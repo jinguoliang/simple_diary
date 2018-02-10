@@ -54,6 +54,7 @@ class MainListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main_list)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+
         mVisible = true
 
         // Set up the user interaction to manually show or hide the system UI.
