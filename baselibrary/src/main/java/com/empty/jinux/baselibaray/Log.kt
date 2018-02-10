@@ -11,18 +11,45 @@ import android.util.Log
  * 1. 方便调用，默认 TAG 为 BaseLibrary
  * 2. 添加 Debug 开关，只在debug模式打印
  * 3. 可以调整打印日志的信息格式
+ * 4. 打印 Throwable
  */
 
 val DEFAULT_TAG = "BaseLibrary"
 val LOG_DEBUG = BuildConfig.DEBUG
 
-fun logd(o: Any): Unit {
+fun logi(o: Any, tag: String = DEFAULT_TAG): Unit {
     if (LOG_DEBUG) {
-        Log.d(DEFAULT_TAG, formatMessage(o.toString()))
+        Log.i(tag, formatMessage(o.toString()))
     }
 }
 
-private fun formatMessage(msg: String): String {
+fun logd(o: Any, tag: String = DEFAULT_TAG): Unit {
+    if (LOG_DEBUG) {
+        Log.d(tag, formatMessage(o.toString()))
+    }
+}
+
+fun logw(o: Any, tag: String = DEFAULT_TAG): Unit {
+    if (LOG_DEBUG) {
+        Log.w(tag, formatMessage(o.toString()))
+    }
+}
+
+fun loge(o: Any, tag: String = DEFAULT_TAG): Unit {
+    if (LOG_DEBUG) {
+        Log.e(tag, formatMessage(o.toString()))
+    }
+}
+
+fun logThrowable(e: Throwable, tag: String = DEFAULT_TAG): Unit {
+    if (LOG_DEBUG) {
+        Log.e(tag, formatMessage(Log.getStackTraceString(e)))
+    }
+}
+
+private fun formatMessage(org: String): String {
+    val threadName = Thread.currentThread().name
+    val msg = "{$threadName} $org"
     return msg
 }
 
