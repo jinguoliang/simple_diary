@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
+import com.empty.jinux.baselibaray.logd
 import kotlinx.android.synthetic.main.activity_main_list.*
 
 /**
@@ -47,6 +48,8 @@ class MainListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        logd("hello world!!　It started")
 
         setContentView(R.layout.activity_main_list)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
