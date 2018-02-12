@@ -18,6 +18,7 @@ package com.empty.jinux.simplediary.addedittask
 
 import android.app.Activity
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -54,8 +55,9 @@ class AddEditTaskFragment : Fragment(), AddEditTaskContract.View {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-//        fab_edit_task_done.setImageResource(R.drawable.ic_done)
-//        fab_edit_task_done.setOnClickListener(View.OnClickListener { mPresenter!!.saveTask(mTitle!!.text.toString(), mDescription!!.text.toString()) })
+        val fab_edit_task_done = activity.findViewById<FloatingActionButton>(R.id.fab_edit_task_done)
+        fab_edit_task_done.setImageResource(R.drawable.ic_launcher_background)
+        fab_edit_task_done.setOnClickListener(View.OnClickListener { mPresenter!!.saveTask(mTitle!!.text.toString(), mDescription!!.text.toString()) })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
