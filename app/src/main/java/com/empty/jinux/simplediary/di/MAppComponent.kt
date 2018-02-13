@@ -10,6 +10,7 @@ import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
 import javax.inject.Singleton
 
+@Singleton
 @dagger.Component(
         modules = arrayOf(AndroidSupportInjectionModule::class, DogModule::class,
                 AppModule::class, TasksRepositoryModule::class,

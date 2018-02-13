@@ -41,7 +41,7 @@ import javax.inject.Singleton
  * therefore, to ensure the developer doesn't instantiate the class manually and bypasses Dagger,
  * it's good practice minimise the visibility of the class/constructor as much as possible.
  */
-
+@Singleton
 class TasksRepository
 /**
  * By marking the constructor with `@Inject`, Dagger will try to inject the dependencies
@@ -56,6 +56,7 @@ class TasksRepository
  * Dagger strictly enforces that arguments not marked with `@Nullable` are not injected
  * with `@Nullable` values.
  */
+
 @Inject
 internal constructor(@param:Remote private val mTasksRemoteDataSource: TasksDataSource,
                      @param:Local private val mTasksLocalDataSource: TasksDataSource) : TasksDataSource {
