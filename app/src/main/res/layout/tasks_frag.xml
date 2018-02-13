@@ -14,7 +14,7 @@
   ~ limitations under the License.
   -->
 
-<com.empty.jinux.simplediary.tasks.ScrollChildSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.empty.jinux.simplediary.diarylist.ScrollChildSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -60,7 +60,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_launcher_background" />
+                android:src="@drawable/ic_assignment_turned_in_24dp" />
 
             <TextView
                 android:id="@+id/noTasksMain"
@@ -75,11 +75,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_gravity="center"
-                android:background="@drawable/ic_launcher_background"
+                android:background="@drawable/touch_feedback"
                 android:gravity="center"
                 android:text="@string/no_tasks_add" />
 
         </LinearLayout>
     </RelativeLayout>
-</com.empty.jinux.simplediary.tasks.ScrollChildSwipeRefreshLayout>
+</com.empty.jinux.simplediary.diarylist.ScrollChildSwipeRefreshLayout>
 

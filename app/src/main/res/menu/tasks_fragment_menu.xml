@@ -19,7 +19,7 @@
     <item
         android:id="@+id/menu_filter"
         android:title="@string/menu_filter"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@drawable/ic_filter_list"
         app:showAsAction="always" />
     <item
         android:id="@+id/menu_clear"

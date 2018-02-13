@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.tasks
+package com.empty.jinux.simplediary.diarylist
 
 import com.empty.jinux.simplediary.BasePresenter
 import com.empty.jinux.simplediary.BaseView
-import com.empty.jinux.simplediary.data.Task
+import com.empty.jinux.simplediary.data.Diary
 
 /**
  * This specifies the contract between the view and the presenter.
  */
-interface TasksContract {
+interface DiaryListContract {
 
     interface View : BaseView<Presenter> {
 
@@ -31,7 +31,7 @@ interface TasksContract {
 
         fun setLoadingIndicator(active: Boolean)
 
-        fun showTasks(tasks: List<Task>)
+        fun showTasks(tasks: List<Diary>)
 
         fun showAddTask()
 
@@ -64,7 +64,7 @@ interface TasksContract {
 
     interface Presenter : BasePresenter {
 
-        var filtering: TasksFilterType
+        var filtering: DiaryListFilterType
 
         fun result(requestCode: Int, resultCode: Int)
 
@@ -72,11 +72,11 @@ interface TasksContract {
 
         fun addNewTask()
 
-        fun openTaskDetails(requestedTask: Task)
+        fun openTaskDetails(requestedTask: Diary)
 
-        fun completeTask(completedTask: Task)
+        fun completeTask(completedTask: Diary)
 
-        fun activateTask(activeTask: Task)
+        fun activateTask(activeTask: Diary)
 
         fun clearCompletedTasks()
     }

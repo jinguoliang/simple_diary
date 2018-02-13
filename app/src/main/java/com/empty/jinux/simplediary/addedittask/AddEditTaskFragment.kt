@@ -23,29 +23,25 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import com.empty.jinux.simplediary.R
 import com.google.common.base.Preconditions.checkNotNull
-import javax.inject.Inject
+import kotlinx.android.synthetic.main.addtask_act.*
+import kotlinx.android.synthetic.main.addtask_frag.*
 
 /**
  * Main UI for the add task screen. Users can enter a task title and description.
  */
 class AddEditTaskFragment : Fragment(), AddEditTaskContract.View {
 
-    private var mPresenter: AddEditTaskContract.Presenter? = null
-
-    private var mTitle: TextView? = null
-
-    private var mDescription: TextView? = null
+    lateinit private var mPresenter: AddEditTaskContract.Presenter
 
     override val isActive: Boolean
         get() = isAdded
 
     override fun onResume() {
         super.onResume()
-        mPresenter!!.start()
+        mPresenter.start()
     }
 
     override fun setPresenter(presenter: AddEditTaskContract.Presenter) {
@@ -55,19 +51,18 @@ class AddEditTaskFragment : Fragment(), AddEditTaskContract.View {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val fab_edit_task_done = activity.findViewById<FloatingActionButton>(R.id.fab_edit_task_done)
-        fab_edit_task_done.setImageResource(R.drawable.ic_launcher_background)
-        fab_edit_task_done.setOnClickListener(View.OnClickListener { mPresenter!!.saveTask(mTitle!!.text.toString(), mDescription!!.text.toString()) })
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val root = inflater!!.inflate(R.layout.addtask_frag, container, false)
-        mTitle = root.findViewById(R.id.add_task_title)
-        mDescription = root.findViewById(R.id.add_task_description)
+        val done = activity.findViewById<FloatingActionButton>(R.id.fab_edit_task_done)
+        done.setImageResource(R.drawable.ic_done)
+        done.setOnClickListener {
+            mPresenter.saveTask(add_task_title.text.toString(), add_task_description.text.toString())
+        }
 
         setHasOptionsMenu(true)
         retainInstance = true
-        return root
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.addtask_frag, container, false)
     }
 
     override fun showEmptyTaskError() {
@@ -80,11 +75,11 @@ class AddEditTaskFragment : Fragment(), AddEditTaskContract.View {
     }
 
     override fun setTitle(title: String) {
-        mTitle!!.text = title
+        add_task_title.setText(title)
     }
 
     override fun setDescription(description: String) {
-        mDescription!!.text = description
+        add_task_description.setText(description)
     }
 
     companion object {

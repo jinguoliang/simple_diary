@@ -17,7 +17,7 @@
 package com.empty.jinux.simplediary.data.source.remote
 
 import android.os.Handler
-import com.empty.jinux.simplediary.data.Task
+import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.data.source.TasksDataSource
 import com.google.common.collect.Lists
 import java.util.*
@@ -53,12 +53,12 @@ class TasksRemoteDataSource : TasksDataSource {
         handler.postDelayed({ callback.onTaskLoaded(task!!) }, SERVICE_LATENCY_IN_MILLIS.toLong())
     }
 
-    override fun saveTask(task: Task) {
+    override fun saveTask(task: Diary) {
         TASKS_SERVICE_DATA.put(task.id, task)
     }
 
-    override fun completeTask(task: Task) {
-        val completedTask = Task(task.title, task.description, task.id, true)
+    override fun completeTask(task: Diary) {
+        val completedTask = Diary(task.title, task.description, task.id, true)
         TASKS_SERVICE_DATA.put(task.id, completedTask)
     }
 
@@ -67,8 +67,8 @@ class TasksRemoteDataSource : TasksDataSource {
         // converting from a {@code taskId} to a {@link task} using its cached data.
     }
 
-    override fun activateTask(task: Task) {
-        val activeTask = Task(task.title, task.description, task.id)
+    override fun activateTask(task: Diary) {
+        val activeTask = Diary(task.title, task.description, task.id)
         TASKS_SERVICE_DATA.put(task.id, activeTask)
     }
 
@@ -104,16 +104,16 @@ class TasksRemoteDataSource : TasksDataSource {
 
         private val SERVICE_LATENCY_IN_MILLIS = 5000
 
-        private val TASKS_SERVICE_DATA: MutableMap<String, Task>
+        private val TASKS_SERVICE_DATA: MutableMap<String, Diary>
 
         init {
-            TASKS_SERVICE_DATA = LinkedHashMap<String, Task>(2)
+            TASKS_SERVICE_DATA = LinkedHashMap<String, Diary>(2)
             addTask("Build tower in Pisa", "Ground looks good, no foundation work required.")
             addTask("Finish bridge in Tacoma", "Found awesome girders at half the cost!")
         }
 
         private fun addTask(title: String, description: String) {
-            val newTask = Task(title, description)
+            val newTask = Diary(title, description)
             TASKS_SERVICE_DATA.put(newTask.id, newTask)
         }
     }

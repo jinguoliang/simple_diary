@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.tasks
+package com.empty.jinux.simplediary.diarylist
 
 import android.app.Activity
 import com.empty.jinux.simplediary.addedittask.AddEditTaskActivity
-import com.empty.jinux.simplediary.data.Task
+import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.data.source.TasksDataSource
 import com.empty.jinux.simplediary.data.source.TasksRepository
 import com.google.common.base.Preconditions.checkNotNull
@@ -27,35 +27,35 @@ import javax.inject.Inject
 
 
 /**
- * Listens to user actions from the UI ([TasksFragment]), retrieves the data and updates the
+ * Listens to user actions from the UI ([DiaryListFragment]), retrieves the data and updates the
  * UI as required.
  *
  *
  * By marking the constructor with `@Inject`, Dagger injects the dependencies required to
- * create an instance of the TasksPresenter (if it fails, it emits a compiler error).  It uses
- * [TasksPresenterModule] to do so.
+ * create an instance of the DiaryListPresenter (if it fails, it emits a compiler error).  It uses
+ * [DiaryListPresenterModule] to do so.
  *
  *
  * Dagger generated code doesn't require public access to the constructor or class, and
  * therefore, to ensure the developer doesn't instantiate the class manually and bypasses Dagger,
  * it's good practice minimise the visibility of the class/constructor as much as possible.
  */
-internal class TasksPresenter
+internal class DiaryListPresenter
 /**
  * Dagger strictly enforces that arguments not marked with `@Nullable` are not injected
  * with `@Nullable` values.
  */
 @Inject
-constructor(private val mTasksRepository: TasksRepository, private val mTasksView: TasksContract.View) : TasksContract.Presenter {
+constructor(private val mTasksRepository: TasksRepository, private val mTasksView: DiaryListContract.View) : DiaryListContract.Presenter {
 
     /**
      * Sets the current task filtering type.
      *
-     * @param requestType Can be [TasksFilterType.ALL_TASKS],
-     * [TasksFilterType.COMPLETED_TASKS], or
-     * [TasksFilterType.ACTIVE_TASKS]
+     * @param requestType Can be [DiaryListFilterType.ALL],
+     * [DiaryListFilterType.COMPLETED], or
+     * [DiaryListFilterType.ACTIVE]
      */
-    override var filtering = TasksFilterType.ALL_TASKS
+    override var filtering = DiaryListFilterType.ALL
 
     private var mFirstLoad = true
 
@@ -99,17 +99,17 @@ constructor(private val mTasksRepository: TasksRepository, private val mTasksVie
 
 
         mTasksRepository.getTasks(object : TasksDataSource.LoadTasksCallback {
-            override fun onTasksLoaded(tasks: List<Task>) {
-                val tasksToShow = ArrayList<Task>()
+            override fun onTasksLoaded(tasks: List<Diary>) {
+                val tasksToShow = ArrayList<Diary>()
 
                 // We filter the tasks based on the requestType
                 for (task in tasks) {
                     when (filtering) {
-                        TasksFilterType.ALL_TASKS -> tasksToShow.add(task)
-                        TasksFilterType.ACTIVE_TASKS -> if (task.isActive) {
+                        DiaryListFilterType.ALL -> tasksToShow.add(task)
+                        DiaryListFilterType.ACTIVE -> if (task.isActive) {
                             tasksToShow.add(task)
                         }
-                        TasksFilterType.COMPLETED_TASKS -> if (task.isCompleted) {
+                        DiaryListFilterType.COMPLETED -> if (task.isCompleted) {
                             tasksToShow.add(task)
                         }
                         else -> tasksToShow.add(task)
@@ -136,7 +136,7 @@ constructor(private val mTasksRepository: TasksRepository, private val mTasksVie
         })
     }
 
-    private fun processTasks(tasks: List<Task>) {
+    private fun processTasks(tasks: List<Diary>) {
         if (tasks.isEmpty()) {
             // Show a message indicating there are no tasks for that filter type.
             processEmptyTasks()
@@ -150,16 +150,16 @@ constructor(private val mTasksRepository: TasksRepository, private val mTasksVie
 
     private fun showFilterLabel() {
         when (filtering) {
-            TasksFilterType.ACTIVE_TASKS -> mTasksView.showActiveFilterLabel()
-            TasksFilterType.COMPLETED_TASKS -> mTasksView.showCompletedFilterLabel()
+            DiaryListFilterType.ACTIVE -> mTasksView.showActiveFilterLabel()
+            DiaryListFilterType.COMPLETED -> mTasksView.showCompletedFilterLabel()
             else -> mTasksView.showAllFilterLabel()
         }
     }
 
     private fun processEmptyTasks() {
         when (filtering) {
-            TasksFilterType.ACTIVE_TASKS -> mTasksView.showNoActiveTasks()
-            TasksFilterType.COMPLETED_TASKS -> mTasksView.showNoCompletedTasks()
+            DiaryListFilterType.ACTIVE -> mTasksView.showNoActiveTasks()
+            DiaryListFilterType.COMPLETED -> mTasksView.showNoCompletedTasks()
             else -> mTasksView.showNoTasks()
         }
     }
@@ -168,20 +168,20 @@ constructor(private val mTasksRepository: TasksRepository, private val mTasksVie
         mTasksView.showAddTask()
     }
 
-    override fun openTaskDetails(requestedTask: Task) {
-        checkNotNull<Task>(requestedTask, "requestedTask cannot be null!")
+    override fun openTaskDetails(requestedTask: Diary) {
+        checkNotNull<Diary>(requestedTask, "requestedTask cannot be null!")
         mTasksView.showTaskDetailsUi(requestedTask.id)
     }
 
-    override fun completeTask(completedTask: Task) {
-        checkNotNull<Task>(completedTask, "completedTask cannot be null!")
+    override fun completeTask(completedTask: Diary) {
+        checkNotNull<Diary>(completedTask, "completedTask cannot be null!")
         mTasksRepository.completeTask(completedTask)
         mTasksView.showTaskMarkedComplete()
         loadTasks(false, false)
     }
 
-    override fun activateTask(activeTask: Task) {
-        checkNotNull<Task>(activeTask, "activeTask cannot be null!")
+    override fun activateTask(activeTask: Diary) {
+        checkNotNull<Diary>(activeTask, "activeTask cannot be null!")
         mTasksRepository.activateTask(activeTask)
         mTasksView.showTaskMarkedActive()
         loadTasks(false, false)

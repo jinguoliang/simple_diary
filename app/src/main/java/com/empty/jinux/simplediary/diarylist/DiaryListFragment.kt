@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.tasks
+package com.empty.jinux.simplediary.diarylist
 
 import android.content.Intent
 import android.os.Bundle
@@ -24,49 +24,40 @@ import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.PopupMenu
 import android.view.*
-import android.widget.*
+import android.widget.BaseAdapter
+import android.widget.CheckBox
+import android.widget.TextView
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.addedittask.AddEditTaskActivity
-import com.empty.jinux.simplediary.data.Task
+import com.empty.jinux.simplediary.data.Diary
 import com.google.common.base.Preconditions.checkNotNull
+import com.google.common.collect.Lists
 import kotlinx.android.synthetic.main.tasks_frag.*
 import java.util.*
 
 /**
- * Display a grid of [Task]s. User can choose to view all, active or completed tasks.
+ * Display a grid of [Diary]s. User can choose to view all, active or completed diaries.
  */
-class TasksFragment : Fragment(), TasksContract.View {
+class DiaryListFragment : Fragment(), DiaryListContract.View {
 
-    private var mPresenter: TasksContract.Presenter? = null
+    lateinit private var mPresenter: DiaryListContract.Presenter
 
-    private var mListAdapter: TasksAdapter? = null
-
-    private var mNoTasksView: View? = null
-
-    private var mNoTaskIcon: ImageView? = null
-
-    private var mNoTaskMainView: TextView? = null
-
-    private var mNoTaskAddView: TextView? = null
-
-    private var mTasksView: LinearLayout? = null
-
-    private var mFilteringLabelView: TextView? = null
+    lateinit private var mListAdapter: TasksAdapter
 
     /**
      * Listener for clicks on tasks in the ListView.
      */
-    internal var mItemListener: TaskItemListener = object : TaskItemListener {
-        override fun onTaskClick(clickedTask: Task) {
-            mPresenter!!.openTaskDetails(clickedTask)
+    internal var mItemListener: DiaryItemListener = object : DiaryItemListener {
+        override fun onClick(diary: Diary) {
+            mPresenter.openTaskDetails(diary)
         }
 
-        override fun onCompleteTaskClick(completedTask: Task) {
-            mPresenter!!.completeTask(completedTask)
+        override fun onCompleteClick(diary: Diary) {
+            mPresenter.completeTask(diary)
         }
 
-        override fun onActivateTaskClick(activatedTask: Task) {
-            mPresenter!!.activateTask(activatedTask)
+        override fun onActivateClick(diary: Diary) {
+            mPresenter.activateTask(diary)
         }
     }
 
@@ -75,73 +66,65 @@ class TasksFragment : Fragment(), TasksContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mListAdapter = TasksAdapter(ArrayList<Task>(0), mItemListener)
+        mListAdapter = TasksAdapter(ArrayList<Diary>(0), mItemListener)
     }
 
     override fun onResume() {
         super.onResume()
-        mPresenter!!.start()
+        mPresenter.start()
     }
 
-    override fun setPresenter(presenter: TasksContract.Presenter) {
+    override fun setPresenter(presenter: DiaryListContract.Presenter) {
         mPresenter = checkNotNull(presenter)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        mPresenter!!.result(requestCode, resultCode)
+        mPresenter.result(requestCode, resultCode)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val root = inflater!!.inflate(R.layout.tasks_frag, container, false)
+        return inflater.inflate(R.layout.tasks_frag, container, false)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
         // Set up tasks view
-        val listView = root.findViewById<ListView>(R.id.tasks_list)
-        listView.adapter = mListAdapter
-        mFilteringLabelView = root.findViewById(R.id.filteringLabel)
-        mTasksView = root.findViewById(R.id.tasksLL)
+        tasks_list.adapter = mListAdapter
 
-        // Set up  no tasks view
-        mNoTasksView = root.findViewById(R.id.noTasks)
-        mNoTaskIcon = root.findViewById(R.id.noTasksIcon)
-        mNoTaskMainView = root.findViewById(R.id.noTasksMain)
-        mNoTaskAddView = root.findViewById(R.id.noTasksAdd)
-        mNoTaskAddView!!.setOnClickListener { showAddTask() }
+        noTasks.setOnClickListener { showAddTask() }
 
         // Set up floating action button
         val fab = activity.findViewById<FloatingActionButton>(R.id.fab_add_task)
 
-        fab.setImageResource(R.drawable.ic_launcher_background)
-        fab.setOnClickListener { mPresenter!!.addNewTask() }
+        fab.setImageResource(R.drawable.ic_add)
+        fab.setOnClickListener { mPresenter.addNewTask() }
 
         // Set up progress indicator
-        val swipeRefreshLayout = root.findViewById<ScrollChildSwipeRefreshLayout>(R.id.refresh_layout)
-        swipeRefreshLayout.setColorSchemeColors(
+        refresh_layout.setColorSchemeColors(
                 ContextCompat.getColor(activity, R.color.colorPrimary),
                 ContextCompat.getColor(activity, R.color.colorAccent),
                 ContextCompat.getColor(activity, R.color.colorPrimaryDark)
         )
         // Set the scrolling view in the custom SwipeRefreshLayout.
-        swipeRefreshLayout.setScrollUpChild(listView)
-
-        swipeRefreshLayout.setOnRefreshListener { mPresenter!!.loadTasks(false) }
+        refresh_layout.setScrollUpChild(tasks_list)
+        refresh_layout.setOnRefreshListener { mPresenter.loadTasks(false) }
 
         setHasOptionsMenu(true)
-
-        return root
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item!!.itemId) {
-            R.id.menu_clear -> mPresenter!!.clearCompletedTasks()
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_clear -> mPresenter.clearCompletedTasks()
             R.id.menu_filter -> showFilteringPopUpMenu()
-            R.id.menu_refresh -> mPresenter!!.loadTasks(true)
+            R.id.menu_refresh -> mPresenter.loadTasks(true)
         }
         return true
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater!!.inflate(R.menu.tasks_fragment_menu, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.tasks_fragment_menu, menu)
     }
 
     override fun showFilteringPopUpMenu() {
@@ -150,11 +133,11 @@ class TasksFragment : Fragment(), TasksContract.View {
 
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
-                R.id.active -> mPresenter!!.filtering = TasksFilterType.ACTIVE_TASKS
-                R.id.completed -> mPresenter!!.filtering = TasksFilterType.COMPLETED_TASKS
-                else -> mPresenter!!.filtering = TasksFilterType.ALL_TASKS
+                R.id.active -> mPresenter.filtering = DiaryListFilterType.ACTIVE
+                R.id.completed -> mPresenter.filtering = DiaryListFilterType.COMPLETED
+                else -> mPresenter.filtering = DiaryListFilterType.ALL
             }
-            mPresenter!!.loadTasks(false)
+            mPresenter.loadTasks(false)
             true
         }
 
@@ -172,17 +155,17 @@ class TasksFragment : Fragment(), TasksContract.View {
         srl.post { srl.isRefreshing = active }
     }
 
-    override fun showTasks(tasks: List<Task>) {
-        mListAdapter!!.replaceData(tasks)
+    override fun showTasks(tasks: List<Diary>) {
+        mListAdapter.replaceData(tasks)
 
-        mTasksView!!.visibility = View.VISIBLE
-        mNoTasksView!!.visibility = View.GONE
+        tasks_list.visibility = View.VISIBLE
+        noTasks.visibility = View.GONE
     }
 
     override fun showNoActiveTasks() {
         showNoTasksViews(
                 resources.getString(R.string.no_tasks_active),
-                R.drawable.ic_launcher_background,
+                R.drawable.ic_check_circle_24dp,
                 false
         )
     }
@@ -190,7 +173,7 @@ class TasksFragment : Fragment(), TasksContract.View {
     override fun showNoTasks() {
         showNoTasksViews(
                 resources.getString(R.string.no_tasks_all),
-                R.drawable.ic_launcher_background,
+                R.drawable.ic_assignment_turned_in_24dp,
                 false
         )
     }
@@ -198,7 +181,7 @@ class TasksFragment : Fragment(), TasksContract.View {
     override fun showNoCompletedTasks() {
         showNoTasksViews(
                 resources.getString(R.string.no_tasks_completed),
-                R.drawable.ic_launcher_background,
+                R.drawable.ic_verified_user_24dp,
                 false
         )
     }
@@ -208,24 +191,24 @@ class TasksFragment : Fragment(), TasksContract.View {
     }
 
     private fun showNoTasksViews(mainText: String, iconRes: Int, showAddView: Boolean) {
-        mTasksView!!.visibility = View.GONE
-        mNoTasksView!!.visibility = View.VISIBLE
+        tasks_list.visibility = View.GONE
+        noTasks.visibility = View.VISIBLE
 
-        mNoTaskMainView!!.text = mainText
-        mNoTaskIcon!!.setImageDrawable(resources.getDrawable(iconRes))
-        mNoTaskAddView!!.visibility = if (showAddView) View.VISIBLE else View.GONE
+        noTasksMain.text = mainText
+        noTasksIcon.setImageDrawable(resources.getDrawable(iconRes))
+        noTasksAdd.visibility = if (showAddView) View.VISIBLE else View.GONE
     }
 
     override fun showActiveFilterLabel() {
-        mFilteringLabelView!!.text = resources.getString(R.string.label_active)
+        filteringLabel.text = resources.getString(R.string.label_active)
     }
 
     override fun showCompletedFilterLabel() {
-        mFilteringLabelView!!.text = resources.getString(R.string.label_completed)
+        filteringLabel.text = resources.getString(R.string.label_completed)
     }
 
     override fun showAllFilterLabel() {
-        mFilteringLabelView!!.text = resources.getString(R.string.label_all)
+        filteringLabel.text = resources.getString(R.string.label_all)
     }
 
     override fun showAddTask() {
@@ -261,29 +244,29 @@ class TasksFragment : Fragment(), TasksContract.View {
         Snackbar.make(view!!, message, Snackbar.LENGTH_LONG).show()
     }
 
-    private class TasksAdapter(tasks: List<Task>, private val mItemListener: TaskItemListener) : BaseAdapter() {
+    private class TasksAdapter(tasks: List<Diary>, private val mItemListener: DiaryItemListener) : BaseAdapter() {
 
-        private var mTasks: List<Task>? = null
+        private var mTasks: List<Diary> = Lists.newArrayList()
 
         init {
             setList(tasks)
         }
 
-        fun replaceData(tasks: List<Task>) {
+        fun replaceData(tasks: List<Diary>) {
             setList(tasks)
             notifyDataSetChanged()
         }
 
-        private fun setList(tasks: List<Task>) {
-            mTasks = checkNotNull<List<Task>>(tasks)
+        private fun setList(tasks: List<Diary>) {
+            mTasks = checkNotNull<List<Diary>>(tasks)
         }
 
         override fun getCount(): Int {
-            return mTasks!!.size
+            return mTasks.size
         }
 
-        override fun getItem(i: Int): Task {
-            return mTasks!![i]
+        override fun getItem(i: Int): Diary {
+            return mTasks[i]
         }
 
         override fun getItemId(i: Int): Long {
@@ -291,57 +274,54 @@ class TasksFragment : Fragment(), TasksContract.View {
         }
 
         override fun getView(i: Int, view: View?, viewGroup: ViewGroup): View {
-            var rowView: View? = view
-            if (rowView == null) {
-                val inflater = LayoutInflater.from(viewGroup.context)
-                rowView = inflater.inflate(R.layout.task_item, viewGroup, false)
-            }
+            val rowView = view ?: LayoutInflater.from(viewGroup.context)
+                    .inflate(R.layout.task_item, viewGroup, false)
 
             val task = getItem(i)
 
-            val titleTV = rowView!!.findViewById<TextView>(R.id.title)
-            titleTV.setText(task.titleForList)
+            val titleTV = rowView.findViewById<TextView>(R.id.title)
+            titleTV.text = task.titleForList
 
             val completeCB = rowView.findViewById<CheckBox>(R.id.complete)
 
             // Active/completed task UI
             completeCB.isChecked = task.isCompleted
-//            if (task.isCompleted) {
-//                rowView.setBackgroundDrawable(viewGroup.context
-//                        .resources.getDrawable(R.drawable.list_completed_touch_feedback))
-//            } else {
-//                rowView.setBackgroundDrawable(viewGroup.context
-//                        .resources.getDrawable(R.drawable.touch_feedback))
-//            }
+            if (task.isCompleted) {
+                rowView.setBackgroundDrawable(viewGroup.context
+                        .resources.getDrawable(R.drawable.list_completed_touch_feedback))
+            } else {
+                rowView.setBackgroundDrawable(viewGroup.context
+                        .resources.getDrawable(R.drawable.touch_feedback))
+            }
 
             completeCB.setOnClickListener {
                 if (!task.isCompleted) {
-                    mItemListener.onCompleteTaskClick(task)
+                    mItemListener.onCompleteClick(task)
                 } else {
-                    mItemListener.onActivateTaskClick(task)
+                    mItemListener.onActivateClick(task)
                 }
             }
 
-            rowView.setOnClickListener { mItemListener.onTaskClick(task) }
+            rowView.setOnClickListener { mItemListener.onClick(task) }
 
             return rowView
         }
     }
 
-    interface TaskItemListener {
+    interface DiaryItemListener {
 
-        fun onTaskClick(clickedTask: Task)
+        fun onClick(diary: Diary)
 
-        fun onCompleteTaskClick(completedTask: Task)
+        fun onCompleteClick(diary: Diary)
 
-        fun onActivateTaskClick(activatedTask: Task)
+        fun onActivateClick(diary: Diary)
     }
 
     companion object {
 
-        fun newInstance(): TasksFragment {
-            return TasksFragment()
+        fun newInstance(): DiaryListFragment {
+            return DiaryListFragment()
         }
     }
 
-}// Requires empty public constructor
+}

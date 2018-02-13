@@ -18,7 +18,7 @@ package com.empty.jinux.simplediary.data.source.local
 
 import android.content.ContentValues
 import android.content.Context
-import com.empty.jinux.simplediary.data.Task
+import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.data.source.TasksDataSource
 import com.google.common.base.Preconditions.checkNotNull
 import java.util.*
@@ -45,7 +45,7 @@ constructor(context: Context) : TasksDataSource {
      * or the table is empty.
      */
     override fun getTasks(callback: TasksDataSource.LoadTasksCallback) {
-        val tasks = ArrayList<Task>()
+        val tasks = ArrayList<Diary>()
         val db = mDbHelper.readableDatabase
 
         val projection = arrayOf<String>(TaskEntry.COLUMN_NAME_ENTRY_ID, TaskEntry.COLUMN_NAME_TITLE, TaskEntry.COLUMN_NAME_DESCRIPTION, TaskEntry.COLUMN_NAME_COMPLETED)
@@ -59,7 +59,7 @@ constructor(context: Context) : TasksDataSource {
                 val title = c.getString(c.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_TITLE))
                 val description = c.getString(c.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_DESCRIPTION))
                 val completed = c.getInt(c.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_COMPLETED)) == 1
-                val task = Task(title, description, itemId, completed)
+                val task = Diary(title, description, itemId, completed)
                 tasks.add(task)
             }
         }
@@ -77,7 +77,7 @@ constructor(context: Context) : TasksDataSource {
     }
 
     /**
-     * Note: [GetTaskCallback.onDataNotAvailable] is fired if the [Task] isn't
+     * Note: [GetTaskCallback.onDataNotAvailable] is fired if the [Diary] isn't
      * found.
      */
     override fun getTask(taskId: String, callback: TasksDataSource.GetTaskCallback) {
@@ -91,7 +91,7 @@ constructor(context: Context) : TasksDataSource {
         val c = db.query(
                 TaskEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null)
 
-        var task: Task? = null
+        var task: Diary? = null
 
         if (c != null && c.count > 0) {
             c.moveToFirst()
@@ -99,7 +99,7 @@ constructor(context: Context) : TasksDataSource {
             val title = c.getString(c.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_TITLE))
             val description = c.getString(c.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_DESCRIPTION))
             val completed = c.getInt(c.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_COMPLETED)) == 1
-            task = Task(title, description, itemId, completed)
+            task = Diary(title, description, itemId, completed)
         }
         c?.close()
 
@@ -112,7 +112,7 @@ constructor(context: Context) : TasksDataSource {
         }
     }
 
-    override fun saveTask(task: Task) {
+    override fun saveTask(task: Diary) {
         checkNotNull(task)
         val db = mDbHelper.writableDatabase
 
@@ -127,7 +127,7 @@ constructor(context: Context) : TasksDataSource {
         db.close()
     }
 
-    override fun completeTask(task: Task) {
+    override fun completeTask(task: Diary) {
         val db = mDbHelper.writableDatabase
 
         val values = ContentValues()
@@ -146,7 +146,7 @@ constructor(context: Context) : TasksDataSource {
         // converting from a {@code taskId} to a {@link task} using its cached data.
     }
 
-    override fun activateTask(task: Task) {
+    override fun activateTask(task: Diary) {
         val db = mDbHelper.writableDatabase
 
         val values = ContentValues()

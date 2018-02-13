@@ -16,7 +16,7 @@
 
 package com.empty.jinux.simplediary.addedittask
 
-import com.empty.jinux.simplediary.data.Task
+import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.data.source.TasksDataSource
 import com.empty.jinux.simplediary.data.source.TasksRepository
 import javax.inject.Inject
@@ -84,7 +84,7 @@ constructor(private val mTaskId: String?, tasksRepository: TasksRepository,
         mTasksRepository.getTask(mTaskId!!, this)
     }
 
-    override fun onTaskLoaded(task: Task) {
+    override fun onTaskLoaded(task: Diary) {
         // The view may not be able to handle UI updates anymore
         if (mAddTaskView.isActive) {
             mAddTaskView.setTitle(task.title)
@@ -100,7 +100,7 @@ constructor(private val mTaskId: String?, tasksRepository: TasksRepository,
     }
 
     private fun createTask(title: String, description: String) {
-        val newTask = Task(title, description)
+        val newTask = Diary(title, description)
         if (newTask.isEmpty) {
             mAddTaskView.showEmptyTaskError()
         } else {
@@ -113,7 +113,7 @@ constructor(private val mTaskId: String?, tasksRepository: TasksRepository,
         if (isNewTask) {
             throw RuntimeException("updateTask() was called but task is new.")
         }
-        mTasksRepository.saveTask(Task(title, description, mTaskId!!))
+        mTasksRepository.saveTask(Diary(title, description, mTaskId!!))
         mAddTaskView.showTasksList() // After an edit, go back to the list.
     }
 }

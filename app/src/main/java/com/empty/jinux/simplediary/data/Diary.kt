@@ -21,12 +21,12 @@ import com.google.common.base.Objects
 import java.util.*
 
 /**
- * Immutable model class for a Task.
+ * Immutable model class for a Diary.
  */
-data class Task
+data class Diary
 /**
- * Use this constructor to specify a completed Task if the Task already has an id (copy of
- * another Task).
+ * Use this constructor to specify a completed Diary if the Diary already has an id (copy of
+ * another Diary).
  *
  * @param title       title of the task
  * @param description description of the task
@@ -50,7 +50,7 @@ constructor(val title: String, val description: String,
         get() = Strings.isNullOrEmpty(title) && Strings.isNullOrEmpty(description)
 
     /**
-     * Use this constructor to create a new completed Task.
+     * Use this constructor to create a new completed Diary.
      *
      * @param title       title of the task
      * @param description description of the task
@@ -61,7 +61,7 @@ constructor(val title: String, val description: String,
     override fun equals(o: Any?): Boolean {
         if (this === o) return true
         if (o == null || javaClass != o.javaClass) return false
-        val task = o as Task?
+        val task = o as Diary?
         return Objects.equal(id, task!!.id) &&
                 Objects.equal(title, task.title) &&
                 Objects.equal(description, task.description)
@@ -72,18 +72,18 @@ constructor(val title: String, val description: String,
     }
 
     override fun toString(): String {
-        return "Task with title " + title!!
+        return "Diary with title " + title!!
     }
 }
 /**
- * Use this constructor to create a new active Task.
+ * Use this constructor to create a new active Diary.
  *
  * @param title       title of the task
  * @param description description of the task
  */
 /**
- * Use this constructor to create an active Task if the Task already has an id (copy of another
- * Task).
+ * Use this constructor to create an active Diary if the Diary already has an id (copy of another
+ * Diary).
  *
  * @param title       title of the task
  * @param description description of the task

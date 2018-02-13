@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.tasks
+package com.empty.jinux.simplediary.diarylist
 
 /**
- * Used with the filter spinner in the tasks list.
+ * Used with the filter spinner in the list.
  */
-enum class TasksFilterType {
+enum class DiaryListFilterType {
     /**
-     * Do not filter tasks.
+     * Do not filter.
      */
-    ALL_TASKS,
+    ALL,
 
     /**
-     * Filters only the active (not completed yet) tasks.
+     * Filters only the active (not completed yet).
      */
-    ACTIVE_TASKS,
+    ACTIVE,
 
     /**
-     * Filters only the completed tasks.
+     * Filters only the completed.
      */
-    COMPLETED_TASKS
+    COMPLETED
 }

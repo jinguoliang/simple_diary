@@ -16,7 +16,7 @@
 
 package com.empty.jinux.simplediary.data.source
 
-import com.empty.jinux.simplediary.data.Task
+import com.empty.jinux.simplediary.data.Diary
 
 /**
  * Main entry point for accessing tasks data.
@@ -31,14 +31,14 @@ interface TasksDataSource {
 
     interface LoadTasksCallback {
 
-        fun onTasksLoaded(tasks: List<Task>)
+        fun onTasksLoaded(tasks: List<Diary>)
 
         fun onDataNotAvailable()
     }
 
     interface GetTaskCallback {
 
-        fun onTaskLoaded(task: Task)
+        fun onTaskLoaded(task: Diary)
 
         fun onDataNotAvailable()
     }
@@ -47,13 +47,13 @@ interface TasksDataSource {
 
     fun getTask(taskId: String, callback: GetTaskCallback)
 
-    fun saveTask(task: Task)
+    fun saveTask(task: Diary)
 
-    fun completeTask(task: Task)
+    fun completeTask(task: Diary)
 
     fun completeTask(taskId: String)
 
-    fun activateTask(task: Task)
+    fun activateTask(task: Diary)
 
     fun activateTask(taskId: String)
 

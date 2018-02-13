@@ -20,7 +20,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".tasks.TasksActivity"
+    tools:context=".diarylist.DiaryListActivity"
     tools:openDrawer="start">
 
     <LinearLayout
@@ -57,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/fab_margin"
-                android:src="@drawable/ic_launcher_background"
+                android:src="@drawable/ic_add"
                 app:fabSize="normal"
                 app:layout_anchor="@id/contentFrame"
                 app:layout_anchorGravity="bottom|right|end" />

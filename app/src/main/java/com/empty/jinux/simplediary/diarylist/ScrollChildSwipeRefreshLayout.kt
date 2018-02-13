@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.tasks
+package com.empty.jinux.simplediary.diarylist
 
 import android.content.Context
-import android.support.v4.view.ViewCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.util.AttributeSet
 import android.view.View
@@ -39,9 +38,7 @@ class ScrollChildSwipeRefreshLayout : SwipeRefreshLayout {
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {}
 
     override fun canChildScrollUp(): Boolean {
-        return if (mScrollUpChild != null) {
-            ViewCompat.canScrollVertically(mScrollUpChild!!, -1)
-        } else super.canChildScrollUp()
+        return mScrollUpChild?.canScrollVertically(-1) ?: super.canChildScrollUp()
     }
 
     fun setScrollUpChild(view: View) {

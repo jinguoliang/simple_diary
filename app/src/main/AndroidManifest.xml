@@ -33,7 +33,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".tasks.TasksActivity"
+            android:name=".diarylist.DiaryListActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:theme="@style/Theme.Design.NoActionBar">
