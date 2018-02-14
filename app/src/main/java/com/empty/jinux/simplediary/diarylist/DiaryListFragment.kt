@@ -22,13 +22,14 @@ import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PopupMenu
+import android.support.v7.widget.RecyclerView
 import android.view.*
-import android.widget.BaseAdapter
 import android.widget.CheckBox
 import android.widget.TextView
 import com.empty.jinux.simplediary.R
-import com.empty.jinux.simplediary.addedittask.AddEditTaskActivity
+import com.empty.jinux.simplediary.addeditdiary.AddEditDiaryActivity
 import com.empty.jinux.simplediary.data.Diary
 import com.google.common.base.Preconditions.checkNotNull
 import com.google.common.collect.Lists
@@ -42,7 +43,7 @@ class DiaryListFragment : Fragment(), DiaryListContract.View {
 
     lateinit private var mPresenter: DiaryListContract.Presenter
 
-    lateinit private var mListAdapter: TasksAdapter
+    lateinit private var mListAdapter: DiariesAdapter
 
     /**
      * Listener for clicks on tasks in the ListView.
@@ -66,7 +67,7 @@ class DiaryListFragment : Fragment(), DiaryListContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mListAdapter = TasksAdapter(ArrayList<Diary>(0), mItemListener)
+        mListAdapter = DiariesAdapter(ArrayList<Diary>(0), mItemListener)
     }
 
     override fun onResume() {
@@ -91,6 +92,7 @@ class DiaryListFragment : Fragment(), DiaryListContract.View {
         super.onActivityCreated(savedInstanceState)
 
         // Set up tasks view
+        tasks_list.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         tasks_list.adapter = mListAdapter
 
         noTasks.setOnClickListener { showAddTask() }
@@ -212,8 +214,8 @@ class DiaryListFragment : Fragment(), DiaryListContract.View {
     }
 
     override fun showAddTask() {
-        val intent = Intent(context, AddEditTaskActivity::class.java)
-        startActivityForResult(intent, AddEditTaskActivity.REQUEST_ADD_TASK)
+        val intent = Intent(context, AddEditDiaryActivity::class.java)
+        startActivityForResult(intent, AddEditDiaryActivity.REQUEST_ADD_TASK)
     }
 
     override fun showTaskDetailsUi(taskId: String) {
@@ -244,68 +246,65 @@ class DiaryListFragment : Fragment(), DiaryListContract.View {
         Snackbar.make(view!!, message, Snackbar.LENGTH_LONG).show()
     }
 
-    private class TasksAdapter(tasks: List<Diary>, private val mItemListener: DiaryItemListener) : BaseAdapter() {
+    private class DiariesAdapter(diaries: List<Diary>, private val mItemListener: DiaryItemListener)
+        : RecyclerView.Adapter<DiaryViewHolder>() {
 
-        private var mTasks: List<Diary> = Lists.newArrayList()
+        private var mDiaries: List<Diary> = Lists.newArrayList()
 
         init {
-            setList(tasks)
+            setList(diaries)
         }
 
-        fun replaceData(tasks: List<Diary>) {
-            setList(tasks)
+        fun replaceData(diaries: List<Diary>) {
+            setList(diaries)
             notifyDataSetChanged()
         }
 
-        private fun setList(tasks: List<Diary>) {
-            mTasks = checkNotNull<List<Diary>>(tasks)
+        private fun setList(diaries: List<Diary>) {
+            mDiaries = checkNotNull(diaries)
         }
 
-        override fun getCount(): Int {
-            return mTasks.size
+        override fun getItemCount(): Int {
+            return mDiaries.size
         }
 
-        override fun getItem(i: Int): Diary {
-            return mTasks[i]
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiaryViewHolder {
+            return DiaryViewHolder(LayoutInflater.from(parent.context)
+                    .inflate(R.layout.task_item, parent, false), mItemListener)
         }
 
-        override fun getItemId(i: Int): Long {
-            return i.toLong()
+        override fun onBindViewHolder(holder: DiaryViewHolder, position: Int) {
+            holder.bind(mDiaries[position])
         }
+    }
 
-        override fun getView(i: Int, view: View?, viewGroup: ViewGroup): View {
-            val rowView = view ?: LayoutInflater.from(viewGroup.context)
-                    .inflate(R.layout.task_item, viewGroup, false)
+    class DiaryViewHolder(v: View, val mItemListener: DiaryItemListener) : RecyclerView.ViewHolder(v) {
+        private var titleTV: TextView = v.findViewById(R.id.title)
+        private var completeCB: CheckBox = v.findViewById(R.id.complete)
 
-            val task = getItem(i)
-
-            val titleTV = rowView.findViewById<TextView>(R.id.title)
-            titleTV.text = task.titleForList
-
-            val completeCB = rowView.findViewById<CheckBox>(R.id.complete)
-
-            // Active/completed task UI
-            completeCB.isChecked = task.isCompleted
-            if (task.isCompleted) {
-                rowView.setBackgroundDrawable(viewGroup.context
+        fun bind(diary: Diary): Unit {
+            titleTV.text = diary.titleForList
+            // Active/completed diary UI
+            completeCB.isChecked = diary.isCompleted
+            if (diary.isCompleted) {
+                itemView.setBackgroundDrawable(itemView.context
                         .resources.getDrawable(R.drawable.list_completed_touch_feedback))
             } else {
-                rowView.setBackgroundDrawable(viewGroup.context
+                itemView.setBackgroundDrawable(itemView.context
                         .resources.getDrawable(R.drawable.touch_feedback))
             }
 
             completeCB.setOnClickListener {
-                if (!task.isCompleted) {
-                    mItemListener.onCompleteClick(task)
+                if (!diary.isCompleted) {
+                    mItemListener.onCompleteClick(diary)
                 } else {
-                    mItemListener.onActivateClick(task)
+                    mItemListener.onActivateClick(diary)
                 }
             }
 
-            rowView.setOnClickListener { mItemListener.onClick(task) }
-
-            return rowView
+            itemView.setOnClickListener { mItemListener.onClick(diary) }
         }
+
     }
 
     interface DiaryItemListener {
