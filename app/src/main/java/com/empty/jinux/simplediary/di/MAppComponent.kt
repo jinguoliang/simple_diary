@@ -1,7 +1,7 @@
 package com.empty.jinux.simplediary.di
 
 import com.empty.jinux.simplediary.MApplication
-import com.empty.jinux.simplediary.addedittask.AddEditTaskActivity
+import com.empty.jinux.simplediary.addeditdiary.AddEditDiaryActivity
 import com.empty.jinux.simplediary.data.source.TasksRepositoryModule
 import com.empty.jinux.simplediary.diarylist.DiaryListActivity
 import dagger.android.AndroidInjector
@@ -12,7 +12,7 @@ import javax.inject.Singleton
 @dagger.Component(
         modules = arrayOf(AndroidSupportInjectionModule::class, DogModule::class,
                 AppModule::class, TasksRepositoryModule::class,
-                AddEditTaskActivity.Module::class,
+                AddEditDiaryActivity.Module::class,
                 DiaryListActivity.Module::class)
 )
 interface MAppComponent : AndroidInjector<MApplication> {

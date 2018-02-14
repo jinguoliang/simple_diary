@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.addedittask
+package com.empty.jinux.simplediary.addeditdiary
 
 import android.app.Activity
 import android.os.Bundle
-import com.empty.jinux.baselibaray.loge
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.source.TasksRepository
-import com.empty.jinux.simplediary.model.Dog
 import com.empty.jinux.simplediary.util.ActivityUtils
 import dagger.Binds
 import dagger.Subcomponent
@@ -35,13 +33,13 @@ import javax.inject.Inject
 /**
  * Displays an add or edit task screen.
  */
-class AddEditTaskActivity : DaggerAppCompatActivity() {
+class AddEditDiaryActivity : DaggerAppCompatActivity() {
 
     @Subcomponent
-    internal interface Component : AndroidInjector<AddEditTaskActivity> {
+    internal interface Component : AndroidInjector<AddEditDiaryActivity> {
 
         @Subcomponent.Builder
-        abstract class Builder : AndroidInjector.Builder<AddEditTaskActivity>()
+        abstract class Builder : AndroidInjector.Builder<AddEditDiaryActivity>()
     }
 
     @dagger.Module(subcomponents = arrayOf(Component::class))
@@ -49,38 +47,35 @@ class AddEditTaskActivity : DaggerAppCompatActivity() {
 
         @Binds
         @IntoMap
-        @ActivityKey(AddEditTaskActivity::class)
+        @ActivityKey(AddEditDiaryActivity::class)
         internal abstract fun bind(builder: Component.Builder): AndroidInjector.Factory<out Activity>
     }
 
-    internal lateinit var mAddEditTasksPresenter: AddEditTaskPresenter
+    internal lateinit var mAddEditTasksPresenter: AddEditDiaryPresenter
 
     @Inject lateinit var mRepository: TasksRepository
-
-    @Inject lateinit var mDog: Dog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.addtask_act)
 
-        loge(mDog.name)
         // Set up the toolbar.
         setSupportActionBar(toolbar)
         val actionBar = supportActionBar
         actionBar!!.setDisplayHomeAsUpEnabled(true)
         actionBar.setDisplayShowHomeEnabled(true)
 
-        var addEditTaskFragment: AddEditTaskFragment? = supportFragmentManager.findFragmentById(R.id.contentFrame) as AddEditTaskFragment?
+        var addEditTaskFragment: AddEditDiaryFragment? = supportFragmentManager.findFragmentById(R.id.contentFrame) as AddEditDiaryFragment?
 
-        val taskId = intent.getStringExtra(AddEditTaskFragment.ARGUMENT_EDIT_TASK_ID)
+        val taskId = intent.getStringExtra(AddEditDiaryFragment.ARGUMENT_EDIT_TASK_ID)
 
         if (addEditTaskFragment == null) {
-            addEditTaskFragment = AddEditTaskFragment.newInstance()
+            addEditTaskFragment = AddEditDiaryFragment.newInstance()
 
-            if (intent.hasExtra(AddEditTaskFragment.ARGUMENT_EDIT_TASK_ID)) {
+            if (intent.hasExtra(AddEditDiaryFragment.ARGUMENT_EDIT_TASK_ID)) {
                 actionBar.setTitle(R.string.edit_task)
                 val bundle = Bundle()
-                bundle.putString(AddEditTaskFragment.ARGUMENT_EDIT_TASK_ID, taskId)
+                bundle.putString(AddEditDiaryFragment.ARGUMENT_EDIT_TASK_ID, taskId)
                 addEditTaskFragment!!.arguments = bundle
             } else {
                 actionBar.setTitle(R.string.add_task)
@@ -90,7 +85,7 @@ class AddEditTaskActivity : DaggerAppCompatActivity() {
                     addEditTaskFragment, R.id.contentFrame)
         }
 
-        mAddEditTasksPresenter = AddEditTaskPresenter(taskId, mRepository, addEditTaskFragment )
+        mAddEditTasksPresenter = AddEditDiaryPresenter(taskId, mRepository, addEditTaskFragment )
         mAddEditTasksPresenter.setupListeners()
     }
 

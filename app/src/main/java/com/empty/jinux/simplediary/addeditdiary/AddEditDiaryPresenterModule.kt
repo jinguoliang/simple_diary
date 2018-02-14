@@ -1,17 +1,17 @@
-package com.empty.jinux.simplediary.addedittask
+package com.empty.jinux.simplediary.addeditdiary
 
 import dagger.Module
 import dagger.Provides
 
 /**
  * This is a Dagger module. We use this to pass in the View dependency to the
- * [AddEditTaskPresenter].
+ * [AddEditDiaryPresenter].
  */
 @Module
-class AddEditTaskPresenterModule(private val mView: AddEditTaskContract.View, private val mTaskId: String?) {
+class AddEditDiaryPresenterModule(private val mView: AddEditDiaryContract.View, private val mTaskId: String?) {
 
     @Provides
-    fun provideAddEditTaskContractView(): AddEditTaskContract.View {
+    fun provideAddEditTaskContractView(): AddEditDiaryContract.View {
         return mView
     }
 

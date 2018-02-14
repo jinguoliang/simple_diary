@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.addedittask
+package com.empty.jinux.simplediary.addeditdiary
 
 import com.empty.jinux.simplediary.BasePresenter
 import com.empty.jinux.simplediary.BaseView
@@ -22,7 +22,7 @@ import com.empty.jinux.simplediary.BaseView
 /**
  * This specifies the contract between the view and the presenter.
  */
-interface AddEditTaskContract {
+interface AddEditDiaryContract {
 
     interface View : BaseView<Presenter> {
 

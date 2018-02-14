@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.addedittask
+package com.empty.jinux.simplediary.addeditdiary
 
 import android.app.Activity
 import android.os.Bundle
@@ -26,15 +26,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.empty.jinux.simplediary.R
 import com.google.common.base.Preconditions.checkNotNull
-import kotlinx.android.synthetic.main.addtask_act.*
 import kotlinx.android.synthetic.main.addtask_frag.*
 
 /**
  * Main UI for the add task screen. Users can enter a task title and description.
  */
-class AddEditTaskFragment : Fragment(), AddEditTaskContract.View {
+class AddEditDiaryFragment : Fragment(), AddEditDiaryContract.View {
 
-    lateinit private var mPresenter: AddEditTaskContract.Presenter
+    lateinit private var mPresenter: AddEditDiaryContract.Presenter
 
     override val isActive: Boolean
         get() = isAdded
@@ -44,7 +43,7 @@ class AddEditTaskFragment : Fragment(), AddEditTaskContract.View {
         mPresenter.start()
     }
 
-    override fun setPresenter(presenter: AddEditTaskContract.Presenter) {
+    override fun setPresenter(presenter: AddEditDiaryContract.Presenter) {
         mPresenter = checkNotNull(presenter)
     }
 
@@ -86,8 +85,8 @@ class AddEditTaskFragment : Fragment(), AddEditTaskContract.View {
 
         val ARGUMENT_EDIT_TASK_ID = "EDIT_TASK_ID"
 
-        fun newInstance(): AddEditTaskFragment {
-            return AddEditTaskFragment()
+        fun newInstance(): AddEditDiaryFragment {
+            return AddEditDiaryFragment()
         }
     }
 }// Required empty public constructor

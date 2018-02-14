@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.addedittask
+package com.empty.jinux.simplediary.addeditdiary
 
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.data.source.TasksDataSource
@@ -22,28 +22,28 @@ import com.empty.jinux.simplediary.data.source.TasksRepository
 import javax.inject.Inject
 
 /**
- * Listens to user actions from the UI ([AddEditTaskFragment]), retrieves the data and
+ * Listens to user actions from the UI ([AddEditDiaryFragment]), retrieves the data and
  * updates
  * the UI as required.
  *
  *
  * By marking the constructor with `@Inject`, Dagger injects the dependencies required to
- * create an instance of the AddEditTaskPresenter (if it fails, it emits a compiler error). It uses
- * [AddEditTaskPresenterModule] to do so.
+ * create an instance of the AddEditDiaryPresenter (if it fails, it emits a compiler error). It uses
+ * [AddEditDiaryPresenterModule] to do so.
  *
  *
  * Dagger generated code doesn't require public access to the constructor or class, and
  * therefore, to ensure the developer doesn't instantiate the class manually bypassing Dagger,
  * it's good practice minimise the visibility of the class/constructor as much as possible.
  */
-internal class AddEditTaskPresenter
+internal class AddEditDiaryPresenter
 /**
  * Dagger strictly enforces that arguments not marked with `@Nullable` are not injected
  * with `@Nullable` values.
  */
 @Inject
 constructor(private val mTaskId: String?, tasksRepository: TasksRepository,
-            private val mAddTaskView: AddEditTaskContract.View) : AddEditTaskContract.Presenter, TasksDataSource.GetTaskCallback {
+            private val mAddTaskView: AddEditDiaryContract.View) : AddEditDiaryContract.Presenter, TasksDataSource.GetTaskCallback {
 
     private val mTasksRepository: TasksDataSource
 

@@ -17,7 +17,7 @@
 package com.empty.jinux.simplediary.diarylist
 
 import android.app.Activity
-import com.empty.jinux.simplediary.addedittask.AddEditTaskActivity
+import com.empty.jinux.simplediary.addeditdiary.AddEditDiaryActivity
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.data.source.TasksDataSource
 import com.empty.jinux.simplediary.data.source.TasksRepository
@@ -74,7 +74,7 @@ constructor(private val mTasksRepository: TasksRepository, private val mTasksVie
 
     override fun result(requestCode: Int, resultCode: Int) {
         // If a task was successfully added, show snackbar
-        if (AddEditTaskActivity.REQUEST_ADD_TASK === requestCode && Activity.RESULT_OK == resultCode) {
+        if (AddEditDiaryActivity.REQUEST_ADD_TASK === requestCode && Activity.RESULT_OK == resultCode) {
             mTasksView.showSuccessfullySavedMessage()
         }
     }
