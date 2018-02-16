@@ -27,7 +27,7 @@ import javax.inject.Singleton
  *
  *
  * For simplicity, this implements a dumb synchronisation between locally persisted data and data
- * obtained from the server, by using the remote data source only if the local database doesn't
+ * obtained from the server, by using the remote data source only if the local mDatabase doesn't
  * exist or is empty.
  *
  *
@@ -80,7 +80,7 @@ internal constructor(@param:Remote private val mTasksRemoteDataSource: TasksData
      * Note: [LoadTasksCallback.onDataNotAvailable] is fired if all data sources fail to
      * get the data.
      */
-    override fun getTasks(callback: TasksDataSource.LoadTasksCallback) {
+    override fun getDiaries(callback: TasksDataSource.LoadDiariesCallback) {
         checkNotNull(callback)
 
         // Respond immediately with cache if available and not dirty
@@ -94,7 +94,7 @@ internal constructor(@param:Remote private val mTasksRemoteDataSource: TasksData
             getTasksFromRemoteDataSource(callback)
         } else {
             // Query the local storage if available. If not, query the network.
-            mTasksLocalDataSource.getTasks(object : TasksDataSource.LoadTasksCallback {
+            mTasksLocalDataSource.getDiaries(object : TasksDataSource.LoadDiariesCallback {
                 override fun onTasksLoaded(tasks: List<Diary>) {
                     refreshCache(tasks)
                     callback.onTasksLoaded(ArrayList<Diary>(mCachedTasks!!.values))
@@ -237,8 +237,8 @@ internal constructor(@param:Remote private val mTasksRemoteDataSource: TasksData
         mCachedTasks!!.remove(taskId)
     }
 
-    private fun getTasksFromRemoteDataSource(callback: TasksDataSource.LoadTasksCallback) {
-        mTasksRemoteDataSource.getTasks(object : TasksDataSource.LoadTasksCallback {
+    private fun getTasksFromRemoteDataSource(callback: TasksDataSource.LoadDiariesCallback) {
+        mTasksRemoteDataSource.getDiaries(object : TasksDataSource.LoadDiariesCallback {
             override fun onTasksLoaded(tasks: List<Diary>) {
                 refreshCache(tasks)
                 refreshLocalDataSource(tasks)

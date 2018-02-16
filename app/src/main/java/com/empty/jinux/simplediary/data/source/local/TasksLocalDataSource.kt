@@ -41,10 +41,10 @@ constructor(context: Context) : TasksDataSource {
     }
 
     /**
-     * Note: [LoadTasksCallback.onDataNotAvailable] is fired if the database doesn't exist
+     * Note: [LoadTasksCallback.onDataNotAvailable] is fired if the mDatabase doesn't exist
      * or the table is empty.
      */
-    override fun getTasks(callback: TasksDataSource.LoadTasksCallback) {
+    override fun getDiaries(callback: TasksDataSource.LoadDiariesCallback) {
         val tasks = ArrayList<Diary>()
         val db = mDbHelper.readableDatabase
 

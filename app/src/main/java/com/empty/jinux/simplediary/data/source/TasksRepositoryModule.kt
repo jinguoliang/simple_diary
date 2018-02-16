@@ -2,10 +2,8 @@ package com.empty.jinux.simplediary.data.source
 
 import android.content.Context
 import com.empty.jinux.simplediary.data.source.local.TasksLocalDataSource
-import com.empty.jinux.simplediary.data.source.remote.TasksRemoteDataSource
+import com.empty.jinux.simplediary.data.source.remote.DiariesRemoteDataSource
 
-
-import javax.inject.Singleton
 
 import dagger.Module
 import dagger.Provides
@@ -25,7 +23,7 @@ class TasksRepositoryModule {
     @Provides
     @Remote
     internal fun provideTasksRemoteDataSource(): TasksDataSource {
-        return TasksRemoteDataSource()
+        return DiariesRemoteDataSource()
     }
 
 }

@@ -16,28 +16,76 @@
 
 package com.empty.jinux.simplediary.data.source.remote
 
-import android.os.Handler
+import com.empty.jinux.baselibaray.logThrowable
+import com.empty.jinux.baselibaray.logd
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.data.source.TasksDataSource
-import com.google.common.collect.Lists
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.util.*
 import javax.inject.Singleton
 
 /**
  * Implementation of the data source that adds a latency simulating network.
  */
+
+inline fun <reified T> Gson.fromJson(json: String) = this.fromJson<T>(json, object : TypeToken<T>() {}.type)
+
 @Singleton
-class TasksRemoteDataSource : TasksDataSource {
+class DiariesRemoteDataSource : TasksDataSource {
+    private val diaries_root = "diary"
+
+    val mDataMap: MutableMap<String, Diary> = mutableMapOf()
+    val mDataList: MutableList<Diary> = mutableListOf()
+
+    val mDatabase = FirebaseDatabase.getInstance().getReference(diaries_root).apply {
+        addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                logThrowable(p0.toException(), "FirebaseDatabase")
+            }
+
+            override fun onDataChange(ds: DataSnapshot) {
+                mDataList.clear()
+                mDataMap.clear()
+
+                ds.value.apply {
+                    when (this) {
+                        is HashMap<*, *> -> {
+                            val iter = this.iterator()
+                            for (item in iter) {
+                                addItem(item.value as String)
+                            }
+                        }
+                        is String -> {
+                            addItem(this)
+                        }
+                    }
+                }
+            }
+
+        })
+    }
+
+    private fun addItem(json: String) {
+        json.apply {
+            logd("json = $json")
+            val data: Diary = Gson().fromJson(json, Diary::class.java)
+            mDataMap[data.id] = data
+            mDataList.add(data)
+        }
+    }
 
     /**
      * Note: [LoadTasksCallback.onDataNotAvailable] is never fired. In a real remote data
      * source implementation, this would be fired if the server can't be contacted or the server
      * returns an error.
      */
-    override fun getTasks(callback: TasksDataSource.LoadTasksCallback) {
-        // Simulate network by delaying the execution.
-        val handler = Handler()
-        handler.postDelayed({ callback.onTasksLoaded(Lists.newArrayList(TASKS_SERVICE_DATA.values)) }, SERVICE_LATENCY_IN_MILLIS.toLong())
+    override fun getDiaries(callback: TasksDataSource.LoadDiariesCallback) {
+        callback.onTasksLoaded(mDataList)
     }
 
     /**
@@ -46,20 +94,21 @@ class TasksRemoteDataSource : TasksDataSource {
      * returns an error.
      */
     override fun getTask(taskId: String, callback: TasksDataSource.GetTaskCallback) {
-        val task = TASKS_SERVICE_DATA[taskId]
-
-        // Simulate network by delaying the execution.
-        val handler = Handler()
-        handler.postDelayed({ callback.onTaskLoaded(task!!) }, SERVICE_LATENCY_IN_MILLIS.toLong())
+        if (mDataMap.containsKey(taskId)) {
+            callback.onTaskLoaded(mDataMap[taskId]!!)
+        } else {
+            callback.onDataNotAvailable()
+        }
     }
 
+
     override fun saveTask(task: Diary) {
-        TASKS_SERVICE_DATA.put(task.id, task)
+        mDatabase.child(task.id).setValue(Gson().toJson(task))
     }
 
     override fun completeTask(task: Diary) {
         val completedTask = Diary(task.title, task.description, task.id, true)
-        TASKS_SERVICE_DATA.put(task.id, completedTask)
+        mDatabase.child(task.id).setValue(Gson().toJson(completedTask))
     }
 
     override fun completeTask(taskId: String) {
@@ -69,7 +118,7 @@ class TasksRemoteDataSource : TasksDataSource {
 
     override fun activateTask(task: Diary) {
         val activeTask = Diary(task.title, task.description, task.id)
-        TASKS_SERVICE_DATA.put(task.id, activeTask)
+        mDatabase.child(task.id).setValue(Gson().toJson(activeTask))
     }
 
     override fun activateTask(taskId: String) {
@@ -78,11 +127,12 @@ class TasksRemoteDataSource : TasksDataSource {
     }
 
     override fun clearCompletedTasks() {
-        val it = TASKS_SERVICE_DATA.entries.iterator()
+        val it = mDataList.iterator()
+
         while (it.hasNext()) {
             val entry = it.next()
-            if (entry.value.isCompleted) {
-                it.remove()
+            if (entry.isCompleted) {
+                mDatabase.child(entry.id).removeValue()
             }
         }
     }
@@ -93,28 +143,20 @@ class TasksRemoteDataSource : TasksDataSource {
     }
 
     override fun deleteAllTasks() {
-        TASKS_SERVICE_DATA.clear()
+        mDatabase.removeValue()
     }
 
     override fun deleteTask(taskId: String) {
-        TASKS_SERVICE_DATA.remove(taskId)
+        mDatabase.child(taskId).removeValue()
     }
 
     companion object {
 
         private val SERVICE_LATENCY_IN_MILLIS = 5000
 
-        private val TASKS_SERVICE_DATA: MutableMap<String, Diary>
-
         init {
-            TASKS_SERVICE_DATA = LinkedHashMap<String, Diary>(2)
-            addTask("Build tower in Pisa", "Ground looks good, no foundation work required.")
-            addTask("Finish bridge in Tacoma", "Found awesome girders at half the cost!")
-        }
-
-        private fun addTask(title: String, description: String) {
-            val newTask = Diary(title, description)
-            TASKS_SERVICE_DATA.put(newTask.id, newTask)
+//            addTask("Build tower in Pisa", "Ground looks good, no foundation work required.")
+//            addTask("Finish bridge in Tacoma", "Found awesome girders at half the cost!")
         }
     }
 }

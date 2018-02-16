@@ -97,8 +97,7 @@ constructor(private val mTasksRepository: TasksRepository, private val mTasksVie
             mTasksRepository.refreshTasks()
         }
 
-
-        mTasksRepository.getTasks(object : TasksDataSource.LoadTasksCallback {
+        mTasksRepository.getDiaries(object : TasksDataSource.LoadDiariesCallback {
             override fun onTasksLoaded(tasks: List<Diary>) {
                 val tasksToShow = ArrayList<Diary>()
 
