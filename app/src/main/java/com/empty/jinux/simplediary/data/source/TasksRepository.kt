@@ -64,7 +64,9 @@ internal constructor(@param:Remote private val mTasksRemoteDataSource: TasksData
     /**
      * This variable has package local visibility so it can be accessed from tests.
      */
-    internal var mCachedTasks: MutableMap<String, Diary>? = null
+    internal val mCachedTasks: MutableMap<String, Diary> by lazy {
+        LinkedHashMap<String, Diary>()
+    }
 
     /**
      * Marks the cache as invalid, to force an update the next time data is requested. This variable
@@ -84,8 +86,8 @@ internal constructor(@param:Remote private val mTasksRemoteDataSource: TasksData
         checkNotNull(callback)
 
         // Respond immediately with cache if available and not dirty
-        if (mCachedTasks != null && !mCacheIsDirty) {
-            callback.onTasksLoaded(ArrayList<Diary>(mCachedTasks!!.values))
+        if (!mCacheIsDirty) {
+            callback.onTasksLoaded(ArrayList<Diary>(mCachedTasks.values))
             return
         }
 
@@ -97,7 +99,7 @@ internal constructor(@param:Remote private val mTasksRemoteDataSource: TasksData
             mTasksLocalDataSource.getDiaries(object : TasksDataSource.LoadDiariesCallback {
                 override fun onTasksLoaded(tasks: List<Diary>) {
                     refreshCache(tasks)
-                    callback.onTasksLoaded(ArrayList<Diary>(mCachedTasks!!.values))
+                    callback.onTasksLoaded(ArrayList<Diary>(mCachedTasks.values))
                 }
 
                 override fun onDataNotAvailable() {
@@ -112,11 +114,7 @@ internal constructor(@param:Remote private val mTasksRemoteDataSource: TasksData
         mTasksRemoteDataSource.saveTask(task)
         mTasksLocalDataSource.saveTask(task)
 
-        // Do in memory cache update to keep the app UI up to date
-        if (mCachedTasks == null) {
-            mCachedTasks = LinkedHashMap<String, Diary>()
-        }
-        mCachedTasks!!.put(task.id, task)
+        mCachedTasks.put(task.id, task)
     }
 
     override fun completeTask(task: Diary) {
@@ -126,11 +124,7 @@ internal constructor(@param:Remote private val mTasksRemoteDataSource: TasksData
 
         val completedTask = Diary(task.title, task.description, task.id, true)
 
-        // Do in memory cache update to keep the app UI up to date
-        if (mCachedTasks == null) {
-            mCachedTasks = LinkedHashMap<String, Diary>()
-        }
-        mCachedTasks!!.put(task.id, completedTask)
+        mCachedTasks.put(task.id, completedTask)
     }
 
     override fun completeTask(taskId: String) {
@@ -145,11 +139,7 @@ internal constructor(@param:Remote private val mTasksRemoteDataSource: TasksData
 
         val activeTask = Diary(task.title, task.description, task.id)
 
-        // Do in memory cache update to keep the app UI up to date
-        if (mCachedTasks == null) {
-            mCachedTasks = LinkedHashMap<String, Diary>()
-        }
-        mCachedTasks!!.put(task.id, activeTask)
+        mCachedTasks.put(task.id, activeTask)
     }
 
     override fun activateTask(taskId: String) {
@@ -161,11 +151,7 @@ internal constructor(@param:Remote private val mTasksRemoteDataSource: TasksData
         mTasksRemoteDataSource.clearCompletedTasks()
         mTasksLocalDataSource.clearCompletedTasks()
 
-        // Do in memory cache update to keep the app UI up to date
-        if (mCachedTasks == null) {
-            mCachedTasks = LinkedHashMap<String, Diary>()
-        }
-        val it = mCachedTasks!!.entries.iterator()
+        val it = mCachedTasks.entries.iterator()
         while (it.hasNext()) {
             val entry = it.next()
             if (entry.value.isCompleted) {
@@ -224,17 +210,14 @@ internal constructor(@param:Remote private val mTasksRemoteDataSource: TasksData
         mTasksRemoteDataSource.deleteAllTasks()
         mTasksLocalDataSource.deleteAllTasks()
 
-        if (mCachedTasks == null) {
-            mCachedTasks = LinkedHashMap<String, Diary>()
-        }
-        mCachedTasks!!.clear()
+        mCachedTasks.clear()
     }
 
     override fun deleteTask(taskId: String) {
         mTasksRemoteDataSource.deleteTask(checkNotNull(taskId))
         mTasksLocalDataSource.deleteTask(checkNotNull(taskId))
 
-        mCachedTasks!!.remove(taskId)
+        mCachedTasks.remove(taskId)
     }
 
     private fun getTasksFromRemoteDataSource(callback: TasksDataSource.LoadDiariesCallback) {
@@ -242,7 +225,7 @@ internal constructor(@param:Remote private val mTasksRemoteDataSource: TasksData
             override fun onTasksLoaded(tasks: List<Diary>) {
                 refreshCache(tasks)
                 refreshLocalDataSource(tasks)
-                callback.onTasksLoaded(ArrayList<Diary>(mCachedTasks!!.values))
+                callback.onTasksLoaded(ArrayList<Diary>(mCachedTasks.values))
             }
 
             override fun onDataNotAvailable() {
@@ -252,12 +235,9 @@ internal constructor(@param:Remote private val mTasksRemoteDataSource: TasksData
     }
 
     private fun refreshCache(tasks: List<Diary>) {
-        if (mCachedTasks == null) {
-            mCachedTasks = LinkedHashMap<String, Diary>()
-        }
-        mCachedTasks!!.clear()
+        mCachedTasks.clear()
         for (task in tasks) {
-            mCachedTasks!!.put(task.id, task)
+            mCachedTasks.put(task.id, task)
         }
         mCacheIsDirty = false
     }
@@ -271,10 +251,10 @@ internal constructor(@param:Remote private val mTasksRemoteDataSource: TasksData
 
     private fun getTaskWithId(id: String): Diary? {
         checkNotNull(id)
-        return if (mCachedTasks == null || mCachedTasks!!.isEmpty()) {
+        return if ( mCachedTasks.isEmpty()) {
             null
         } else {
-            mCachedTasks!![id]
+            mCachedTasks[id]
         }
     }
 }
