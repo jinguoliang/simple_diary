@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright 2016, The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.diarylist
+package com.empty.jinux.simplediary.statistics
 
 import android.app.Activity
 import android.content.Intent
@@ -25,7 +25,7 @@ import android.support.v4.widget.DrawerLayout
 import android.view.MenuItem
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.source.TasksRepository
-import com.empty.jinux.simplediary.statistics.StatisticsActivity
+import com.empty.jinux.simplediary.diarylist.DiaryListActivity
 import com.empty.jinux.simplediary.util.ActivityUtils
 import dagger.Binds
 import dagger.Subcomponent
@@ -33,16 +33,19 @@ import dagger.android.ActivityKey
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerAppCompatActivity
 import dagger.multibindings.IntoMap
-import kotlinx.android.synthetic.main.diary_list_act.*
+import kotlinx.android.synthetic.main.statistics_act.*
 import javax.inject.Inject
 
-class DiaryListActivity : DaggerAppCompatActivity() {
+/**
+ * Show statistics for tasks.
+ */
+class StatisticsActivity : DaggerAppCompatActivity() {
 
     @Subcomponent
-    internal interface Component : AndroidInjector<DiaryListActivity> {
+    internal interface Component : AndroidInjector<StatisticsActivity> {
 
         @Subcomponent.Builder
-        abstract class Builder : AndroidInjector.Builder<DiaryListActivity>()
+        abstract class Builder : AndroidInjector.Builder<StatisticsActivity>()
     }
 
     @dagger.Module(subcomponents = arrayOf(Component::class))
@@ -50,25 +53,27 @@ class DiaryListActivity : DaggerAppCompatActivity() {
 
         @Binds
         @IntoMap
-        @ActivityKey(DiaryListActivity::class)
+        @ActivityKey(StatisticsActivity::class)
         internal abstract fun bind(builder: Component.Builder): AndroidInjector.Factory<out Activity>
     }
 
     private var mDrawerLayout: DrawerLayout? = null
 
-    private var mTasksPresenter: DiaryListPresenter? = null
-
     @Inject
     lateinit internal var mTasksRepository: TasksRepository
 
+    internal var mStatiticsPresenter: StatisticsPresenter? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.diary_list_act)
+
+        setContentView(R.layout.statistics_act)
 
         // Set up the toolbar.
         setSupportActionBar(toolbar)
         val ab = supportActionBar
-        ab!!.setHomeAsUpIndicator(R.drawable.ic_menu)
+        ab!!.setTitle(R.string.statistics_title)
+        ab.setHomeAsUpIndicator(R.drawable.ic_menu)
         ab.setDisplayHomeAsUpEnabled(true)
 
         // Set up the navigation drawer.
@@ -79,28 +84,17 @@ class DiaryListActivity : DaggerAppCompatActivity() {
             setupDrawerContent(navigationView)
         }
 
-        var tasksFragment: DiaryListFragment? = supportFragmentManager.findFragmentById(R.id.contentFrame) as DiaryListFragment?
-        if (tasksFragment == null) {
-            // Create the fragment
-            tasksFragment = DiaryListFragment.newInstance()
-            ActivityUtils.addFragmentToActivity(
-                    supportFragmentManager, tasksFragment, R.id.contentFrame)
+        var statisticsFragment = supportFragmentManager
+                .findFragmentById(R.id.contentFrame) as StatisticsFragment?
+        if (statisticsFragment == null) {
+            statisticsFragment = StatisticsFragment.newInstance()
+            ActivityUtils.addFragmentToActivity(supportFragmentManager,
+                    statisticsFragment, R.id.contentFrame)
         }
 
-        mTasksPresenter = DiaryListPresenter(mTasksRepository, tasksFragment)
-        mTasksPresenter!!.setupListeners()
+        mStatiticsPresenter = StatisticsPresenter(mTasksRepository, statisticsFragment)
+        mStatiticsPresenter!!.setupListeners()
 
-        // Load previously saved state, if available.
-        savedInstanceState?.apply {
-            val currentFiltering = getSerializable(CURRENT_FILTERING_KEY) as DiaryListFilterType
-            mTasksPresenter!!.filtering = currentFiltering
-        }
-    }
-
-    public override fun onSaveInstanceState(outState: Bundle) {
-        outState.putSerializable(CURRENT_FILTERING_KEY, mTasksPresenter!!.filtering)
-
-        super.onSaveInstanceState(outState)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -118,26 +112,19 @@ class DiaryListActivity : DaggerAppCompatActivity() {
         navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.list_navigation_menu_item -> {
-                }
-                R.id.statistics_navigation_menu_item -> {
-                    val intent = Intent(this@DiaryListActivity, StatisticsActivity::class.java)
+                    val intent = Intent(this@StatisticsActivity, DiaryListActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     startActivity(intent)
                 }
+                R.id.statistics_navigation_menu_item -> {
+                }
                 else -> {
                 }
-            }
-
-            // Do nothing, we're already on that screen
+            }// Do nothing, we're already on that screen
             // Close the navigation drawer when an item is selected.
             menuItem.isChecked = true
             mDrawerLayout!!.closeDrawers()
             true
         }
-    }
-
-    companion object {
-
-        private val CURRENT_FILTERING_KEY = "CURRENT_FILTERING_KEY"
     }
 }

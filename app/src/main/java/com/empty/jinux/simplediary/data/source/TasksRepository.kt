@@ -198,13 +198,13 @@ internal constructor(@param:Remote private val mTasksRemoteDataSource: TasksData
 
         // Is the task in the local data source? If not, query the network.
         mTasksLocalDataSource.getTask(taskId, object : TasksDataSource.GetTaskCallback {
-            override fun onTaskLoaded(task: Diary) {
+            override fun onTaskLoaded(task: Diary?) {
                 callback.onTaskLoaded(task)
             }
 
             override fun onDataNotAvailable() {
                 mTasksRemoteDataSource.getTask(taskId, object : TasksDataSource.GetTaskCallback {
-                    override fun onTaskLoaded(task: Diary) {
+                    override fun onTaskLoaded(task: Diary?) {
                         callback.onTaskLoaded(task)
                     }
 

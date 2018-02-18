@@ -84,12 +84,15 @@ constructor(private val mTaskId: String?, tasksRepository: TasksRepository,
         mTasksRepository.getTask(mTaskId!!, this)
     }
 
-    override fun onTaskLoaded(task: Diary) {
-        // The view may not be able to handle UI updates anymore
-        if (mAddTaskView.isActive) {
-            mAddTaskView.setTitle(task.title)
-            mAddTaskView.setDescription(task.description)
+    override fun onTaskLoaded(task: Diary?) {
+        task?.apply {
+            // The view may not be able to handle UI updates anymore
+            if (mAddTaskView.isActive) {
+                mAddTaskView.setTitle(task.title)
+                mAddTaskView.setDescription(task.description)
+            }
         }
+
     }
 
     override fun onDataNotAvailable() {

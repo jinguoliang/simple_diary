@@ -38,7 +38,7 @@ interface TasksDataSource {
 
     interface GetTaskCallback {
 
-        fun onTaskLoaded(task: Diary)
+        fun onTaskLoaded(task: Diary?)
 
         fun onDataNotAvailable()
     }

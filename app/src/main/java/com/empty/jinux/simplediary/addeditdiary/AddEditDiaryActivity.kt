@@ -97,5 +97,6 @@ class AddEditDiaryActivity : DaggerAppCompatActivity() {
     companion object {
 
         val REQUEST_ADD_TASK = 1
+        val ARGUMENT_EDIT_TASK_ID = "edit_id"
     }
 }

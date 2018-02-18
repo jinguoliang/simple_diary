@@ -31,6 +31,7 @@ import android.widget.TextView
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.addeditdiary.AddEditDiaryActivity
 import com.empty.jinux.simplediary.data.Diary
+import com.empty.jinux.simplediary.taskdetail.TaskDetailActivity
 import com.google.common.base.Preconditions.checkNotNull
 import com.google.common.collect.Lists
 import kotlinx.android.synthetic.main.tasks_frag.*
@@ -221,9 +222,9 @@ class DiaryListFragment : Fragment(), DiaryListContract.View {
     override fun showTaskDetailsUi(taskId: String) {
         // in it's own Activity, since it makes more sense that way and it gives us the flexibility
         // to show some Intent stubbing.
-//        val intent = Intent(context, TaskDetailActivity::class.java)
-//        intent.putExtra(TaskDetailActivity.EXTRA_TASK_ID, taskId)
-//        startActivity(intent)
+        val intent = Intent(context, TaskDetailActivity::class.java)
+        intent.putExtra(TaskDetailActivity.EXTRA_TASK_ID, taskId)
+        startActivity(intent)
     }
 
     override fun showTaskMarkedComplete() {
