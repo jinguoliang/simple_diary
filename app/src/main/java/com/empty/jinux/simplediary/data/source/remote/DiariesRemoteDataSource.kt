@@ -37,60 +37,37 @@ inline fun <reified T> Gson.fromJson(json: String) = this.fromJson<T>(json, obje
 
 @Singleton
 class DiariesRemoteDataSource : TasksDataSource {
+
+
+    val mDatabase = FirebaseDatabase.getInstance().getReference(diaries_root)
+    private var mEventListener: DatabaseDataChangeListener? = null
+
+    private val mDataList = mutableListOf<Diary>()
+    private val mDataMap = mutableMapOf<String, Diary>()
+
     override fun registerDataChangeListener(listener: TasksDataSource.OnChangeListener) {
-        registerDataListener(listener)
+        if (mEventListener == null) {
+            mEventListener = DatabaseDataChangeListener {
+                mDataList.clear()
+                mDataList.addAll(it)
+                mDataMap.clear()
+                it.forEach {
+                    mDataMap.put(it.id, it)
+                }
+                listener.onChange(it)
+            }
+        }
+        // show old data
+        if (mDataList.isNotEmpty()) {
+            listener.onChange(mDataList)
+        }
+        mDatabase.addValueEventListener(mEventListener)
     }
 
     override fun unregisterDataChangeListener(listener: TasksDataSource.OnChangeListener) {
-//        mDatabase.removeEventListener(listener)
+        mDatabase.removeEventListener(mEventListener)
     }
 
-    private val diaries_root = "diary"
-
-    val mDataMap: MutableMap<String, Diary> = mutableMapOf()
-    val mDataList: MutableList<Diary> = mutableListOf()
-
-    val mDatabase = FirebaseDatabase.getInstance().getReference(diaries_root)
-
-
-    private fun registerDataListener(listener: TasksDataSource.OnChangeListener): Unit {
-        mDatabase.addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-                logThrowable(p0.toException(), "FirebaseDatabase")
-            }
-
-            override fun onDataChange(ds: DataSnapshot) {
-                mDataList.clear()
-                mDataMap.clear()
-
-                ds.value.apply {
-                    when (this) {
-                        is HashMap<*, *> -> {
-                            val iter = this.iterator()
-                            for (item in iter) {
-                                addItem(item.value as String)
-                            }
-                            listener.onChange(mDataList)
-                        }
-                        is String -> {
-                            addItem(this)
-                            listener.onChange(mDataList)
-                        }
-                    }
-                }
-            }
-        })
-    }
-
-
-    private fun addItem(json: String) {
-        json.apply {
-            logd("json = $json")
-            val data: Diary = Gson().fromJson(json, Diary::class.java)
-            mDataMap[data.id] = data
-            mDataList.add(data)
-        }
-    }
 
     /**
      * Note: [LoadTasksCallback.onDataNotAvailable] is never fired. In a real remote data
@@ -166,10 +143,41 @@ class DiariesRemoteDataSource : TasksDataSource {
     companion object {
 
         private val SERVICE_LATENCY_IN_MILLIS = 5000
+        private val diaries_root = "diary"
 
         init {
 //            addTask("Build tower in Pisa", "Ground looks good, no foundation work required.")
 //            addTask("Finish bridge in Tacoma", "Found awesome girders at half the cost!")
+        }
+    }
+
+    /**
+     * listen to data change, and parse the data
+     */
+    private class DatabaseDataChangeListener(val listener: (data: List<Diary>) -> Unit) : ValueEventListener {
+        override fun onCancelled(p0: DatabaseError) {
+            logThrowable(p0.toException(), "FirebaseDatabase")
+        }
+
+        override fun onDataChange(ds: DataSnapshot) {
+            ds.value.apply {
+                when (this) {
+                    is HashMap<*, *> -> {
+                        listener(this.map { parseItem(it.value as String) })
+                    }
+                    is String -> {
+                        listener(listOf(parseItem(this)))
+                    }
+                    else -> {
+                        listener(listOf())
+                    }
+                }
+            }
+        }
+
+        private fun parseItem(json: String): Diary {
+            logd("json = $json")
+            return Gson().fromJson(json, Diary::class.java)
         }
     }
 }
