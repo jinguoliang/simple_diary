@@ -79,5 +79,7 @@ interface DiaryListContract {
         fun activateTask(activeTask: Diary)
 
         fun clearCompletedTasks()
+
+        fun stop()
     }
 }

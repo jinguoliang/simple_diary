@@ -32,6 +32,13 @@ import javax.inject.Singleton
 @Singleton
 class TasksLocalDataSource @Inject
 constructor(context: Context) : TasksDataSource {
+    override fun registerDataChangeListener(listener: TasksDataSource.OnChangeListener) {
+
+    }
+
+    override fun unregisterDataChangeListener(listener: TasksDataSource.OnChangeListener) {
+
+    }
 
     private val mDbHelper: TasksDbHelper
 
@@ -112,7 +119,7 @@ constructor(context: Context) : TasksDataSource {
         }
     }
 
-    override fun saveTask(task: Diary) {
+    override fun save(task: Diary) {
         checkNotNull(task)
         val db = mDbHelper.writableDatabase
 
@@ -181,7 +188,7 @@ constructor(context: Context) : TasksDataSource {
         // tasks from all the available data sources.
     }
 
-    override fun deleteAllTasks() {
+    override fun deleteAllDiaries() {
         val db = mDbHelper.writableDatabase
 
         db.delete(TaskEntry.TABLE_NAME, null, null)

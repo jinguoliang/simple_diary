@@ -76,6 +76,12 @@ class DiaryListFragment : Fragment(), DiaryListContract.View {
         mPresenter.start()
     }
 
+    override fun onPause() {
+        super.onPause()
+        mPresenter.stop()
+    }
+
+
     override fun setPresenter(presenter: DiaryListContract.Presenter) {
         mPresenter = checkNotNull(presenter)
     }

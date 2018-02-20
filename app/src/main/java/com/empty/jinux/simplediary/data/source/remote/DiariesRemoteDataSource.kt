@@ -37,13 +37,24 @@ inline fun <reified T> Gson.fromJson(json: String) = this.fromJson<T>(json, obje
 
 @Singleton
 class DiariesRemoteDataSource : TasksDataSource {
+    override fun registerDataChangeListener(listener: TasksDataSource.OnChangeListener) {
+        registerDataListener(listener)
+    }
+
+    override fun unregisterDataChangeListener(listener: TasksDataSource.OnChangeListener) {
+//        mDatabase.removeEventListener(listener)
+    }
+
     private val diaries_root = "diary"
 
     val mDataMap: MutableMap<String, Diary> = mutableMapOf()
     val mDataList: MutableList<Diary> = mutableListOf()
 
-    val mDatabase = FirebaseDatabase.getInstance().getReference(diaries_root).apply {
-        addValueEventListener(object : ValueEventListener {
+    val mDatabase = FirebaseDatabase.getInstance().getReference(diaries_root)
+
+
+    private fun registerDataListener(listener: TasksDataSource.OnChangeListener): Unit {
+        mDatabase.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 logThrowable(p0.toException(), "FirebaseDatabase")
             }
@@ -59,16 +70,18 @@ class DiariesRemoteDataSource : TasksDataSource {
                             for (item in iter) {
                                 addItem(item.value as String)
                             }
+                            listener.onChange(mDataList)
                         }
                         is String -> {
                             addItem(this)
+                            listener.onChange(mDataList)
                         }
                     }
                 }
             }
-
         })
     }
+
 
     private fun addItem(json: String) {
         json.apply {
@@ -102,7 +115,7 @@ class DiariesRemoteDataSource : TasksDataSource {
     }
 
 
-    override fun saveTask(task: Diary) {
+    override fun save(task: Diary) {
         mDatabase.child(task.id).setValue(Gson().toJson(task))
     }
 
@@ -142,7 +155,7 @@ class DiariesRemoteDataSource : TasksDataSource {
         // tasks from all the available data sources.
     }
 
-    override fun deleteAllTasks() {
+    override fun deleteAllDiaries() {
         mDatabase.removeValue()
     }
 

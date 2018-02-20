@@ -79,7 +79,7 @@ class DiaryListActivity : DaggerAppCompatActivity() {
             setupDrawerContent(navigationView)
         }
 
-        var tasksFragment: DiaryListFragment? = supportFragmentManager.findFragmentById(R.id.contentFrame) as DiaryListFragment?
+        var tasksFragment = supportFragmentManager.findFragmentById(R.id.contentFrame) as DiaryListFragment?
         if (tasksFragment == null) {
             // Create the fragment
             tasksFragment = DiaryListFragment.newInstance()

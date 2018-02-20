@@ -107,7 +107,7 @@ constructor(private val mTaskId: String?, tasksRepository: TasksRepository,
         if (newTask.isEmpty) {
             mAddTaskView.showEmptyTaskError()
         } else {
-            mTasksRepository.saveTask(newTask)
+            mTasksRepository.save(newTask)
             mAddTaskView.showTasksList()
         }
     }
@@ -116,7 +116,7 @@ constructor(private val mTaskId: String?, tasksRepository: TasksRepository,
         if (isNewTask) {
             throw RuntimeException("updateTask() was called but task is new.")
         }
-        mTasksRepository.saveTask(Diary(title, description, mTaskId!!))
+        mTasksRepository.save(Diary(title, description, mTaskId!!))
         mAddTaskView.showTasksList() // After an edit, go back to the list.
     }
 }

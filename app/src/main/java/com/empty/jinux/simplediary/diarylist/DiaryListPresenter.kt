@@ -69,7 +69,49 @@ constructor(private val mTasksRepository: TasksRepository, private val mTasksVie
     }
 
     override fun start() {
-        loadTasks(false)
+        registerDataChangeListener()
+    }
+
+    override fun stop() {
+        unregisterDataChangeListener()
+    }
+
+    private var mDataChangeListener = object : TasksDataSource.OnChangeListener {
+        override fun onChange(data: List<Diary>) {
+            val tasksToShow = ArrayList<Diary>()
+
+            // We filter the tasks based on the requestType
+            for (diary in data) {
+                when (filtering) {
+                    DiaryListFilterType.ALL -> tasksToShow.add(diary)
+                    DiaryListFilterType.ACTIVE -> if (diary.isActive) {
+                        tasksToShow.add(diary)
+                    }
+                    DiaryListFilterType.COMPLETED -> if (diary.isCompleted) {
+                        tasksToShow.add(diary)
+                    }
+                    else -> tasksToShow.add(diary)
+                }
+            }
+            // The view may not be able to handle UI updates anymore
+            if (!mTasksView.isActive) {
+                return
+            }
+
+            processTasks(tasksToShow)
+        }
+    }
+
+    private fun registerDataChangeListener() {
+        mDataChangeListener.let {
+            mTasksRepository.registerDataChangeListener(it)
+        }
+    }
+
+    private fun unregisterDataChangeListener() {
+        mDataChangeListener.let {
+            mTasksRepository.unregisterDataChangeListener(it)
+        }
     }
 
     override fun result(requestCode: Int, resultCode: Int) {
@@ -191,5 +233,4 @@ constructor(private val mTasksRepository: TasksRepository, private val mTasksVie
         mTasksView.showCompletedTasksCleared()
         loadTasks(false, false)
     }
-
 }

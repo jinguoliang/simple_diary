@@ -43,11 +43,15 @@ interface TasksDataSource {
         fun onDataNotAvailable()
     }
 
+    interface OnChangeListener {
+        fun onChange(data: List<Diary>)
+    }
+
     fun getDiaries(callback: LoadDiariesCallback)
 
     fun getTask(taskId: String, callback: GetTaskCallback)
 
-    fun saveTask(task: Diary)
+    fun save(task: Diary)
 
     fun completeTask(task: Diary)
 
@@ -61,7 +65,11 @@ interface TasksDataSource {
 
     fun refreshTasks()
 
-    fun deleteAllTasks()
+    fun deleteAllDiaries()
 
     fun deleteTask(taskId: String)
+
+    fun registerDataChangeListener(listener: OnChangeListener)
+
+    fun unregisterDataChangeListener(listener: OnChangeListener)
 }
