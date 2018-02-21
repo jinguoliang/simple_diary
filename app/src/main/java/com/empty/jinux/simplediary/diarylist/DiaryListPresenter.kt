@@ -184,9 +184,10 @@ constructor(private val mTasksRepository: TasksRepository, private val mTasksVie
         } else {
             // Show the list of tasks
             mTasksView.showTasks(tasks)
-            // Set the filter label's text.
-            showFilterLabel()
         }
+
+        // Set the filter label's text.
+        showFilterLabel()
     }
 
     private fun showFilterLabel() {
