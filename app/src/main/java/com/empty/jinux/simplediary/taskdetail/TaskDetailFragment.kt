@@ -27,6 +27,7 @@ import android.widget.CheckBox
 import android.widget.TextView
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.addeditdiary.AddEditDiaryActivity
+import com.empty.jinux.simplediary.addeditdiary.AddEditDiaryFragment
 import com.google.common.base.Preconditions
 import com.google.common.base.Preconditions.checkNotNull
 
@@ -118,7 +119,7 @@ class TaskDetailFragment : Fragment(), TaskDetailContract.View {
 
     override fun showEditTask(taskId: String) {
         val intent = Intent(context, AddEditDiaryActivity::class.java)
-        intent.putExtra(AddEditDiaryActivity.ARGUMENT_EDIT_TASK_ID, taskId)
+        intent.putExtra(AddEditDiaryFragment.ARGUMENT_EDIT_TASK_ID, taskId)
         startActivityForResult(intent, REQUEST_EDIT_TASK)
     }
 

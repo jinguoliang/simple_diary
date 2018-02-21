@@ -76,7 +76,7 @@ class AddEditDiaryActivity : DaggerAppCompatActivity() {
                 actionBar.setTitle(R.string.edit_task)
                 val bundle = Bundle()
                 bundle.putString(AddEditDiaryFragment.ARGUMENT_EDIT_TASK_ID, taskId)
-                addEditTaskFragment!!.arguments = bundle
+                addEditTaskFragment.arguments = bundle
             } else {
                 actionBar.setTitle(R.string.add_task)
             }
@@ -95,8 +95,6 @@ class AddEditDiaryActivity : DaggerAppCompatActivity() {
     }
 
     companion object {
-
         val REQUEST_ADD_TASK = 1
-        val ARGUMENT_EDIT_TASK_ID = "edit_id"
     }
 }
