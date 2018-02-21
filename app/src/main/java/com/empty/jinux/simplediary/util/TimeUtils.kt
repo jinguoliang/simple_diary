@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat
 
 /**
  * Created by jingu on 2018/2/21.
+ *
+ * Time format utils
  */
 
 fun formatTime(t: Long): String {
