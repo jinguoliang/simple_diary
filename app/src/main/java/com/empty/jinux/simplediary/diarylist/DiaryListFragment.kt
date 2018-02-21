@@ -32,6 +32,7 @@ import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.addeditdiary.AddEditDiaryActivity
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.taskdetail.TaskDetailActivity
+import com.empty.jinux.simplediary.util.formatCreatedTime
 import com.google.common.base.Preconditions.checkNotNull
 import com.google.common.collect.Lists
 import kotlinx.android.synthetic.main.tasks_frag.*
@@ -288,11 +289,14 @@ class DiaryListFragment : Fragment(), DiaryListContract.View {
     class DiaryViewHolder(v: View, val mItemListener: DiaryItemListener) : RecyclerView.ViewHolder(v) {
         private var titleTV: TextView = v.findViewById(R.id.title)
         private var completeCB: CheckBox = v.findViewById(R.id.complete)
+        private var createTimeTv: TextView = v.findViewById(R.id.createTime)
 
         fun bind(diary: Diary): Unit {
             titleTV.text = diary.titleForList
             // Active/completed diary UI
             completeCB.isChecked = diary.isCompleted
+            createTimeTv.text = diary.formatCreatedTime()
+
             if (diary.isCompleted) {
                 itemView.setBackgroundDrawable(itemView.context
                         .resources.getDrawable(R.drawable.list_completed_touch_feedback))

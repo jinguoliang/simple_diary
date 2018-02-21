@@ -16,25 +16,30 @@
 
 package com.empty.jinux.simplediary.data
 
-import com.google.common.base.Strings
 import com.google.common.base.Objects
+import com.google.common.base.Strings
 import java.util.*
 
 /**
  * Immutable model class for a Diary.
  */
 data class Diary
+
 /**
- * Use this constructor to specify a completed Diary if the Diary already has an id (copy of
- * another Diary).
+ * Use this constructor to create a new Diary.
  *
- * @param title       title of the task
- * @param description description of the task
- * @param id          id of the task
- * @param completed   true if the task is completed, false if it's active
+ * @param title       title of the diary
+ * @param description description of the diary
+ * @param id          id of the diary
+ * @param completed   true if the diary is completed, false if it's active
  */
-constructor(val title: String, val description: String,
-                          val id: String = UUID.randomUUID().toString(), val isCompleted: Boolean = false) {
+constructor(
+        val title: String,
+        val description: String,
+        val id: String = UUID.randomUUID().toString(),
+        val isCompleted: Boolean = false,
+        val createTime: Long = System.currentTimeMillis()
+) {
 
     val titleForList: String
         get() = if (!Strings.isNullOrEmpty(title)) {
@@ -49,22 +54,13 @@ constructor(val title: String, val description: String,
     val isEmpty: Boolean
         get() = Strings.isNullOrEmpty(title) && Strings.isNullOrEmpty(description)
 
-    /**
-     * Use this constructor to create a new completed Diary.
-     *
-     * @param title       title of the task
-     * @param description description of the task
-     * @param completed   true if the task is completed, false if it's active
-     */
-    constructor(title: String, description: String, completed: Boolean) : this(title, description, UUID.randomUUID().toString(), completed) {}
-
     override fun equals(o: Any?): Boolean {
         if (this === o) return true
         if (o == null || javaClass != o.javaClass) return false
-        val task = o as Diary?
-        return Objects.equal(id, task!!.id) &&
-                Objects.equal(title, task.title) &&
-                Objects.equal(description, task.description)
+        val diary = o as Diary?
+        return Objects.equal(id, diary!!.id) &&
+                Objects.equal(title, diary.title) &&
+                Objects.equal(description, diary.description)
     }
 
     override fun hashCode(): Int {
@@ -75,17 +71,3 @@ constructor(val title: String, val description: String,
         return "Diary with title " + title!!
     }
 }
-/**
- * Use this constructor to create a new active Diary.
- *
- * @param title       title of the task
- * @param description description of the task
- */
-/**
- * Use this constructor to create an active Diary if the Diary already has an id (copy of another
- * Diary).
- *
- * @param title       title of the task
- * @param description description of the task
- * @param id          id of the task
- */
