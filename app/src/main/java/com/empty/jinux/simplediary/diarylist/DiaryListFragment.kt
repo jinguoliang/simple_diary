@@ -129,7 +129,7 @@ class DiaryListFragment : Fragment(), DiaryListContract.View {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.tasks_fragment_menu, menu)
+//        inflater.inflate(R.menu.tasks_fragment_menu, menu)
     }
 
     override fun showFilteringPopUpMenu() {
