@@ -16,20 +16,25 @@
 
 package com.empty.jinux.simplediary.taskdetail
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.Snackbar
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.view.*
-import android.widget.CheckBox
-import android.widget.TextView
+import android.widget.Toast
+import com.empty.jinux.baselibaray.loge
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.addeditdiary.AddEditDiaryActivity
 import com.empty.jinux.simplediary.addeditdiary.AddEditDiaryFragment
-import com.google.common.base.Preconditions
+import com.google.android.gms.location.LocationServices
 import com.google.common.base.Preconditions.checkNotNull
+import kotlinx.android.synthetic.main.taskdetail_frag.*
 
 /**
  * Main UI for the task detail screen.
@@ -37,12 +42,6 @@ import com.google.common.base.Preconditions.checkNotNull
 class TaskDetailFragment : Fragment(), TaskDetailContract.View {
 
     private var mPresenter: TaskDetailContract.Presenter? = null
-
-    private var mDetailTitle: TextView? = null
-
-    private var mDetailDescription: TextView? = null
-
-    private var mDetailCompleteStatus: CheckBox? = null
 
     override val isActive: Boolean
         get() = isAdded
@@ -52,13 +51,12 @@ class TaskDetailFragment : Fragment(), TaskDetailContract.View {
         mPresenter!!.start()
     }
 
+    private val MY_PERMISSIONS_REQUEST_COARSE_LOCATION = 0x25
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val root = inflater!!.inflate(R.layout.taskdetail_frag, container, false)
         setHasOptionsMenu(true)
-        mDetailTitle = root.findViewById(R.id.task_detail_title)
-        mDetailDescription = root.findViewById(R.id.task_detail_description)
-        mDetailCompleteStatus = root.findViewById(R.id.task_detail_complete)
 
         // Set up floating action button
         (activity.findViewById<FloatingActionButton>(R.id.fab_edit_task)).setOnClickListener { mPresenter!!.editTask() }
@@ -85,36 +83,19 @@ class TaskDetailFragment : Fragment(), TaskDetailContract.View {
     }
 
     override fun setLoadingIndicator(active: Boolean) {
-        if (active) {
-            mDetailTitle!!.text = ""
-            mDetailDescription!!.text = getString(R.string.loading)
-        }
     }
 
     override fun hideDescription() {
-        mDetailDescription!!.visibility = View.GONE
-    }
-
-    override fun hideTitle() {
-        mDetailTitle!!.visibility = View.GONE
+        diaryContent.visibility = View.GONE
     }
 
     override fun showDescription(description: String) {
-        mDetailDescription!!.visibility = View.VISIBLE
-        mDetailDescription!!.text = description
+        diaryContent.visibility = View.VISIBLE
+        diaryContent.setText(description)
     }
 
-    override fun showCompletionStatus(complete: Boolean) {
-        Preconditions.checkNotNull<CheckBox>(mDetailCompleteStatus)
-
-        mDetailCompleteStatus!!.isChecked = complete
-        mDetailCompleteStatus!!.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
-                mPresenter!!.completeTask()
-            } else {
-                mPresenter!!.activateTask()
-            }
-        }
+    override fun showDate(dateStr: String) {
+        date.text = dateStr
     }
 
     override fun showEditTask(taskId: String) {
@@ -127,15 +108,6 @@ class TaskDetailFragment : Fragment(), TaskDetailContract.View {
         activity.finish()
     }
 
-    override fun showTaskMarkedComplete() {
-        Snackbar.make(view!!, getString(R.string.task_marked_complete), Snackbar.LENGTH_LONG)
-                .show()
-    }
-
-    override fun showTaskMarkedActive() {
-        Snackbar.make(view!!, getString(R.string.task_marked_active), Snackbar.LENGTH_LONG)
-                .show()
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_EDIT_TASK) {
@@ -146,14 +118,8 @@ class TaskDetailFragment : Fragment(), TaskDetailContract.View {
         }
     }
 
-    override fun showTitle(title: String) {
-        mDetailTitle!!.visibility = View.VISIBLE
-        mDetailTitle!!.text = title
-    }
-
     override fun showMissingTask() {
-        mDetailTitle!!.text = ""
-        mDetailDescription!!.text = getString(R.string.no_data)
+        loge("no this task")
     }
 
     companion object {

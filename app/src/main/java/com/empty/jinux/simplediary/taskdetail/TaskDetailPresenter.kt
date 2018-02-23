@@ -19,6 +19,7 @@ package com.empty.jinux.simplediary.taskdetail
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.data.source.TasksDataSource
 import com.empty.jinux.simplediary.data.source.TasksRepository
+import com.empty.jinux.simplediary.util.formatDisplayTime
 import com.google.common.base.Strings
 
 import javax.inject.Inject
@@ -113,39 +114,15 @@ constructor(
         mTaskDetailView.showTaskDeleted()
     }
 
-    override fun completeTask() {
-        if (Strings.isNullOrEmpty(mTaskId)) {
-            mTaskDetailView.showMissingTask()
-            return
-        }
-        mTasksRepository.completeTask(mTaskId!!)
-        mTaskDetailView.showTaskMarkedComplete()
-    }
-
-    override fun activateTask() {
-        if (Strings.isNullOrEmpty(mTaskId)) {
-            mTaskDetailView.showMissingTask()
-            return
-        }
-        mTasksRepository.activateTask(mTaskId!!)
-        mTaskDetailView.showTaskMarkedActive()
-    }
-
     private fun showTask(task: Diary) {
-        val title = task.title
         val description = task.description
 
-        if (Strings.isNullOrEmpty(title)) {
-            mTaskDetailView.hideTitle()
-        } else {
-            mTaskDetailView.showTitle(title)
-        }
+        mTaskDetailView.showDate(task.formatDisplayTime())
 
         if (Strings.isNullOrEmpty(description)) {
             mTaskDetailView.hideDescription()
         } else {
             mTaskDetailView.showDescription(description)
         }
-        mTaskDetailView.showCompletionStatus(task.isCompleted)
     }
 }

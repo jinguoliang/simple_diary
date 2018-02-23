@@ -33,23 +33,16 @@ interface TaskDetailContract {
 
         fun showMissingTask()
 
-        fun hideTitle()
-
-        fun showTitle(title: String)
-
         fun hideDescription()
 
         fun showDescription(description: String)
-
-        fun showCompletionStatus(complete: Boolean)
 
         fun showEditTask(taskId: String)
 
         fun showTaskDeleted()
 
-        fun showTaskMarkedComplete()
+        fun showDate(data: String)
 
-        fun showTaskMarkedActive()
     }
 
     interface Presenter : BasePresenter {
@@ -58,8 +51,5 @@ interface TaskDetailContract {
 
         fun deleteTask()
 
-        fun completeTask()
-
-        fun activateTask()
     }
 }

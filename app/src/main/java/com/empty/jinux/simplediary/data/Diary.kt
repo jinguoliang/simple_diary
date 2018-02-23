@@ -38,7 +38,8 @@ constructor(
         val description: String,
         val id: String = UUID.randomUUID().toString(),
         val isCompleted: Boolean = false,
-        val createTime: Long = System.currentTimeMillis()
+        val createdTime: Long = System.currentTimeMillis(),
+        val displayTime: Long = createdTime
 ) {
 
     val titleForList: String

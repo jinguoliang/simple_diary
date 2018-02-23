@@ -14,9 +14,21 @@ fun formatTime(t: Long): String {
     return formater.format(t)
 }
 
+fun formatDateWithWeekday(t: Long): String {
+    val formater = SimpleDateFormat("M月d日 E")
+    return formater.format(t)
+}
+
 fun Diary.formatCreatedTime(): String {
-    if (createTime == 0L) {
+    if (createdTime == 0L) {
         return ""
     }
-    return formatTime(createTime)
+    return formatTime(createdTime)
+}
+
+fun Diary.formatDisplayTime(): String {
+    if (displayTime == 0L) {
+        return ""
+    }
+    return formatDateWithWeekday(displayTime)
 }

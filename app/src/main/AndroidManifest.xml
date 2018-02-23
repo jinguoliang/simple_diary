@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:name=".MApplication"
@@ -18,8 +20,7 @@
         <activity
             android:name=".diarylist.DiaryListActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.Design.NoActionBar">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,21 +31,18 @@
         <activity
             android:name=".addeditdiary.AddEditDiaryActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.Design.NoActionBar" />
+            android:label="@string/app_name" />
 
         <activity
             android:name=".taskdetail.TaskDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.Design.NoActionBar" />
+            android:label="@string/app_name" />
 
 
         <activity
             android:name=".statistics.StatisticsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.Design.NoActionBar" />
+            android:label="@string/app_name" />
     </application>
 
 </manifest>

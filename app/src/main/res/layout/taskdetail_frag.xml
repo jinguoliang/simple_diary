@@ -14,7 +14,8 @@
   ~ limitations under the License.
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -23,28 +24,72 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
-    <CheckBox
-        android:id="@+id/task_detail_complete"
+    <TextView
+        android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:visibility="gone"/>
-
-    <TextView
-        android:id="@+id/task_detail_title"
-        android:layout_toRightOf="@id/task_detail_complete"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        tools:text="2月14日 星期五"
+        android:layout_marginBottom="@dimen/common_margin"
+        android:layout_margin="@dimen/common_margin"
         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
-    <TextView
-        android:id="@+id/task_detail_description"
-        android:layout_toRightOf="@id/task_detail_complete"
-        android:layout_below="@id/task_detail_title"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <View
+            android:id="@+id/weatherIcon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="@dimen/common_margin"
+            android:background="@drawable/icon_weather" />
+
+        <TextView
+            android:id="@+id/weatherName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/common_margin"
+            android:text="多云"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="10dp">
+
+        <View
+            android:id="@+id/locationIcon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="@dimen/common_margin"
+            android:background="@drawable/weather_location" />
+
+        <TextView
+            android:id="@+id/locationName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/common_margin"
+            android:text="山东"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/splitLine"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="@dimen/common_margin"
+        android:background="#111111" />
+
+    <EditText
+        android:id="@+id/diaryContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Medium Text"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:layout_margin="@dimen/common_margin"
+        android:background="#0fff"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        tools:text="Medium Text" />
 
-</RelativeLayout>
+</LinearLayout>
