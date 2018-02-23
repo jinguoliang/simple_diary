@@ -59,25 +59,24 @@ class StatisticsFragment : Fragment(), StatisticsContract.View {
 
     override fun setProgressIndicator(active: Boolean) {
         if (active) {
-            mStatisticsTV!!.text = getString(R.string.loading)
+            mStatisticsTV.text = getString(R.string.loading)
         } else {
-            mStatisticsTV!!.text = ""
+            mStatisticsTV.text = ""
         }
     }
 
     override fun showStatistics(numberOfIncompleteTasks: Int, numberOfCompletedTasks: Int) {
         if (numberOfCompletedTasks == 0 && numberOfIncompleteTasks == 0) {
-            mStatisticsTV!!.text = resources.getString(R.string.statistics_no_tasks)
+            mStatisticsTV.text = resources.getString(R.string.statistics_no_diary)
         } else {
-            val displayString = (resources.getString(R.string.statistics_active_tasks) + " "
-                    + numberOfIncompleteTasks + "\n" + resources.getString(
-                    R.string.statistics_completed_tasks) + " " + numberOfCompletedTasks)
-            mStatisticsTV!!.text = displayString
+            val displayString = (resources.getString(R.string.statistics_diaries) + " "
+                    + numberOfIncompleteTasks)
+            mStatisticsTV.text = displayString
         }
     }
 
     override fun showLoadingStatisticsError() {
-        mStatisticsTV!!.text = resources.getString(R.string.statistics_error)
+        mStatisticsTV.text = resources.getString(R.string.statistics_error)
     }
 
     override fun isActive(): Boolean {
