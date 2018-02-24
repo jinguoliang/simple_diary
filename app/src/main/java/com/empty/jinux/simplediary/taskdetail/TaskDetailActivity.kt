@@ -16,17 +16,12 @@
 
 package com.empty.jinux.simplediary.taskdetail
 
-import android.app.Activity
 import android.os.Bundle
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.source.TasksRepository
+import com.empty.jinux.simplediary.location.LocationManager
 import com.empty.jinux.simplediary.util.ActivityUtils
-import dagger.Binds
-import dagger.Subcomponent
-import dagger.android.ActivityKey
-import dagger.android.AndroidInjector
 import dagger.android.support.DaggerAppCompatActivity
-import dagger.multibindings.IntoMap
 import kotlinx.android.synthetic.main.statistics_act.*
 import javax.inject.Inject
 
@@ -35,26 +30,13 @@ import javax.inject.Inject
  */
 class TaskDetailActivity : DaggerAppCompatActivity() {
 
-    @Subcomponent
-    internal interface Component : AndroidInjector<TaskDetailActivity> {
-
-        @Subcomponent.Builder
-        abstract class Builder : AndroidInjector.Builder<TaskDetailActivity>()
-    }
-
-    @dagger.Module(subcomponents = arrayOf(Component::class))
-    internal abstract inner class Module {
-
-        @Binds
-        @IntoMap
-        @ActivityKey(TaskDetailActivity::class)
-        internal abstract fun bind(builder: Component.Builder): AndroidInjector.Factory<out Activity>
-    }
-
     private var mTaskDetailPresenter: TaskDetailPresenter? = null
 
     @Inject
     lateinit internal var mTasksRepository: TasksRepository
+
+    @Inject
+    lateinit internal var mLocationManager: LocationManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,7 +62,7 @@ class TaskDetailActivity : DaggerAppCompatActivity() {
                     taskDetailFragment, R.id.contentFrame)
         }
 
-        mTaskDetailPresenter = TaskDetailPresenter(taskId, mTasksRepository, taskDetailFragment)
+        mTaskDetailPresenter = TaskDetailPresenter(taskId, mTasksRepository, taskDetailFragment, mLocationManager)
         mTaskDetailPresenter!!.setupListeners()
     }
 

@@ -41,7 +41,9 @@ interface TaskDetailContract {
 
         fun showTaskDeleted()
 
-        fun showDate(data: String)
+        fun showDate(dateStr: String)
+
+        fun showLocation(city: String)
 
     }
 
@@ -50,6 +52,8 @@ interface TaskDetailContract {
         fun editTask()
 
         fun deleteTask()
+
+        fun refreshLocation()
 
     }
 }

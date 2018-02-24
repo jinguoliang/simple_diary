@@ -19,6 +19,7 @@ package com.empty.jinux.simplediary.taskdetail
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.data.source.TasksDataSource
 import com.empty.jinux.simplediary.data.source.TasksRepository
+import com.empty.jinux.simplediary.location.LocationManager
 import com.empty.jinux.simplediary.util.formatDisplayTime
 import com.google.common.base.Strings
 
@@ -51,7 +52,8 @@ constructor(
          */
         var mTaskId: String?,
         private val mTasksRepository: TasksRepository,
-        private val mTaskDetailView: TaskDetailContract.View) : TaskDetailContract.Presenter {
+        private val mTaskDetailView: TaskDetailContract.View,
+        private val mLocationManager: LocationManager) : TaskDetailContract.Presenter {
 
     /**
      * Method injection is used here to safely reference `this` after the object is created.
@@ -123,6 +125,12 @@ constructor(
             mTaskDetailView.hideDescription()
         } else {
             mTaskDetailView.showDescription(description)
+        }
+    }
+
+    override fun refreshLocation() {
+        mLocationManager.getLastLocation {
+            mTaskDetailView.showLocation("haha $it")
         }
     }
 }

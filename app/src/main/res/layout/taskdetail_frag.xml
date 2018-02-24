@@ -43,7 +43,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_margin="@dimen/common_margin"
-            android:background="@drawable/icon_weather" />
+            android:background="@drawable/ic_weather" />
 
         <TextView
             android:id="@+id/weatherName"
@@ -74,6 +74,13 @@
             android:layout_margin="@dimen/common_margin"
             android:text="山东"
             android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+        <View
+            android:id="@+id/refreshLocation"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/ic_refresh"
+            android:layout_margin="@dimen/common_margin"/>
     </LinearLayout>
 
     <View

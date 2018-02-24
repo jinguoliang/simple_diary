@@ -64,6 +64,13 @@ class TaskDetailFragment : Fragment(), TaskDetailContract.View {
         return root
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        refreshLocation.setOnClickListener {
+            mPresenter?.refreshLocation()
+        }
+    }
+
     override fun setPresenter(presenter: TaskDetailContract.Presenter) {
         mPresenter = checkNotNull(presenter)
     }
@@ -135,6 +142,10 @@ class TaskDetailFragment : Fragment(), TaskDetailContract.View {
             fragment.arguments = arguments
             return fragment
         }
+    }
+
+    override fun showLocation(city: String) {
+        locationName.text = city
     }
 
 }
