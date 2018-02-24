@@ -5,7 +5,7 @@ import com.empty.jinux.simplediary.addeditdiary.AddEditDiaryActivity
 import com.empty.jinux.simplediary.data.source.TasksRepositoryModule
 import com.empty.jinux.simplediary.diarylist.DiaryListActivity
 import com.empty.jinux.simplediary.statistics.StatisticsActivity
-import com.empty.jinux.simplediary.taskdetail.Module
+import com.empty.jinux.simplediary.taskdetail.TaskDetailActivityModule
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
 import javax.inject.Singleton
@@ -15,7 +15,7 @@ import javax.inject.Singleton
         modules = arrayOf(AndroidSupportInjectionModule::class,
                 AppModule::class, TasksRepositoryModule::class,
                 AddEditDiaryActivity.Module::class,
-                Module::class,
+                TaskDetailActivityModule::class,
                 StatisticsActivity.Module::class,
                 DiaryListActivity.Module::class)
 )

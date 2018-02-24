@@ -20,6 +20,7 @@ import android.os.Bundle
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.source.TasksRepository
 import com.empty.jinux.simplediary.location.LocationManager
+import com.empty.jinux.simplediary.taskdetail.fragment.TaskDetailFragment
 import com.empty.jinux.simplediary.util.ActivityUtils
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.statistics_act.*
@@ -29,14 +30,6 @@ import javax.inject.Inject
  * Displays task details screen.
  */
 class TaskDetailActivity : DaggerAppCompatActivity() {
-
-    private var mTaskDetailPresenter: TaskDetailPresenter? = null
-
-    @Inject
-    lateinit internal var mTasksRepository: TasksRepository
-
-    @Inject
-    lateinit internal var mLocationManager: LocationManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,9 +54,6 @@ class TaskDetailActivity : DaggerAppCompatActivity() {
             ActivityUtils.addFragmentToActivity(supportFragmentManager,
                     taskDetailFragment, R.id.contentFrame)
         }
-
-        mTaskDetailPresenter = TaskDetailPresenter(taskId, mTasksRepository, taskDetailFragment, mLocationManager)
-        mTaskDetailPresenter!!.setupListeners()
     }
 
     override fun onSupportNavigateUp(): Boolean {

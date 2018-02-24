@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.taskdetail
+package com.empty.jinux.simplediary.taskdetail.presenter
 
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.data.source.TasksDataSource
 import com.empty.jinux.simplediary.data.source.TasksRepository
 import com.empty.jinux.simplediary.location.LocationManager
+import com.empty.jinux.simplediary.taskdetail.TaskDetailContract
 import com.empty.jinux.simplediary.util.formatDisplayTime
 import com.google.common.base.Strings
 
@@ -46,11 +47,6 @@ internal class TaskDetailPresenter
  */
 @Inject
 constructor(
-        /**
-         * Dagger strictly enforces that arguments not marked with `@Nullable` are not injected
-         * with `@Nullable` values.
-         */
-        var mTaskId: String?,
         private val mTasksRepository: TasksRepository,
         private val mTaskDetailView: TaskDetailContract.View,
         private val mLocationManager: LocationManager) : TaskDetailContract.Presenter {
@@ -132,5 +128,11 @@ constructor(
         mLocationManager.getLastLocation {
             mTaskDetailView.showLocation("haha $it")
         }
+    }
+
+    private var mTaskId: String? = null
+
+    fun setDiaryId(taskId: String?) {
+        mTaskId = taskId
     }
 }

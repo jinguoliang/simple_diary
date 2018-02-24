@@ -14,41 +14,46 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.taskdetail
+package com.empty.jinux.simplediary.taskdetail.fragment
 
-import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
 import android.view.*
-import android.widget.Toast
 import com.empty.jinux.baselibaray.loge
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.addeditdiary.AddEditDiaryActivity
 import com.empty.jinux.simplediary.addeditdiary.AddEditDiaryFragment
-import com.google.android.gms.location.LocationServices
-import com.google.common.base.Preconditions.checkNotNull
+import com.empty.jinux.simplediary.taskdetail.TaskDetailContract
+import com.empty.jinux.simplediary.taskdetail.presenter.TaskDetailPresenter
+import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.taskdetail_frag.*
+import javax.inject.Inject
 
 /**
  * Main UI for the task detail screen.
  */
-class TaskDetailFragment : Fragment(), TaskDetailContract.View {
+class TaskDetailFragment : DaggerFragment(), TaskDetailContract.View {
 
-    private var mPresenter: TaskDetailContract.Presenter? = null
+    @Inject internal
+    lateinit var mPresenter: TaskDetailPresenter
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+
+        val taskId = arguments.getString(ARGUMENT_TASK_ID)
+        mPresenter.setDiaryId(taskId)
+        mPresenter.setupListeners()
+    }
 
     override val isActive: Boolean
         get() = isAdded
 
     override fun onResume() {
         super.onResume()
-        mPresenter!!.start()
+        mPresenter.start()
     }
 
     private val MY_PERMISSIONS_REQUEST_COARSE_LOCATION = 0x25
@@ -59,7 +64,7 @@ class TaskDetailFragment : Fragment(), TaskDetailContract.View {
         setHasOptionsMenu(true)
 
         // Set up floating action button
-        (activity.findViewById<FloatingActionButton>(R.id.fab_edit_task)).setOnClickListener { mPresenter!!.editTask() }
+        (activity.findViewById<FloatingActionButton>(R.id.fab_edit_task)).setOnClickListener { mPresenter.editTask() }
 
         return root
     }
@@ -67,18 +72,18 @@ class TaskDetailFragment : Fragment(), TaskDetailContract.View {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         refreshLocation.setOnClickListener {
-            mPresenter?.refreshLocation()
+            mPresenter.refreshLocation()
         }
     }
 
     override fun setPresenter(presenter: TaskDetailContract.Presenter) {
-        mPresenter = checkNotNull(presenter)
+//        mPresenter = checkNotNull(presenter)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
             R.id.menu_delete -> {
-                mPresenter!!.deleteTask()
+                mPresenter.deleteTask()
                 return true
             }
         }
