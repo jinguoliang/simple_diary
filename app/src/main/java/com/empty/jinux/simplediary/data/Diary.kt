@@ -69,6 +69,6 @@ constructor(
     }
 
     override fun toString(): String {
-        return "Diary with title " + title!!
+        return "Diary with title " + title
     }
 }

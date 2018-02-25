@@ -1,11 +1,11 @@
 package com.empty.jinux.simplediary.di
 
 import com.empty.jinux.simplediary.MApplication
-import com.empty.jinux.simplediary.addeditdiary.AddEditDiaryActivity
+import com.empty.jinux.simplediary.ui.addeditdiary.AddEditDiaryActivity
 import com.empty.jinux.simplediary.data.source.TasksRepositoryModule
-import com.empty.jinux.simplediary.diarylist.DiaryListActivity
-import com.empty.jinux.simplediary.statistics.StatisticsActivity
-import com.empty.jinux.simplediary.taskdetail.TaskDetailActivityModule
+import com.empty.jinux.simplediary.ui.diarylist.DiaryListActivity
+import com.empty.jinux.simplediary.ui.statistics.StatisticsActivity
+import com.empty.jinux.simplediary.ui.taskdetail.TaskDetailActivityModule
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
 import javax.inject.Singleton

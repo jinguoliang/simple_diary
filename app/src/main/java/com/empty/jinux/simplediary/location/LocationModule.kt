@@ -1,7 +1,6 @@
 package com.empty.jinux.simplediary.location
 
-import android.app.Activity
-import com.empty.jinux.simplediary.taskdetail.TaskDetailActivity
+import com.empty.jinux.simplediary.ui.taskdetail.TaskDetailActivity
 import dagger.Module
 import dagger.Provides
 
