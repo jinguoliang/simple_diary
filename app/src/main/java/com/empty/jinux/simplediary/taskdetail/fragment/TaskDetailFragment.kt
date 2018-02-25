@@ -28,6 +28,7 @@ import com.empty.jinux.simplediary.addeditdiary.AddEditDiaryActivity
 import com.empty.jinux.simplediary.addeditdiary.AddEditDiaryFragment
 import com.empty.jinux.simplediary.taskdetail.TaskDetailContract
 import com.empty.jinux.simplediary.taskdetail.presenter.TaskDetailPresenter
+import com.squareup.picasso.Picasso
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.taskdetail_frag.*
 import javax.inject.Inject
@@ -36,6 +37,7 @@ import javax.inject.Inject
  * Main UI for the task detail screen.
  */
 class TaskDetailFragment : DaggerFragment(), TaskDetailContract.View {
+
 
     @Inject internal
     lateinit var mPresenter: TaskDetailPresenter
@@ -151,6 +153,11 @@ class TaskDetailFragment : DaggerFragment(), TaskDetailContract.View {
 
     override fun showLocation(city: String) {
         locationName.text = city
+    }
+
+    override fun showWeather(weather: String, weatherIconUrl: String) {
+        weatherName.text = weather
+        Picasso.with(context).load(weatherIconUrl).into(weatherIcon)
     }
 
 }

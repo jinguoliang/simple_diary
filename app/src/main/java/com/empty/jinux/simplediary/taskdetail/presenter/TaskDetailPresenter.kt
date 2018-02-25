@@ -16,12 +16,14 @@
 
 package com.empty.jinux.simplediary.taskdetail.presenter
 
+import com.empty.jinux.baselibaray.logi
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.data.source.TasksDataSource
 import com.empty.jinux.simplediary.data.source.TasksRepository
 import com.empty.jinux.simplediary.location.LocationManager
 import com.empty.jinux.simplediary.taskdetail.TaskDetailContract
 import com.empty.jinux.simplediary.util.formatDisplayTime
+import com.empty.jinux.simplediary.weather.WeatherManager
 import com.google.common.base.Strings
 
 import javax.inject.Inject
@@ -49,7 +51,8 @@ internal class TaskDetailPresenter
 constructor(
         private val mTasksRepository: TasksRepository,
         private val mTaskDetailView: TaskDetailContract.View,
-        private val mLocationManager: LocationManager) : TaskDetailContract.Presenter {
+        private val mLocationManager: LocationManager,
+        private val mWeatherManager: WeatherManager) : TaskDetailContract.Presenter {
 
     /**
      * Method injection is used here to safely reference `this` after the object is created.
@@ -62,6 +65,9 @@ constructor(
 
     override fun start() {
         openTask()
+
+        refreshLocation()
+        refreshWeather();
     }
 
     private fun openTask() {
@@ -125,8 +131,17 @@ constructor(
     }
 
     override fun refreshLocation() {
+        mLocationManager.getCurrentAddress { address ->
+            mTaskDetailView.showLocation(address)
+        }
+    }
+
+    private fun refreshWeather() {
         mLocationManager.getLastLocation {
-            mTaskDetailView.showLocation("haha $it")
+            mWeatherManager.getCurrentWeather(it.latitude, it.longitude) {
+                logi("current weather = $it")
+                mTaskDetailView.showWeather(it.description, mWeatherManager.getWeatherIcon(it.icon))
+            }
         }
     }
 

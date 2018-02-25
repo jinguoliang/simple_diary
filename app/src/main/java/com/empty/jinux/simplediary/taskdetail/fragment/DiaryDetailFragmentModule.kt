@@ -2,6 +2,7 @@ package com.empty.jinux.simplediary.taskdetail.fragment
 
 import android.support.v4.app.Fragment
 import com.empty.jinux.simplediary.taskdetail.TaskDetailContract
+import com.empty.jinux.simplediary.weather.WeatherModule
 import dagger.Binds
 import dagger.android.AndroidInjector
 import dagger.multibindings.IntoMap

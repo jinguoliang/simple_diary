@@ -38,19 +38,19 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical">
 
-        <View
+        <ImageView
             android:id="@+id/weatherIcon"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_margin="@dimen/common_margin"
-            android:background="@drawable/ic_weather" />
+            tools:background="@drawable/ic_weather" />
 
         <TextView
             android:id="@+id/weatherName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/common_margin"
-            android:text="多云"
+            tools:text="多云"
             android:textAppearance="@style/TextAppearance.AppCompat.Title" />
     </LinearLayout>
 
@@ -72,7 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/common_margin"
-            android:text="山东"
+            tools:text="山东"
             android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
         <View
@@ -97,6 +97,7 @@
         android:layout_margin="@dimen/common_margin"
         android:background="#0fff"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        tools:text="Medium Text" />
+        tools:text="Medium Text"
+        android:inputType="text" />
 
 </LinearLayout>

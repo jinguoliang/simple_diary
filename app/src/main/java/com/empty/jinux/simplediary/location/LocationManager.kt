@@ -17,6 +17,6 @@ interface LocationManager {
     /**
      * get the current address for the location
      */
-    fun getCurrentAddress(): String
+    fun getCurrentAddress(callback: (String) -> Unit): Unit
 }
 

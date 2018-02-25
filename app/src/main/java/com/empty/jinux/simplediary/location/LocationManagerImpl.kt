@@ -2,11 +2,12 @@ package com.empty.jinux.simplediary.location
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.location.Geocoder
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import javax.inject.Inject
+import java.util.*
 
 
 /**
@@ -14,8 +15,8 @@ import javax.inject.Inject
  *
  * Location Manager Implement with gms
  */
-class LocationManagerImpl constructor(val context: Activity) : LocationManager {
-    val mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
+open class LocationManagerImpl constructor(val context: Activity) : LocationManager {
+    private val mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
 
     @SuppressLint("MissingPermission")
     override fun getLastLocation(callback: (Location) -> Unit) {
@@ -45,7 +46,7 @@ class LocationManagerImpl constructor(val context: Activity) : LocationManager {
                 null /* Looper */);
     }
 
-    protected fun createLocationRequest(): LocationRequest {
+    private fun createLocationRequest(): LocationRequest {
         val locationRequest = LocationRequest()
         locationRequest.interval = 10000
         locationRequest.fastestInterval = 5000
@@ -53,7 +54,15 @@ class LocationManagerImpl constructor(val context: Activity) : LocationManager {
         return locationRequest
     }
 
-    override fun getCurrentAddress(): String {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getCurrentAddress(callback: (address: String) -> Unit): Unit {
+        getLastLocation { location ->
+            val geocoder = Geocoder(context, Locale.getDefault())
+            val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+            if (addresses.isNotEmpty()) {
+                val address = addresses[0]
+                val addressStr = "${address.getAddressLine(0)}${address.getAddressLine(1)}${address.featureName}"
+                callback(addressStr)
+            }
+        }
     }
 }

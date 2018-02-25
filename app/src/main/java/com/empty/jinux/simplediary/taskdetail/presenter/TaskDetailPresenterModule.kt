@@ -3,7 +3,7 @@ package com.empty.jinux.simplediary.taskdetail.presenter
 import com.empty.jinux.simplediary.data.source.TasksRepository
 import com.empty.jinux.simplediary.location.LocationManager
 import com.empty.jinux.simplediary.taskdetail.TaskDetailContract
-import com.empty.jinux.simplediary.taskdetail.presenter.TaskDetailPresenter
+import com.empty.jinux.simplediary.weather.WeatherManager
 import dagger.Module
 import dagger.Provides
 
@@ -17,8 +17,9 @@ class TaskDetailPresenterModule {
     fun providePresenter(
             repo: TasksRepository,
             v: TaskDetailContract.View,
-            locationManager: LocationManager
+            locationManager: LocationManager,
+            weatherManager: WeatherManager
     ): TaskDetailContract.Presenter {
-        return TaskDetailPresenter(repo, v, locationManager)
+        return TaskDetailPresenter(repo, v, locationManager, weatherManager)
     }
 }

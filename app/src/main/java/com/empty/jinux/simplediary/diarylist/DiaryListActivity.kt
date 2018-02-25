@@ -27,6 +27,7 @@ import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.source.TasksRepository
 import com.empty.jinux.simplediary.statistics.StatisticsActivity
 import com.empty.jinux.simplediary.util.ActivityUtils
+import com.empty.jinux.simplediary.weather.WeatherManagerRetrofitImpl
 import dagger.Binds
 import dagger.Subcomponent
 import dagger.android.ActivityKey

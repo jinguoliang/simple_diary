@@ -45,6 +45,8 @@ interface TaskDetailContract {
 
         fun showLocation(city: String)
 
+        fun showWeather(weather: String, weatherIcon: String)
+
     }
 
     interface Presenter : BasePresenter {
