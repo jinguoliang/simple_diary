@@ -15,13 +15,9 @@
  */
 package com.empty.jinux.simplediary.data.source
 
-import java.lang.annotation.Documented
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
-
 import javax.inject.Qualifier
 
 @Qualifier
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
+@MustBeDocumented
+@Retention(AnnotationRetention.RUNTIME)
 annotation class Remote
