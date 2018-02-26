@@ -101,20 +101,23 @@ class DiaryListFragment : Fragment(), DiaryListContract.View {
         noTasks.setOnClickListener { showAddTask() }
 
         // Set up floating action button
-        val fab = activity.findViewById<FloatingActionButton>(R.id.fab_add_task)
+        activity?.findViewById<FloatingActionButton>(R.id.fab_add_task)?.apply {
+            setImageResource(R.drawable.ic_add)
+            setOnClickListener { mPresenter.addNewTask() }
+        }
 
-        fab.setImageResource(R.drawable.ic_add)
-        fab.setOnClickListener { mPresenter.addNewTask() }
+        activity?.let { activity ->
+            // Set up progress indicator
+            refresh_layout.setColorSchemeColors(
+                    ContextCompat.getColor(activity, R.color.colorPrimary),
+                    ContextCompat.getColor(activity, R.color.colorAccent),
+                    ContextCompat.getColor(activity, R.color.colorPrimaryDark)
+            )
+            // Set the scrolling view in the custom SwipeRefreshLayout.
+            refresh_layout.setScrollUpChild(tasks_list)
+            refresh_layout.setOnRefreshListener { mPresenter.loadTasks(false) }
+        }
 
-        // Set up progress indicator
-        refresh_layout.setColorSchemeColors(
-                ContextCompat.getColor(activity, R.color.colorPrimary),
-                ContextCompat.getColor(activity, R.color.colorAccent),
-                ContextCompat.getColor(activity, R.color.colorPrimaryDark)
-        )
-        // Set the scrolling view in the custom SwipeRefreshLayout.
-        refresh_layout.setScrollUpChild(tasks_list)
-        refresh_layout.setOnRefreshListener { mPresenter.loadTasks(false) }
 
         setHasOptionsMenu(true)
     }
@@ -133,7 +136,7 @@ class DiaryListFragment : Fragment(), DiaryListContract.View {
     }
 
     override fun showFilteringPopUpMenu() {
-        val popup = PopupMenu(context, activity.findViewById(R.id.menu_filter))
+        val popup = PopupMenu(context!!, activity!!.findViewById(R.id.menu_filter))
         popup.menuInflater.inflate(R.menu.filter_tasks, popup.menu)
 
         popup.setOnMenuItemClickListener { item ->

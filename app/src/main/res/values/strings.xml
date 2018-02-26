@@ -81,4 +81,9 @@
     <string name="no_tasks_add">Add a diary item +</string>
 
     <string name="refresh">Refresh</string>
+    <string name="about_intro">This ia a good app</string>
+    <string name="about_title">About it</string>
+    <string name="translate_title">Help translate it</string>
+    <string name="share_title">Share it</string>
+    <string name="rate_title">Rate it</string>
 </resources>

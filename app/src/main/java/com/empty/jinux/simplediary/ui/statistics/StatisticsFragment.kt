@@ -16,16 +16,14 @@
 
 package com.empty.jinux.simplediary.ui.statistics
 
-import com.google.common.base.Preconditions.checkNotNull
-
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-
 import com.empty.jinux.simplediary.R
+import com.google.common.base.Preconditions.checkNotNull
 import kotlinx.android.synthetic.main.statistics_frag.*
 
 
@@ -42,10 +40,10 @@ class StatisticsFragment : Fragment(), StatisticsContract.View {
         mPresenter = checkNotNull<StatisticsContract.Presenter>(presenter)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.statistics_frag, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.statistics_frag, container, false)
     }
+
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

@@ -45,7 +45,7 @@ class TaskDetailFragment : DaggerFragment(), TaskDetailContract.View {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
 
-        val taskId = arguments.getString(ARGUMENT_TASK_ID)
+        val taskId = arguments?.getString(ARGUMENT_TASK_ID)
         mPresenter.setDiaryId(taskId)
         mPresenter.setupListeners()
     }
@@ -60,13 +60,13 @@ class TaskDetailFragment : DaggerFragment(), TaskDetailContract.View {
 
     private val MY_PERMISSIONS_REQUEST_COARSE_LOCATION = 0x25
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val root = inflater!!.inflate(R.layout.taskdetail_frag, container, false)
+        val root = inflater.inflate(R.layout.taskdetail_frag, container, false)
         setHasOptionsMenu(true)
 
         // Set up floating action button
-        (activity.findViewById<FloatingActionButton>(R.id.fab_edit_task)).setOnClickListener { mPresenter.editTask() }
+        (activity!!.findViewById<FloatingActionButton>(R.id.fab_edit_task)).setOnClickListener { mPresenter.editTask() }
 
         return root
     }
@@ -119,7 +119,7 @@ class TaskDetailFragment : DaggerFragment(), TaskDetailContract.View {
     }
 
     override fun showTaskDeleted() {
-        activity.finish()
+        activity?.finish()
     }
 
 
@@ -127,7 +127,7 @@ class TaskDetailFragment : DaggerFragment(), TaskDetailContract.View {
         if (requestCode == REQUEST_EDIT_TASK) {
             // If the task was edited successfully, go back to the list.
             if (resultCode == Activity.RESULT_OK) {
-                activity.finish()
+                activity?.finish()
             }
         }
     }

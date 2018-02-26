@@ -50,11 +50,13 @@ class AddEditDiaryFragment : Fragment(), AddEditDiaryContract.View {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val done = activity.findViewById<FloatingActionButton>(R.id.fab_edit_task_done)
-        done.setImageResource(R.drawable.ic_done)
-        done.setOnClickListener {
-            mPresenter.saveTask(add_task_title.text.toString(), add_task_description.text.toString())
+        activity?.findViewById<FloatingActionButton>(R.id.fab_edit_task_done)?.apply {
+            setImageResource(R.drawable.ic_done)
+            setOnClickListener {
+                mPresenter.saveTask(add_task_title.text.toString(), add_task_description.text.toString())
+            }
         }
+
 
         setHasOptionsMenu(true)
         retainInstance = true

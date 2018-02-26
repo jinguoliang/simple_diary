@@ -25,6 +25,7 @@ import android.support.v4.widget.DrawerLayout
 import android.view.MenuItem
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.source.TasksRepository
+import com.empty.jinux.simplediary.ui.about.AboutActivity
 import com.empty.jinux.simplediary.ui.statistics.StatisticsActivity
 import com.empty.jinux.simplediary.util.ActivityUtils
 import dagger.Binds
@@ -34,6 +35,7 @@ import dagger.android.AndroidInjector
 import dagger.android.support.DaggerAppCompatActivity
 import dagger.multibindings.IntoMap
 import kotlinx.android.synthetic.main.diary_list_act.*
+import org.jetbrains.anko.intentFor
 import javax.inject.Inject
 
 class DiaryListActivity : DaggerAppCompatActivity() {
@@ -123,6 +125,18 @@ class DiaryListActivity : DaggerAppCompatActivity() {
                     val intent = Intent(this@DiaryListActivity, StatisticsActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     startActivity(intent)
+                }
+                R.id.rate_navigation_menu_item -> {
+
+                }
+                R.id.share_navigation_menu_item -> {
+
+                }
+                R.id.translate_navigation_menu_item -> {
+
+                }
+                R.id.about_navigation_menu_item -> {
+                    startActivity(intentFor<AboutActivity>())
                 }
                 else -> {
                 }
