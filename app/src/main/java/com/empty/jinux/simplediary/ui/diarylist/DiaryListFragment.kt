@@ -51,11 +51,9 @@ class DiaryListFragment : Fragment(), DiaryListContract.View {
         }
 
         override fun onCompleteClick(diary: Diary) {
-            mPresenter.completeTask(diary)
         }
 
         override fun onActivateClick(diary: Diary) {
-            mPresenter.activateTask(diary)
         }
     }
 
@@ -124,7 +122,6 @@ class DiaryListFragment : Fragment(), DiaryListContract.View {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.menu_clear -> mPresenter.clearCompletedTasks()
             R.id.menu_filter -> showFilteringPopUpMenu()
             R.id.menu_refresh -> mPresenter.loadTasks(true)
         }

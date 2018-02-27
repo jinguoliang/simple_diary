@@ -39,35 +39,26 @@ inline fun <reified T> Gson.fromJson(json: String) = this.fromJson<T>(json, obje
 class DiariesRemoteDataSource : TasksDataSource {
 
 
-    val mDatabase = FirebaseDatabase.getInstance().getReference(diaries_root)
     private var mEventListener: DatabaseDataChangeListener? = null
 
     private val mDataList = mutableListOf<Diary>()
     private val mDataMap = mutableMapOf<String, Diary>()
 
-    override fun registerDataChangeListener(listener: TasksDataSource.OnChangeListener) {
-        if (mEventListener == null) {
-            mEventListener = DatabaseDataChangeListener {
-                mDataList.clear()
-                mDataList.addAll(it)
-                mDataMap.clear()
-                it.forEach {
-                    mDataMap.put(it.id, it)
-                }
-                listener.onChange(it)
+    private var mCacheDirty = true
+
+    val mDatabase = FirebaseDatabase.getInstance().getReference(diaries_root).apply {
+        mEventListener = DatabaseDataChangeListener {
+            mDataList.clear()
+            mDataList.addAll(it)
+            mDataMap.clear()
+            it.forEach {
+                mDataMap.put(it.id, it)
             }
-        }
-        // show old data
-        if (mDataList.isNotEmpty()) {
-            listener.onChange(mDataList)
-        }
-        mDatabase.addValueEventListener(mEventListener)
-    }
+            mCacheDirty = false
 
-    override fun unregisterDataChangeListener(listener: TasksDataSource.OnChangeListener) {
-        mDatabase.removeEventListener(mEventListener)
+        }
+        this.addValueEventListener(mEventListener)
     }
-
 
     /**
      * Note: [LoadTasksCallback.onDataNotAvailable] is never fired. In a real remote data
@@ -75,7 +66,11 @@ class DiariesRemoteDataSource : TasksDataSource {
      * returns an error.
      */
     override fun getDiaries(callback: TasksDataSource.LoadDiariesCallback) {
-        callback.onTasksLoaded(mDataList)
+        if (mCacheDirty) {
+
+        } else {
+            callback.onTasksLoaded(mDataList)
+        }
     }
 
     /**
@@ -84,36 +79,21 @@ class DiariesRemoteDataSource : TasksDataSource {
      * returns an error.
      */
     override fun getTask(taskId: String, callback: TasksDataSource.GetTaskCallback) {
-        if (mDataMap.containsKey(taskId)) {
-            callback.onTaskLoaded(mDataMap[taskId]!!)
+        if (mCacheDirty) {
+
         } else {
-            callback.onDataNotAvailable()
+            if (mDataMap.containsKey(taskId)) {
+                callback.onTaskLoaded(mDataMap[taskId]!!)
+            } else {
+                callback.onDataNotAvailable()
+            }
         }
     }
 
 
     override fun save(task: Diary) {
         mDatabase.child(task.id).setValue(Gson().toJson(task))
-    }
-
-    override fun completeTask(task: Diary) {
-        val completedTask = Diary(task.title, task.description, task.id, true)
-        mDatabase.child(task.id).setValue(Gson().toJson(completedTask))
-    }
-
-    override fun completeTask(taskId: String) {
-        // Not required for the remote data source because the {@link TasksRepository} handles
-        // converting from a {@code taskId} to a {@link task} using its cached data.
-    }
-
-    override fun activateTask(task: Diary) {
-        val activeTask = Diary(task.title, task.description, task.id)
-        mDatabase.child(task.id).setValue(Gson().toJson(activeTask))
-    }
-
-    override fun activateTask(taskId: String) {
-        // Not required for the remote data source because the {@link TasksRepository} handles
-        // converting from a {@code taskId} to a {@link task} using its cached data.
+        mCacheDirty = true
     }
 
     override fun clearCompletedTasks() {
@@ -125,6 +105,8 @@ class DiariesRemoteDataSource : TasksDataSource {
                 mDatabase.child(entry.id).removeValue()
             }
         }
+
+        mCacheDirty = true
     }
 
     override fun refreshTasks() {
@@ -134,6 +116,8 @@ class DiariesRemoteDataSource : TasksDataSource {
 
     override fun deleteAllDiaries() {
         mDatabase.removeValue()
+
+        mCacheDirty = true
     }
 
     override fun deleteTask(taskId: String) {

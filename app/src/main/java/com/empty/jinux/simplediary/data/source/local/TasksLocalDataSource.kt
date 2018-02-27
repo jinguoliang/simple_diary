@@ -32,13 +32,6 @@ import javax.inject.Singleton
 @Singleton
 class TasksLocalDataSource @Inject
 constructor(context: Context) : TasksDataSource {
-    override fun registerDataChangeListener(listener: TasksDataSource.OnChangeListener) {
-
-    }
-
-    override fun unregisterDataChangeListener(listener: TasksDataSource.OnChangeListener) {
-
-    }
 
     private val mDbHelper: TasksDbHelper
 
@@ -74,12 +67,7 @@ constructor(context: Context) : TasksDataSource {
 
         db.close()
 
-        if (tasks.isEmpty()) {
-            // This will be called if the table is new or just empty.
-            callback.onDataNotAvailable()
-        } else {
-            callback.onTasksLoaded(tasks)
-        }
+        callback.onTasksLoaded(tasks)
 
     }
 
@@ -132,44 +120,6 @@ constructor(context: Context) : TasksDataSource {
         db.insert(TaskEntry.TABLE_NAME, null, values)
 
         db.close()
-    }
-
-    override fun completeTask(task: Diary) {
-        val db = mDbHelper.writableDatabase
-
-        val values = ContentValues()
-        values.put(TaskEntry.COLUMN_NAME_COMPLETED, true)
-
-        val selection = TaskEntry.COLUMN_NAME_ENTRY_ID + " LIKE ?"
-        val selectionArgs = arrayOf<String>(task.id)
-
-        db.update(TaskEntry.TABLE_NAME, values, selection, selectionArgs)
-
-        db.close()
-    }
-
-    override fun completeTask(taskId: String) {
-        // Not required for the local data source because the {@link TasksRepository} handles
-        // converting from a {@code taskId} to a {@link task} using its cached data.
-    }
-
-    override fun activateTask(task: Diary) {
-        val db = mDbHelper.writableDatabase
-
-        val values = ContentValues()
-        values.put(TaskEntry.COLUMN_NAME_COMPLETED, false)
-
-        val selection = TaskEntry.COLUMN_NAME_ENTRY_ID + " LIKE ?"
-        val selectionArgs = arrayOf<String>(task.id)
-
-        db.update(TaskEntry.TABLE_NAME, values, selection, selectionArgs)
-
-        db.close()
-    }
-
-    override fun activateTask(taskId: String) {
-        // Not required for the local data source because the {@link TasksRepository} handles
-        // converting from a {@code taskId} to a {@link task} using its cached data.
     }
 
     override fun clearCompletedTasks() {

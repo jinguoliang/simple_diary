@@ -17,10 +17,10 @@
 package com.empty.jinux.simplediary.ui.diarylist
 
 import android.app.Activity
-import com.empty.jinux.simplediary.ui.addeditdiary.AddEditDiaryActivity
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.data.source.TasksDataSource
 import com.empty.jinux.simplediary.data.source.TasksRepository
+import com.empty.jinux.simplediary.ui.addeditdiary.AddEditDiaryActivity
 import com.google.common.base.Preconditions.checkNotNull
 import java.util.*
 import javax.inject.Inject
@@ -69,11 +69,10 @@ constructor(private val mTasksRepository: TasksRepository, private val mTasksVie
     }
 
     override fun start() {
-        registerDataChangeListener()
+        loadTasks(true)
     }
 
     override fun stop() {
-        unregisterDataChangeListener()
     }
 
     private var mDataChangeListener = object : TasksDataSource.OnChangeListener {
@@ -99,18 +98,6 @@ constructor(private val mTasksRepository: TasksRepository, private val mTasksVie
             }
 
             processTasks(tasksToShow)
-        }
-    }
-
-    private fun registerDataChangeListener() {
-        mDataChangeListener.let {
-            mTasksRepository.registerDataChangeListener(it)
-        }
-    }
-
-    private fun unregisterDataChangeListener() {
-        mDataChangeListener.let {
-            mTasksRepository.unregisterDataChangeListener(it)
         }
     }
 
@@ -213,25 +200,5 @@ constructor(private val mTasksRepository: TasksRepository, private val mTasksVie
     override fun openTaskDetails(requestedTask: Diary) {
         checkNotNull<Diary>(requestedTask, "requestedTask cannot be null!")
         mTasksView.showTaskDetailsUi(requestedTask.id)
-    }
-
-    override fun completeTask(completedTask: Diary) {
-        checkNotNull<Diary>(completedTask, "completedTask cannot be null!")
-        mTasksRepository.completeTask(completedTask)
-        mTasksView.showTaskMarkedComplete()
-        loadTasks(false, false)
-    }
-
-    override fun activateTask(activeTask: Diary) {
-        checkNotNull<Diary>(activeTask, "activeTask cannot be null!")
-        mTasksRepository.activateTask(activeTask)
-        mTasksView.showTaskMarkedActive()
-        loadTasks(false, false)
-    }
-
-    override fun clearCompletedTasks() {
-        mTasksRepository.clearCompletedTasks()
-        mTasksView.showCompletedTasksCleared()
-        loadTasks(false, false)
     }
 }

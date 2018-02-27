@@ -53,14 +53,6 @@ interface TasksDataSource {
 
     fun save(task: Diary)
 
-    fun completeTask(task: Diary)
-
-    fun completeTask(taskId: String)
-
-    fun activateTask(task: Diary)
-
-    fun activateTask(taskId: String)
-
     fun clearCompletedTasks()
 
     fun refreshTasks()
@@ -69,7 +61,4 @@ interface TasksDataSource {
 
     fun deleteTask(taskId: String)
 
-    fun registerDataChangeListener(listener: OnChangeListener)
-
-    fun unregisterDataChangeListener(listener: OnChangeListener)
 }

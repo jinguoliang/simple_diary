@@ -74,12 +74,6 @@ interface DiaryListContract {
 
         fun openTaskDetails(requestedTask: Diary)
 
-        fun completeTask(completedTask: Diary)
-
-        fun activateTask(activeTask: Diary)
-
-        fun clearCompletedTasks()
-
         fun stop()
     }
 }
