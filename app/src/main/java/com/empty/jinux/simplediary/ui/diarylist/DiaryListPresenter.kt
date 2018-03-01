@@ -20,7 +20,6 @@ import android.app.Activity
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.data.source.TasksDataSource
 import com.empty.jinux.simplediary.data.source.TasksRepository
-import com.empty.jinux.simplediary.ui.addeditdiary.AddEditDiaryActivity
 import com.google.common.base.Preconditions.checkNotNull
 import java.util.*
 import javax.inject.Inject
@@ -103,7 +102,7 @@ constructor(private val mTasksRepository: TasksRepository, private val mTasksVie
 
     override fun result(requestCode: Int, resultCode: Int) {
         // If a task was successfully added, show snackbar
-        if (AddEditDiaryActivity.REQUEST_ADD_TASK === requestCode && Activity.RESULT_OK == resultCode) {
+        if (DiaryListActivity.REQUEST_ADD_TASK == requestCode && Activity.RESULT_OK == resultCode) {
             mTasksView.showSuccessfullySavedMessage()
         }
     }

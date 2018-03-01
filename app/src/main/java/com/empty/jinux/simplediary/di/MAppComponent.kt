@@ -1,7 +1,6 @@
 package com.empty.jinux.simplediary.di
 
 import com.empty.jinux.simplediary.MApplication
-import com.empty.jinux.simplediary.ui.addeditdiary.AddEditDiaryActivity
 import com.empty.jinux.simplediary.data.source.TasksRepositoryModule
 import com.empty.jinux.simplediary.ui.diarylist.DiaryListActivity
 import com.empty.jinux.simplediary.ui.statistics.StatisticsActivity
@@ -14,7 +13,6 @@ import javax.inject.Singleton
 @dagger.Component(
         modules = arrayOf(AndroidSupportInjectionModule::class,
                 AppModule::class, TasksRepositoryModule::class,
-                AddEditDiaryActivity.Module::class,
                 TaskDetailActivityModule::class,
                 StatisticsActivity.Module::class,
                 DiaryListActivity.Module::class)
