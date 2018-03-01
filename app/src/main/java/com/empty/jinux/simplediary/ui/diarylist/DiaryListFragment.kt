@@ -26,11 +26,11 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PopupMenu
 import android.view.*
 import com.empty.jinux.simplediary.R
-import com.empty.jinux.simplediary.ui.addeditdiary.AddEditDiaryActivity
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.ui.taskdetail.TaskDetailActivity
 import com.google.common.base.Preconditions.checkNotNull
 import kotlinx.android.synthetic.main.tasks_frag.*
+import org.jetbrains.anko.intentFor
 import java.util.*
 
 /**
@@ -217,16 +217,13 @@ class DiaryListFragment : Fragment(), DiaryListContract.View {
     }
 
     override fun showAddTask() {
-        val intent = Intent(context, AddEditDiaryActivity::class.java)
-        startActivityForResult(intent, AddEditDiaryActivity.REQUEST_ADD_TASK)
+        startActivityForResult(context?.intentFor<TaskDetailActivity>(),
+                DiaryListActivity.REQUEST_ADD_TASK)
     }
 
     override fun showTaskDetailsUi(taskId: String) {
-        // in it's own Activity, since it makes more sense that way and it gives us the flexibility
-        // to show some Intent stubbing.
-        val intent = Intent(context, TaskDetailActivity::class.java)
-        intent.putExtra(TaskDetailActivity.EXTRA_TASK_ID, taskId)
-        startActivity(intent)
+        startActivity(context?.intentFor<TaskDetailActivity>(
+                TaskDetailActivity.EXTRA_TASK_ID to taskId))
     }
 
     override fun showTaskMarkedComplete() {

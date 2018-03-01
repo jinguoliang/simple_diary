@@ -25,6 +25,10 @@ import android.support.v4.widget.DrawerLayout
 import android.view.MenuItem
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.source.TasksRepository
+import com.empty.jinux.simplediary.intent.helpTranslate
+import com.empty.jinux.simplediary.intent.rateApp
+import com.empty.jinux.simplediary.intent.sendFeedback
+import com.empty.jinux.simplediary.intent.shareApp
 import com.empty.jinux.simplediary.ui.about.AboutActivity
 import com.empty.jinux.simplediary.ui.statistics.StatisticsActivity
 import com.empty.jinux.simplediary.util.ActivityUtils
@@ -127,13 +131,16 @@ class DiaryListActivity : DaggerAppCompatActivity() {
                     startActivity(intent)
                 }
                 R.id.rate_navigation_menu_item -> {
-
+                    startActivity(rateApp(this))
                 }
                 R.id.share_navigation_menu_item -> {
-
+                    startActivity(shareApp(this))
                 }
                 R.id.translate_navigation_menu_item -> {
-
+                    startActivity(helpTranslate(this))
+                }
+                R.id.feedback_navigation_menu_item -> {
+                    startActivity(sendFeedback(this))
                 }
                 R.id.about_navigation_menu_item -> {
                     startActivity(intentFor<AboutActivity>())
@@ -151,7 +158,7 @@ class DiaryListActivity : DaggerAppCompatActivity() {
     }
 
     companion object {
-
+        val REQUEST_ADD_TASK = 1
         private val CURRENT_FILTERING_KEY = "CURRENT_FILTERING_KEY"
     }
 }
