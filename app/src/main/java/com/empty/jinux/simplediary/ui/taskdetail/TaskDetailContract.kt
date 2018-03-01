@@ -37,25 +37,34 @@ interface TaskDetailContract {
 
         fun showDescription(description: String)
 
-        fun showEditTask(taskId: String)
-
         fun showTaskDeleted()
 
         fun showDate(dateStr: String)
 
         fun showLocation(city: String)
 
-        fun showWeather(weather: String, weatherIcon: String)
+        fun showWeather(weather: String, weatherIconUrl: String)
+
+        fun showSaveButton()
+
+        fun showEditButton()
+
+        fun showTaskSaved()
+
+        fun showEmptyTaskError()
 
     }
 
     interface Presenter : BasePresenter {
 
-        fun editTask()
+        fun editDiary()
 
-        fun deleteTask()
+        fun deleteDiary()
 
         fun refreshLocation()
 
+        fun saveDiary()
+
+        fun refreshWeather()
     }
 }

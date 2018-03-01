@@ -25,7 +25,6 @@ import com.empty.jinux.simplediary.ui.taskdetail.TaskDetailContract
 import com.empty.jinux.simplediary.util.formatDisplayTime
 import com.empty.jinux.simplediary.weather.WeatherManager
 import com.google.common.base.Strings
-
 import javax.inject.Inject
 
 /**
@@ -63,31 +62,45 @@ constructor(
         mTaskDetailView.setPresenter(this)
     }
 
-    override fun start() {
-        openTask()
+    private var currentContent: String? = null
 
-        refreshLocation()
-        refreshWeather();
+    private val isNewTask: Boolean
+        get() = mDiaryId == null
+
+    override fun start() {
+        if (isNewTask) {
+            initForNewDiary()
+        } else {
+            initForDiary(mDiaryId!!)
+        }
     }
 
-    private fun openTask() {
-        if (Strings.isNullOrEmpty(mTaskId)) {
-            mTaskDetailView.showMissingTask()
-            return
-        }
+    private fun initForDiary(diaryId: String) {
+        openDiary()
+        mTaskDetailView.showEditButton()
+    }
 
+    private fun initForNewDiary() {
+        refreshLocation()
+        refreshWeather()
+        mTaskDetailView.showSaveButton()
+    }
+
+    private fun openDiary() {
         mTaskDetailView.setLoadingIndicator(true)
-        mTasksRepository.getTask(mTaskId!!, object : TasksDataSource.GetTaskCallback {
-            override fun onTaskLoaded(task: Diary?) {
+        mTasksRepository.getTask(mDiaryId!!, object : TasksDataSource.GetTaskCallback {
+            override fun onTaskLoaded(diary: Diary?) {
                 // The view may not be able to handle UI updates anymore
                 if (!mTaskDetailView.isActive) {
                     return
                 }
+
                 mTaskDetailView.setLoadingIndicator(false)
-                if (null == task) {
+                if (null == diary) {
                     mTaskDetailView.showMissingTask()
                 } else {
-                    showTask(task)
+                    currentContent = diary.description
+                    showDiary(diary)
                 }
             }
 
@@ -101,27 +114,53 @@ constructor(
         })
     }
 
-    override fun editTask() {
-        if (Strings.isNullOrEmpty(mTaskId)) {
-            mTaskDetailView.showMissingTask()
+    override fun saveDiary() {
+        if (Strings.isNullOrEmpty(currentContent)) {
+            mTaskDetailView.showEmptyTaskError()
             return
         }
-        mTaskDetailView.showEditTask(mTaskId!!)
+
+        if (isNewTask) {
+            createTask()
+        } else {
+            updateTask()
+        }
+        mTaskDetailView.showEditButton()
+        mTaskDetailView.showTaskSaved()
     }
 
-    override fun deleteTask() {
-        if (Strings.isNullOrEmpty(mTaskId)) {
+    private fun createTask() {
+        val newTask = Diary("", currentContent!!)
+        if (newTask.isEmpty) {
+            mTaskDetailView.showEmptyTaskError()
+        } else {
+            mTasksRepository.save(newTask)
+            mTaskDetailView.showTaskSaved()
+        }
+    }
+
+    private fun updateTask() {
+        mTasksRepository.save(Diary("", currentContent!!, mDiaryId!!))
+        mTaskDetailView.showTaskSaved() // After an edit, go back to the list.
+    }
+
+    override fun editDiary() {
+        mTaskDetailView.showSaveButton()
+    }
+
+    override fun deleteDiary() {
+        if (Strings.isNullOrEmpty(mDiaryId)) {
             mTaskDetailView.showMissingTask()
             return
         }
-        mTasksRepository.deleteTask(mTaskId!!)
+        mTasksRepository.deleteTask(mDiaryId!!)
         mTaskDetailView.showTaskDeleted()
     }
 
-    private fun showTask(task: Diary) {
-        val description = task.description
+    private fun showDiary(diary: Diary) {
+        val description = diary.description
 
-        mTaskDetailView.showDate(task.formatDisplayTime())
+        mTaskDetailView.showDate(diary.formatDisplayTime())
 
         if (Strings.isNullOrEmpty(description)) {
             mTaskDetailView.hideDescription()
@@ -136,7 +175,7 @@ constructor(
         }
     }
 
-    private fun refreshWeather() {
+    override fun refreshWeather() {
         mLocationManager.getLastLocation {
             mWeatherManager.getCurrentWeather(it.latitude, it.longitude) {
                 logi("current weather = $it")
@@ -145,9 +184,13 @@ constructor(
         }
     }
 
-    private var mTaskId: String? = null
+    private var mDiaryId: String? = null
 
     fun setDiaryId(taskId: String?) {
-        mTaskId = taskId
+        mDiaryId = taskId
+    }
+
+    fun onContentChange(newContent: String) {
+        currentContent = newContent
     }
 }

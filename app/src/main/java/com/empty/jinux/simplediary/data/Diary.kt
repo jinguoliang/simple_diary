@@ -34,8 +34,8 @@ data class Diary
  * @param completed   true if the diary is completed, false if it's active
  */
 constructor(
-        val title: String,
-        val description: String,
+        val title: String = "",
+        val description: String = "",
         val id: String = UUID.randomUUID().toString(),
         val isCompleted: Boolean = false,
         val createdTime: Long = System.currentTimeMillis(),
@@ -71,4 +71,5 @@ constructor(
     override fun toString(): String {
         return "Diary with title " + title
     }
+
 }

@@ -21,11 +21,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
+import android.support.design.widget.Snackbar
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.*
 import com.empty.jinux.baselibaray.loge
 import com.empty.jinux.simplediary.R
-import com.empty.jinux.simplediary.ui.addeditdiary.AddEditDiaryActivity
-import com.empty.jinux.simplediary.ui.addeditdiary.AddEditDiaryFragment
 import com.empty.jinux.simplediary.ui.taskdetail.TaskDetailContract
 import com.empty.jinux.simplediary.ui.taskdetail.presenter.TaskDetailPresenter
 import com.squareup.picasso.Picasso
@@ -60,22 +61,37 @@ class TaskDetailFragment : DaggerFragment(), TaskDetailContract.View {
 
     private val MY_PERMISSIONS_REQUEST_COARSE_LOCATION = 0x25
 
+    private lateinit var floatBtn: FloatingActionButton
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val root = inflater.inflate(R.layout.taskdetail_frag, container, false)
-        setHasOptionsMenu(true)
-
-        // Set up floating action button
-        (activity!!.findViewById<FloatingActionButton>(R.id.fab_edit_task)).setOnClickListener { mPresenter.editTask() }
-
-        return root
+        return inflater.inflate(R.layout.taskdetail_frag, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        setHasOptionsMenu(true)
+
+        // Set up floating action button
+        floatBtn = activity!!.findViewById<FloatingActionButton>(R.id.fab_edit_task)
         refreshLocation.setOnClickListener {
             mPresenter.refreshLocation()
         }
+        diaryContent.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                mPresenter.onContentChange(s.toString())
+            }
+
+        })
+
     }
 
     override fun setPresenter(presenter: TaskDetailContract.Presenter) {
@@ -85,7 +101,7 @@ class TaskDetailFragment : DaggerFragment(), TaskDetailContract.View {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
             R.id.menu_delete -> {
-                mPresenter.deleteTask()
+                mPresenter.deleteDiary()
                 return true
             }
         }
@@ -110,12 +126,6 @@ class TaskDetailFragment : DaggerFragment(), TaskDetailContract.View {
 
     override fun showDate(dateStr: String) {
         date.text = dateStr
-    }
-
-    override fun showEditTask(taskId: String) {
-        val intent = Intent(context, AddEditDiaryActivity::class.java)
-        intent.putExtra(AddEditDiaryFragment.ARGUMENT_EDIT_TASK_ID, taskId)
-        startActivityForResult(intent, REQUEST_EDIT_TASK)
     }
 
     override fun showTaskDeleted() {
@@ -159,5 +169,24 @@ class TaskDetailFragment : DaggerFragment(), TaskDetailContract.View {
         weatherName.text = weather
         Picasso.with(context).load(weatherIconUrl).into(weatherIcon)
     }
+
+    override fun showSaveButton() {
+        floatBtn.setImageResource(R.drawable.ic_done)
+        floatBtn.setOnClickListener { mPresenter.saveDiary() }
+    }
+
+    override fun showEditButton() {
+        floatBtn.setImageResource(R.drawable.ic_edit)
+        floatBtn.setOnClickListener { mPresenter.editDiary() }
+    }
+
+    override fun showTaskSaved() {
+        Snackbar.make(view!!, getString(R.string.successfully_saved_task_message), Snackbar.LENGTH_LONG).show()
+    }
+
+    override fun showEmptyTaskError() {
+
+    }
+
 
 }

@@ -40,7 +40,7 @@ class TaskDetailActivity : DaggerAppCompatActivity() {
         ab.setDisplayShowHomeEnabled(true)
 
         // Get the requested task id
-        val taskId = intent.getStringExtra(EXTRA_TASK_ID)
+        val taskId: String? = intent.getStringExtra(EXTRA_TASK_ID)
 
         var taskDetailFragment = supportFragmentManager
                 .findFragmentById(R.id.contentFrame) as TaskDetailFragment?

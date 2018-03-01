@@ -19,7 +19,7 @@ package com.empty.jinux.simplediary.data.source.local
 import android.provider.BaseColumns
 
 /**
- * The contract used for the db to save the tasks locally.
+ * The contract used for the db to saveDiary the tasks locally.
  */
 class TasksPersistenceContract {
 
