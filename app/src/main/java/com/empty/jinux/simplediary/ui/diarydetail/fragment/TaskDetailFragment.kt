@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.ui.taskdetail.fragment
+package com.empty.jinux.simplediary.ui.diarydetail.fragment
 
 import android.app.Activity
 import android.content.Context
@@ -27,8 +27,8 @@ import android.text.TextWatcher
 import android.view.*
 import com.empty.jinux.baselibaray.loge
 import com.empty.jinux.simplediary.R
-import com.empty.jinux.simplediary.ui.taskdetail.TaskDetailContract
-import com.empty.jinux.simplediary.ui.taskdetail.presenter.TaskDetailPresenter
+import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
+import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
 import com.squareup.picasso.Picasso
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.taskdetail_frag.*
@@ -37,11 +37,11 @@ import javax.inject.Inject
 /**
  * Main UI for the task detail screen.
  */
-class TaskDetailFragment : DaggerFragment(), TaskDetailContract.View {
+class TaskDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
 
     @Inject internal
-    lateinit var mPresenter: TaskDetailPresenter
+    lateinit var mPresenter: DiaryDetailPresenter
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -94,7 +94,7 @@ class TaskDetailFragment : DaggerFragment(), TaskDetailContract.View {
 
     }
 
-    override fun setPresenter(presenter: TaskDetailContract.Presenter) {
+    override fun setPresenter(presenter: DiaryDetailContract.Presenter) {
 //        mPresenter = checkNotNull(presenter)
     }
 
@@ -128,7 +128,7 @@ class TaskDetailFragment : DaggerFragment(), TaskDetailContract.View {
         date.text = dateStr
     }
 
-    override fun showTaskDeleted() {
+    override fun showDiaryDeleted() {
         activity?.finish()
     }
 
@@ -142,7 +142,7 @@ class TaskDetailFragment : DaggerFragment(), TaskDetailContract.View {
         }
     }
 
-    override fun showMissingTask() {
+    override fun showMissingDiary() {
         loge("no this task")
     }
 
@@ -180,11 +180,11 @@ class TaskDetailFragment : DaggerFragment(), TaskDetailContract.View {
         floatBtn.setOnClickListener { mPresenter.editDiary() }
     }
 
-    override fun showTaskSaved() {
+    override fun showDiarySaved() {
         Snackbar.make(view!!, getString(R.string.successfully_saved_task_message), Snackbar.LENGTH_LONG).show()
     }
 
-    override fun showEmptyTaskError() {
+    override fun showEmptyDiaryError() {
 
     }
 

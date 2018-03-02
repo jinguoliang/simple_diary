@@ -19,24 +19,20 @@ package com.empty.jinux.simplediary.data.source.remote
 import com.empty.jinux.baselibaray.logThrowable
 import com.empty.jinux.baselibaray.logd
 import com.empty.jinux.simplediary.data.Diary
-import com.empty.jinux.simplediary.data.source.TasksDataSource
+import com.empty.jinux.simplediary.data.source.DiariesDataSource
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import java.util.*
 import javax.inject.Singleton
 
 /**
- * Implementation of the data source that adds a latency simulating network.
+ * Implementation of the data source with Firebase
  */
-
-inline fun <reified T> Gson.fromJson(json: String) = this.fromJson<T>(json, object : TypeToken<T>() {}.type)
-
 @Singleton
-class DiariesRemoteDataSource : TasksDataSource {
+class DiariesRemoteDataSource : DiariesDataSource {
 
 
     private var mEventListener: DatabaseDataChangeListener? = null
@@ -46,7 +42,7 @@ class DiariesRemoteDataSource : TasksDataSource {
 
     private var mCacheDirty = true
 
-    val mDatabase = FirebaseDatabase.getInstance().getReference(diaries_root).apply {
+    private val mDatabase = FirebaseDatabase.getInstance().getReference(diaries_root).apply {
         mEventListener = DatabaseDataChangeListener {
             mDataList.clear()
             mDataList.addAll(it)
@@ -60,30 +56,20 @@ class DiariesRemoteDataSource : TasksDataSource {
         this.addValueEventListener(mEventListener)
     }
 
-    /**
-     * Note: [LoadTasksCallback.onDataNotAvailable] is never fired. In a real remote data
-     * source implementation, this would be fired if the server can't be contacted or the server
-     * returns an error.
-     */
-    override fun getDiaries(callback: TasksDataSource.LoadDiariesCallback) {
+    override fun getDiaries(callback: DiariesDataSource.LoadDiariesCallback) {
         if (mCacheDirty) {
 
         } else {
-            callback.onTasksLoaded(mDataList)
+            callback.onDiariesLoaded(mDataList)
         }
     }
 
-    /**
-     * Note: [GetTaskCallback.onDataNotAvailable] is never fired. In a real remote data
-     * source implementation, this would be fired if the server can't be contacted or the server
-     * returns an error.
-     */
-    override fun getTask(taskId: String, callback: TasksDataSource.GetTaskCallback) {
+    override fun getDiary(diaryId: String, callback: DiariesDataSource.GetDiaryCallback) {
         if (mCacheDirty) {
 
         } else {
-            if (mDataMap.containsKey(taskId)) {
-                callback.onTaskLoaded(mDataMap[taskId]!!)
+            if (mDataMap.containsKey(diaryId)) {
+                callback.onDiaryLoaded(mDataMap[diaryId]!!)
             } else {
                 callback.onDataNotAvailable()
             }
@@ -91,27 +77,12 @@ class DiariesRemoteDataSource : TasksDataSource {
     }
 
 
-    override fun save(task: Diary) {
-        mDatabase.child(task.id).setValue(Gson().toJson(task))
+    override fun save(diary: Diary) {
+        mDatabase.child(diary.id).setValue(Gson().toJson(diary))
         mCacheDirty = true
     }
 
-    override fun clearCompletedTasks() {
-        val it = mDataList.iterator()
-
-        while (it.hasNext()) {
-            val entry = it.next()
-            if (entry.isCompleted) {
-                mDatabase.child(entry.id).removeValue()
-            }
-        }
-
-        mCacheDirty = true
-    }
-
-    override fun refreshTasks() {
-        // Not required because the {@link TasksRepository} handles the logic of refreshing the
-        // tasks from all the available data sources.
+    override fun refreshDiaries() {
     }
 
     override fun deleteAllDiaries() {
@@ -120,19 +91,13 @@ class DiariesRemoteDataSource : TasksDataSource {
         mCacheDirty = true
     }
 
-    override fun deleteTask(taskId: String) {
-        mDatabase.child(taskId).removeValue()
+    override fun deleteDiary(diaryId: String) {
+        mDatabase.child(diaryId).removeValue()
     }
 
     companion object {
 
-        private val SERVICE_LATENCY_IN_MILLIS = 5000
         private val diaries_root = "diary"
-
-        init {
-//            addTask("Build tower in Pisa", "Ground looks good, no foundation work required.")
-//            addTask("Finish bridge in Tacoma", "Found awesome girders at half the cost!")
-        }
     }
 
     /**

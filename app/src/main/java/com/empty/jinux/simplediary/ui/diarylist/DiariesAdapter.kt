@@ -34,7 +34,7 @@ internal class DiariesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiaryViewHolder {
         return DiaryViewHolder(LayoutInflater.from(parent.context)
-                .inflate(R.layout.task_item, parent, false), mItemListener)
+                .inflate(R.layout.recycle_item_diary, parent, false), mItemListener)
     }
 
     override fun onBindViewHolder(holder: DiaryViewHolder, position: Int) {

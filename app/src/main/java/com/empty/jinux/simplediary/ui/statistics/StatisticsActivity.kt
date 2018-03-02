@@ -24,7 +24,7 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.view.MenuItem
 import com.empty.jinux.simplediary.R
-import com.empty.jinux.simplediary.data.source.TasksRepository
+import com.empty.jinux.simplediary.data.source.DiariesRepository
 import com.empty.jinux.simplediary.ui.diarylist.DiaryListActivity
 import com.empty.jinux.simplediary.util.ActivityUtils
 import dagger.Binds
@@ -37,7 +37,7 @@ import kotlinx.android.synthetic.main.statistics_act.*
 import javax.inject.Inject
 
 /**
- * Show statistics for tasks.
+ * Show statistics for diaries.
  */
 class StatisticsActivity : DaggerAppCompatActivity() {
 
@@ -59,8 +59,11 @@ class StatisticsActivity : DaggerAppCompatActivity() {
 
     private var mDrawerLayout: DrawerLayout? = null
 
+    /**
+     * Dagger doesn't support private field
+     */
     @Inject
-    lateinit internal var mTasksRepository: TasksRepository
+    internal lateinit var mDiariesRepository: DiariesRepository
 
     internal var mStatiticsPresenter: StatisticsPresenter? = null
 
@@ -92,7 +95,7 @@ class StatisticsActivity : DaggerAppCompatActivity() {
                     statisticsFragment, R.id.contentFrame)
         }
 
-        mStatiticsPresenter = StatisticsPresenter(mTasksRepository, statisticsFragment)
+        mStatiticsPresenter = StatisticsPresenter(mDiariesRepository, statisticsFragment)
         mStatiticsPresenter!!.setupListeners()
 
     }

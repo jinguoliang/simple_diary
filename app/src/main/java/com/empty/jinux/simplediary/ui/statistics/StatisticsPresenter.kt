@@ -18,8 +18,8 @@ package com.empty.jinux.simplediary.ui.statistics
 
 
 import com.empty.jinux.simplediary.data.Diary
-import com.empty.jinux.simplediary.data.source.TasksDataSource
-import com.empty.jinux.simplediary.data.source.TasksRepository
+import com.empty.jinux.simplediary.data.source.DiariesDataSource
+import com.empty.jinux.simplediary.data.source.DiariesRepository
 import javax.inject.Inject
 
 /**
@@ -42,7 +42,7 @@ internal class StatisticsPresenter
  * with `@Nullable` values.
  */
 @Inject
-constructor(private val mTasksRepository: TasksRepository,
+constructor(private val mTasksRepository: DiariesRepository,
             private val mStatisticsView: StatisticsContract.View) : StatisticsContract.Presenter {
 
     /**
@@ -61,13 +61,13 @@ constructor(private val mTasksRepository: TasksRepository,
     private fun loadStatistics() {
         mStatisticsView.setProgressIndicator(true)
 
-        mTasksRepository.getDiaries(object : TasksDataSource.LoadDiariesCallback {
-            override fun onTasksLoaded(tasks: List<Diary>) {
+        mTasksRepository.getDiaries(object : DiariesDataSource.LoadDiariesCallback {
+            override fun onDiariesLoaded(diaries: List<Diary>) {
                 var activeTasks = 0
                 var completedTasks = 0
 
                 // We calculate number of active and completed tasks
-                for ((_, _, _, isCompleted) in tasks) {
+                for ((_, _, _, isCompleted) in diaries) {
                     if (isCompleted) {
                         completedTasks += 1
                     } else {
@@ -80,7 +80,7 @@ constructor(private val mTasksRepository: TasksRepository,
                 }
                 mStatisticsView.setProgressIndicator(false)
 
-                mStatisticsView.showStatistics(activeTasks, completedTasks)
+                mStatisticsView.showStatistics()
             }
 
             override fun onDataNotAvailable() {

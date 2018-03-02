@@ -23,11 +23,12 @@ import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.PopupMenu
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
-import com.empty.jinux.simplediary.ui.taskdetail.TaskDetailActivity
+import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivity
 import com.google.common.base.Preconditions.checkNotNull
 import kotlinx.android.synthetic.main.tasks_frag.*
 import org.jetbrains.anko.intentFor
@@ -45,9 +46,9 @@ class DiaryListFragment : Fragment(), DiaryListContract.View {
     /**
      * Listener for clicks on tasks in the ListView.
      */
-    internal var mItemListener: DiariesAdapter.DiaryItemListener = object : DiariesAdapter.DiaryItemListener {
+    private var mItemListener: DiariesAdapter.DiaryItemListener = object : DiariesAdapter.DiaryItemListener {
         override fun onClick(diary: Diary) {
-            mPresenter.openTaskDetails(diary)
+            mPresenter.openDiaryDetails(diary)
         }
 
         override fun onCompleteClick(diary: Diary) {
@@ -62,7 +63,7 @@ class DiaryListFragment : Fragment(), DiaryListContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mListAdapter = DiariesAdapter(ArrayList<Diary>(0), mItemListener)
+        mListAdapter = DiariesAdapter(ArrayList(0), mItemListener)
     }
 
     override fun onResume() {
@@ -96,12 +97,12 @@ class DiaryListFragment : Fragment(), DiaryListContract.View {
         tasks_list.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         tasks_list.adapter = mListAdapter
 
-        noTasks.setOnClickListener { showAddTask() }
+        noTasks.setOnClickListener { showAddDiary() }
 
         // Set up floating action button
         activity?.findViewById<FloatingActionButton>(R.id.fab_add_task)?.apply {
             setImageResource(R.drawable.ic_add)
-            setOnClickListener { mPresenter.addNewTask() }
+            setOnClickListener { mPresenter.addNewDiary() }
         }
 
         activity?.let { activity ->
@@ -113,40 +114,11 @@ class DiaryListFragment : Fragment(), DiaryListContract.View {
             )
             // Set the scrolling view in the custom SwipeRefreshLayout.
             refresh_layout.setScrollUpChild(tasks_list)
-            refresh_layout.setOnRefreshListener { mPresenter.loadTasks(false) }
+            refresh_layout.setOnRefreshListener { mPresenter.loadDiaries(false) }
         }
 
 
         setHasOptionsMenu(true)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_filter -> showFilteringPopUpMenu()
-            R.id.menu_refresh -> mPresenter.loadTasks(true)
-        }
-        return true
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-//        inflater.inflate(R.menu.tasks_fragment_menu, menu)
-    }
-
-    override fun showFilteringPopUpMenu() {
-        val popup = PopupMenu(context!!, activity!!.findViewById(R.id.menu_filter))
-        popup.menuInflater.inflate(R.menu.filter_tasks, popup.menu)
-
-        popup.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.active -> mPresenter.filtering = DiaryListFilterType.ACTIVE
-                R.id.completed -> mPresenter.filtering = DiaryListFilterType.COMPLETED
-                else -> mPresenter.filtering = DiaryListFilterType.ALL
-            }
-            mPresenter.loadTasks(false)
-            true
-        }
-
-        popup.show()
     }
 
     override fun setLoadingIndicator(active: Boolean) {
@@ -160,33 +132,17 @@ class DiaryListFragment : Fragment(), DiaryListContract.View {
         srl.post { srl.isRefreshing = active }
     }
 
-    override fun showTasks(tasks: List<Diary>) {
-        mListAdapter.replaceData(tasks)
+    override fun showDiaries(diaries: List<Diary>) {
+        mListAdapter.replaceData(diaries)
 
         tasks_list.visibility = View.VISIBLE
         noTasks.visibility = View.GONE
     }
 
-    override fun showNoActiveTasks() {
-        showNoTasksViews(
-                resources.getString(R.string.no_tasks_active),
-                R.drawable.ic_check_circle_24dp,
-                false
-        )
-    }
-
-    override fun showNoTasks() {
+    override fun showNoDiaries() {
         showNoTasksViews(
                 resources.getString(R.string.no_tasks_all),
                 R.drawable.ic_assignment_turned_in_24dp,
-                false
-        )
-    }
-
-    override fun showNoCompletedTasks() {
-        showNoTasksViews(
-                resources.getString(R.string.no_tasks_completed),
-                R.drawable.ic_verified_user_24dp,
                 false
         )
     }
@@ -204,41 +160,21 @@ class DiaryListFragment : Fragment(), DiaryListContract.View {
         noTasksAdd.visibility = if (showAddView) View.VISIBLE else View.GONE
     }
 
-    override fun showActiveFilterLabel() {
-        filteringLabel.text = resources.getString(R.string.label_active)
+    override fun showAddDiary() {
+        startActivityForResult(context?.intentFor<DiaryDetailActivity>(),
+                DiaryListActivity.REQUEST_ADD_DIARY)
     }
 
-    override fun showCompletedFilterLabel() {
-        filteringLabel.text = resources.getString(R.string.label_completed)
+    override fun showDiaryDetailsUI(diaryId: String) {
+        startActivity(context?.intentFor<DiaryDetailActivity>(
+                DiaryDetailActivity.EXTRA_TASK_ID to diaryId))
     }
 
-    override fun showAllFilterLabel() {
-        filteringLabel.text = resources.getString(R.string.label_all)
-    }
-
-    override fun showAddTask() {
-        startActivityForResult(context?.intentFor<TaskDetailActivity>(),
-                DiaryListActivity.REQUEST_ADD_TASK)
-    }
-
-    override fun showTaskDetailsUi(taskId: String) {
-        startActivity(context?.intentFor<TaskDetailActivity>(
-                TaskDetailActivity.EXTRA_TASK_ID to taskId))
-    }
-
-    override fun showTaskMarkedComplete() {
+    override fun showDiaryMarkedComplete() {
         showMessage(getString(R.string.task_marked_complete))
     }
 
-    override fun showTaskMarkedActive() {
-        showMessage(getString(R.string.task_marked_active))
-    }
-
-    override fun showCompletedTasksCleared() {
-        showMessage(getString(R.string.completed_tasks_cleared))
-    }
-
-    override fun showLoadingTasksError() {
+    override fun showLoadingDiariesError() {
         showMessage(getString(R.string.loading_tasks_error))
     }
 

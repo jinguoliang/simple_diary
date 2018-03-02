@@ -18,10 +18,8 @@ package com.empty.jinux.simplediary.ui.diarylist
 
 import android.app.Activity
 import com.empty.jinux.simplediary.data.Diary
-import com.empty.jinux.simplediary.data.source.TasksDataSource
-import com.empty.jinux.simplediary.data.source.TasksRepository
-import com.google.common.base.Preconditions.checkNotNull
-import java.util.*
+import com.empty.jinux.simplediary.data.source.DiariesDataSource
+import com.empty.jinux.simplediary.data.source.DiariesRepository
 import javax.inject.Inject
 
 
@@ -45,16 +43,7 @@ internal class DiaryListPresenter
  * with `@Nullable` values.
  */
 @Inject
-constructor(private val mTasksRepository: TasksRepository, private val mTasksView: DiaryListContract.View) : DiaryListContract.Presenter {
-
-    /**
-     * Sets the current task filtering type.
-     *
-     * @param requestType Can be [DiaryListFilterType.ALL],
-     * [DiaryListFilterType.COMPLETED], or
-     * [DiaryListFilterType.ACTIVE]
-     */
-    override var filtering = DiaryListFilterType.ALL
+constructor(private val mDiariesRepository: DiariesRepository, private val mDiariesView: DiaryListContract.View) : DiaryListContract.Presenter {
 
     private var mFirstLoad = true
 
@@ -64,140 +53,84 @@ constructor(private val mTasksRepository: TasksRepository, private val mTasksVie
      */
     @Inject
     fun setupListeners() {
-        mTasksView.setPresenter(this)
+        mDiariesView.setPresenter(this)
     }
 
     override fun start() {
-        loadTasks(true)
+        loadDiaries(true)
     }
 
     override fun stop() {
     }
 
-    private var mDataChangeListener = object : TasksDataSource.OnChangeListener {
-        override fun onChange(data: List<Diary>) {
-            val tasksToShow = ArrayList<Diary>()
-
-            // We filter the tasks based on the requestType
-            for (diary in data) {
-                when (filtering) {
-                    DiaryListFilterType.ALL -> tasksToShow.add(diary)
-                    DiaryListFilterType.ACTIVE -> if (diary.isActive) {
-                        tasksToShow.add(diary)
-                    }
-                    DiaryListFilterType.COMPLETED -> if (diary.isCompleted) {
-                        tasksToShow.add(diary)
-                    }
-                    else -> tasksToShow.add(diary)
-                }
-            }
-            // The view may not be able to handle UI updates anymore
-            if (!mTasksView.isActive) {
-                return
-            }
-
-            processTasks(tasksToShow)
-        }
-    }
-
     override fun result(requestCode: Int, resultCode: Int) {
-        // If a task was successfully added, show snackbar
-        if (DiaryListActivity.REQUEST_ADD_TASK == requestCode && Activity.RESULT_OK == resultCode) {
-            mTasksView.showSuccessfullySavedMessage()
+        // If a diary was successfully added, show snackbar
+        if (DiaryListActivity.REQUEST_ADD_DIARY == requestCode && Activity.RESULT_OK == resultCode) {
+            mDiariesView.showSuccessfullySavedMessage()
         }
     }
 
-    override fun loadTasks(forceUpdate: Boolean) {
+    override fun loadDiaries(forceUpdate: Boolean) {
         // Simplification for sample: a network reload will be forced on first load.
-        loadTasks(forceUpdate || mFirstLoad, true)
+        loadDiaries(forceUpdate || mFirstLoad, true)
         mFirstLoad = false
     }
 
     /**
-     * @param forceUpdate   Pass in true to refresh the data in the [TasksDataSource]
+     * @param forceUpdate   Pass in true to refresh the data in the [DiariesDataSource]
      * @param showLoadingUI Pass in true to display a loading icon in the UI
      */
-    private fun loadTasks(forceUpdate: Boolean, showLoadingUI: Boolean) {
+    private fun loadDiaries(forceUpdate: Boolean, showLoadingUI: Boolean) {
         if (showLoadingUI) {
-            mTasksView.setLoadingIndicator(true)
+            mDiariesView.setLoadingIndicator(true)
         }
         if (forceUpdate) {
-            mTasksRepository.refreshTasks()
+            mDiariesRepository.refreshDiaries()
         }
 
-        mTasksRepository.getDiaries(object : TasksDataSource.LoadDiariesCallback {
-            override fun onTasksLoaded(tasks: List<Diary>) {
-                val tasksToShow = ArrayList<Diary>()
-
-                // We filter the tasks based on the requestType
-                for (task in tasks) {
-                    when (filtering) {
-                        DiaryListFilterType.ALL -> tasksToShow.add(task)
-                        DiaryListFilterType.ACTIVE -> if (task.isActive) {
-                            tasksToShow.add(task)
-                        }
-                        DiaryListFilterType.COMPLETED -> if (task.isCompleted) {
-                            tasksToShow.add(task)
-                        }
-                        else -> tasksToShow.add(task)
-                    }
-                }
+        mDiariesRepository.getDiaries(object : DiariesDataSource.LoadDiariesCallback {
+            override fun onDiariesLoaded(diaries: List<Diary>) {
                 // The view may not be able to handle UI updates anymore
-                if (!mTasksView.isActive) {
+                if (!mDiariesView.isActive) {
                     return
                 }
                 if (showLoadingUI) {
-                    mTasksView.setLoadingIndicator(false)
+                    mDiariesView.setLoadingIndicator(false)
                 }
 
-                processTasks(tasksToShow)
+                processDiaries(diaries)
             }
 
             override fun onDataNotAvailable() {
                 // The view may not be able to handle UI updates anymore
-                if (!mTasksView.isActive) {
+                if (!mDiariesView.isActive) {
                     return
                 }
-                mTasksView.showLoadingTasksError()
+                mDiariesView.showLoadingDiariesError()
             }
         })
     }
 
-    private fun processTasks(tasks: List<Diary>) {
-        if (tasks.isEmpty()) {
-            // Show a message indicating there are no tasks for that filter type.
-            processEmptyTasks()
+    private fun processDiaries(diaries: List<Diary>) {
+        if (diaries.isEmpty()) {
+            // Show a message indicating there are no diaries for that filter type.
+            processEmptyDiaries()
         } else {
-            // Show the list of tasks
-            mTasksView.showTasks(tasks)
+            // Show the list of diaries
+            mDiariesView.showDiaries(diaries)
         }
 
-        // Set the filter label's text.
-        showFilterLabel()
     }
 
-    private fun showFilterLabel() {
-        when (filtering) {
-            DiaryListFilterType.ACTIVE -> mTasksView.showActiveFilterLabel()
-            DiaryListFilterType.COMPLETED -> mTasksView.showCompletedFilterLabel()
-            else -> mTasksView.showAllFilterLabel()
-        }
+    private fun processEmptyDiaries() {
+        mDiariesView.showNoDiaries()
     }
 
-    private fun processEmptyTasks() {
-        when (filtering) {
-            DiaryListFilterType.ACTIVE -> mTasksView.showNoActiveTasks()
-            DiaryListFilterType.COMPLETED -> mTasksView.showNoCompletedTasks()
-            else -> mTasksView.showNoTasks()
-        }
+    override fun addNewDiary() {
+        mDiariesView.showAddDiary()
     }
 
-    override fun addNewTask() {
-        mTasksView.showAddTask()
-    }
-
-    override fun openTaskDetails(requestedTask: Diary) {
-        checkNotNull<Diary>(requestedTask, "requestedTask cannot be null!")
-        mTasksView.showTaskDetailsUi(requestedTask.id)
+    override fun openDiaryDetails(diary: Diary) {
+        mDiariesView.showDiaryDetailsUI(diary.id)
     }
 }

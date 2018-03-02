@@ -14,24 +14,17 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.ui.diarylist
+package com.empty.jinux.simplediary.data.source.local
 
-/**
- * Used with the filter spinner in the list.
- */
-enum class DiaryListFilterType {
-    /**
-     * Do not filter.
-     */
-    ALL,
+import android.provider.BaseColumns
 
-    /**
-     * Filters only the active (not completed yet).
-     */
-    ACTIVE,
-
-    /**
-     * Filters only the completed.
-     */
-    COMPLETED
+interface DiaryEntry : BaseColumns {
+    companion object {
+        val TABLE_NAME = "task"
+        val COLUMN_NAME_ENTRY_ID = "entryid"
+        val COLUMN_NAME_TITLE = "title"
+        val COLUMN_NAME_DESCRIPTION = "description"
+        val COLUMN_NAME_COMPLETED = "completed"
+        val COLUMN_ID = "_id"
+    }
 }

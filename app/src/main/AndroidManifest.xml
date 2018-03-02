@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.empty.jinux.simplediary.ui.taskdetail.TaskDetailActivity"
+            android:name="com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name" />
         <activity

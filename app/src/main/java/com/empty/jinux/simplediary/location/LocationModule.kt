@@ -1,6 +1,6 @@
 package com.empty.jinux.simplediary.location
 
-import com.empty.jinux.simplediary.ui.taskdetail.TaskDetailActivity
+import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivity
 import dagger.Module
 import dagger.Provides
 
@@ -14,7 +14,7 @@ import dagger.Provides
 class LocationModule {
 
     @Provides
-    fun provideLocationManager(context: TaskDetailActivity): LocationManager {
+    fun provideLocationManager(context: DiaryDetailActivity): LocationManager {
         return LocationManagerImpl(context)
     }
 }

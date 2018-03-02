@@ -14,29 +14,26 @@ import javax.inject.Singleton
 
 /**
  * Created by jingu on 2018/2/25.
+ *
  */
 
 @Singleton
-class WeatherManagerRetrofitImpl : WeatherManager {
+class WeatherManagerRetrofitImpl @Inject constructor() : WeatherManager {
 
-    val mOkHttpClientBuilder = OkHttpClient.Builder().apply {
+    private val mOkHttpClientBuilder = OkHttpClient.Builder().apply {
         if (BuildConfig.DEBUG) {
             val interceptor = HttpLoggingInterceptor()
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+            interceptor.level = HttpLoggingInterceptor.Level.BODY
             addInterceptor(interceptor)
         }
     }
 
-    val mRetrofit = Retrofit.Builder()
+    private val mRetrofit = Retrofit.Builder()
             .baseUrl("http://api.openweathermap.org/data/2.5/")
             .client(mOkHttpClientBuilder.build())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-    val mWeatherService = mRetrofit.create(WeatherApi::class.java)
-
-    @Inject
-    constructor() {
-    }
+    private val mWeatherService = mRetrofit.create(WeatherApi::class.java)
 
     override fun getCurrentWeather(lat: Double, lon: Double, callback: (Weather) -> Unit) {
         val call = mWeatherService.getCurrentWeatherByCoordinates(lat, lon)

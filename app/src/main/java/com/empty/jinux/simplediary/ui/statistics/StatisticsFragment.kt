@@ -23,7 +23,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.empty.jinux.simplediary.R
-import com.google.common.base.Preconditions.checkNotNull
 import kotlinx.android.synthetic.main.statistics_frag.*
 
 
@@ -37,7 +36,7 @@ class StatisticsFragment : Fragment(), StatisticsContract.View {
     private var mPresenter: StatisticsContract.Presenter? = null
 
     override fun setPresenter(presenter: StatisticsContract.Presenter) {
-        mPresenter = checkNotNull<StatisticsContract.Presenter>(presenter)
+        mPresenter = presenter
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -63,14 +62,8 @@ class StatisticsFragment : Fragment(), StatisticsContract.View {
         }
     }
 
-    override fun showStatistics(numberOfIncompleteTasks: Int, numberOfCompletedTasks: Int) {
-        if (numberOfCompletedTasks == 0 && numberOfIncompleteTasks == 0) {
-            mStatisticsTV.text = resources.getString(R.string.statistics_no_diary)
-        } else {
-            val displayString = (resources.getString(R.string.statistics_diaries) + " "
-                    + numberOfIncompleteTasks)
-            mStatisticsTV.text = displayString
-        }
+    override fun showStatistics() {
+
     }
 
     override fun showLoadingStatisticsError() {

@@ -14,44 +14,34 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.ui.taskdetail.presenter
+package com.empty.jinux.simplediary.ui.diarydetail.presenter
 
 import com.empty.jinux.baselibaray.logi
 import com.empty.jinux.simplediary.data.Diary
-import com.empty.jinux.simplediary.data.source.TasksDataSource
-import com.empty.jinux.simplediary.data.source.TasksRepository
+import com.empty.jinux.simplediary.data.source.DiariesDataSource
+import com.empty.jinux.simplediary.data.source.DiariesRepository
 import com.empty.jinux.simplediary.location.LocationManager
-import com.empty.jinux.simplediary.ui.taskdetail.TaskDetailContract
+import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.util.formatDisplayTime
 import com.empty.jinux.simplediary.weather.WeatherManager
 import com.google.common.base.Strings
 import javax.inject.Inject
 
 /**
- * Listens to user actions from the UI ([TaskDetailFragment]), retrieves the data and updates
+ * Listens to user actions from the UI, retrieves the data and updates
  * the UI as required.
- *
- *
- * By marking the constructor with `@Inject`, Dagger injects the dependencies required to
- * create an instance of the TaskDetailPresenter (if it fails, it emits a compiler error). It uses
- * [TaskDetailPresenterModule] to do so.
- *
- *
- * Dagger generated code doesn't require public access to the constructor or class, and
- * therefore, to ensure the developer doesn't instantiate the class manually and bypasses Dagger,
- * it's good practice minimise the visibility of the class/constructor as much as possible.
  */
-internal class TaskDetailPresenter
+internal class DiaryDetailPresenter
 /**
  * Dagger strictly enforces that arguments not marked with `@Nullable` are not injected
  * with `@Nullable` values.
  */
 @Inject
 constructor(
-        private val mTasksRepository: TasksRepository,
-        private val mTaskDetailView: TaskDetailContract.View,
+        private val mDiariesRepository: DiariesRepository,
+        private val mDiaryDetailView: DiaryDetailContract.View,
         private val mLocationManager: LocationManager,
-        private val mWeatherManager: WeatherManager) : TaskDetailContract.Presenter {
+        private val mWeatherManager: WeatherManager) : DiaryDetailContract.Presenter {
 
     /**
      * Method injection is used here to safely reference `this` after the object is created.
@@ -59,16 +49,16 @@ constructor(
      */
     @Inject
     fun setupListeners() {
-        mTaskDetailView.setPresenter(this)
+        mDiaryDetailView.setPresenter(this)
     }
 
     private var currentContent: String? = null
 
-    private val isNewTask: Boolean
+    private val isNewDiary: Boolean
         get() = mDiaryId == null
 
     override fun start() {
-        if (isNewTask) {
+        if (isNewDiary) {
             initForNewDiary()
         } else {
             initForDiary(mDiaryId!!)
@@ -76,98 +66,98 @@ constructor(
     }
 
     private fun initForDiary(diaryId: String) {
-        openDiary()
-        mTaskDetailView.showEditButton()
+        openDiary(diaryId)
+        mDiaryDetailView.showEditButton()
     }
 
     private fun initForNewDiary() {
         refreshLocation()
         refreshWeather()
-        mTaskDetailView.showSaveButton()
+        mDiaryDetailView.showSaveButton()
     }
 
-    private fun openDiary() {
-        mTaskDetailView.setLoadingIndicator(true)
-        mTasksRepository.getTask(mDiaryId!!, object : TasksDataSource.GetTaskCallback {
-            override fun onTaskLoaded(diary: Diary) {
+    private fun openDiary(diaryId: String) {
+        mDiaryDetailView.setLoadingIndicator(true)
+        mDiariesRepository.getDiary(diaryId, object : DiariesDataSource.GetDiaryCallback {
+            override fun onDiaryLoaded(diary: Diary) {
                 // The view may not be able to handle UI updates anymore
-                if (!mTaskDetailView.isActive) {
+                if (!mDiaryDetailView.isActive) {
                     return
                 }
 
-                mTaskDetailView.setLoadingIndicator(false)
+                mDiaryDetailView.setLoadingIndicator(false)
                 currentContent = diary.description
                 showDiary(diary)
             }
 
             override fun onDataNotAvailable() {
                 // The view may not be able to handle UI updates anymore
-                if (!mTaskDetailView.isActive) {
+                if (!mDiaryDetailView.isActive) {
                     return
                 }
-                mTaskDetailView.showMissingTask()
+                mDiaryDetailView.showMissingDiary()
             }
         })
     }
 
     override fun saveDiary() {
         if (Strings.isNullOrEmpty(currentContent)) {
-            mTaskDetailView.showEmptyTaskError()
+            mDiaryDetailView.showEmptyDiaryError()
             return
         }
 
-        if (isNewTask) {
-            createTask()
+        if (isNewDiary) {
+            createDiary()
         } else {
-            updateTask()
+            updateDiary()
         }
-        mTaskDetailView.showEditButton()
-        mTaskDetailView.showTaskSaved()
+        mDiaryDetailView.showEditButton()
+        mDiaryDetailView.showDiarySaved()
     }
 
-    private fun createTask() {
-        val newTask = Diary("", currentContent!!)
-        if (newTask.isEmpty) {
-            mTaskDetailView.showEmptyTaskError()
+    private fun createDiary() {
+        val newDiary = Diary("", currentContent!!)
+        if (newDiary.isEmpty) {
+            mDiaryDetailView.showEmptyDiaryError()
         } else {
-            mTasksRepository.save(newTask)
-            mTaskDetailView.showTaskSaved()
+            mDiariesRepository.save(newDiary)
+            mDiaryDetailView.showDiarySaved()
         }
     }
 
-    private fun updateTask() {
-        mTasksRepository.save(Diary("", currentContent!!, mDiaryId!!))
-        mTaskDetailView.showTaskSaved() // After an edit, go back to the list.
+    private fun updateDiary() {
+        mDiariesRepository.save(Diary("", currentContent!!, mDiaryId!!))
+        mDiaryDetailView.showDiarySaved() // After an edit, go back to the list.
     }
 
     override fun editDiary() {
-        mTaskDetailView.showSaveButton()
+        mDiaryDetailView.showSaveButton()
     }
 
     override fun deleteDiary() {
         if (Strings.isNullOrEmpty(mDiaryId)) {
-            mTaskDetailView.showMissingTask()
+            mDiaryDetailView.showMissingDiary()
             return
         }
-        mTasksRepository.deleteTask(mDiaryId!!)
-        mTaskDetailView.showTaskDeleted()
+        mDiariesRepository.deleteDiary(mDiaryId!!)
+        mDiaryDetailView.showDiaryDeleted()
     }
 
     private fun showDiary(diary: Diary) {
         val description = diary.description
 
-        mTaskDetailView.showDate(diary.formatDisplayTime())
+        mDiaryDetailView.showDate(diary.formatDisplayTime())
 
         if (Strings.isNullOrEmpty(description)) {
-            mTaskDetailView.hideDescription()
+            mDiaryDetailView.hideDescription()
         } else {
-            mTaskDetailView.showDescription(description)
+            mDiaryDetailView.showDescription(description)
         }
     }
 
     override fun refreshLocation() {
         mLocationManager.getCurrentAddress { address ->
-            mTaskDetailView.showLocation(address)
+            mDiaryDetailView.showLocation(address)
         }
     }
 
@@ -175,15 +165,15 @@ constructor(
         mLocationManager.getLastLocation {
             mWeatherManager.getCurrentWeather(it.latitude, it.longitude) {
                 logi("current weather = $it")
-                mTaskDetailView.showWeather(it.description, mWeatherManager.getWeatherIcon(it.icon))
+                mDiaryDetailView.showWeather(it.description, mWeatherManager.getWeatherIcon(it.icon))
             }
         }
     }
 
     private var mDiaryId: String? = null
 
-    fun setDiaryId(taskId: String?) {
-        mDiaryId = taskId
+    fun setDiaryId(diaryId: String?) {
+        mDiaryId = diaryId
     }
 
     fun onContentChange(newContent: String) {

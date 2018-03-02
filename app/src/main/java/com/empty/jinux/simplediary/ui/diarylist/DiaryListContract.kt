@@ -31,48 +31,31 @@ interface DiaryListContract {
 
         fun setLoadingIndicator(active: Boolean)
 
-        fun showTasks(tasks: List<Diary>)
+        fun showDiaries(diaries: List<Diary>)
 
-        fun showAddTask()
+        fun showAddDiary()
 
-        fun showTaskDetailsUi(taskId: String)
+        fun showDiaryDetailsUI(diaryId: String)
 
-        fun showTaskMarkedComplete()
+        fun showDiaryMarkedComplete()
 
-        fun showTaskMarkedActive()
+        fun showLoadingDiariesError()
 
-        fun showCompletedTasksCleared()
-
-        fun showLoadingTasksError()
-
-        fun showNoTasks()
-
-        fun showActiveFilterLabel()
-
-        fun showCompletedFilterLabel()
-
-        fun showAllFilterLabel()
-
-        fun showNoActiveTasks()
-
-        fun showNoCompletedTasks()
+        fun showNoDiaries()
 
         fun showSuccessfullySavedMessage()
 
-        fun showFilteringPopUpMenu()
     }
 
     interface Presenter : BasePresenter {
 
-        var filtering: DiaryListFilterType
-
         fun result(requestCode: Int, resultCode: Int)
 
-        fun loadTasks(forceUpdate: Boolean)
+        fun loadDiaries(forceUpdate: Boolean)
 
-        fun addNewTask()
+        fun addNewDiary()
 
-        fun openTaskDetails(requestedTask: Diary)
+        fun openDiaryDetails(diary: Diary)
 
         fun stop()
     }

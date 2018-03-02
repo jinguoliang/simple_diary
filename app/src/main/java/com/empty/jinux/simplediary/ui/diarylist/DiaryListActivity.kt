@@ -24,7 +24,7 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.view.MenuItem
 import com.empty.jinux.simplediary.R
-import com.empty.jinux.simplediary.data.source.TasksRepository
+import com.empty.jinux.simplediary.data.source.DiariesRepository
 import com.empty.jinux.simplediary.intent.helpTranslate
 import com.empty.jinux.simplediary.intent.rateApp
 import com.empty.jinux.simplediary.intent.sendFeedback
@@ -65,7 +65,7 @@ class DiaryListActivity : DaggerAppCompatActivity() {
     private var mTasksPresenter: DiaryListPresenter? = null
 
     @Inject
-    lateinit internal var mTasksRepository: TasksRepository
+    lateinit internal var mTasksRepository: DiariesRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,17 +96,6 @@ class DiaryListActivity : DaggerAppCompatActivity() {
         mTasksPresenter = DiaryListPresenter(mTasksRepository, tasksFragment)
         mTasksPresenter!!.setupListeners()
 
-        // Load previously saved state, if available.
-        savedInstanceState?.apply {
-            val currentFiltering = getSerializable(CURRENT_FILTERING_KEY) as DiaryListFilterType
-            mTasksPresenter!!.filtering = currentFiltering
-        }
-    }
-
-    public override fun onSaveInstanceState(outState: Bundle) {
-        outState.putSerializable(CURRENT_FILTERING_KEY, mTasksPresenter!!.filtering)
-
-        super.onSaveInstanceState(outState)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -158,7 +147,7 @@ class DiaryListActivity : DaggerAppCompatActivity() {
     }
 
     companion object {
-        val REQUEST_ADD_TASK = 1
+        val REQUEST_ADD_DIARY = 1
         private val CURRENT_FILTERING_KEY = "CURRENT_FILTERING_KEY"
     }
 }

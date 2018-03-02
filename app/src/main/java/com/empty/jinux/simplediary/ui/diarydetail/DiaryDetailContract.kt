@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.ui.taskdetail
+package com.empty.jinux.simplediary.ui.diarydetail
 
 import com.empty.jinux.simplediary.BasePresenter
 import com.empty.jinux.simplediary.BaseView
@@ -23,7 +23,7 @@ import com.empty.jinux.simplediary.BaseView
 /**
  * This specifies the contract between the view and the presenter.
  */
-interface TaskDetailContract {
+interface DiaryDetailContract {
 
     interface View : BaseView<Presenter> {
 
@@ -31,13 +31,13 @@ interface TaskDetailContract {
 
         fun setLoadingIndicator(active: Boolean)
 
-        fun showMissingTask()
+        fun showMissingDiary()
 
         fun hideDescription()
 
         fun showDescription(description: String)
 
-        fun showTaskDeleted()
+        fun showDiaryDeleted()
 
         fun showDate(dateStr: String)
 
@@ -49,9 +49,9 @@ interface TaskDetailContract {
 
         fun showEditButton()
 
-        fun showTaskSaved()
+        fun showDiarySaved()
 
-        fun showEmptyTaskError()
+        fun showEmptyDiaryError()
 
     }
 

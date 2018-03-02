@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.ui.taskdetail
+package com.empty.jinux.simplediary.ui.diarydetail
 
 import android.os.Bundle
 import com.empty.jinux.simplediary.R
-import com.empty.jinux.simplediary.ui.taskdetail.fragment.TaskDetailFragment
+import com.empty.jinux.simplediary.ui.diarydetail.fragment.TaskDetailFragment
 import com.empty.jinux.simplediary.util.ActivityUtils
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.statistics_act.*
@@ -26,7 +26,7 @@ import kotlinx.android.synthetic.main.statistics_act.*
 /**
  * Displays task details screen.
  */
-class TaskDetailActivity : DaggerAppCompatActivity() {
+class DiaryDetailActivity : DaggerAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -20,7 +20,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class TasksDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+class DiaryDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(SQL_CREATE_ENTRIES)
@@ -37,7 +37,7 @@ class TasksDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
     companion object {
         val DATABASE_VERSION = 1
 
-        val DATABASE_NAME = "Tasks.db"
+        val DATABASE_NAME = "Diaries.db"
 
         private val TEXT_TYPE = " TEXT"
 
@@ -45,12 +45,12 @@ class TasksDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
 
         private val COMMA_SEP = ","
 
-        private val SQL_CREATE_ENTRIES = "CREATE TABLE " + TaskEntry.TABLE_NAME + " (" +
-                TaskEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
-                TaskEntry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + COMMA_SEP +
-                TaskEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +
-                TaskEntry.COLUMN_NAME_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
-                TaskEntry.COLUMN_NAME_COMPLETED + BOOLEAN_TYPE +
+        private val SQL_CREATE_ENTRIES = "CREATE TABLE " + DiaryEntry.TABLE_NAME + " (" +
+                DiaryEntry.COLUMN_ID + TEXT_TYPE + " PRIMARY KEY," +
+                DiaryEntry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + COMMA_SEP +
+                DiaryEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +
+                DiaryEntry.COLUMN_NAME_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
+                DiaryEntry.COLUMN_NAME_COMPLETED + BOOLEAN_TYPE +
                 " )"
     }
 }
