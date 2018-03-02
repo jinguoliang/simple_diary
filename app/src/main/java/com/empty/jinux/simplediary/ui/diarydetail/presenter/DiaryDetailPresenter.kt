@@ -65,7 +65,7 @@ constructor(
         }
     }
 
-    private fun initForDiary(diaryId: String) {
+    private fun initForDiary(diaryId: Int) {
         openDiary(diaryId)
         mDiaryDetailView.showEditButton()
     }
@@ -76,7 +76,7 @@ constructor(
         mDiaryDetailView.showSaveButton()
     }
 
-    private fun openDiary(diaryId: String) {
+    private fun openDiary(diaryId: Int) {
         mDiaryDetailView.setLoadingIndicator(true)
         mDiariesRepository.getDiary(diaryId, object : DiariesDataSource.GetDiaryCallback {
             override fun onDiaryLoaded(diary: Diary) {
@@ -116,7 +116,7 @@ constructor(
     }
 
     private fun createDiary() {
-        val newDiary = Diary("", currentContent!!)
+        val newDiary = Diary(null, currentContent!!)
         if (newDiary.isEmpty) {
             mDiaryDetailView.showEmptyDiaryError()
         } else {
@@ -126,7 +126,7 @@ constructor(
     }
 
     private fun updateDiary() {
-        mDiariesRepository.save(Diary(mDiaryId!!, currentContent!!))
+        mDiariesRepository.save(Diary(mDiaryId, currentContent!!))
         mDiaryDetailView.showDiarySaved() // After an edit, go back to the list.
     }
 
@@ -135,10 +135,6 @@ constructor(
     }
 
     override fun deleteDiary() {
-        if (Strings.isNullOrEmpty(mDiaryId)) {
-            mDiaryDetailView.showMissingDiary()
-            return
-        }
         mDiariesRepository.deleteDiary(mDiaryId!!)
         mDiaryDetailView.showDiaryDeleted()
     }
@@ -170,9 +166,9 @@ constructor(
         }
     }
 
-    private var mDiaryId: String? = null
+    private var mDiaryId: Int? = null
 
-    fun setDiaryId(diaryId: String?) {
+    fun setDiaryId(diaryId: Int?) {
         mDiaryId = diaryId
     }
 

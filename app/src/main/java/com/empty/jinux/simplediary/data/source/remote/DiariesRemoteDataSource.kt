@@ -38,7 +38,7 @@ class DiariesRemoteDataSource : DiariesDataSource {
     private var mEventListener: DatabaseDataChangeListener? = null
 
     private val mDataList = mutableListOf<Diary>()
-    private val mDataMap = mutableMapOf<String, Diary>()
+    private val mDataMap = mutableMapOf<Int, Diary>()
 
     private var mCacheDirty = true
 
@@ -48,7 +48,7 @@ class DiariesRemoteDataSource : DiariesDataSource {
             mDataList.addAll(it)
             mDataMap.clear()
             it.forEach {
-                mDataMap.put(it.id, it)
+                mDataMap.put(it.id!!, it)
             }
             mCacheDirty = false
 
@@ -64,7 +64,7 @@ class DiariesRemoteDataSource : DiariesDataSource {
         }
     }
 
-    override fun getDiary(diaryId: String, callback: DiariesDataSource.GetDiaryCallback) {
+    override fun getDiary(diaryId: Int, callback: DiariesDataSource.GetDiaryCallback) {
         if (mCacheDirty) {
 
         } else {
@@ -78,7 +78,7 @@ class DiariesRemoteDataSource : DiariesDataSource {
 
 
     override fun save(diary: Diary) {
-        mDatabase.child(diary.id).setValue(Gson().toJson(diary))
+        mDatabase.child(diary.id.toString()).setValue(Gson().toJson(diary))
         mCacheDirty = true
     }
 
@@ -91,8 +91,8 @@ class DiariesRemoteDataSource : DiariesDataSource {
         mCacheDirty = true
     }
 
-    override fun deleteDiary(diaryId: String) {
-        mDatabase.child(diaryId).removeValue()
+    override fun deleteDiary(diaryId: Int) {
+        mDatabase.child(diaryId.toString()).removeValue()
     }
 
     companion object {

@@ -58,11 +58,11 @@ internal constructor(@param:Remote private val mRemoteDataSource: DiariesDataSou
         mLocalDataSource.save(diary)
     }
 
-    override fun getDiary(diaryId: String, callback: DiariesDataSource.GetDiaryCallback) {
+    override fun getDiary(diaryId: Int, callback: DiariesDataSource.GetDiaryCallback) {
         // Is the task in the local data source? If not, query the network.
         mLocalDataSource.getDiary(diaryId, object : DiariesDataSource.GetDiaryCallback {
-            override fun onDiaryLoaded(task: Diary) {
-                callback.onDiaryLoaded(task)
+            override fun onDiaryLoaded(diary: Diary) {
+                callback.onDiaryLoaded(diary)
             }
 
             override fun onDataNotAvailable() {
@@ -79,7 +79,7 @@ internal constructor(@param:Remote private val mRemoteDataSource: DiariesDataSou
         mLocalDataSource.deleteAllDiaries()
     }
 
-    override fun deleteDiary(diaryId: String) {
+    override fun deleteDiary(diaryId: Int) {
         mRemoteDataSource.deleteDiary(diaryId)
         mLocalDataSource.deleteDiary(diaryId)
     }

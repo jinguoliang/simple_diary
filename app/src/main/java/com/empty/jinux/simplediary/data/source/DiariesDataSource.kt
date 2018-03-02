@@ -49,7 +49,7 @@ interface DiariesDataSource {
 
     fun getDiaries(callback: LoadDiariesCallback)
 
-    fun getDiary(diaryId: String, callback: GetDiaryCallback)
+    fun getDiary(diaryId: Int, callback: GetDiaryCallback)
 
     fun save(diary: Diary)
 
@@ -57,6 +57,6 @@ interface DiariesDataSource {
 
     fun deleteAllDiaries()
 
-    fun deleteDiary(diaryId: String)
+    fun deleteDiary(diaryId: Int)
 
 }

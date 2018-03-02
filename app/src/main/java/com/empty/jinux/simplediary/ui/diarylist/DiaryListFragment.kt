@@ -165,7 +165,7 @@ class DiaryListFragment : Fragment(), DiaryListContract.View {
                 DiaryListActivity.REQUEST_ADD_DIARY)
     }
 
-    override fun showDiaryDetailsUI(diaryId: String) {
+    override fun showDiaryDetailsUI(diaryId: Int) {
         startActivity(context?.intentFor<DiaryDetailActivity>(
                 DiaryDetailActivity.EXTRA_TASK_ID to diaryId))
     }

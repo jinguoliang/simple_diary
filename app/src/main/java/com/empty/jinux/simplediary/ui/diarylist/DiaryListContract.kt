@@ -35,7 +35,7 @@ interface DiaryListContract {
 
         fun showAddDiary()
 
-        fun showDiaryDetailsUI(diaryId: String)
+        fun showDiaryDetailsUI(diaryId: Int)
 
         fun showDiaryMarkedComplete()
 

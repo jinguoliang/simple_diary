@@ -46,7 +46,7 @@ class TaskDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
 
-        val taskId = arguments?.getString(ARGUMENT_TASK_ID)
+        val taskId = arguments?.getInt(ARGUMENT_TASK_ID)
         mPresenter.setDiaryId(taskId)
         mPresenter.setupListeners()
     }

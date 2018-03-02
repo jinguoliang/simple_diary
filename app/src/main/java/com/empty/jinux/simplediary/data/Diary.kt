@@ -18,14 +18,13 @@ package com.empty.jinux.simplediary.data
 
 import com.google.common.base.Objects
 import com.google.common.base.Strings
-import java.util.*
 
 /**
  * Immutable model class for a Diary.
  */
 data class Diary
 constructor(
-        val id: String = UUID.randomUUID().toString(),
+        val id: Int?,
         val content: String = "",
         val createdTime: Long = System.currentTimeMillis(),
         val displayTime: Long = createdTime

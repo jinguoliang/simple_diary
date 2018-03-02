@@ -16,12 +16,14 @@
 
 package com.empty.jinux.simplediary.data.source.local
 
-import android.content.ContentValues
+import android.arch.persistence.room.Room
 import android.content.Context
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
-import com.google.common.base.Preconditions.checkNotNull
-import java.util.*
+import com.empty.jinux.simplediary.data.source.local.room.DATABASE_NAME
+import com.empty.jinux.simplediary.data.source.local.room.DiaryDatabase
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,124 +33,62 @@ import javax.inject.Singleton
  */
 @Singleton
 class DiariesLocalDataSource
-
 @Inject
 constructor(context: Context) : DiariesDataSource {
 
-    private val mDbHelper: DiaryDbHelper
-
-    init {
-        checkNotNull(context)
-        mDbHelper = DiaryDbHelper(context)
-    }
+    private var diaryDao = Room.databaseBuilder(context.applicationContext,
+            DiaryDatabase::class.java, DATABASE_NAME).build().diaryDao()
 
     override fun getDiaries(callback: DiariesDataSource.LoadDiariesCallback) {
-        val diaries = ArrayList<Diary>()
-        val db = mDbHelper.readableDatabase
-
-        val projection = arrayOf(DiaryEntry.COLUMN_NAME_ENTRY_ID, DiaryEntry.COLUMN_NAME_DESCRIPTION)
-
-        val c = db.query(
-                DiaryEntry.TABLE_NAME, projection, null, null, null, null, null)
-
-        if (c != null && c.count > 0) {
-            while (c.moveToNext()) {
-                val itemId = c.getString(c.getColumnIndexOrThrow(DiaryEntry.COLUMN_NAME_ENTRY_ID))
-                val description = c.getString(c.getColumnIndexOrThrow(DiaryEntry.COLUMN_NAME_DESCRIPTION))
-                val diary = Diary(itemId, description)
-                diaries.add(diary)
+        doAsync {
+            val data = diaryDao.getAll().map { diary ->
+                mapDiaryFromRoomToDataSource(diary)
+            }
+            uiThread {
+                callback.onDiariesLoaded(data)
             }
         }
-        c?.close()
-
-        db.close()
-
-        callback.onDiariesLoaded(diaries)
-
     }
 
-    override fun getDiary(diaryId: String, callback: DiariesDataSource.GetDiaryCallback) {
-        val db = mDbHelper.readableDatabase
+    override fun getDiary(diaryId: Int, callback: DiariesDataSource.GetDiaryCallback) {
+        doAsync {
+            val diary = diaryDao.getOneById(diaryId)
 
-        val projection = arrayOf(DiaryEntry.COLUMN_NAME_ENTRY_ID, DiaryEntry.COLUMN_NAME_DESCRIPTION)
+            uiThread {
+                if (diary != null) {
+                    callback.onDiaryLoaded(mapDiaryFromRoomToDataSource(diary))
+                } else {
+                    callback.onDataNotAvailable()
+                }
+            }
 
-        val selection = DiaryEntry.COLUMN_NAME_ENTRY_ID + " LIKE ?"
-        val selectionArgs = arrayOf(diaryId)
-
-        val c = db.query(
-                DiaryEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null)
-
-        var diary: Diary? = null
-
-        if (c != null && c.count > 0) {
-            c.moveToFirst()
-            val itemId = c.getString(c.getColumnIndexOrThrow(DiaryEntry.COLUMN_NAME_ENTRY_ID))
-            val description = c.getString(c.getColumnIndexOrThrow(DiaryEntry.COLUMN_NAME_DESCRIPTION))
-            diary = Diary(itemId, description)
-        }
-        c?.close()
-
-        db.close()
-
-        if (diary != null) {
-            callback.onDiaryLoaded(diary)
-        } else {
-            callback.onDataNotAvailable()
         }
     }
 
     override fun save(diary: Diary) {
-        getDiary(diary.id, object : DiariesDataSource.GetDiaryCallback {
-            override fun onDiaryLoaded(diary: Diary) {
-                updateDiary(diary)
-            }
-
-            override fun onDataNotAvailable() {
-                insertDiary(diary)
-            }
-        })
-    }
-
-    private fun updateDiary(diary: Diary) {
-        val db = mDbHelper.writableDatabase
-        val values = ContentValues()
-        values.put(DiaryEntry.COLUMN_NAME_DESCRIPTION, diary.content)
-        db.update(DiaryEntry.TABLE_NAME, values,
-                "${DiaryEntry.COLUMN_NAME_ENTRY_ID} = ?", arrayOf(diary.id))
-        db.close()
-    }
-
-    private fun insertDiary(diary: Diary) {
-        val db = mDbHelper.writableDatabase
-
-        val values = ContentValues()
-        values.put(DiaryEntry.COLUMN_NAME_ENTRY_ID, diary.id)
-        values.put(DiaryEntry.COLUMN_NAME_DESCRIPTION, diary.content)
-
-        db.insert(DiaryEntry.TABLE_NAME, null, values)
-
-        db.close()
+        doAsync {
+            diaryDao.insertOne(mapDiaryFromDataSourceToRoom(diary))
+        }
     }
 
     override fun refreshDiaries() {
     }
 
     override fun deleteAllDiaries() {
-        val db = mDbHelper.writableDatabase
-
-        db.delete(DiaryEntry.TABLE_NAME, null, null)
-
-        db.close()
+        doAsync {
+            diaryDao.deleteAll()
+        }
     }
 
-    override fun deleteDiary(diaryId: String) {
-        val db = mDbHelper.writableDatabase
-
-        val selection = DiaryEntry.COLUMN_NAME_ENTRY_ID + " LIKE ?"
-        val selectionArgs = arrayOf(diaryId)
-
-        db.delete(DiaryEntry.TABLE_NAME, selection, selectionArgs)
-
-        db.close()
+    override fun deleteDiary(diaryId: Int) {
+        doAsync {
+            diaryDao.deleteById(diaryId)
+        }
     }
+
+    private fun mapDiaryFromRoomToDataSource(diary: com.empty.jinux.simplediary.data.source.local.room.entity.Diary) =
+            Diary(diary.id!!, diary.text)
+
+    private fun mapDiaryFromDataSourceToRoom(diary: Diary) =
+            com.empty.jinux.simplediary.data.source.local.room.entity.Diary(diary.id, diary.content)
 }
