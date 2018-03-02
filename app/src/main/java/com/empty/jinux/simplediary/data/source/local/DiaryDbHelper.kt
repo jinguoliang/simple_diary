@@ -46,11 +46,9 @@ class DiaryDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         private val COMMA_SEP = ","
 
         private val SQL_CREATE_ENTRIES = "CREATE TABLE " + DiaryEntry.TABLE_NAME + " (" +
-                DiaryEntry.COLUMN_ID + TEXT_TYPE + " PRIMARY KEY," +
+                DiaryEntry.COLUMN_ID + TEXT_TYPE + " PRIMARY KEY" + COMMA_SEP +
                 DiaryEntry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + COMMA_SEP +
-                DiaryEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +
-                DiaryEntry.COLUMN_NAME_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
-                DiaryEntry.COLUMN_NAME_COMPLETED + BOOLEAN_TYPE +
+                DiaryEntry.COLUMN_NAME_DESCRIPTION + TEXT_TYPE +
                 " )"
     }
 }

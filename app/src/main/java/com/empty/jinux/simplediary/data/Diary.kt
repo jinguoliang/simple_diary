@@ -24,52 +24,30 @@ import java.util.*
  * Immutable model class for a Diary.
  */
 data class Diary
-
-/**
- * Use this constructor to create a new Diary.
- *
- * @param title       title of the diary
- * @param description description of the diary
- * @param id          id of the diary
- * @param completed   true if the diary is completed, false if it's active
- */
 constructor(
-        val title: String = "",
-        val description: String = "",
         val id: String = UUID.randomUUID().toString(),
-        val isCompleted: Boolean = false,
+        val content: String = "",
         val createdTime: Long = System.currentTimeMillis(),
         val displayTime: Long = createdTime
 ) {
 
-    val titleForList: String
-        get() = if (!Strings.isNullOrEmpty(title)) {
-            title
-        } else {
-            description
-        }
-
-    val isActive: Boolean
-        get() = !isCompleted
-
     val isEmpty: Boolean
-        get() = Strings.isNullOrEmpty(title) && Strings.isNullOrEmpty(description)
+        get() = Strings.isNullOrEmpty(content)
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o == null || javaClass != o.javaClass) return false
-        val diary = o as Diary?
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || javaClass != other.javaClass) return false
+        val diary = other as Diary?
         return Objects.equal(id, diary!!.id) &&
-                Objects.equal(title, diary.title) &&
-                Objects.equal(description, diary.description)
+                Objects.equal(content, diary.content)
     }
 
     override fun hashCode(): Int {
-        return Objects.hashCode(id, title, description)
+        return Objects.hashCode(id, content)
     }
 
     override fun toString(): String {
-        return "Diary with title " + title
+        return "$id: $content"
     }
 
 }

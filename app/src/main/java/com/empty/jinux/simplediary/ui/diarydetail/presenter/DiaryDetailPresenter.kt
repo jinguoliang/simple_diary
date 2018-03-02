@@ -86,7 +86,7 @@ constructor(
                 }
 
                 mDiaryDetailView.setLoadingIndicator(false)
-                currentContent = diary.description
+                currentContent = diary.content
                 showDiary(diary)
             }
 
@@ -126,7 +126,7 @@ constructor(
     }
 
     private fun updateDiary() {
-        mDiariesRepository.save(Diary("", currentContent!!, mDiaryId!!))
+        mDiariesRepository.save(Diary(mDiaryId!!, currentContent!!))
         mDiaryDetailView.showDiarySaved() // After an edit, go back to the list.
     }
 
@@ -144,7 +144,7 @@ constructor(
     }
 
     private fun showDiary(diary: Diary) {
-        val description = diary.description
+        val description = diary.content
 
         mDiaryDetailView.showDate(diary.formatDisplayTime())
 

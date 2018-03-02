@@ -63,17 +63,6 @@ constructor(private val mTasksRepository: DiariesRepository,
 
         mTasksRepository.getDiaries(object : DiariesDataSource.LoadDiariesCallback {
             override fun onDiariesLoaded(diaries: List<Diary>) {
-                var activeTasks = 0
-                var completedTasks = 0
-
-                // We calculate number of active and completed tasks
-                for ((_, _, _, isCompleted) in diaries) {
-                    if (isCompleted) {
-                        completedTasks += 1
-                    } else {
-                        activeTasks += 1
-                    }
-                }
                 // The view may not be able to handle UI updates anymore
                 if (!mStatisticsView.isActive) {
                     return

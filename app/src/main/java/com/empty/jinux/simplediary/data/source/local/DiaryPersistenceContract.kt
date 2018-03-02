@@ -21,10 +21,8 @@ import android.provider.BaseColumns
 interface DiaryEntry : BaseColumns {
     companion object {
         val TABLE_NAME = "task"
-        val COLUMN_NAME_ENTRY_ID = "entryid"
-        val COLUMN_NAME_TITLE = "title"
-        val COLUMN_NAME_DESCRIPTION = "description"
-        val COLUMN_NAME_COMPLETED = "completed"
         val COLUMN_ID = "_id"
+        val COLUMN_NAME_ENTRY_ID = "entryid"
+        val COLUMN_NAME_DESCRIPTION = "content"
     }
 }

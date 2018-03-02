@@ -30,7 +30,9 @@ import javax.inject.Singleton
  * Concrete implementation of a data source as a db.
  */
 @Singleton
-class DiariesLocalDataSource @Inject
+class DiariesLocalDataSource
+
+@Inject
 constructor(context: Context) : DiariesDataSource {
 
     private val mDbHelper: DiaryDbHelper
@@ -44,7 +46,7 @@ constructor(context: Context) : DiariesDataSource {
         val diaries = ArrayList<Diary>()
         val db = mDbHelper.readableDatabase
 
-        val projection = arrayOf(DiaryEntry.COLUMN_NAME_ENTRY_ID, DiaryEntry.COLUMN_NAME_TITLE, DiaryEntry.COLUMN_NAME_DESCRIPTION, DiaryEntry.COLUMN_NAME_COMPLETED)
+        val projection = arrayOf(DiaryEntry.COLUMN_NAME_ENTRY_ID, DiaryEntry.COLUMN_NAME_DESCRIPTION)
 
         val c = db.query(
                 DiaryEntry.TABLE_NAME, projection, null, null, null, null, null)
@@ -52,10 +54,8 @@ constructor(context: Context) : DiariesDataSource {
         if (c != null && c.count > 0) {
             while (c.moveToNext()) {
                 val itemId = c.getString(c.getColumnIndexOrThrow(DiaryEntry.COLUMN_NAME_ENTRY_ID))
-                val title = c.getString(c.getColumnIndexOrThrow(DiaryEntry.COLUMN_NAME_TITLE))
                 val description = c.getString(c.getColumnIndexOrThrow(DiaryEntry.COLUMN_NAME_DESCRIPTION))
-                val completed = c.getInt(c.getColumnIndexOrThrow(DiaryEntry.COLUMN_NAME_COMPLETED)) == 1
-                val diary = Diary(title, description, itemId, completed)
+                val diary = Diary(itemId, description)
                 diaries.add(diary)
             }
         }
@@ -70,7 +70,7 @@ constructor(context: Context) : DiariesDataSource {
     override fun getDiary(diaryId: String, callback: DiariesDataSource.GetDiaryCallback) {
         val db = mDbHelper.readableDatabase
 
-        val projection = arrayOf(DiaryEntry.COLUMN_NAME_ENTRY_ID, DiaryEntry.COLUMN_NAME_TITLE, DiaryEntry.COLUMN_NAME_DESCRIPTION, DiaryEntry.COLUMN_NAME_COMPLETED)
+        val projection = arrayOf(DiaryEntry.COLUMN_NAME_ENTRY_ID, DiaryEntry.COLUMN_NAME_DESCRIPTION)
 
         val selection = DiaryEntry.COLUMN_NAME_ENTRY_ID + " LIKE ?"
         val selectionArgs = arrayOf(diaryId)
@@ -83,10 +83,8 @@ constructor(context: Context) : DiariesDataSource {
         if (c != null && c.count > 0) {
             c.moveToFirst()
             val itemId = c.getString(c.getColumnIndexOrThrow(DiaryEntry.COLUMN_NAME_ENTRY_ID))
-            val title = c.getString(c.getColumnIndexOrThrow(DiaryEntry.COLUMN_NAME_TITLE))
             val description = c.getString(c.getColumnIndexOrThrow(DiaryEntry.COLUMN_NAME_DESCRIPTION))
-            val completed = c.getInt(c.getColumnIndexOrThrow(DiaryEntry.COLUMN_NAME_COMPLETED)) == 1
-            diary = Diary(title, description, itemId, completed)
+            diary = Diary(itemId, description)
         }
         c?.close()
 
@@ -104,6 +102,7 @@ constructor(context: Context) : DiariesDataSource {
             override fun onDiaryLoaded(diary: Diary) {
                 updateDiary(diary)
             }
+
             override fun onDataNotAvailable() {
                 insertDiary(diary)
             }
@@ -112,15 +111,10 @@ constructor(context: Context) : DiariesDataSource {
 
     private fun updateDiary(diary: Diary) {
         val db = mDbHelper.writableDatabase
-
         val values = ContentValues()
-        values.put(DiaryEntry.COLUMN_NAME_TITLE, diary.title)
-        values.put(DiaryEntry.COLUMN_NAME_DESCRIPTION, diary.description)
-        values.put(DiaryEntry.COLUMN_NAME_COMPLETED, diary.isCompleted)
-
+        values.put(DiaryEntry.COLUMN_NAME_DESCRIPTION, diary.content)
         db.update(DiaryEntry.TABLE_NAME, values,
                 "${DiaryEntry.COLUMN_NAME_ENTRY_ID} = ?", arrayOf(diary.id))
-
         db.close()
     }
 
@@ -129,9 +123,7 @@ constructor(context: Context) : DiariesDataSource {
 
         val values = ContentValues()
         values.put(DiaryEntry.COLUMN_NAME_ENTRY_ID, diary.id)
-        values.put(DiaryEntry.COLUMN_NAME_TITLE, diary.title)
-        values.put(DiaryEntry.COLUMN_NAME_DESCRIPTION, diary.description)
-        values.put(DiaryEntry.COLUMN_NAME_COMPLETED, diary.isCompleted)
+        values.put(DiaryEntry.COLUMN_NAME_DESCRIPTION, diary.content)
 
         db.insert(DiaryEntry.TABLE_NAME, null, values)
 
