@@ -89,19 +89,15 @@ constructor(
     private fun openDiary() {
         mTaskDetailView.setLoadingIndicator(true)
         mTasksRepository.getTask(mDiaryId!!, object : TasksDataSource.GetTaskCallback {
-            override fun onTaskLoaded(diary: Diary?) {
+            override fun onTaskLoaded(diary: Diary) {
                 // The view may not be able to handle UI updates anymore
                 if (!mTaskDetailView.isActive) {
                     return
                 }
 
                 mTaskDetailView.setLoadingIndicator(false)
-                if (null == diary) {
-                    mTaskDetailView.showMissingTask()
-                } else {
-                    currentContent = diary.description
-                    showDiary(diary)
-                }
+                currentContent = diary.description
+                showDiary(diary)
             }
 
             override fun onDataNotAvailable() {

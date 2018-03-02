@@ -107,15 +107,39 @@ constructor(context: Context) : TasksDataSource {
         }
     }
 
-    override fun save(task: Diary) {
-        checkNotNull(task)
+    override fun save(newDiary: Diary) {
+        getTask(newDiary.id, object : TasksDataSource.GetTaskCallback {
+            override fun onTaskLoaded(diary: Diary) {
+                updateDiary(newDiary)
+            }
+            override fun onDataNotAvailable() {
+                insertDiary(newDiary)
+            }
+        })
+    }
+
+    private fun updateDiary(diary: Diary) {
         val db = mDbHelper.writableDatabase
 
         val values = ContentValues()
-        values.put(TaskEntry.COLUMN_NAME_ENTRY_ID, task.id)
-        values.put(TaskEntry.COLUMN_NAME_TITLE, task.title)
-        values.put(TaskEntry.COLUMN_NAME_DESCRIPTION, task.description)
-        values.put(TaskEntry.COLUMN_NAME_COMPLETED, task.isCompleted)
+        values.put(TaskEntry.COLUMN_NAME_TITLE, diary.title)
+        values.put(TaskEntry.COLUMN_NAME_DESCRIPTION, diary.description)
+        values.put(TaskEntry.COLUMN_NAME_COMPLETED, diary.isCompleted)
+
+        db.update(TaskEntry.TABLE_NAME, values,
+                "${TaskEntry.COLUMN_NAME_ENTRY_ID} = ?", arrayOf(diary.id))
+
+        db.close()
+    }
+
+    private fun insertDiary(diary: Diary) {
+        val db = mDbHelper.writableDatabase
+
+        val values = ContentValues()
+        values.put(TaskEntry.COLUMN_NAME_ENTRY_ID, diary.id)
+        values.put(TaskEntry.COLUMN_NAME_TITLE, diary.title)
+        values.put(TaskEntry.COLUMN_NAME_DESCRIPTION, diary.description)
+        values.put(TaskEntry.COLUMN_NAME_COMPLETED, diary.isCompleted)
 
         db.insert(TaskEntry.TABLE_NAME, null, values)
 
