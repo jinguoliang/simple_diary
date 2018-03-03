@@ -1,6 +1,6 @@
 package com.empty.jinux.simplediary.ui.diarydetail.presenter
 
-import com.empty.jinux.simplediary.data.source.DiariesRepository
+import com.empty.jinux.simplediary.data.source.DiariesDataSource
 import com.empty.jinux.simplediary.location.LocationManager
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.weather.WeatherManager
@@ -15,7 +15,7 @@ import dagger.Provides
 class TaskDetailPresenterModule {
     @Provides
     fun providePresenter(
-            repo: DiariesRepository,
+            repo: DiariesDataSource,
             v: DiaryDetailContract.View,
             locationManager: LocationManager,
             weatherManager: WeatherManager

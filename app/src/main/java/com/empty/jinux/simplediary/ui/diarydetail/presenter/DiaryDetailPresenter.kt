@@ -19,7 +19,7 @@ package com.empty.jinux.simplediary.ui.diarydetail.presenter
 import com.empty.jinux.baselibaray.logi
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
-import com.empty.jinux.simplediary.data.source.DiariesRepository
+import com.empty.jinux.simplediary.data.source.Repository
 import com.empty.jinux.simplediary.location.LocationManager
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.util.formatDisplayTime
@@ -31,14 +31,14 @@ import javax.inject.Inject
  * Listens to user actions from the UI, retrieves the data and updates
  * the UI as required.
  */
-internal class DiaryDetailPresenter
+class DiaryDetailPresenter
 /**
  * Dagger strictly enforces that arguments not marked with `@Nullable` are not injected
  * with `@Nullable` values.
  */
 @Inject
 constructor(
-        private val mDiariesRepository: DiariesRepository,
+        @param:Repository private val mDiariesRepository: DiariesDataSource,
         private val mDiaryDetailView: DiaryDetailContract.View,
         private val mLocationManager: LocationManager,
         private val mWeatherManager: WeatherManager) : DiaryDetailContract.Presenter {
