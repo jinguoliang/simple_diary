@@ -1,4 +1,4 @@
-package com.empty.jinux.simplediary.data.source
+package com.empty.jinux.simplediary.di
 
 import javax.inject.Qualifier
 

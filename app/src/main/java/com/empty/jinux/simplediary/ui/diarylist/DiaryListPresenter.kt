@@ -131,6 +131,6 @@ constructor(private val mDiariesRepository: DiariesRepository, private val mDiar
     }
 
     override fun openDiaryDetails(diary: Diary) {
-        mDiariesView.showDiaryDetailsUI(diary.id!!)
+        mDiariesView.showDiaryDetailsUI(diary.id)
     }
 }

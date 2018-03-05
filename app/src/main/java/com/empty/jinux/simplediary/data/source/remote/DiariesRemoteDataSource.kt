@@ -50,7 +50,7 @@ class DiariesRemoteDataSource : DiariesDataSource {
             it.forEach {
                 mDataMap.put(it.id!!, it)
             }
-            mCacheDirty = false
+            mCacheDirty = true
 
         }
         this.addValueEventListener(mEventListener)

@@ -27,6 +27,7 @@ import android.text.TextWatcher
 import android.view.*
 import com.empty.jinux.baselibaray.loge
 import com.empty.jinux.simplediary.R
+import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
 import com.squareup.picasso.Picasso
@@ -46,7 +47,7 @@ class TaskDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
 
-        val taskId = arguments?.getInt(ARGUMENT_TASK_ID)
+        val taskId = arguments?.getInt(ARGUMENT_TASK_ID, INVALID_DIARY_ID) ?: INVALID_DIARY_ID
         mPresenter.setDiaryId(taskId)
         mPresenter.setupListeners()
     }
@@ -152,9 +153,9 @@ class TaskDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
         private val REQUEST_EDIT_TASK = 1
 
-        fun newInstance(taskId: String?): TaskDetailFragment {
+        fun newInstance(taskId: Int): TaskDetailFragment {
             val arguments = Bundle()
-            arguments.putString(ARGUMENT_TASK_ID, taskId)
+            arguments.putInt(ARGUMENT_TASK_ID, taskId)
             val fragment = TaskDetailFragment()
             fragment.arguments = arguments
             return fragment

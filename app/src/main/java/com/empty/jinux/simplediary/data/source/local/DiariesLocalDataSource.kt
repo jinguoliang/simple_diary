@@ -18,7 +18,7 @@ package com.empty.jinux.simplediary.data.source.local
 
 import android.arch.persistence.room.Room
 import android.content.Context
-import com.empty.jinux.simplediary.data.Diary
+import com.empty.jinux.simplediary.data.*
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
 import com.empty.jinux.simplediary.data.source.local.room.DATABASE_NAME
 import com.empty.jinux.simplediary.data.source.local.room.DiaryDatabase
@@ -87,8 +87,9 @@ constructor(context: Context) : DiariesDataSource {
     }
 
     private fun mapDiaryFromRoomToDataSource(diary: com.empty.jinux.simplediary.data.source.local.room.entity.Diary) =
-            Diary(diary.id!!, diary.text)
+            Diary(diary.id!!, Content("", diary.contentText, 0, EMPTY_WEATHER, EMPTY_LOCATION), EMPTY_META)
 
     private fun mapDiaryFromDataSourceToRoom(diary: Diary) =
-            com.empty.jinux.simplediary.data.source.local.room.entity.Diary(diary.id, diary.content)
+            com.empty.jinux.simplediary.data.source.local.room.entity.Diary(diary.id.takeIf { it != INVALID_DIARY_ID },
+                    contentText = diary.content.content)
 }

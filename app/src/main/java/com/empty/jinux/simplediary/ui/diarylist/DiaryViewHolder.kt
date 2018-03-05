@@ -17,7 +17,7 @@ internal constructor(
     private var createTimeTv: TextView = v.findViewById(R.id.createTime)
 
     fun bind(diary: Diary): Unit {
-        titleTV.text = diary.content
+        titleTV.text = diary.content.content
         createTimeTv.text = diary.formatCreatedTime()
         itemView.setOnClickListener { mItemListener.onClick(diary) }
     }

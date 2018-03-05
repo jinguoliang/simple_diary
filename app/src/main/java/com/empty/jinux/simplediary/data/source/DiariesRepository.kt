@@ -17,6 +17,8 @@
 package com.empty.jinux.simplediary.data.source
 
 import com.empty.jinux.simplediary.data.Diary
+import com.empty.jinux.simplediary.di.Local
+import com.empty.jinux.simplediary.di.Remote
 import javax.inject.Inject
 import javax.inject.Singleton
 

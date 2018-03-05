@@ -20,6 +20,7 @@ fun formatDateWithWeekday(t: Long): String {
 }
 
 fun Diary.formatCreatedTime(): String {
+    val createdTime = meta.createdTime
     if (createdTime == 0L) {
         return ""
     }
@@ -27,6 +28,7 @@ fun Diary.formatCreatedTime(): String {
 }
 
 fun Diary.formatDisplayTime(): String {
+    val displayTime = content.displayTime
     if (displayTime == 0L) {
         return ""
     }

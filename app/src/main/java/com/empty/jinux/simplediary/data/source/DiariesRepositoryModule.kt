@@ -3,6 +3,9 @@ package com.empty.jinux.simplediary.data.source
 import android.content.Context
 import com.empty.jinux.simplediary.data.source.local.DiariesLocalDataSource
 import com.empty.jinux.simplediary.data.source.remote.DiariesRemoteDataSource
+import com.empty.jinux.simplediary.di.Local
+import com.empty.jinux.simplediary.di.Remote
+import com.empty.jinux.simplediary.di.Repository
 import dagger.Binds
 
 

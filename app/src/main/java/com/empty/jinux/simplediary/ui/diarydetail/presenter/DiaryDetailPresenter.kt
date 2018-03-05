@@ -17,14 +17,13 @@
 package com.empty.jinux.simplediary.ui.diarydetail.presenter
 
 import com.empty.jinux.baselibaray.logi
-import com.empty.jinux.simplediary.data.Diary
+import com.empty.jinux.simplediary.data.*
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
-import com.empty.jinux.simplediary.data.source.Repository
+import com.empty.jinux.simplediary.di.Repository
 import com.empty.jinux.simplediary.location.LocationManager
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.util.formatDisplayTime
 import com.empty.jinux.simplediary.weather.WeatherManager
-import com.google.common.base.Strings
 import javax.inject.Inject
 
 /**
@@ -52,21 +51,27 @@ constructor(
         mDiaryDetailView.setPresenter(this)
     }
 
-    private var currentContent: String? = null
+    private var mDiaryId: Int = INVALID_DIARY_ID
+    private var currentTitle = ""
+    private var currentContent: String = ""
+    private var currentDisplayTime: Long = -1
+    private var currentWeatherInfo: WeatherInfo = EMPTY_WEATHER
+    private var currentLocationInfo: LocationInfo = EMPTY_LOCATION
+    private var currentDairyMeta = EMPTY_META
 
     private val isNewDiary: Boolean
-        get() = mDiaryId == null
+        get() = mDiaryId == INVALID_DIARY_ID
 
     override fun start() {
         if (isNewDiary) {
             initForNewDiary()
         } else {
-            initForDiary(mDiaryId!!)
+            initForDiary()
         }
     }
 
-    private fun initForDiary(diaryId: Int) {
-        openDiary(diaryId)
+    private fun initForDiary() {
+        openDiary()
         mDiaryDetailView.showEditButton()
     }
 
@@ -76,9 +81,9 @@ constructor(
         mDiaryDetailView.showSaveButton()
     }
 
-    private fun openDiary(diaryId: Int) {
+    private fun openDiary() {
         mDiaryDetailView.setLoadingIndicator(true)
-        mDiariesRepository.getDiary(diaryId, object : DiariesDataSource.GetDiaryCallback {
+        mDiariesRepository.getDiary(mDiaryId, object : DiariesDataSource.GetDiaryCallback {
             override fun onDiaryLoaded(diary: Diary) {
                 // The view may not be able to handle UI updates anymore
                 if (!mDiaryDetailView.isActive) {
@@ -86,7 +91,7 @@ constructor(
                 }
 
                 mDiaryDetailView.setLoadingIndicator(false)
-                currentContent = diary.content
+                currentContent = diary.content.content
                 showDiary(diary)
             }
 
@@ -101,33 +106,22 @@ constructor(
     }
 
     override fun saveDiary() {
-        if (Strings.isNullOrEmpty(currentContent)) {
-            mDiaryDetailView.showEmptyDiaryError()
-            return
+        if (isNewDiary) {
+            val createdTime = System.currentTimeMillis()
+            currentDairyMeta = Meta(createdTime, createdTime)
+            currentDisplayTime = createdTime
+        } else {
+            currentDairyMeta.lastChangeTime = System.currentTimeMillis()
         }
 
-        if (isNewDiary) {
-            createDiary()
-        } else {
-            updateDiary()
-        }
+        val newDiary = Diary(
+                mDiaryId,
+                Content(currentTitle, currentContent, currentDisplayTime, currentWeatherInfo, currentLocationInfo),
+                currentDairyMeta
+        )
+        mDiariesRepository.save(newDiary)
         mDiaryDetailView.showEditButton()
         mDiaryDetailView.showDiarySaved()
-    }
-
-    private fun createDiary() {
-        val newDiary = Diary(null, currentContent!!)
-        if (newDiary.isEmpty) {
-            mDiaryDetailView.showEmptyDiaryError()
-        } else {
-            mDiariesRepository.save(newDiary)
-            mDiaryDetailView.showDiarySaved()
-        }
-    }
-
-    private fun updateDiary() {
-        mDiariesRepository.save(Diary(mDiaryId, currentContent!!))
-        mDiaryDetailView.showDiarySaved() // After an edit, go back to the list.
     }
 
     override fun editDiary() {
@@ -135,40 +129,36 @@ constructor(
     }
 
     override fun deleteDiary() {
-        mDiariesRepository.deleteDiary(mDiaryId!!)
+        mDiariesRepository.deleteDiary(mDiaryId)
         mDiaryDetailView.showDiaryDeleted()
     }
 
     private fun showDiary(diary: Diary) {
-        val description = diary.content
-
+        val description = diary.content.content
+        mDiaryDetailView.showDescription(description)
         mDiaryDetailView.showDate(diary.formatDisplayTime())
-
-        if (Strings.isNullOrEmpty(description)) {
-            mDiaryDetailView.hideDescription()
-        } else {
-            mDiaryDetailView.showDescription(description)
-        }
     }
 
     override fun refreshLocation() {
-        mLocationManager.getCurrentAddress { address ->
-            mDiaryDetailView.showLocation(address)
+        mLocationManager.getLastLocation { location ->
+            mLocationManager.getCurrentAddress { address ->
+                currentLocationInfo = LocationInfo(location, address)
+                mDiaryDetailView.showLocation(address)
+            }
         }
     }
 
     override fun refreshWeather() {
         mLocationManager.getLastLocation {
             mWeatherManager.getCurrentWeather(it.latitude, it.longitude) {
-                logi("current weather = $it")
+                logi("current weatherInfo = $it")
+                currentWeatherInfo = WeatherInfo(it.description, it.icon)
                 mDiaryDetailView.showWeather(it.description, mWeatherManager.getWeatherIcon(it.icon))
             }
         }
     }
 
-    private var mDiaryId: Int? = null
-
-    fun setDiaryId(diaryId: Int?) {
+    fun setDiaryId(diaryId: Int) {
         mDiaryId = diaryId
     }
 

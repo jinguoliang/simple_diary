@@ -18,6 +18,7 @@ package com.empty.jinux.simplediary.ui.diarydetail
 
 import android.os.Bundle
 import com.empty.jinux.simplediary.R
+import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.TaskDetailFragment
 import com.empty.jinux.simplediary.util.ActivityUtils
 import dagger.android.support.DaggerAppCompatActivity
@@ -40,7 +41,7 @@ class DiaryDetailActivity : DaggerAppCompatActivity() {
         ab.setDisplayShowHomeEnabled(true)
 
         // Get the requested task id
-        val taskId: String? = intent.getStringExtra(EXTRA_TASK_ID)
+        val taskId: Int = intent.getIntExtra(EXTRA_TASK_ID, INVALID_DIARY_ID)
 
         var taskDetailFragment = supportFragmentManager
                 .findFragmentById(R.id.contentFrame) as TaskDetailFragment?

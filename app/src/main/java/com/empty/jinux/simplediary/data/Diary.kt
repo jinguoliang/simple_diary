@@ -16,37 +16,32 @@
 
 package com.empty.jinux.simplediary.data
 
-import com.google.common.base.Objects
-import com.google.common.base.Strings
+import com.empty.jinux.simplediary.location.Location
 
-/**
- * Immutable model class for a Diary.
- */
+const val INVALID_DIARY_ID = -1
+val EMPTY_WEATHER = WeatherInfo("", "")
+val EMPTY_LOCATION = LocationInfo(Location(-1.0, -1.0), "")
+val EMPTY_CONTENT = Content("", "", -1, EMPTY_WEATHER, EMPTY_LOCATION)
+val EMPTY_META = Meta(-1, -1, false)
+
 data class Diary
 constructor(
-        val id: Int?,
-        val content: String = "",
-        val createdTime: Long = System.currentTimeMillis(),
-        val displayTime: Long = createdTime
-) {
+        val id: Int,
+        val content: Content,
+        val meta: Meta
+)
 
-    val isEmpty: Boolean
-        get() = Strings.isNullOrEmpty(content)
+data class WeatherInfo(val description: String, val iconUri: String)
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || javaClass != other.javaClass) return false
-        val diary = other as Diary?
-        return Objects.equal(id, diary!!.id) &&
-                Objects.equal(content, diary.content)
-    }
+data class LocationInfo(val location: Location, val address: String)
 
-    override fun hashCode(): Int {
-        return Objects.hashCode(id, content)
-    }
+data class Content(var title: String,
+                   var content: String,
+                   var displayTime: Long,
+                   var weatherInfo: WeatherInfo,
+                   var locationInfo: LocationInfo)
 
-    override fun toString(): String {
-        return "$id: $content"
-    }
-
+data class Meta(val createdTime: Long,
+                var lastChangeTime: Long,
+                var deleted: Boolean = false) {
 }
