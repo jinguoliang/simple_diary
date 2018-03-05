@@ -39,7 +39,10 @@ class WeatherManagerRetrofitImpl @Inject constructor() : WeatherManager {
         val call = mWeatherService.getCurrentWeatherByCoordinates(lat, lon)
         call.enqueue(object : Callback<CurrentWeatherResult> {
             override fun onResponse(call: Call<CurrentWeatherResult>?, response: Response<CurrentWeatherResult>?) {
-                callback(response?.body()?.weather!![0])
+                val info = response?.body()?.weather?.get(0)
+                if (info != null) {
+                    callback(info)
+                }
             }
 
             override fun onFailure(call: Call<CurrentWeatherResult>?, t: Throwable?) {
