@@ -18,17 +18,27 @@ import java.util.*
 open class LocationManagerImpl constructor(val context: Activity) : LocationManager {
     private val mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
 
-    @SuppressLint("MissingPermission")
     override fun getLastLocation(callback: (Location) -> Unit) {
+        getLastLocation(true, callback)
+    }
+
+    @SuppressLint("MissingPermission")
+    fun getLastLocation(tryAgain: Boolean, callback: (Location) -> Unit) {
         mFusedLocationClient.lastLocation
                 .addOnSuccessListener(context, { location: android.location.Location? ->
                     // Got last known location. In some rare situations this can be null.
                     if (location != null) {
                         // Logic to handle location object
                         callback(Location(location.latitude, location.longitude))
+                    } else {
+                        refreshLocation {
+                            getLastLocation(false, callback)
+                        }
                     }
                 })
     }
+
+
 
     @SuppressLint("MissingPermission")
     override fun refreshLocation(callback: (suc: Boolean) -> Unit) {
