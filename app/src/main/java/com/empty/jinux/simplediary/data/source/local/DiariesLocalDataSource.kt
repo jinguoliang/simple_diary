@@ -22,6 +22,8 @@ import com.empty.jinux.simplediary.data.*
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
 import com.empty.jinux.simplediary.data.source.local.room.DATABASE_NAME
 import com.empty.jinux.simplediary.data.source.local.room.DiaryDatabase
+import com.empty.jinux.simplediary.data.source.local.room.entity.Location
+import com.empty.jinux.simplediary.data.source.local.room.entity.Weather
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import javax.inject.Inject
@@ -87,9 +89,22 @@ constructor(context: Context) : DiariesDataSource {
     }
 
     private fun mapDiaryFromRoomToDataSource(diary: com.empty.jinux.simplediary.data.source.local.room.entity.Diary) =
-            Diary(diary.id!!, Content("", diary.contentText, 0, EMPTY_WEATHER, EMPTY_LOCATION), EMPTY_META)
+            Diary(diary.id!!, DiaryContent(
+                    diary.title,
+                    diary.contentText,
+                    diary.displayTime,
+                    weatherInfo = diary.weather?.run { WeatherInfo(desc, icon) },
+                    locationInfo = diary.location?.run { LocationInfo(com.empty.jinux.simplediary.location.Location(longitude, latitude), address) }
+            ), EMPTY_META)
 
     private fun mapDiaryFromDataSourceToRoom(diary: Diary) =
             com.empty.jinux.simplediary.data.source.local.room.entity.Diary(diary.id.takeIf { it != INVALID_DIARY_ID },
-                    contentText = diary.content.content)
+                    contentText = diary.diaryContent.content, displayTime = diary.diaryContent.displayTime,
+                    weather = diary.diaryContent.weatherInfo?.run {
+                        Weather(null, desc = description,
+                                icon = iconUri)
+                    },
+                    location = diary.diaryContent.locationInfo?.run {
+                        Location(null, location.latitude, location.longitude, address)
+                    })
 }

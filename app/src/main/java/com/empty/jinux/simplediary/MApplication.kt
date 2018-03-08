@@ -6,15 +6,12 @@ import com.empty.jinux.baselibaray.logi
 import com.empty.jinux.baselibaray.logw
 import com.empty.jinux.simplediary.di.DaggerMAppComponent
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import java.io.File
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 
 class MApplication : DaggerApplication() {
@@ -39,7 +36,7 @@ class MApplication : DaggerApplication() {
 
                 logw(mAuth.currentUser?.displayName.toString())
 
-                mStorageRef = FirebaseStorage.getInstance().getReference();
+                mStorageRef = FirebaseStorage.getInstance().reference
                 upload()
             } else {
                 loge("login failed")

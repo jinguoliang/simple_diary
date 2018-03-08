@@ -1,6 +1,7 @@
 package com.empty.jinux.simplediary.util
 
 import com.empty.jinux.simplediary.data.Diary
+import com.empty.jinux.simplediary.data.DiaryContent
 import java.text.SimpleDateFormat
 
 /**
@@ -27,8 +28,8 @@ fun Diary.formatCreatedTime(): String {
     return formatTime(createdTime)
 }
 
-fun Diary.formatDisplayTime(): String {
-    val displayTime = content.displayTime
+fun DiaryContent.formatDisplayTime(): String {
+    val displayTime = displayTime
     if (displayTime == 0L) {
         return ""
     }

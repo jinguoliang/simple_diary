@@ -51,8 +51,4 @@ class WeatherManagerRetrofitImpl @Inject constructor() : WeatherManager {
         })
     }
 
-    override fun getWeatherIcon(iconCode: String): String {
-        return "http://openweathermap.org/img/w/$iconCode.png"
-    }
-
 }

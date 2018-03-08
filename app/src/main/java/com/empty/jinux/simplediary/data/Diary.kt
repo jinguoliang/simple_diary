@@ -21,13 +21,13 @@ import com.empty.jinux.simplediary.location.Location
 const val INVALID_DIARY_ID = -1
 val EMPTY_WEATHER = WeatherInfo("", "")
 val EMPTY_LOCATION = LocationInfo(Location(-1.0, -1.0), "")
-val EMPTY_CONTENT = Content("", "", -1, EMPTY_WEATHER, EMPTY_LOCATION)
+val EMPTY_CONTENT = DiaryContent("", "", -1, EMPTY_WEATHER, EMPTY_LOCATION)
 val EMPTY_META = Meta(-1, -1, false)
 
 data class Diary
 constructor(
         val id: Int,
-        val content: Content,
+        val diaryContent: DiaryContent,
         val meta: Meta
 )
 
@@ -35,11 +35,11 @@ data class WeatherInfo(val description: String, val iconUri: String)
 
 data class LocationInfo(val location: Location, val address: String)
 
-data class Content(var title: String,
-                   var content: String,
-                   var displayTime: Long,
-                   var weatherInfo: WeatherInfo,
-                   var locationInfo: LocationInfo)
+data class DiaryContent(var title: String,
+                        var content: String,
+                        var displayTime: Long,
+                        var weatherInfo: WeatherInfo? = null,
+                        var locationInfo: LocationInfo? = null)
 
 data class Meta(val createdTime: Long,
                 var lastChangeTime: Long,

@@ -22,6 +22,7 @@ import com.empty.jinux.simplediary.data.source.DiariesDataSource
 import com.empty.jinux.simplediary.di.Repository
 import com.empty.jinux.simplediary.location.LocationManager
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
+import com.empty.jinux.simplediary.util.formatDateWithWeekday
 import com.empty.jinux.simplediary.util.formatDisplayTime
 import com.empty.jinux.simplediary.weather.WeatherManager
 import javax.inject.Inject
@@ -31,10 +32,6 @@ import javax.inject.Inject
  * the UI as required.
  */
 class DiaryDetailPresenter
-/**
- * Dagger strictly enforces that arguments not marked with `@Nullable` are not injected
- * with `@Nullable` values.
- */
 @Inject
 constructor(
         @param:Repository private val mDiariesRepository: DiariesDataSource,
@@ -52,11 +49,7 @@ constructor(
     }
 
     private var mDiaryId: Int = INVALID_DIARY_ID
-    private var currentTitle = ""
-    private var currentContent: String = ""
-    private var currentDisplayTime: Long = -1
-    private var currentWeatherInfo: WeatherInfo = EMPTY_WEATHER
-    private var currentLocationInfo: LocationInfo = EMPTY_LOCATION
+    private var currentDiaryContent: DiaryContent = EMPTY_CONTENT
     private var currentDairyMeta = EMPTY_META
 
     private val isNewDiary: Boolean
@@ -75,9 +68,10 @@ constructor(
         mDiaryDetailView.showEditButton()
     }
 
-    private fun initForNewDiary() {
+    fun initForNewDiary() {
         refreshLocation()
         refreshWeather()
+        mDiaryDetailView.showDate(formatDateWithWeekday(System.currentTimeMillis()))
         mDiaryDetailView.showSaveButton()
     }
 
@@ -91,8 +85,9 @@ constructor(
                 }
 
                 mDiaryDetailView.setLoadingIndicator(false)
-                currentContent = diary.content.content
-                showDiary(diary)
+                currentDiaryContent = diary.diaryContent
+                currentDiaryContent.weatherInfo = diary.diaryContent.weatherInfo
+                showDiary()
             }
 
             override fun onDataNotAvailable() {
@@ -109,14 +104,14 @@ constructor(
         if (isNewDiary) {
             val createdTime = System.currentTimeMillis()
             currentDairyMeta = Meta(createdTime, createdTime)
-            currentDisplayTime = createdTime
+            currentDiaryContent.displayTime = createdTime
         } else {
             currentDairyMeta.lastChangeTime = System.currentTimeMillis()
         }
 
         val newDiary = Diary(
                 mDiaryId,
-                Content(currentTitle, currentContent, currentDisplayTime, currentWeatherInfo, currentLocationInfo),
+                currentDiaryContent,
                 currentDairyMeta
         )
         mDiariesRepository.save(newDiary)
@@ -133,16 +128,25 @@ constructor(
         mDiaryDetailView.showDiaryDeleted()
     }
 
-    private fun showDiary(diary: Diary) {
-        val description = diary.content.content
-        mDiaryDetailView.showDescription(description)
-        mDiaryDetailView.showDate(diary.formatDisplayTime())
+    private fun showDiary() {
+        currentDiaryContent.apply {
+            mDiaryDetailView.showDate(formatDisplayTime())
+            mDiaryDetailView.showDescription(content)
+
+            weatherInfo?.apply {
+                mDiaryDetailView.showWeather(description, iconUri)
+            }
+
+            locationInfo?.apply {
+                mDiaryDetailView.showLocation(address)
+            }
+        }
     }
 
     override fun refreshLocation() {
         mLocationManager.getLastLocation { location ->
             mLocationManager.getCurrentAddress { address ->
-                currentLocationInfo = LocationInfo(location, address)
+                currentDiaryContent.locationInfo = LocationInfo(location, address)
                 mDiaryDetailView.showLocation(address)
             }
         }
@@ -152,8 +156,8 @@ constructor(
         mLocationManager.getLastLocation {
             mWeatherManager.getCurrentWeather(it.latitude, it.longitude) {
                 logi("current weatherInfo = $it")
-                currentWeatherInfo = WeatherInfo(it.description, it.icon)
-                mDiaryDetailView.showWeather(it.description, mWeatherManager.getWeatherIcon(it.icon))
+                currentDiaryContent.weatherInfo = WeatherInfo(it.description, it.iconUri())
+                mDiaryDetailView.showWeather(it.description, it.iconUri())
             }
         }
     }
@@ -163,6 +167,6 @@ constructor(
     }
 
     fun onContentChange(newContent: String) {
-        currentContent = newContent
+        currentDiaryContent.content = newContent
     }
 }
