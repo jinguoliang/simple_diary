@@ -35,7 +35,7 @@ interface DiaryDetailContract {
 
         fun hideDescription()
 
-        fun showDescription(description: String)
+        fun showContent(content: String)
 
         fun showDiaryDeleted()
 

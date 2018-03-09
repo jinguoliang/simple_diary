@@ -125,9 +125,10 @@ class TaskDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         diaryContent.visibility = View.GONE
     }
 
-    override fun showDescription(description: String) {
+    override fun showContent(content: String) {
         diaryContent.visibility = View.VISIBLE
-        diaryContent.setText(description)
+        diaryContent.setText(content)
+        diaryContent.setSelection(content.length)
     }
 
     override fun showDate(dateStr: String) {

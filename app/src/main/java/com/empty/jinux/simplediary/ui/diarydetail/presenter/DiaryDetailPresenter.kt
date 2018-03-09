@@ -133,7 +133,7 @@ constructor(
     private fun showDiary() {
         currentDiaryContent.apply {
             mDiaryDetailView.showDate(formatDisplayTime())
-            mDiaryDetailView.showDescription(content)
+            mDiaryDetailView.showContent(content)
 
             weatherInfo?.apply {
                 mDiaryDetailView.showWeather(description, iconUri)
