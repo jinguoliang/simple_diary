@@ -53,6 +53,8 @@ interface DiaryDetailContract {
 
         fun showEmptyDiaryError()
 
+        fun showInputMethod()
+
     }
 
     interface Presenter : BasePresenter {

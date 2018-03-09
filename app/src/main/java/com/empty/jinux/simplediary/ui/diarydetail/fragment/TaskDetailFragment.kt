@@ -25,6 +25,7 @@ import android.support.design.widget.Snackbar
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import com.empty.jinux.baselibaray.loge
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
@@ -39,7 +40,6 @@ import javax.inject.Inject
  * Main UI for the task detail screen.
  */
 class TaskDetailFragment : DaggerFragment(), DiaryDetailContract.View {
-
 
     @Inject internal
     lateinit var mPresenter: DiaryDetailPresenter
@@ -187,6 +187,13 @@ class TaskDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     override fun showEmptyDiaryError() {
 
+    }
+
+    override fun showInputMethod() {
+        val im = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+        diaryContent.postDelayed({
+            im?.showSoftInput(diaryContent, InputMethodManager.SHOW_FORCED)
+        }, 500)
     }
 
 

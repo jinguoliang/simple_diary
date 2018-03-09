@@ -73,6 +73,7 @@ constructor(
         refreshWeather()
         mDiaryDetailView.showDate(formatDateWithWeekday(System.currentTimeMillis()))
         mDiaryDetailView.showSaveButton()
+        mDiaryDetailView.showInputMethod()
     }
 
     private fun openDiary() {
@@ -121,6 +122,7 @@ constructor(
 
     override fun editDiary() {
         mDiaryDetailView.showSaveButton()
+        mDiaryDetailView.showInputMethod()
     }
 
     override fun deleteDiary() {
