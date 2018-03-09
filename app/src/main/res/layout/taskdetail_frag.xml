@@ -28,10 +28,10 @@
         android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="2月14日 星期五"
-        android:layout_marginBottom="@dimen/common_margin"
         android:layout_margin="@dimen/common_margin"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+        android:layout_marginBottom="@dimen/common_margin"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        tools:text="2月14日 星期五" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -50,15 +50,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/common_margin"
-            tools:text="多云"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            tools:text="多云" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:gravity="center_vertical">
 
         <View
             android:id="@+id/locationIcon"
@@ -72,15 +72,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/common_margin"
-            tools:text="山东"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            tools:text="山东" />
 
         <View
             android:id="@+id/refreshLocation"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:background="@drawable/ic_refresh"
-            android:layout_margin="@dimen/common_margin"/>
+            android:layout_margin="@dimen/common_margin"
+            android:background="@drawable/ic_refresh" />
     </LinearLayout>
 
     <View
@@ -93,11 +93,11 @@
     <EditText
         android:id="@+id/diaryContent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_margin="@dimen/common_margin"
         android:background="#0fff"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        tools:text="Medium Text"
-        android:inputType="text" />
+        android:gravity="top|start"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        tools:text="Medium Text" />
 
 </LinearLayout>
