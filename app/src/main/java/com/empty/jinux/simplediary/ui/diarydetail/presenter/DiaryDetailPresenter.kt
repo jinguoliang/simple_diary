@@ -171,4 +171,8 @@ constructor(
     fun onContentChange(newContent: String) {
         currentDiaryContent.content = newContent
     }
+
+    override fun stop() {
+        mDiaryDetailView.hideInputMethod()
+    }
 }

@@ -54,6 +54,7 @@ interface DiaryDetailContract {
         fun showEmptyDiaryError()
 
         fun showInputMethod()
+        fun hideInputMethod()
 
     }
 
@@ -68,5 +69,7 @@ interface DiaryDetailContract {
         fun saveDiary()
 
         fun refreshWeather()
+
+        fun stop()
     }
 }

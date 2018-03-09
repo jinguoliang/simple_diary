@@ -60,6 +60,11 @@ class TaskDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         mPresenter.start()
     }
 
+    override fun onPause() {
+        super.onPause()
+        mPresenter.stop()
+    }
+
     private val MY_PERMISSIONS_REQUEST_COARSE_LOCATION = 0x25
 
     private lateinit var floatBtn: FloatingActionButton
@@ -194,6 +199,11 @@ class TaskDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         diaryContent.postDelayed({
             im?.showSoftInput(diaryContent, InputMethodManager.SHOW_FORCED)
         }, 500)
+    }
+
+    override fun hideInputMethod() {
+        val im = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+        im?.hideSoftInputFromWindow(diaryContent.windowToken, 0)
     }
 
 
