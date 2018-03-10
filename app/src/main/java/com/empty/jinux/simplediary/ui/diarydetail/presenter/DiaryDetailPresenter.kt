@@ -39,15 +39,6 @@ constructor(
         private val mLocationManager: LocationManager,
         private val mWeatherManager: WeatherManager) : DiaryDetailContract.Presenter {
 
-    /**
-     * Method injection is used here to safely reference `this` after the object is created.
-     * For more information, see Java Concurrency in Practice.
-     */
-    @Inject
-    fun setupListeners() {
-        mDiaryDetailView.setPresenter(this)
-    }
-
     private var mDiaryId: Int = INVALID_DIARY_ID
     private var currentDiaryContent: DiaryContent = EMPTY_CONTENT
     private var currentDairyMeta = EMPTY_META

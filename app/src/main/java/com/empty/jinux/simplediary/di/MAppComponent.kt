@@ -3,8 +3,7 @@ package com.empty.jinux.simplediary.di
 import com.empty.jinux.simplediary.MApplication
 import com.empty.jinux.simplediary.data.source.DiariesRepositoryModule
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivityModule
-import com.empty.jinux.simplediary.ui.diarylist.DiaryListActivity
-import com.empty.jinux.simplediary.ui.statistics.StatisticsActivity
+import com.empty.jinux.simplediary.ui.main.MainActivityModule
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
 import javax.inject.Singleton
@@ -15,8 +14,7 @@ import javax.inject.Singleton
                 AppModule::class,
                 DiariesRepositoryModule::class,
                 DiaryDetailActivityModule::class,
-                StatisticsActivity.Module::class,
-                DiaryListActivity.Module::class)
+                MainActivityModule::class)
 )
 interface MAppComponent : AndroidInjector<MApplication> {
 

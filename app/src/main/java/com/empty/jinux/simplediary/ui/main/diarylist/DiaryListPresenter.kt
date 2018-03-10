@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.ui.diarylist
+package com.empty.jinux.simplediary.ui.main.diarylist
 
 import android.app.Activity
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
-import com.empty.jinux.simplediary.data.source.DiariesRepository
+import com.empty.jinux.simplediary.di.Repository
+import com.empty.jinux.simplediary.ui.main.MainActivity
 import javax.inject.Inject
 
 
@@ -43,18 +44,10 @@ internal class DiaryListPresenter
  * with `@Nullable` values.
  */
 @Inject
-constructor(private val mDiariesRepository: DiariesRepository, private val mDiariesView: DiaryListContract.View) : DiaryListContract.Presenter {
+constructor(@param:Repository private val mDiariesRepository: DiariesDataSource,
+            private val mDiariesView: DiaryListContract.View) : DiaryListContract.Presenter {
 
     private var mFirstLoad = true
-
-    /**
-     * Method injection is used here to safely reference `this` after the object is created.
-     * For more information, see Java Concurrency in Practice.
-     */
-    @Inject
-    fun setupListeners() {
-        mDiariesView.setPresenter(this)
-    }
 
     override fun start() {
         loadDiaries(true)
@@ -65,7 +58,7 @@ constructor(private val mDiariesRepository: DiariesRepository, private val mDiar
 
     override fun result(requestCode: Int, resultCode: Int) {
         // If a diary was successfully added, show snackbar
-        if (DiaryListActivity.REQUEST_ADD_DIARY == requestCode && Activity.RESULT_OK == resultCode) {
+        if (MainActivity.REQUEST_ADD_DIARY == requestCode && Activity.RESULT_OK == resultCode) {
             mDiariesView.showSuccessfullySavedMessage()
         }
     }

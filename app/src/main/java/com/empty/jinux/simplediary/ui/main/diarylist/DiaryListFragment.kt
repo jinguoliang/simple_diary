@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.ui.diarylist
+package com.empty.jinux.simplediary.ui.main.diarylist
 
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -29,17 +28,20 @@ import android.view.ViewGroup
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivity
-import com.google.common.base.Preconditions.checkNotNull
+import com.empty.jinux.simplediary.ui.main.MainActivity
+import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.tasks_frag.*
 import org.jetbrains.anko.intentFor
 import java.util.*
+import javax.inject.Inject
 
 /**
  * Display a grid of [Diary]s. User can choose to view all, active or completed diaries.
  */
-class DiaryListFragment : Fragment(), DiaryListContract.View {
+class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
 
-    lateinit private var mPresenter: DiaryListContract.Presenter
+    @Inject
+    lateinit internal var mPresenter: DiaryListContract.Presenter
 
     lateinit private var mListAdapter: DiariesAdapter
 
@@ -76,10 +78,6 @@ class DiaryListFragment : Fragment(), DiaryListContract.View {
         mPresenter.stop()
     }
 
-
-    override fun setPresenter(presenter: DiaryListContract.Presenter) {
-        mPresenter = checkNotNull(presenter)
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         mPresenter.result(requestCode, resultCode)
@@ -162,7 +160,7 @@ class DiaryListFragment : Fragment(), DiaryListContract.View {
 
     override fun showAddDiary() {
         startActivityForResult(context?.intentFor<DiaryDetailActivity>(),
-                DiaryListActivity.REQUEST_ADD_DIARY)
+                MainActivity.REQUEST_ADD_DIARY)
     }
 
     override fun showDiaryDetailsUI(diaryId: Int) {

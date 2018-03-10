@@ -14,7 +14,7 @@
   ~ limitations under the License.
   -->
 
-<com.empty.jinux.simplediary.ui.diarylist.ScrollChildSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.empty.jinux.simplediary.ui.main.diarylist.ScrollChildSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -82,5 +82,5 @@
 
         </LinearLayout>
     </RelativeLayout>
-</com.empty.jinux.simplediary.ui.diarylist.ScrollChildSwipeRefreshLayout>
+</com.empty.jinux.simplediary.ui.main.diarylist.ScrollChildSwipeRefreshLayout>
 

@@ -1,10 +1,11 @@
-package com.empty.jinux.simplediary.ui.diarylist
+package com.empty.jinux.simplediary.ui.main.diarylist
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
+import com.empty.jinux.simplediary.ui.main.DiaryViewHolder
 import com.google.common.base.Preconditions
 import com.google.common.collect.Lists
 

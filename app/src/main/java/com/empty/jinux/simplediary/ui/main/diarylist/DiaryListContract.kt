@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.ui.diarylist
+package com.empty.jinux.simplediary.ui.main.diarylist
 
 import com.empty.jinux.simplediary.BasePresenter
 import com.empty.jinux.simplediary.BaseView

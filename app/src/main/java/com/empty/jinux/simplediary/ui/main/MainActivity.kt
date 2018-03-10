@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.ui.diarylist
+package com.empty.jinux.simplediary.ui.main
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -30,39 +28,17 @@ import com.empty.jinux.simplediary.intent.rateApp
 import com.empty.jinux.simplediary.intent.sendFeedback
 import com.empty.jinux.simplediary.intent.shareApp
 import com.empty.jinux.simplediary.ui.about.AboutActivity
-import com.empty.jinux.simplediary.ui.statistics.StatisticsActivity
+import com.empty.jinux.simplediary.ui.main.diarylist.DiaryListFragment
+import com.empty.jinux.simplediary.ui.main.statistics.StatisticsFragment
 import com.empty.jinux.simplediary.util.ActivityUtils
-import dagger.Binds
-import dagger.Subcomponent
-import dagger.android.ActivityKey
-import dagger.android.AndroidInjector
 import dagger.android.support.DaggerAppCompatActivity
-import dagger.multibindings.IntoMap
 import kotlinx.android.synthetic.main.diary_list_act.*
 import org.jetbrains.anko.intentFor
 import javax.inject.Inject
 
-class DiaryListActivity : DaggerAppCompatActivity() {
-
-    @Subcomponent
-    internal interface Component : AndroidInjector<DiaryListActivity> {
-
-        @Subcomponent.Builder
-        abstract class Builder : AndroidInjector.Builder<DiaryListActivity>()
-    }
-
-    @dagger.Module(subcomponents = arrayOf(Component::class))
-    internal abstract inner class Module {
-
-        @Binds
-        @IntoMap
-        @ActivityKey(DiaryListActivity::class)
-        internal abstract fun bind(builder: Component.Builder): AndroidInjector.Factory<out Activity>
-    }
+class MainActivity : DaggerAppCompatActivity() {
 
     private var mDrawerLayout: DrawerLayout? = null
-
-    private var mTasksPresenter: DiaryListPresenter? = null
 
     @Inject
     lateinit internal var mTasksRepository: DiariesRepository
@@ -70,21 +46,12 @@ class DiaryListActivity : DaggerAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.diary_list_act)
+        setupToolbar()
+        setupNavigationDrawer()
+        setupFragment()
+    }
 
-        // Set up the toolbar.
-        setSupportActionBar(toolbar)
-        val ab = supportActionBar
-        ab!!.setHomeAsUpIndicator(R.drawable.ic_menu)
-        ab.setDisplayHomeAsUpEnabled(true)
-
-        // Set up the navigation drawer.
-        mDrawerLayout = drawer_layout
-        mDrawerLayout!!.setStatusBarBackground(R.color.colorPrimaryDark)
-        val navigationView = nav_view
-        if (navigationView != null) {
-            setupDrawerContent(navigationView)
-        }
-
+    private fun setupFragment() {
         var tasksFragment = supportFragmentManager.findFragmentById(R.id.contentFrame) as DiaryListFragment?
         if (tasksFragment == null) {
             // Create the fragment
@@ -92,10 +59,22 @@ class DiaryListActivity : DaggerAppCompatActivity() {
             ActivityUtils.addFragmentToActivity(
                     supportFragmentManager, tasksFragment, R.id.contentFrame)
         }
+    }
 
-        mTasksPresenter = DiaryListPresenter(mTasksRepository, tasksFragment)
-        mTasksPresenter!!.setupListeners()
+    private fun setupNavigationDrawer() {
+        mDrawerLayout = drawer_layout
+        mDrawerLayout!!.setStatusBarBackground(R.color.colorPrimaryDark)
+        val navigationView = nav_view
+        if (navigationView != null) {
+            setupDrawerContent(navigationView)
+        }
+    }
 
+    private fun setupToolbar() {
+        setSupportActionBar(toolbar)
+        val ab = supportActionBar
+        ab!!.setHomeAsUpIndicator(R.drawable.ic_menu)
+        ab.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -113,11 +92,10 @@ class DiaryListActivity : DaggerAppCompatActivity() {
         navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.list_navigation_menu_item -> {
+                    showDiaryListFragment()
                 }
                 R.id.statistics_navigation_menu_item -> {
-                    val intent = Intent(this@DiaryListActivity, StatisticsActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                    startActivity(intent)
+                    showDiaryStatistics()
                 }
                 R.id.rate_navigation_menu_item -> {
                     startActivity(rateApp(this))
@@ -144,6 +122,18 @@ class DiaryListActivity : DaggerAppCompatActivity() {
             mDrawerLayout!!.closeDrawers()
             true
         }
+    }
+
+    private fun showDiaryStatistics() {
+        val fragment = StatisticsFragment.newInstance()
+        ActivityUtils.replaceFragment(
+                supportFragmentManager, fragment, R.id.contentFrame)
+    }
+
+    private fun showDiaryListFragment() {
+        val fragment = DiaryListFragment.newInstance()
+        ActivityUtils.replaceFragment(
+                supportFragmentManager, fragment, R.id.contentFrame)
     }
 
     companion object {

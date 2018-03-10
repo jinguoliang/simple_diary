@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.ui.statistics;
+package com.empty.jinux.simplediary.ui.main.statistics;
 
 
 import com.empty.jinux.simplediary.BasePresenter;

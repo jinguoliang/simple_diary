@@ -1,10 +1,11 @@
-package com.empty.jinux.simplediary.ui.diarylist
+package com.empty.jinux.simplediary.ui.main
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
+import com.empty.jinux.simplediary.ui.main.diarylist.DiariesAdapter
 import com.empty.jinux.simplediary.util.formatCreatedTime
 
 class DiaryViewHolder

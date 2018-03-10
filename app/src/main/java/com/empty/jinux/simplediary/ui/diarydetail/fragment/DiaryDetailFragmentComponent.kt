@@ -11,8 +11,8 @@ import dagger.android.AndroidInjector
         TaskDetailPresenterModule::class,
         WeatherModule::class
 ))
-internal interface DiaryDetailFragmentComponent : AndroidInjector<TaskDetailFragment> {
+internal interface DiaryDetailFragmentComponent : AndroidInjector<DiaryDetailFragment> {
 
     @Subcomponent.Builder
-    abstract class Builder : AndroidInjector.Builder<TaskDetailFragment>()
+    abstract class Builder : AndroidInjector.Builder<DiaryDetailFragment>()
 }

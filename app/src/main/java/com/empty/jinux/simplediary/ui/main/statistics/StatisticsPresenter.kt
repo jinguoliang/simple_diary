@@ -14,45 +14,22 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.ui.statistics
+package com.empty.jinux.simplediary.ui.main.statistics
 
 
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
-import com.empty.jinux.simplediary.data.source.DiariesRepository
+import com.empty.jinux.simplediary.di.Repository
 import javax.inject.Inject
 
 /**
  * Listens to user actions from the UI ([StatisticsFragment]), retrieves the data and updates
  * the UI as required.
- *
- *
- * By marking the constructor with `@Inject`, Dagger injects the dependencies required to
- * create an instance of the StatisticsPresenter (if it fails, it emits a compiler error). It uses
- * [StatisticsPresenterModule] to do so.
- *
- *
- * Dagger generated code doesn't require public access to the constructor or class, and
- * therefore, to ensure the developer doesn't instantiate the class manually and bypasses Dagger,
- * it's good practice minimise the visibility of the class/constructor as much as possible.
  */
 internal class StatisticsPresenter
-/**
- * Dagger strictly enforces that arguments not marked with `@Nullable` are not injected
- * with `@Nullable` values.
- */
 @Inject
-constructor(private val mTasksRepository: DiariesRepository,
+constructor(@param:Repository private val mTasksRepository: DiariesDataSource,
             private val mStatisticsView: StatisticsContract.View) : StatisticsContract.Presenter {
-
-    /**
-     * Method injection is used here to safely reference `this` after the object is created.
-     * For more information, see Java Concurrency in Practice.
-     */
-    @Inject
-    fun setupListeners() {
-        mStatisticsView.setPresenter(this)
-    }
 
     override fun start() {
         loadStatistics()

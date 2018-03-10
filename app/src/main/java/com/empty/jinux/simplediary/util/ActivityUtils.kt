@@ -36,4 +36,11 @@ object ActivityUtils {
         transaction.commit()
     }
 
+    fun replaceFragment(fragmentManager: FragmentManager,
+                        fragment: Fragment, frameId: Int) {
+        val transaction = fragmentManager.beginTransaction()
+        transaction.replace(frameId, fragment)
+        transaction.commit()
+    }
+
 }

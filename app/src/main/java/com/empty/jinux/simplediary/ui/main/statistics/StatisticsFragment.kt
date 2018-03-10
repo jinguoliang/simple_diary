@@ -14,30 +14,28 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.ui.statistics
+package com.empty.jinux.simplediary.ui.main.statistics
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.empty.jinux.simplediary.R
+import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.statistics_frag.*
+import javax.inject.Inject
 
 
 /**
  * Main UI for the statistics screen.
  */
-class StatisticsFragment : Fragment(), StatisticsContract.View {
+class StatisticsFragment : DaggerFragment(), StatisticsContract.View {
 
     private lateinit var mStatisticsTV: TextView
 
-    private var mPresenter: StatisticsContract.Presenter? = null
-
-    override fun setPresenter(presenter: StatisticsContract.Presenter) {
-        mPresenter = presenter
-    }
+    @Inject internal
+    lateinit var mPresenter: StatisticsPresenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.statistics_frag, container, false)

@@ -18,6 +18,4 @@ package com.empty.jinux.simplediary
 
 interface BaseView<T> {
 
-    fun setPresenter(presenter: T)
-
 }

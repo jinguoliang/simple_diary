@@ -39,7 +39,7 @@ import javax.inject.Inject
 /**
  * Main UI for the task detail screen.
  */
-class TaskDetailFragment : DaggerFragment(), DiaryDetailContract.View {
+class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     @Inject internal
     lateinit var mPresenter: DiaryDetailPresenter
@@ -49,7 +49,6 @@ class TaskDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
         val taskId = arguments?.getInt(ARGUMENT_TASK_ID, INVALID_DIARY_ID) ?: INVALID_DIARY_ID
         mPresenter.setDiaryId(taskId)
-        mPresenter.setupListeners()
     }
 
     override val isActive: Boolean
@@ -98,10 +97,6 @@ class TaskDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
         })
 
-    }
-
-    override fun setPresenter(presenter: DiaryDetailContract.Presenter) {
-//        mPresenter = checkNotNull(presenter)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -159,10 +154,10 @@ class TaskDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
         private val REQUEST_EDIT_TASK = 1
 
-        fun newInstance(taskId: Int): TaskDetailFragment {
+        fun newInstance(taskId: Int): DiaryDetailFragment {
             val arguments = Bundle()
             arguments.putInt(ARGUMENT_TASK_ID, taskId)
-            val fragment = TaskDetailFragment()
+            val fragment = DiaryDetailFragment()
             fragment.arguments = arguments
             return fragment
         }
