@@ -16,7 +16,9 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/group1"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/list_navigation_menu_item"
             android:icon="@drawable/ic_list"
@@ -27,8 +29,10 @@
             android:title="@string/statistics_title" />
     </group>
 
-
-    <group >
+    <group
+        android:id="@+id/group2"
+        android:checkableBehavior="none"
+        android:menuCategory="container">
         <item
             android:id="@+id/rate_navigation_menu_item"
             android:icon="@drawable/ic_star"
