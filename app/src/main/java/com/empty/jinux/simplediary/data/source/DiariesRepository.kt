@@ -17,8 +17,8 @@
 package com.empty.jinux.simplediary.data.source
 
 import com.empty.jinux.simplediary.data.Diary
+import com.empty.jinux.simplediary.di.EmptyData
 import com.empty.jinux.simplediary.di.Local
-import com.empty.jinux.simplediary.di.Remote
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -29,7 +29,7 @@ import javax.inject.Singleton
 @Singleton
 class DiariesRepository
 @Inject
-internal constructor(@param:Remote private val mRemoteDataSource: DiariesDataSource,
+internal constructor(@param:EmptyData private val mRemoteDataSource: DiariesDataSource,
                      @param:Local private val mLocalDataSource: DiariesDataSource) : DiariesDataSource {
 
     override fun getDiaries(callback: DiariesDataSource.LoadDiariesCallback) {
@@ -44,15 +44,15 @@ internal constructor(@param:Remote private val mRemoteDataSource: DiariesDataSou
             }
         })
 
-        mRemoteDataSource.getDiaries(object : DiariesDataSource.LoadDiariesCallback {
-            override fun onDiariesLoaded(diaries: List<Diary>) {
-                callback.onDiariesLoaded(diaries)
-            }
-
-            override fun onDataNotAvailable() {
-                callback.onDataNotAvailable()
-            }
-        })
+//        mRemoteDataSource.getDiaries(object : DiariesDataSource.LoadDiariesCallback {
+//            override fun onDiariesLoaded(diaries: List<Diary>) {
+//                callback.onDiariesLoaded(diaries)
+//            }
+//
+//            override fun onDataNotAvailable() {
+//                callback.onDataNotAvailable()
+//            }
+//        })
     }
 
     override fun save(diary: Diary) {

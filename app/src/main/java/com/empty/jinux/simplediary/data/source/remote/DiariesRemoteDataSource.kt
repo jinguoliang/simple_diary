@@ -48,7 +48,7 @@ class DiariesRemoteDataSource : DiariesDataSource {
             mDataList.addAll(it)
             mDataMap.clear()
             it.forEach {
-                mDataMap.put(it.id!!, it)
+                mDataMap.put(it.id, it)
             }
             mCacheDirty = true
 
@@ -96,7 +96,6 @@ class DiariesRemoteDataSource : DiariesDataSource {
     }
 
     companion object {
-
         private val diaries_root = "diary"
     }
 

@@ -3,6 +3,7 @@ package com.empty.jinux.simplediary.data.source
 import android.content.Context
 import com.empty.jinux.simplediary.data.source.local.DiariesLocalDataSource
 import com.empty.jinux.simplediary.data.source.remote.DiariesRemoteDataSource
+import com.empty.jinux.simplediary.di.EmptyData
 import com.empty.jinux.simplediary.di.Local
 import com.empty.jinux.simplediary.di.Remote
 import com.empty.jinux.simplediary.di.Repository
@@ -32,6 +33,13 @@ abstract class DiariesRepositoryModule {
         @Remote
         internal fun provideDiariesRemoteDataSource(): DiariesDataSource {
             return DiariesRemoteDataSource()
+        }
+
+        @JvmStatic
+        @Provides
+        @EmptyData
+        internal fun provideDiariesEmptyDataSource(): DiariesDataSource {
+            return EmptyDataSource()
         }
     }
 
