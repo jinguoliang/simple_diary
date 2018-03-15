@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="playStoreURL">market://details?id=%1$s</string>
-    <string name="playStoreHttpsURL">https://play.google.com/store/apps/details?id=%1$s</string>
-    <string name="feedbackURL" formatted="false">mailto:jinguol999@163.com?subject=Feedback%20about%20Diary%20Book</string>
-    <string name="translateURL">https://crowdin.com/project/diary-book</string>
+    <string name="playStoreURL" translatable="false">market://details?id=%1$s</string>
+    <string name="playStoreHttpsURL" translatable="false">https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="feedbackURL" formatted="false" translatable="false">mailto:jinguol999@163.com?subject=Feedback%20about%20Diary%20Book</string>
+    <string name="translateURL" translatable="false">https://crowdin.com/project/diary-book</string>
     <string name="share_app_content_fmt">I like the diary book app so much, share it to you.\n %1$s</string>
 
 </resources>

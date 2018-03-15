@@ -19,10 +19,8 @@ package com.empty.jinux.simplediary.ui.main
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
-import android.support.v4.widget.DrawerLayout
 import android.view.MenuItem
 import com.empty.jinux.simplediary.R
-import com.empty.jinux.simplediary.data.source.DiariesRepository
 import com.empty.jinux.simplediary.intent.helpTranslate
 import com.empty.jinux.simplediary.intent.rateApp
 import com.empty.jinux.simplediary.intent.sendFeedback
@@ -34,14 +32,12 @@ import com.empty.jinux.simplediary.util.ActivityUtils
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.diary_list_act.*
 import org.jetbrains.anko.intentFor
-import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity() {
 
-    private var mDrawerLayout: DrawerLayout? = null
+    lateinit var mDiaryListFragment: DiaryListFragment
 
-    @Inject
-    lateinit internal var mTasksRepository: DiariesRepository
+    lateinit var mStatisticFragment: StatisticsFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,18 +48,18 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     private fun setupFragment() {
-        var tasksFragment = supportFragmentManager.findFragmentById(R.id.contentFrame) as DiaryListFragment?
-        if (tasksFragment == null) {
+        var diaryListFragment = supportFragmentManager.findFragmentById(R.id.contentFrame) as DiaryListFragment?
+        if (diaryListFragment == null) {
             // Create the fragment
-            tasksFragment = DiaryListFragment.newInstance()
+            diaryListFragment = DiaryListFragment.newInstance()
             ActivityUtils.addFragmentToActivity(
-                    supportFragmentManager, tasksFragment, R.id.contentFrame)
+                    supportFragmentManager, diaryListFragment, R.id.contentFrame)
         }
+        mDiaryListFragment = diaryListFragment
     }
 
     private fun setupNavigationDrawer() {
-        mDrawerLayout = drawer_layout
-        mDrawerLayout!!.setStatusBarBackground(R.color.colorPrimaryDark)
+        drawer_layout.setStatusBarBackground(R.color.colorPrimaryDark)
         val navigationView = nav_view
         if (navigationView != null) {
             setupDrawerContent(navigationView)
@@ -80,8 +76,7 @@ class MainActivity : DaggerAppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                // Open the navigation drawer when the home icon is selected from the toolbar.
-                mDrawerLayout!!.openDrawer(GravityCompat.START)
+                drawer_layout.openDrawer(GravityCompat.START)
                 return true
             }
         }
@@ -119,21 +114,21 @@ class MainActivity : DaggerAppCompatActivity() {
             // Do nothing, we're already on that screen
             // Close the navigation drawer when an item is selected.
             menuItem.isChecked = true
-            mDrawerLayout!!.closeDrawers()
+            drawer_layout.closeDrawers()
             true
         }
     }
 
     private fun showDiaryStatistics() {
         val fragment = StatisticsFragment.newInstance()
+        mStatisticFragment = fragment
         ActivityUtils.replaceFragment(
-                supportFragmentManager, fragment, R.id.contentFrame)
+                supportFragmentManager, mStatisticFragment, R.id.contentFrame)
     }
 
     private fun showDiaryListFragment() {
-        val fragment = DiaryListFragment.newInstance()
         ActivityUtils.replaceFragment(
-                supportFragmentManager, fragment, R.id.contentFrame)
+                supportFragmentManager, mDiaryListFragment, R.id.contentFrame)
     }
 
     companion object {

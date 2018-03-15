@@ -1,90 +1,19 @@
 <resources>
-    <string name="app_name">SimpleDiary</string>
-
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
-
-    <string name="add_task">New Diary</string>
-
-    <string name="edit_task">Edit Diary</string>
-
-    <string name="task_marked_complete">Task marked complete</string>
-
-    <string name="task_marked_active">Task marked active</string>
-
-    <string name="loading_tasks_error">Error while loading tasks</string>
-
-    <string name="completed_tasks_cleared">Completed tasks cleared</string>
-
-    <string name="menu_filter">Filter</string>
-
-    <string name="menu_clear">Clear completed</string>
-
+    <string name="app_name">Uncommon Diary</string>
+    <string name="loading_diaries_error">Error while loading diaries</string>
     <string name="menu_delete_diary">Delete diary</string>
-
     <string name="navigation_view_header_title">Diaries</string>
-
-    <string name="title_hint">Title</string>
-
-    <string name="description_hint">Enter your diary here.</string>
-
-    <string name="empty_task_message">TO DOs cannot be empty</string>
-
-    <string name="successfully_saved_task_message">Diary saved</string>
-
+    <string name="successfully_saved_diary_message">Diary saved</string>
     <string name="list_title">Diary List</string>
-
     <string name="statistics_title">Statistics</string>
-
-    <string name="statistics_no_diary">You have no diaries.</string>
-
-    <string name="statistics_diaries">Diaries:</string>
-
-    <string name="statistics_completed_tasks">Completed tasks:</string>
-
     <string name="statistics_error">Error loading statistics.</string>
-
-    <string name="no_data">No data</string>
-
     <string name="loading">LOADING</string>
-
-
-    -
-    <string-array name="list_tasks_array">
-
-        <item>@string/nav_all</item>
-
-        <item>@string/nav_active</item>
-
-        <item>@string/nav_completed</item>
-
-    </string-array>
-
-    <string name="nav_all">All</string>
-
-    <string name="nav_active">Active</string>
-
-    <string name="nav_completed">Completed</string>
-
-    <string name="label_all">All diarys</string>
-
-    <string name="label_active">Active diaries</string>
-
-    <string name="label_completed">Completed diaries</string>
-
-    <string name="no_tasks_all">You have no diaries!</string>
-
-    <string name="no_tasks_active">You have no active diaries!</string>
-
-    <string name="no_tasks_completed">You have no completed diaries!</string>
-
-    <string name="no_tasks_add">Add a diary item +</string>
-
-    <string name="refresh">Refresh</string>
+    <string name="no_diaries_all">You have no diaries!</string>
     <string name="about_intro">This ia a good app</string>
     <string name="about_title">About it</string>
     <string name="translate_title">Help translate it</string>
     <string name="share_title">Share it</string>
     <string name="rate_title">Rate it</string>
     <string name="feedback_title">Feedback</string>
+    <string name="about_app_intro_hint">Intro: </string>
 </resources>

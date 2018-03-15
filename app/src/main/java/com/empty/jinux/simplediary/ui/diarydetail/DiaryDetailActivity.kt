@@ -22,7 +22,7 @@ import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.DiaryDetailFragment
 import com.empty.jinux.simplediary.util.ActivityUtils
 import dagger.android.support.DaggerAppCompatActivity
-import kotlinx.android.synthetic.main.statistics_act.*
+import kotlinx.android.synthetic.main.diary_detail_act.*
 
 /**
  * Displays task details screen.
@@ -32,7 +32,7 @@ class DiaryDetailActivity : DaggerAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.taskdetail_act)
+        setContentView(R.layout.diary_detail_act)
 
         // Set up the toolbar.
         setSupportActionBar(toolbar)
@@ -41,7 +41,7 @@ class DiaryDetailActivity : DaggerAppCompatActivity() {
         ab.setDisplayShowHomeEnabled(true)
 
         // Get the requested task id
-        val taskId: Int = intent.getIntExtra(EXTRA_TASK_ID, INVALID_DIARY_ID)
+        val taskId: Int = intent.getIntExtra(EXTRA_DIARY_ID, INVALID_DIARY_ID)
 
         var diaryDetailFragment = supportFragmentManager
                 .findFragmentById(R.id.contentFrame) as DiaryDetailFragment?
@@ -61,6 +61,6 @@ class DiaryDetailActivity : DaggerAppCompatActivity() {
 
     companion object {
 
-        val EXTRA_TASK_ID = "TASK_ID"
+        val EXTRA_DIARY_ID = "TASK_ID"
     }
 }

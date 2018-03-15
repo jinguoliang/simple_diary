@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">非凡日记</string>
+    <string name="about_app_intro_hint">介绍</string>
+    <string name="feedback_title">反馈</string>
+    <string name="rate_title">评价</string>
+    <string name="share_title">分享</string>
+    <string name="translate_title">帮助翻译</string>
+    <string name="about_title">关于</string>
+    <string name="about_intro">很高兴遇到你！\n\n这是一个日记软件，非常简单，它会与你一同成长，但会一直保持简洁。</string>
+</resources>

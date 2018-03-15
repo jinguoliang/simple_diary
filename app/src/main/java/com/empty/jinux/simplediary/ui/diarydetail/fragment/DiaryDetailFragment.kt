@@ -183,7 +183,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     override fun showDiarySaved() {
-        Snackbar.make(view!!, getString(R.string.successfully_saved_task_message), Snackbar.LENGTH_LONG).show()
+        Snackbar.make(view!!, getString(R.string.successfully_saved_diary_message), Snackbar.LENGTH_LONG).show()
     }
 
     override fun showEmptyDiaryError() {

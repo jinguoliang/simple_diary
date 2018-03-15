@@ -30,7 +30,7 @@ import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivity
 import com.empty.jinux.simplediary.ui.main.MainActivity
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.tasks_frag.*
+import kotlinx.android.synthetic.main.diaries_frag.*
 import org.jetbrains.anko.intentFor
 import java.util.*
 import javax.inject.Inject
@@ -46,7 +46,7 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
     lateinit private var mListAdapter: DiariesAdapter
 
     /**
-     * Listener for clicks on tasks in the ListView.
+     * Listener for clicks on diaries in the ListView.
      */
     private var mItemListener: DiariesAdapter.DiaryItemListener = object : DiariesAdapter.DiaryItemListener {
         override fun onClick(diary: Diary) {
@@ -85,20 +85,20 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.tasks_frag, container, false)
+        return inflater.inflate(R.layout.diaries_frag, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        // Set up tasks view
-        tasks_list.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        tasks_list.adapter = mListAdapter
+        // Set up diaries view
+        diaryList.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        diaryList.adapter = mListAdapter
 
-        noTasks.setOnClickListener { showAddDiary() }
+        noDiaries.setOnClickListener { showAddDiary() }
 
         // Set up floating action button
-        activity?.findViewById<FloatingActionButton>(R.id.fab_add_task)?.apply {
+        activity?.findViewById<FloatingActionButton>(R.id.fab_add_diary)?.apply {
             setImageResource(R.drawable.ic_add)
             setOnClickListener { mPresenter.addNewDiary() }
         }
@@ -111,7 +111,7 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
                     ContextCompat.getColor(activity, R.color.colorPrimaryDark)
             )
             // Set the scrolling view in the custom SwipeRefreshLayout.
-            refresh_layout.setScrollUpChild(tasks_list)
+            refresh_layout.setScrollUpChild(diaryList)
             refresh_layout.setOnRefreshListener { mPresenter.loadDiaries(false) }
         }
 
@@ -133,29 +133,27 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
     override fun showDiaries(diaries: List<Diary>) {
         mListAdapter.replaceData(diaries)
 
-        tasks_list.visibility = View.VISIBLE
-        noTasks.visibility = View.GONE
+        diaryList.visibility = View.VISIBLE
+        noDiaries.visibility = View.GONE
     }
 
     override fun showNoDiaries() {
-        showNoTasksViews(
-                resources.getString(R.string.no_tasks_all),
-                R.drawable.ic_assignment_turned_in_24dp,
-                false
+        showNoDiariesViews(
+                resources.getString(R.string.no_diaries_all),
+                R.drawable.ic_assignment_turned_in_24dp
         )
     }
 
     override fun showSuccessfullySavedMessage() {
-        showMessage(getString(R.string.successfully_saved_task_message))
+        showMessage(getString(R.string.successfully_saved_diary_message))
     }
 
-    private fun showNoTasksViews(mainText: String, iconRes: Int, showAddView: Boolean) {
-        tasks_list.visibility = View.GONE
-        noTasks.visibility = View.VISIBLE
+    private fun showNoDiariesViews(mainText: String, iconRes: Int) {
+        diaryList.visibility = View.GONE
+        noDiaries.visibility = View.VISIBLE
 
-        noTasksMain.text = mainText
-        noTasksIcon.setImageDrawable(resources.getDrawable(iconRes))
-        noTasksAdd.visibility = if (showAddView) View.VISIBLE else View.GONE
+        noDiariesMessage.text = mainText
+        noDiariesIcon.setImageDrawable(resources.getDrawable(iconRes))
     }
 
     override fun showAddDiary() {
@@ -165,15 +163,11 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
 
     override fun showDiaryDetailsUI(diaryId: Int) {
         startActivity(context?.intentFor<DiaryDetailActivity>(
-                DiaryDetailActivity.EXTRA_TASK_ID to diaryId))
-    }
-
-    override fun showDiaryMarkedComplete() {
-        showMessage(getString(R.string.task_marked_complete))
+                DiaryDetailActivity.EXTRA_DIARY_ID to diaryId))
     }
 
     override fun showLoadingDiariesError() {
-        showMessage(getString(R.string.loading_tasks_error))
+        showMessage(getString(R.string.loading_diaries_error))
     }
 
     private fun showMessage(message: String) {
