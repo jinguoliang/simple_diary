@@ -52,7 +52,7 @@ constructor(context: Context) : DiariesDataSource {
         }
     }
 
-    override fun getDiary(diaryId: Int, callback: DiariesDataSource.GetDiaryCallback) {
+    override fun getDiary(diaryId: Long, callback: DiariesDataSource.GetDiaryCallback) {
         doAsync {
             val diary = diaryDao.getOneById(diaryId)
 
@@ -67,9 +67,10 @@ constructor(context: Context) : DiariesDataSource {
         }
     }
 
-    override fun save(diary: Diary) {
+    override fun save(diary: Diary, callback: DiariesDataSource.OnCallback<Long>){
         doAsync {
-            diaryDao.insertOne(mapDiaryFromDataSourceToRoom(diary))
+            val id = diaryDao.insertOne(mapDiaryFromDataSourceToRoom(diary))
+            callback.onResult(id)
         }
     }
 
@@ -82,7 +83,7 @@ constructor(context: Context) : DiariesDataSource {
         }
     }
 
-    override fun deleteDiary(diaryId: Int) {
+    override fun deleteDiary(diaryId: Long) {
         doAsync {
             diaryDao.deleteById(diaryId)
         }

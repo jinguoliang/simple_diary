@@ -45,10 +45,6 @@ interface DiaryDetailContract {
 
         fun showWeather(weather: String, weatherIconUrl: String)
 
-        fun showSaveButton()
-
-        fun showEditButton()
-
         fun showDiarySaved()
 
         fun showEmptyDiaryError()

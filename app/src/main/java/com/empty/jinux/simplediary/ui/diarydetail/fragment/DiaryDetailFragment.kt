@@ -20,7 +20,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.text.Editable
 import android.text.TextWatcher
@@ -47,7 +46,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
 
-        val taskId = arguments?.getInt(ARGUMENT_TASK_ID, INVALID_DIARY_ID) ?: INVALID_DIARY_ID
+        val taskId = arguments?.getLong(ARGUMENT_TASK_ID, INVALID_DIARY_ID) ?: INVALID_DIARY_ID
         mPresenter.setDiaryId(taskId)
     }
 
@@ -66,8 +65,6 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     private val MY_PERMISSIONS_REQUEST_COARSE_LOCATION = 0x25
 
-    private lateinit var floatBtn: FloatingActionButton
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.taskdetail_frag, container, false)
@@ -78,8 +75,6 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
         setHasOptionsMenu(true)
 
-        // Set up floating action button
-        floatBtn = activity!!.findViewById<FloatingActionButton>(R.id.fab_edit_task)
         refreshLocation.setOnClickListener {
             mPresenter.refreshLocation()
         }
@@ -154,9 +149,9 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
         private val REQUEST_EDIT_TASK = 1
 
-        fun newInstance(taskId: Int): DiaryDetailFragment {
+        fun newInstance(taskId: Long): DiaryDetailFragment {
             val arguments = Bundle()
-            arguments.putInt(ARGUMENT_TASK_ID, taskId)
+            arguments.putLong(ARGUMENT_TASK_ID, taskId)
             val fragment = DiaryDetailFragment()
             fragment.arguments = arguments
             return fragment
@@ -170,16 +165,6 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     override fun showWeather(weather: String, weatherIconUrl: String) {
         weatherName.text = weather
         Picasso.with(context).load(weatherIconUrl).into(weatherIcon)
-    }
-
-    override fun showSaveButton() {
-        floatBtn.setImageResource(R.drawable.ic_done)
-        floatBtn.setOnClickListener { mPresenter.saveDiary() }
-    }
-
-    override fun showEditButton() {
-        floatBtn.setImageResource(R.drawable.ic_edit)
-        floatBtn.setOnClickListener { mPresenter.editDiary() }
     }
 
     override fun showDiarySaved() {

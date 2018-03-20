@@ -16,19 +16,19 @@ import com.empty.jinux.simplediary.data.source.local.room.entity.Diary
 @Dao
 interface DiaryDao {
     @Insert(onConflict = REPLACE)
-    fun insertOne(diary: Diary)
+    fun insertOne(diary: Diary): Long
 
     @Query("SELECT * FROM $TABLE_DIARY")
     fun getAll(): List<Diary>
 
     @Query("SELECT * FROM $TABLE_DIARY WHERE $COLUMN_ID LIKE :id LIMIT 1")
-    fun getOneById(id: Int): Diary?
+    fun getOneById(id: Long): Diary?
 
     @Delete
     fun delete(diary: Diary)
 
     @Query("DELETE FROM $TABLE_DIARY WHERE $COLUMN_ID LIKE :id")
-    fun deleteById(id: Int)
+    fun deleteById(id: Long)
 
     @Query("DELETE FROM $TABLE_DIARY")
     fun deleteAll()

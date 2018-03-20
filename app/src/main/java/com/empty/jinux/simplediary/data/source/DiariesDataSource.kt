@@ -49,14 +49,17 @@ interface DiariesDataSource {
 
     fun getDiaries(callback: LoadDiariesCallback)
 
-    fun getDiary(diaryId: Int, callback: GetDiaryCallback)
+    fun getDiary(diaryId: Long, callback: GetDiaryCallback)
 
-    fun save(diary: Diary)
+    fun save(diary: Diary, callback: OnCallback<Long>)
 
     fun refreshDiaries()
 
     fun deleteAllDiaries()
 
-    fun deleteDiary(diaryId: Int)
+    fun deleteDiary(diaryId: Long)
 
+    interface OnCallback<in T> {
+        fun onResult(id: T)
+    }
 }

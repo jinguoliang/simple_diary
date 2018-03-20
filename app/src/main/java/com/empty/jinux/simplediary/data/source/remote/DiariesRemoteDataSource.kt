@@ -38,7 +38,7 @@ class DiariesRemoteDataSource : DiariesDataSource {
     private var mEventListener: DatabaseDataChangeListener? = null
 
     private val mDataList = mutableListOf<Diary>()
-    private val mDataMap = mutableMapOf<Int, Diary>()
+    private val mDataMap = mutableMapOf<Long, Diary>()
 
     private var mCacheDirty = true
 
@@ -64,7 +64,7 @@ class DiariesRemoteDataSource : DiariesDataSource {
         }
     }
 
-    override fun getDiary(diaryId: Int, callback: DiariesDataSource.GetDiaryCallback) {
+    override fun getDiary(diaryId: Long, callback: DiariesDataSource.GetDiaryCallback) {
         if (mCacheDirty) {
 
         } else {
@@ -77,7 +77,7 @@ class DiariesRemoteDataSource : DiariesDataSource {
     }
 
 
-    override fun save(diary: Diary) {
+    override fun save(diary: Diary, callback: DiariesDataSource.OnCallback<Long>) {
         mDatabase.child(diary.id.toString()).setValue(Gson().toJson(diary))
         mCacheDirty = true
     }
@@ -91,7 +91,7 @@ class DiariesRemoteDataSource : DiariesDataSource {
         mCacheDirty = true
     }
 
-    override fun deleteDiary(diaryId: Int) {
+    override fun deleteDiary(diaryId: Long) {
         mDatabase.child(diaryId.toString()).removeValue()
     }
 

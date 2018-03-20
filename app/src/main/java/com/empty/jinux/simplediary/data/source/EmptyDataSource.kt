@@ -10,11 +10,11 @@ class EmptyDataSource : DiariesDataSource {
         callback.onDiariesLoaded(arrayListOf())
     }
 
-    override fun getDiary(diaryId: Int, callback: DiariesDataSource.GetDiaryCallback) {
+    override fun getDiary(diaryId: Long, callback: DiariesDataSource.GetDiaryCallback) {
         callback.onDataNotAvailable()
     }
 
-    override fun save(diary: Diary) {
+    override fun save(diary: Diary, callback: DiariesDataSource.OnCallback<Long>) {
     }
 
     override fun refreshDiaries() {
@@ -23,6 +23,6 @@ class EmptyDataSource : DiariesDataSource {
     override fun deleteAllDiaries() {
     }
 
-    override fun deleteDiary(diaryId: Int) {
+    override fun deleteDiary(diaryId: Long) {
     }
 }

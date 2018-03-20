@@ -18,7 +18,7 @@ package com.empty.jinux.simplediary.data
 
 import com.empty.jinux.simplediary.location.Location
 
-const val INVALID_DIARY_ID = -1
+const val INVALID_DIARY_ID = -1L
 val EMPTY_WEATHER = WeatherInfo("", "")
 val EMPTY_LOCATION = LocationInfo(Location(-1.0, -1.0), "")
 val EMPTY_CONTENT = DiaryContent("", "", -1, EMPTY_WEATHER, EMPTY_LOCATION)
@@ -26,7 +26,7 @@ val EMPTY_META = Meta(-1, -1, false)
 
 data class Diary
 constructor(
-        val id: Int,
+        val id: Long,
         val diaryContent: DiaryContent,
         val meta: Meta
 )

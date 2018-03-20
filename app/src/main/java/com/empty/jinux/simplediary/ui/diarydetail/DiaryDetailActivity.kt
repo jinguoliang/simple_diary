@@ -41,7 +41,7 @@ class DiaryDetailActivity : DaggerAppCompatActivity() {
         ab.setDisplayShowHomeEnabled(true)
 
         // Get the requested task id
-        val taskId: Int = intent.getIntExtra(EXTRA_DIARY_ID, INVALID_DIARY_ID)
+        val taskId = intent.getLongExtra(EXTRA_DIARY_ID, INVALID_DIARY_ID)
 
         var diaryDetailFragment = supportFragmentManager
                 .findFragmentById(R.id.contentFrame) as DiaryDetailFragment?

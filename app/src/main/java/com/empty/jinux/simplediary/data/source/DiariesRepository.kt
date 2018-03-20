@@ -55,12 +55,12 @@ internal constructor(@param:EmptyData private val mRemoteDataSource: DiariesData
 //        })
     }
 
-    override fun save(diary: Diary) {
-        mRemoteDataSource.save(diary)
-        mLocalDataSource.save(diary)
+    override fun save(diary: Diary, callback: DiariesDataSource.OnCallback<Long>) {
+        mRemoteDataSource.save(diary, callback)
+        mLocalDataSource.save(diary, callback)
     }
 
-    override fun getDiary(diaryId: Int, callback: DiariesDataSource.GetDiaryCallback) {
+    override fun getDiary(diaryId: Long, callback: DiariesDataSource.GetDiaryCallback) {
         // Is the task in the local data source? If not, query the network.
         mLocalDataSource.getDiary(diaryId, object : DiariesDataSource.GetDiaryCallback {
             override fun onDiaryLoaded(diary: Diary) {
@@ -81,28 +81,8 @@ internal constructor(@param:EmptyData private val mRemoteDataSource: DiariesData
         mLocalDataSource.deleteAllDiaries()
     }
 
-    override fun deleteDiary(diaryId: Int) {
+    override fun deleteDiary(diaryId: Long) {
         mRemoteDataSource.deleteDiary(diaryId)
         mLocalDataSource.deleteDiary(diaryId)
-    }
-
-    private fun getDiariesFromRemoteDataSource(callback: DiariesDataSource.LoadDiariesCallback) {
-        mRemoteDataSource.getDiaries(object : DiariesDataSource.LoadDiariesCallback {
-            override fun onDiariesLoaded(diaries: List<Diary>) {
-                refreshLocalDataSource(diaries)
-                callback.onDiariesLoaded(diaries)
-            }
-
-            override fun onDataNotAvailable() {
-                callback.onDataNotAvailable()
-            }
-        })
-    }
-
-    private fun refreshLocalDataSource(diaries: List<Diary>) {
-        mLocalDataSource.deleteAllDiaries()
-        for (diary in diaries) {
-            mLocalDataSource.save(diary)
-        }
     }
 }

@@ -12,7 +12,7 @@ import com.empty.jinux.simplediary.data.source.local.room.TABLE_DIARY
 
 @Entity(tableName = TABLE_DIARY)
 data class Diary(
-        @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") var id: Int?,
+        @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") var id: Long?,
         @ColumnInfo(name = "title") var title: String = "",
         @ColumnInfo(name = "content_text") var contentText: String = "",
         @ColumnInfo(name = "content_images") var contentImages: String = "",

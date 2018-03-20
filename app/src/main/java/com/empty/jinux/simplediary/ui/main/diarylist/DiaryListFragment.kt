@@ -161,7 +161,7 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
                 MainActivity.REQUEST_ADD_DIARY)
     }
 
-    override fun showDiaryDetailsUI(diaryId: Int) {
+    override fun showDiaryDetailsUI(diaryId: Long) {
         startActivity(context?.intentFor<DiaryDetailActivity>(
                 DiaryDetailActivity.EXTRA_DIARY_ID to diaryId))
     }

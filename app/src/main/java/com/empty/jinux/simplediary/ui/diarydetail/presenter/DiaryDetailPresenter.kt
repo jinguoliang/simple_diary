@@ -39,7 +39,7 @@ constructor(
         private val mLocationManager: LocationManager,
         private val mWeatherManager: WeatherManager) : DiaryDetailContract.Presenter {
 
-    private var mDiaryId: Int = INVALID_DIARY_ID
+    private var mDiaryId: Long = INVALID_DIARY_ID
     private var currentDiaryContent: DiaryContent = EMPTY_CONTENT
     private var currentDairyMeta = EMPTY_META
 
@@ -56,14 +56,12 @@ constructor(
 
     private fun initForDiary() {
         openDiary()
-        mDiaryDetailView.showEditButton()
     }
 
     fun initForNewDiary() {
         refreshLocation()
         refreshWeather()
         mDiaryDetailView.showDate(formatDateWithWeekday(System.currentTimeMillis()))
-        mDiaryDetailView.showSaveButton()
         mDiaryDetailView.showInputMethod()
     }
 
@@ -106,13 +104,16 @@ constructor(
                 currentDiaryContent,
                 currentDairyMeta
         )
-        mDiariesRepository.save(newDiary)
-        mDiaryDetailView.showEditButton()
+        mDiariesRepository.save(newDiary, object : DiariesDataSource.OnCallback<Long> {
+            override fun onResult(id: Long) {
+                mDiaryId = id
+            }
+
+        })
         mDiaryDetailView.showDiarySaved()
     }
 
     override fun editDiary() {
-        mDiaryDetailView.showSaveButton()
         mDiaryDetailView.showInputMethod()
     }
 
@@ -155,7 +156,7 @@ constructor(
         }
     }
 
-    fun setDiaryId(diaryId: Int) {
+    fun setDiaryId(diaryId: Long) {
         mDiaryId = diaryId
     }
 
@@ -165,5 +166,6 @@ constructor(
 
     override fun stop() {
         mDiaryDetailView.hideInputMethod()
+        saveDiary()
     }
 }
