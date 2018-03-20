@@ -21,7 +21,7 @@ class AboutActivity : AbsAboutActivity() {
         items.add(Card(getString(R.string.about_intro)))
 
         items.add(Category("Developers"))
-        items.add(Contributor(R.drawable.ic_add, "Jinux", "Developer & designer", "git@github.com:google/guava.githttp://weibo.com/jinux111"))
+        items.add(Contributor(R.drawable.jinux_head, "Jinux", "Developer & designer", "git@github.com:google/guava.githttp://weibo.com/jinux111"))
 
         items.add(Category("Open Source Licenses"))
         items.add(License("Dagger2", "Google", License.APACHE_2, "https://github.com/google/dagger"))
