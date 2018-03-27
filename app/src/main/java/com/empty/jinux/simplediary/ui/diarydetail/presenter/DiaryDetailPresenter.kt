@@ -78,6 +78,7 @@ constructor(
                 currentDiaryContent = diary.diaryContent
                 currentDiaryContent.weatherInfo = diary.diaryContent.weatherInfo
                 showDiary()
+                mDiaryDetailView.showInputMethod()
             }
 
             override fun onDataNotAvailable() {
