@@ -8,11 +8,8 @@ import com.empty.jinux.simplediary.utils.any
 import com.empty.jinux.simplediary.weather.WeatherManager
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Matchers
-import org.mockito.Mock
-import org.mockito.Mockito
+import org.mockito.*
 import org.mockito.Mockito.verify
-import org.mockito.MockitoAnnotations
 
 /**
  * Created by jingu on 2018/3/3.
@@ -27,6 +24,9 @@ class DiaryDetailPresenterTest {
     lateinit var mLocationManager: LocationManager
     @Mock
     lateinit var mWeatherManager: WeatherManager
+
+    @Captor
+    lateinit var mGetDiaryCallbackCaptor: ArgumentCaptor<DiariesDataSource.GetDiaryCallback>
 
     lateinit var mPresenter: DiaryDetailPresenter
 
@@ -51,8 +51,8 @@ class DiaryDetailPresenterTest {
         mPresenter.start()
 
         verify(mView).showSaveButton()
-        verify(mWeatherManager).getCurrentWeather(Matchers.anyDouble(),
-                Matchers.anyDouble(), any())
+//        verify(mWeatherManager).getCurrentWeather(Matchers.anyDouble(),
+//                Matchers.anyDouble(), any())
         verify(mLocationManager).getCurrentAddress(any())
     }
 
@@ -60,9 +60,13 @@ class DiaryDetailPresenterTest {
     fun testStart_view() {
         mPresenter.setDiaryId(Matchers.anyInt())
         mPresenter.start()
+
+        verify(mDiaryReposity).getDiary(Matchers.anyInt(), mGetDiaryCallbackCaptor.capture())
+        mGetDiaryCallbackCaptor.value.onDiaryLoaded(any())
+
         verify(mView).showEditButton()
 //        verify(mView).showWeather(Matchers.anyString(),
 //                Matchers.anyString())
-//        verify(mView).showLocation(Matchers.anyString())
+        verify(mView).showLocation(Matchers.anyString())
     }
 }
