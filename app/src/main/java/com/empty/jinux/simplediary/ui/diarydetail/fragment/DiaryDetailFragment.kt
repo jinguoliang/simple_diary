@@ -21,6 +21,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v4.content.ContextCompat
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
@@ -30,6 +31,7 @@ import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
+import com.empty.jinux.simplediary.util.PermissionUtil
 import com.squareup.picasso.Picasso
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.taskdetail_frag.*
@@ -53,22 +55,17 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     override val isActive: Boolean
         get() = isAdded
 
-    override fun onResume() {
-        super.onResume()
-        mPresenter.start()
-    }
-
     override fun onPause() {
         super.onPause()
         mPresenter.stop()
     }
 
-    private val MY_PERMISSIONS_REQUEST_COARSE_LOCATION = 0x25
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.taskdetail_frag, container, false)
     }
+
+    private val REQUEST_CODE_LOCATION_PERMISSION = 0x64
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -91,7 +88,30 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             }
 
         })
+        activity?.let {
+            if (PermissionUtil.getLocationPermissions(it, REQUEST_CODE_LOCATION_PERMISSION)) {
+                mPresenter.start()
+            }
+        }
 
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        PermissionUtil.onRequestPermissionsResult(requestCode, permissions, grantResults, object : PermissionUtil.OnRequestPermissionsResultCallbacks {
+            override fun onPermissionsGranted(requestCode: Int, perms: List<String>, isAllGranted: Boolean) {
+                if (requestCode == REQUEST_CODE_LOCATION_PERMISSION) {
+                    mPresenter.start()
+                }
+            }
+
+            override fun onPermissionsDenied(requestCode: Int, perms: List<String>, isAllDenied: Boolean) {
+                if (requestCode == REQUEST_CODE_LOCATION_PERMISSION) {
+//                    mPresenter.start()
+                }
+            }
+
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
