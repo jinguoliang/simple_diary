@@ -2,11 +2,14 @@ package com.empty.jinux.simplediary.location
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.location.Address
 import android.location.Geocoder
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.google.common.collect.Lists
+import java.io.IOException
 import java.util.*
 
 
@@ -67,7 +70,12 @@ open class LocationManagerImpl constructor(val context: Activity) : LocationMana
     override fun getCurrentAddress(callback: (address: String) -> Unit): Unit {
         getLastLocation { location ->
             val geocoder = Geocoder(context, Locale.getDefault())
-            val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+            val addresses = try {
+                geocoder.getFromLocation(location.latitude, location.longitude, 1)
+            } catch (e: IOException) {
+                Lists.newArrayList<Address>()
+            }
+
             if (addresses.isNotEmpty()) {
                 val address = addresses[0]
                 val addressStr = "${address.getAddressLine(0)}${address.getAddressLine(1)}${address.featureName}"
