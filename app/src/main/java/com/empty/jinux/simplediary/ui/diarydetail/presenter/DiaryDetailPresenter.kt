@@ -16,6 +16,7 @@
 
 package com.empty.jinux.simplediary.ui.diarydetail.presenter
 
+import android.text.TextUtils
 import com.empty.jinux.baselibaray.logi
 import com.empty.jinux.simplediary.data.*
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
@@ -92,6 +93,11 @@ constructor(
     }
 
     override fun saveDiary() {
+        if (isContentCleared()) {
+            deleteDiaryFromRepoIfNecessary()
+            return
+        }
+
         if (isNewDiary) {
             val createdTime = System.currentTimeMillis()
             currentDairyMeta = Meta(createdTime, createdTime)
@@ -114,12 +120,22 @@ constructor(
         mDiaryDetailView.showDiarySaved()
     }
 
+    private fun deleteDiaryFromRepoIfNecessary() {
+        if (mDiaryId != INVALID_DIARY_ID) {
+            mDiariesRepository.deleteDiary(mDiaryId)
+            mDiaryId = INVALID_DIARY_ID
+        }
+    }
+
+    private fun isContentCleared() = TextUtils.isEmpty(currentDiaryContent.content)
+
     override fun editDiary() {
         mDiaryDetailView.showInputMethod()
     }
 
     override fun deleteDiary() {
-        mDiariesRepository.deleteDiary(mDiaryId)
+        currentDiaryContent.content = ""
+        deleteDiaryFromRepoIfNecessary()
         mDiaryDetailView.showDiaryDeleted()
     }
 
