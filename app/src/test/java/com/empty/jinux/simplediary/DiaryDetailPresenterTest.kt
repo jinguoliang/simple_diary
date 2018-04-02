@@ -50,7 +50,6 @@ class DiaryDetailPresenterTest {
         }
         mPresenter.start()
 
-        verify(mView).showSaveButton()
 //        verify(mWeatherManager).getCurrentWeather(Matchers.anyDouble(),
 //                Matchers.anyDouble(), any())
         verify(mLocationManager).getCurrentAddress(any())
@@ -58,13 +57,12 @@ class DiaryDetailPresenterTest {
 
     @Test
     fun testStart_view() {
-        mPresenter.setDiaryId(Matchers.anyInt())
+        mPresenter.setDiaryId(Matchers.anyLong())
         mPresenter.start()
 
-        verify(mDiaryReposity).getDiary(Matchers.anyInt(), mGetDiaryCallbackCaptor.capture())
+        verify(mDiaryReposity).getDiary(Matchers.anyLong(), mGetDiaryCallbackCaptor.capture())
         mGetDiaryCallbackCaptor.value.onDiaryLoaded(any())
 
-        verify(mView).showEditButton()
 //        verify(mView).showWeather(Matchers.anyString(),
 //                Matchers.anyString())
         verify(mView).showLocation(Matchers.anyString())
