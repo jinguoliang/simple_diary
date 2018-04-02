@@ -11,7 +11,7 @@ import javax.inject.Scope
  * scope to be used by all fragment components. Additionally, a component with a specific scope
  * cannot have a sub component with the same scope.
  */
-@Documented
+@MustBeDocumented
 @Scope
-@Retention(RetentionPolicy.RUNTIME)
+@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
 annotation class FragmentScoped

@@ -49,7 +49,7 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View {
 
     override fun onResume() {
         super.onResume()
-        mPresenter!!.start()
+        mPresenter.start()
     }
 
     override fun setProgressIndicator(active: Boolean) {
