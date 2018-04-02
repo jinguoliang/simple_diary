@@ -5,7 +5,8 @@ import android.view.View
 import android.widget.TextView
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
-import com.empty.jinux.simplediary.util.formatCreatedTime
+import com.empty.jinux.simplediary.util.formatToTime
+import com.empty.jinux.simplediary.util.formatToWeekday
 
 class DiaryViewHolder
 internal constructor(
@@ -13,11 +14,13 @@ internal constructor(
 ) : RecyclerView.ViewHolder(v) {
 
     private var titleTV: TextView = v.findViewById(R.id.title)
-    private var createTimeTv: TextView = v.findViewById(R.id.createTime)
+    private var weekName: TextView = v.findViewById(R.id.weekName)
+    private var time: TextView = v.findViewById(R.id.time)
 
     fun bind(diary: Diary, mItemListener: DiariesRecyclerViewWithCategoriesAdapter.DiaryItemListener) {
         titleTV.text = diary.diaryContent.content
-        createTimeTv.text = diary.formatCreatedTime()
+        weekName.text = diary.diaryContent.displayTime.formatToWeekday()
+        time.text = diary.diaryContent.displayTime.formatToTime()
         itemView.setOnClickListener { mItemListener.onClick(diary) }
     }
 

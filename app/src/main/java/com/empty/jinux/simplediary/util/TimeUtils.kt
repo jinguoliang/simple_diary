@@ -45,13 +45,24 @@ fun Long.weekStartTime(): Long {
     calendar.set(Calendar.MINUTE, 0)
     calendar.set(Calendar.SECOND, 0)
     calendar.set(Calendar.MILLISECOND, 0)
-    calendar.set(Calendar.DAY_OF_WEEK, 1)
+    calendar.set(Calendar.DAY_OF_WEEK, calendar.firstDayOfWeek)
 
     return calendar.timeInMillis
 }
 
-fun Long.formatWithWeekday(): String {
-    return formatTime(this)
+fun Long.formatToYeayWeek(): String {
+    val formater = SimpleDateFormat("yyyy年  第 w 周")
+    return formater.format(this)
+}
+
+fun Long.formatToWeekday(): String {
+    val formater = SimpleDateFormat("E")
+    return formater.format(this)
+}
+
+fun Long.formatToTime(): String {
+    val formater = SimpleDateFormat("H:mm")
+    return formater.format(this)
 }
 
 

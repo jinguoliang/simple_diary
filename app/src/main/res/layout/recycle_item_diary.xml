@@ -17,26 +17,53 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:layout_height="@dimen/diary_list_item_height"
     android:background="@drawable/touch_feedback"
-    android:orientation="horizontal"
-    android:paddingBottom="@dimen/list_item_padding"
-    android:paddingTop="@dimen/list_item_padding">
+    android:orientation="horizontal">
+
+    <FrameLayout
+        android:id="@+id/timeBlock"
+        android:layout_width="@dimen/diary_list_item_height"
+        android:layout_height="match_parent"
+        android:background="@color/colorAccent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/weekName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="20dp"
+                tools:text="周二" />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/weekName"
+                android:layout_below="@id/weekName"
+                android:textColor="@android:color/white"
+                tools:text="22:54" />
+        </LinearLayout>
+
+    </FrameLayout>
 
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_toEndOf="@+id/timeBlock"
         android:lines="1"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         tools:text="test title, it very long long long long long long " />
 
-    <TextView
-        android:id="@+id/createTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@id/title"
-        android:layout_below="@id/title"
-        tools:text="2018/2/22" />
+
 </RelativeLayout>
