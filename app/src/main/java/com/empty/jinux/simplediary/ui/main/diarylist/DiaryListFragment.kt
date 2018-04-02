@@ -41,9 +41,9 @@ import javax.inject.Inject
 class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
 
     @Inject
-    lateinit internal var mPresenter: DiaryListContract.Presenter
+    internal lateinit var mPresenter: DiaryListContract.Presenter
 
-    lateinit private var mListAdapter: DiariesAdapter
+    private lateinit var mDiariesAdapter: DiariesAdapter
 
     /**
      * Listener for clicks on diaries in the ListView.
@@ -65,7 +65,7 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mListAdapter = DiariesAdapter(ArrayList(0), mItemListener)
+        mDiariesAdapter = DiariesAdapter(ArrayList(0), mItemListener)
     }
 
     override fun onResume() {
@@ -92,8 +92,8 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
         super.onActivityCreated(savedInstanceState)
 
         // Set up diaries view
-        diaryList.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        diaryList.adapter = mListAdapter
+        diaryRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        diaryRecyclerView.adapter = mDiariesAdapter
 
         noDiaries.setOnClickListener { showAddDiary() }
 
@@ -111,7 +111,7 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
                     ContextCompat.getColor(activity, R.color.colorPrimaryDark)
             )
             // Set the scrolling view in the custom SwipeRefreshLayout.
-            refresh_layout.setScrollUpChild(diaryList)
+            refresh_layout.setScrollUpChild(diaryRecyclerView)
             refresh_layout.setOnRefreshListener { mPresenter.loadDiaries(false) }
         }
 
@@ -131,9 +131,9 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
     }
 
     override fun showDiaries(diaries: List<Diary>) {
-        mListAdapter.replaceData(diaries)
+        mDiariesAdapter.replaceData(diaries)
 
-        diaryList.visibility = View.VISIBLE
+        diaryRecyclerView.visibility = View.VISIBLE
         noDiaries.visibility = View.GONE
     }
 
@@ -149,7 +149,7 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
     }
 
     private fun showNoDiariesViews(mainText: String, iconRes: Int) {
-        diaryList.visibility = View.GONE
+        diaryRecyclerView.visibility = View.GONE
         noDiaries.visibility = View.VISIBLE
 
         noDiariesMessage.text = mainText
