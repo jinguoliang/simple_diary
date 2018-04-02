@@ -3,6 +3,7 @@ package com.empty.jinux.simplediary.util
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.data.DiaryContent
 import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Created by jingu on 2018/2/21.
@@ -35,3 +36,22 @@ fun DiaryContent.formatDisplayTime(): String {
     }
     return formatDateWithWeekday(displayTime)
 }
+
+
+fun Long.weekStartTime(): Long {
+    val calendar = Calendar.getInstance()
+    calendar.timeInMillis = this
+    calendar.set(Calendar.HOUR_OF_DAY, 0)
+    calendar.set(Calendar.MINUTE, 0)
+    calendar.set(Calendar.SECOND, 0)
+    calendar.set(Calendar.MILLISECOND, 0)
+    calendar.set(Calendar.DAY_OF_WEEK, 1)
+
+    return calendar.timeInMillis
+}
+
+fun Long.formatWithWeekday(): String {
+    return formatTime(this)
+}
+
+

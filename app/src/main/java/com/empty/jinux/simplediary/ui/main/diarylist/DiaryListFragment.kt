@@ -29,6 +29,7 @@ import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivity
 import com.empty.jinux.simplediary.ui.main.MainActivity
+import com.empty.jinux.simplediary.ui.main.diarylist.adapter.DiariesRecyclerViewWithCategoriesAdapter
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.diaries_frag.*
 import org.jetbrains.anko.intentFor
@@ -43,12 +44,12 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
     @Inject
     internal lateinit var mPresenter: DiaryListContract.Presenter
 
-    private lateinit var mDiariesAdapter: DiariesAdapter
+    private lateinit var mDiariesAdapter: DiariesRecyclerViewWithCategoriesAdapter
 
     /**
      * Listener for clicks on diaries in the ListView.
      */
-    private var mItemListener: DiariesAdapter.DiaryItemListener = object : DiariesAdapter.DiaryItemListener {
+    private var mItemListener: DiariesRecyclerViewWithCategoriesAdapter.DiaryItemListener = object : DiariesRecyclerViewWithCategoriesAdapter.DiaryItemListener {
         override fun onClick(diary: Diary) {
             mPresenter.openDiaryDetails(diary)
         }
@@ -65,7 +66,7 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mDiariesAdapter = DiariesAdapter(ArrayList(0), mItemListener)
+        mDiariesAdapter = DiariesRecyclerViewWithCategoriesAdapter(ArrayList(0), mItemListener)
     }
 
     override fun onResume() {
