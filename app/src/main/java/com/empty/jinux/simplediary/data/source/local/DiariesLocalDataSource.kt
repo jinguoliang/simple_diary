@@ -70,7 +70,9 @@ constructor(context: Context) : DiariesDataSource {
     override fun save(diary: Diary, callback: DiariesDataSource.OnCallback<Long>){
         doAsync {
             val id = diaryDao.insertOne(mapDiaryFromDataSourceToRoom(diary))
-            callback.onResult(id)
+            uiThread {
+                callback.onResult(id)
+            }
         }
     }
 
