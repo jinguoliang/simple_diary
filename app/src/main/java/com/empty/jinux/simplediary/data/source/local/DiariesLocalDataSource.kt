@@ -96,7 +96,7 @@ constructor(context: Context) : DiariesDataSource {
                     diary.displayTime,
                     weatherInfo = diary.weather?.run { WeatherInfo(desc, icon) },
                     locationInfo = diary.location?.run { LocationInfo(com.empty.jinux.simplediary.location.Location(longitude, latitude), address) }
-            ), EMPTY_META)
+            ), meta = Meta(diary.createTime, diary.lastChangeTime, diary.deleted))
 
     private fun mapDiaryFromDataSourceToRoom(diary: Diary) =
             com.empty.jinux.simplediary.data.source.local.room.entity.Diary(diary.id.takeIf { it != INVALID_DIARY_ID },
@@ -107,5 +107,8 @@ constructor(context: Context) : DiariesDataSource {
                     },
                     location = diary.diaryContent.locationInfo?.run {
                         Location(null, location.latitude, location.longitude, address)
-                    })
+                    },
+                    createTime = diary.meta.createdTime,
+                    lastChangeTime = diary.meta.lastChangeTime,
+                    deleted = diary.meta.deleted)
 }

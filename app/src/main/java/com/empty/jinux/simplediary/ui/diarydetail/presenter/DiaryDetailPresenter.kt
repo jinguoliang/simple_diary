@@ -78,6 +78,7 @@ constructor(
                 mDiaryDetailView.setLoadingIndicator(false)
                 currentDiaryContent = diary.diaryContent
                 currentDiaryContent.weatherInfo = diary.diaryContent.weatherInfo
+                currentDairyMeta = diary.meta
                 showDiary()
                 mDiaryDetailView.showInputMethod()
             }
