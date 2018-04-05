@@ -16,4 +16,5 @@
     <string name="rate_title">Rate it</string>
     <string name="feedback_title">Feedback</string>
     <string name="about_app_intro_hint">Intro: </string>
+    <string name="untitled">Untitled</string>
 </resources>

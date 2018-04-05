@@ -17,6 +17,7 @@
 package com.empty.jinux.simplediary.data
 
 import com.empty.jinux.simplediary.location.Location
+import com.empty.jinux.simplediary.util.getFirstLine
 
 const val INVALID_DIARY_ID = -1L
 val EMPTY_CONTENT = DiaryContent("", "", -1, null, null)
@@ -37,9 +38,14 @@ data class DiaryContent(var title: String,
                         var content: String,
                         var displayTime: Long,
                         var weatherInfo: WeatherInfo? = null,
-                        var locationInfo: LocationInfo? = null)
+                        var locationInfo: LocationInfo? = null) {
+    fun getTitleFromContent(): String {
+        return content.trim().let {
+            return it.getFirstLine()
+        }
+    }
+}
 
 data class Meta(val createdTime: Long,
                 var lastChangeTime: Long,
-                var deleted: Boolean = false) {
-}
+                var deleted: Boolean = false)

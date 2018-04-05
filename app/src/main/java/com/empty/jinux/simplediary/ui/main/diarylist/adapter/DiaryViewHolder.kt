@@ -18,7 +18,8 @@ internal constructor(
     private var time: TextView = v.findViewById(R.id.time)
 
     fun bind(diary: Diary, mItemListener: DiariesRecyclerViewWithCategoriesAdapter.DiaryItemListener) {
-        titleTV.text = diary.diaryContent.content
+        titleTV.text = diary.diaryContent.getTitleFromContent().takeIf { it.isNotEmpty() }
+                ?: itemView.resources.getString(R.string.untitled)
         weekName.text = diary.diaryContent.displayTime.formatToWeekday()
         time.text = diary.diaryContent.displayTime.formatToTime()
         itemView.setOnClickListener { mItemListener.onClick(diary) }
