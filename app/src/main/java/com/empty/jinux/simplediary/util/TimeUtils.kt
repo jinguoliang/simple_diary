@@ -50,6 +50,17 @@ fun Long.weekStartTime(): Long {
     return calendar.timeInMillis
 }
 
+fun Long.dayTime(): Long {
+    val calendar = Calendar.getInstance()
+    calendar.timeInMillis = this
+    calendar.set(Calendar.HOUR_OF_DAY, 0)
+    calendar.set(Calendar.MINUTE, 0)
+    calendar.set(Calendar.SECOND, 0)
+    calendar.set(Calendar.MILLISECOND, 0)
+
+    return calendar.timeInMillis
+}
+
 fun Long.formatToYeayWeek(): String {
     val formater = SimpleDateFormat("yyyy年  第 w 周")
     return formater.format(this)

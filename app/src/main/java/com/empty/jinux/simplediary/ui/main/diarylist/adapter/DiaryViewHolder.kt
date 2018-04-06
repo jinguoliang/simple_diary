@@ -25,4 +25,8 @@ internal constructor(
         itemView.setOnClickListener { mItemListener.onClick(diary) }
     }
 
+    fun showWeekday(differentDay: Boolean) {
+        weekName.visibility = if (differentDay) View.VISIBLE else View.INVISIBLE
+    }
+
 }

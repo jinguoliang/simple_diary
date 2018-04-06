@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import com.droidcba.kedditbysteps.commons.adapter.ViewType
 import com.droidcba.kedditbysteps.commons.adapter.ViewTypeDelegateAdapter
 import com.empty.jinux.simplediary.data.Diary
+import com.empty.jinux.simplediary.util.dayTime
 import com.empty.jinux.simplediary.util.weekStartTime
 
 class DiariesRecyclerViewWithCategoriesAdapter(
@@ -25,13 +26,19 @@ class DiariesRecyclerViewWithCategoriesAdapter(
     private fun setItems(diaries: List<Diary>) {
         val items = mutableListOf<ViewType>()
 
-        var preDate = 0L
+        var preWeekStart = 0L
+        var preDay = 0L
         diaries.forEach {
-            if (it.meta.createdTime.weekStartTime() != preDate) {
-                preDate = it.meta.createdTime.weekStartTime()
-                items.add(CategoryItem(preDate))
+            val createdTime = it.meta.createdTime
+            if (createdTime.weekStartTime() != preWeekStart) {
+                preWeekStart = createdTime.weekStartTime()
+                items.add(CategoryItem(preWeekStart))
             }
-            items.add(DiaryItem(it))
+            val differentDay = createdTime.dayTime() != preDay
+            if (differentDay) {
+                preDay = createdTime.dayTime()
+            }
+            items.add(DiaryItem(it, differentDay))
         }
         mItems = items
     }
@@ -67,4 +74,5 @@ class DiariesRecyclerViewWithCategoriesAdapter(
         fun onActivateClick(diary: Diary)
     }
 }
+
 

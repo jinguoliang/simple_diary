@@ -6,7 +6,7 @@ import com.empty.jinux.simplediary.data.Diary
 
 val VIEW_TYPE_DIARY = 2
 
-class DiaryItem(val data: Diary) : ViewType{
+class DiaryItem(val data: Diary,val differentDay: Boolean) : ViewType{
     override fun getViewType(): Int {
         return VIEW_TYPE_DIARY
     }
