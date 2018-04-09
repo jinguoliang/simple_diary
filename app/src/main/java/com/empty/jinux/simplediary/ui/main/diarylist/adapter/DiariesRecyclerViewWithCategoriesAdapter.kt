@@ -69,9 +69,7 @@ class DiariesRecyclerViewWithCategoriesAdapter(
 
         fun onClick(diary: Diary)
 
-        fun onCompleteClick(diary: Diary)
-
-        fun onActivateClick(diary: Diary)
+        fun onDeleteClick(diary: Diary)
     }
 }
 

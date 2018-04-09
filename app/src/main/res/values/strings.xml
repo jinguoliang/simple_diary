@@ -17,4 +17,5 @@
     <string name="feedback_title">Feedback</string>
     <string name="about_app_intro_hint">Intro: </string>
     <string name="untitled">Untitled</string>
+    <string name="delete">Delete</string>
 </resources>

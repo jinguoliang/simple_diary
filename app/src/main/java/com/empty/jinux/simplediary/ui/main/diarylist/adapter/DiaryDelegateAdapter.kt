@@ -10,13 +10,13 @@ import com.empty.jinux.simplediary.R
 class DiaryDelegateAdapter internal constructor(private val mItemListener: DiariesRecyclerViewWithCategoriesAdapter.DiaryItemListener) : ViewTypeDelegateAdapter {
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
         return DiaryViewHolder(LayoutInflater.from(parent.context)
-                .inflate(R.layout.recycle_item_diary, parent, false))
+                .inflate(R.layout.recycle_item_diary, parent, false), mItemListener)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: ViewType) {
         val holder = holder as DiaryViewHolder
         item as DiaryItem
-        holder.bind(item.data, mItemListener)
+        holder.bind(item.data)
         holder.showWeekday(item.differentDay)
     }
 }

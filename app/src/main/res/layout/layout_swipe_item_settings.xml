@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/swipe_settings_delete"
+        android:layout_width="@dimen/swipe_item_menu_item_width"
+        android:layout_height="match_parent"
+        android:text="@string/delete"
+        android:gravity="center"
+        android:background="@android:color/holo_red_light"/>
+</LinearLayout>

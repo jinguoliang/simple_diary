@@ -23,7 +23,7 @@
 
     <FrameLayout
         android:id="@+id/weekBlock"
-        android:layout_width="@dimen/diary_list_item_height"
+        android:layout_width="@dimen/swipe_item_menu_item_width"
         android:layout_height="match_parent"
         android:background="@color/colorAccent">
 

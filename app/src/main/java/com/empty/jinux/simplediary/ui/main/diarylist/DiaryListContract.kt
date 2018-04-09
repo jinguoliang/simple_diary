@@ -56,5 +56,7 @@ interface DiaryListContract {
         fun openDiaryDetails(diary: Diary)
 
         fun stop()
+
+        fun deleteDiary(diary: Diary)
     }
 }

@@ -126,4 +126,9 @@ constructor(@param:Repository private val mDiariesRepository: DiariesDataSource,
     override fun openDiaryDetails(diary: Diary) {
         mDiariesView.showDiaryDetailsUI(diary.id)
     }
+
+    override fun deleteDiary(diary: Diary) {
+        mDiariesRepository.deleteDiary(diary.id)
+        loadDiaries(true, true)
+    }
 }

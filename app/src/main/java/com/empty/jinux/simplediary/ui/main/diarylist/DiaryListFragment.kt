@@ -54,10 +54,8 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
             mPresenter.openDiaryDetails(diary)
         }
 
-        override fun onCompleteClick(diary: Diary) {
-        }
-
-        override fun onActivateClick(diary: Diary) {
+        override fun onDeleteClick(diary: Diary) {
+            mPresenter.deleteDiary(diary)
         }
     }
 
