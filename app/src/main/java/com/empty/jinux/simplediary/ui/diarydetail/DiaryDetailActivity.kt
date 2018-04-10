@@ -33,12 +33,7 @@ class DiaryDetailActivity : DaggerAppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.diary_detail_act)
-
-        // Set up the toolbar.
-        setSupportActionBar(toolbar)
-        val ab = supportActionBar
-        ab!!.setDisplayHomeAsUpEnabled(true)
-        ab.setDisplayShowHomeEnabled(true)
+        supportActionBar
 
         // Get the requested task id
         val taskId = intent.getLongExtra(EXTRA_DIARY_ID, INVALID_DIARY_ID)

@@ -22,6 +22,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.ActionBar
+import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
@@ -34,7 +36,11 @@ import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
 import com.empty.jinux.simplediary.util.PermissionUtil
 import com.squareup.picasso.Picasso
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.layout_content_scrolling.*
 import kotlinx.android.synthetic.main.taskdetail_frag.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.doAsyncResult
+import org.jetbrains.anko.uiThread
 import javax.inject.Inject
 
 /**
@@ -70,7 +76,14 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        setHasOptionsMenu(true)
+        setHasOptionsMenu(false)
+
+        // Set up the toolbar.
+        val act = activity as AppCompatActivity
+        act.setSupportActionBar(toolbar)
+        val actionBar = act.supportActionBar!!
+        actionBar.setDisplayHomeAsUpEnabled(true)
+        actionBar.setDisplayShowHomeEnabled(true)
 
         refreshLocation.setOnClickListener {
             mPresenter.refreshLocation()
@@ -142,7 +155,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     override fun showDate(dateStr: String) {
-        date.text = dateStr
+        toolbar_layout.title = dateStr
     }
 
     override fun showDiaryDeleted() {
