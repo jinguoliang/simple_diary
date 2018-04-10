@@ -16,6 +16,7 @@
 
 package com.empty.jinux.simplediary.ui.diarydetail.presenter
 
+import android.support.annotation.UiThread
 import android.text.TextUtils
 import com.empty.jinux.baselibaray.logi
 import com.empty.jinux.simplediary.data.*
@@ -26,6 +27,8 @@ import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.util.formatDateWithWeekday
 import com.empty.jinux.simplediary.util.formatDisplayTime
 import com.empty.jinux.simplediary.weather.WeatherManager
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import javax.inject.Inject
 
 /**
@@ -59,7 +62,7 @@ constructor(
         openDiary()
     }
 
-    fun initForNewDiary() {
+    private fun initForNewDiary() {
         refreshLocation()
         refreshWeather()
         mDiaryDetailView.showDate(formatDateWithWeekday(System.currentTimeMillis()))
@@ -123,7 +126,7 @@ constructor(
 
     private fun deleteDiaryFromRepoIfNecessary() {
         if (mDiaryId != INVALID_DIARY_ID) {
-            mDiariesRepository.deleteDiaryAsync(mDiaryId,  object: DiariesDataSource.OnCallback<Boolean> {
+            mDiariesRepository.deleteDiaryAsync(mDiaryId, object : DiariesDataSource.OnCallback<Boolean> {
                 override fun onResult(result: Boolean) {
 
                 }
