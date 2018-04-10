@@ -112,13 +112,17 @@ class SwipeView(v: View) : HorizontalScrollView(v.context) {
 
     override fun onTouchEvent(ev: MotionEvent): Boolean {
         if (ev.action == MotionEvent.ACTION_UP) {
-            if (scrollX < swipeMenuWidth / 2) {
-                close()
-            } else {
-                open()
-            }
+            toggle()
         }
         return super.onTouchEvent(ev)
+    }
+
+    private fun toggle() {
+        if (scrollX < swipeMenuWidth / 2) {
+            close()
+        } else {
+            open()
+        }
     }
 
 }
