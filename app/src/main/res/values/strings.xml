@@ -18,4 +18,6 @@
     <string name="about_app_intro_hint">Intro: </string>
     <string name="untitled">Untitled</string>
     <string name="delete">Delete</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>
