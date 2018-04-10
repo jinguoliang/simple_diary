@@ -25,6 +25,8 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.gson.Gson
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import java.util.*
 import javax.inject.Singleton
 
@@ -93,6 +95,15 @@ class DiariesRemoteDataSource : DiariesDataSource {
 
     override fun deleteDiary(diaryId: Long) {
         mDatabase.child(diaryId.toString()).removeValue()
+    }
+
+    override fun deleteDiaryAsync(diaryId: Long, callback: DiariesDataSource.OnCallback<Boolean>) {
+        doAsync {
+            deleteDiary(diaryId)
+            uiThread {
+                callback.onResult(true)
+            }
+        }
     }
 
     companion object {

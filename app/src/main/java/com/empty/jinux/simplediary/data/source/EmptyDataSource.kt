@@ -6,6 +6,10 @@ import com.empty.jinux.simplediary.data.Diary
  * Created by jingu on 2018/3/15.
  */
 class EmptyDataSource : DiariesDataSource {
+    override fun deleteDiaryAsync(diaryId: Long, callback: DiariesDataSource.OnCallback<Boolean>) {
+        callback.onResult(true)
+    }
+
     override fun getDiaries(callback: DiariesDataSource.LoadDiariesCallback) {
         callback.onDiariesLoaded(arrayListOf())
     }

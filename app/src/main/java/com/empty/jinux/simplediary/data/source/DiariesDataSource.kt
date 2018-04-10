@@ -59,7 +59,9 @@ interface DiariesDataSource {
 
     fun deleteDiary(diaryId: Long)
 
+    fun deleteDiaryAsync(diaryId: Long, callback: OnCallback<Boolean>)
+
     interface OnCallback<in T> {
-        fun onResult(id: T)
+        fun onResult(result: T)
     }
 }

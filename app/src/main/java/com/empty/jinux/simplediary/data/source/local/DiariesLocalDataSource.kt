@@ -86,8 +86,15 @@ constructor(context: Context) : DiariesDataSource {
     }
 
     override fun deleteDiary(diaryId: Long) {
+        diaryDao.deleteById(diaryId)
+    }
+
+    override fun deleteDiaryAsync(diaryId: Long, callback: DiariesDataSource.OnCallback<Boolean>) {
         doAsync {
-            diaryDao.deleteById(diaryId)
+            deleteDiary(diaryId)
+            uiThread {
+                callback.onResult(true)
+            }
         }
     }
 

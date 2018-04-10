@@ -128,7 +128,10 @@ constructor(@param:Repository private val mDiariesRepository: DiariesDataSource,
     }
 
     override fun deleteDiary(diary: Diary) {
-        mDiariesRepository.deleteDiary(diary.id)
-        loadDiaries(true, true)
+        mDiariesRepository.deleteDiaryAsync(diary.id,  object: DiariesDataSource.OnCallback<Boolean> {
+            override fun onResult(result: Boolean) {
+                loadDiaries(true, true)
+            }
+        })
     }
 }

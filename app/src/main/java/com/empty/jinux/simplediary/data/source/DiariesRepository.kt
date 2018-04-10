@@ -19,6 +19,8 @@ package com.empty.jinux.simplediary.data.source
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.di.EmptyData
 import com.empty.jinux.simplediary.di.Local
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,6 +33,7 @@ class DiariesRepository
 @Inject
 internal constructor(@param:EmptyData private val mRemoteDataSource: DiariesDataSource,
                      @param:Local private val mLocalDataSource: DiariesDataSource) : DiariesDataSource {
+
 
     override fun getDiaries(callback: DiariesDataSource.LoadDiariesCallback) {
         // Query the local storage if available. If not, query the network.
@@ -84,5 +87,14 @@ internal constructor(@param:EmptyData private val mRemoteDataSource: DiariesData
     override fun deleteDiary(diaryId: Long) {
         mRemoteDataSource.deleteDiary(diaryId)
         mLocalDataSource.deleteDiary(diaryId)
+    }
+
+    override fun deleteDiaryAsync(diaryId: Long, callback: DiariesDataSource.OnCallback<Boolean>) {
+        doAsync {
+            deleteDiary(diaryId)
+            uiThread {
+                callback.onResult(true)
+            }
+        }
     }
 }

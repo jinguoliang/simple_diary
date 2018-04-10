@@ -123,7 +123,12 @@ constructor(
 
     private fun deleteDiaryFromRepoIfNecessary() {
         if (mDiaryId != INVALID_DIARY_ID) {
-            mDiariesRepository.deleteDiary(mDiaryId)
+            mDiariesRepository.deleteDiaryAsync(mDiaryId,  object: DiariesDataSource.OnCallback<Boolean> {
+                override fun onResult(result: Boolean) {
+
+                }
+
+            })
             mDiaryId = INVALID_DIARY_ID
         }
     }
