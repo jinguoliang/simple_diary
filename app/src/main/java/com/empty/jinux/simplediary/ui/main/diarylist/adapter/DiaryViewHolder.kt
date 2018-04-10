@@ -56,7 +56,7 @@ abstract class ItemWithSwipeSettingsViewHolder(v: View) : RecyclerView.ViewHolde
         itemView as SwipeView
         v.setOnClickListener {
             if (itemView.isOpen()) {
-                itemView.close()
+                itemView.smoothClose()
             } else {
                 onItemClick()
             }
@@ -102,12 +102,16 @@ class SwipeView(v: View) : HorizontalScrollView(v.context) {
         return scrollX > 0
     }
 
-    fun close() {
+    fun smoothClose() {
         smoothScrollTo(0, scrollY)
     }
 
-    fun open() {
+    fun smoothOpen() {
         smoothScrollTo(swipeMenuWidth, scrollY)
+    }
+
+    fun close() {
+        scrollX = 0
     }
 
     override fun onTouchEvent(ev: MotionEvent): Boolean {
@@ -119,9 +123,9 @@ class SwipeView(v: View) : HorizontalScrollView(v.context) {
 
     private fun toggle() {
         if (scrollX < swipeMenuWidth / 2) {
-            close()
+            smoothClose()
         } else {
-            open()
+            smoothOpen()
         }
     }
 
