@@ -66,7 +66,6 @@ constructor(
         refreshLocation()
         refreshWeather()
         mDiaryDetailView.showDate(formatDateWithWeekday(System.currentTimeMillis()))
-        mDiaryDetailView.showInputMethod()
     }
 
     private fun openDiary() {
@@ -83,7 +82,6 @@ constructor(
                 currentDiaryContent.weatherInfo = diary.diaryContent.weatherInfo
                 currentDairyMeta = diary.meta
                 showDiary()
-                mDiaryDetailView.showInputMethod()
             }
 
             override fun onDataNotAvailable() {

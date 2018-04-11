@@ -22,13 +22,12 @@
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name="com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:windowSoftInputMode="stateVisible|adjustResize"
             android:label="@string/app_name" />
         <activity
             android:name="com.empty.jinux.simplediary.ui.about.AboutActivity"
