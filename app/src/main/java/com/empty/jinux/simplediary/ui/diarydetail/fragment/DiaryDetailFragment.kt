@@ -31,8 +31,10 @@ import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
 import com.empty.jinux.simplediary.util.PermissionUtil
+import com.empty.jinux.simplediary.util.getScreenHeight
 import com.squareup.picasso.Picasso
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.layout_diary_detail_edit_tool.*
 import kotlinx.android.synthetic.main.taskdetail_frag.*
 import javax.inject.Inject
 
@@ -93,6 +95,27 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             }
         }
 
+        initEditToolbar()
+    }
+
+    private fun initEditToolbar() {
+        toolInputMethod.setOnClickListener {
+            toggleInputMethod()
+        }
+    }
+
+    private fun toggleInputMethod() {
+        if (isInputMethodShowed()) {
+            hideInputMethod()
+        } else {
+            showInputMethod()
+        }
+    }
+
+    private fun isInputMethodShowed(): Boolean {
+        return activity?.run {
+            view!!.height < getScreenHeight() * 3 / 4
+        } ?: false
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -196,9 +219,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     override fun showInputMethod() {
         val im = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-        diaryContent.postDelayed({
-            im?.showSoftInput(diaryContent, InputMethodManager.SHOW_FORCED)
-        }, 500)
+        im?.showSoftInput(diaryContent, InputMethodManager.SHOW_FORCED)
     }
 
     override fun hideInputMethod() {
