@@ -114,9 +114,6 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
             refresh_layout.setScrollUpChild(diaryRecyclerView)
             refresh_layout.setOnRefreshListener { mPresenter.loadDiaries(false) }
         }
-
-
-        setHasOptionsMenu(true)
     }
 
     override fun setLoadingIndicator(active: Boolean) {
