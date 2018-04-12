@@ -25,5 +25,9 @@
     <dimen name="common_margin">5dp</dimen>
     <dimen name="diary_list_item_height">70dp</dimen>
     <dimen name="swipe_item_menu_item_width">60dp</dimen>
+    <dimen name="edit_text_space_extra">6dp</dimen>
+    <dimen name="diary_detail_edit_tool_height">45dp</dimen>
+    <dimen name="diary_detail_edit_tool_item_size" >30dp</dimen>
+    <dimen name="diary_detail_edit_tool_item_space">12dp</dimen>
 
 </resources>

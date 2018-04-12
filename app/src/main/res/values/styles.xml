@@ -10,4 +10,15 @@
 
 
     <style name="Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="DiaryContentText">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="DetailEditToolButton">
+        <item name="android:width">@dimen/diary_detail_edit_tool_item_size</item>
+        <item name="android:height">@dimen/diary_detail_edit_tool_item_size</item>
+        <item name="android:layout_marginStart">5dp</item>
+    </style>
 </resources>
