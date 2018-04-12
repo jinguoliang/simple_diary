@@ -17,6 +17,7 @@
 package com.empty.jinux.simplediary.ui.main.statistics
 
 import android.os.Bundle
+import android.support.design.widget.FloatingActionButton
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,6 +46,8 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         mStatisticsTV = statistics
+
+        activity?.findViewById<FloatingActionButton>(R.id.fab_add_diary)?.visibility = View.INVISIBLE
     }
 
     override fun onResume() {

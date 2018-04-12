@@ -98,6 +98,7 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
 
         // Set up floating action button
         activity?.findViewById<FloatingActionButton>(R.id.fab_add_diary)?.apply {
+            visibility = View.VISIBLE
             setImageResource(R.drawable.ic_add)
             setOnClickListener { mPresenter.addNewDiary() }
         }
