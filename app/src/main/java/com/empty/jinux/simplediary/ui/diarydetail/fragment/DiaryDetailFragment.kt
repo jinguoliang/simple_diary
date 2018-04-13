@@ -73,9 +73,6 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
         setHasOptionsMenu(true)
 
-        refreshLocation.setOnClickListener {
-            mPresenter.refreshLocation()
-        }
         diaryContent.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
@@ -102,6 +99,12 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         toolInputMethod.setOnClickListener {
             toggleInputMethod()
         }
+
+        toolLocation.setOnClickListener {
+            mPresenter.refreshLocation()
+        }
+
+
     }
 
     private fun toggleInputMethod() {
@@ -201,12 +204,12 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     override fun showLocation(city: String) {
-        locationName.text = city
+//        locationName.text = city
     }
 
     override fun showWeather(weather: String, weatherIconUrl: String) {
-        weatherName.text = weather
-        Picasso.with(context).load(weatherIconUrl).into(weatherIcon)
+//        weatherName.text = weather
+//        Picasso.with(context).load(weatherIconUrl).into(weatherIcon)
     }
 
     override fun showDiarySaved() {
