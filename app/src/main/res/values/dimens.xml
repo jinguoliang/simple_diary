@@ -28,6 +28,6 @@
     <dimen name="edit_text_space_extra">6dp</dimen>
     <dimen name="diary_detail_edit_tool_height">45dp</dimen>
     <dimen name="diary_detail_edit_tool_item_size" >30dp</dimen>
-    <dimen name="diary_detail_edit_tool_item_space">12dp</dimen>
+    <dimen name="diary_detail_edit_tool_item_space">20dp</dimen>
 
 </resources>

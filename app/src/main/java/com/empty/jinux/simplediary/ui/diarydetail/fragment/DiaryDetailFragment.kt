@@ -25,6 +25,8 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
+import android.widget.ImageView
 import com.empty.jinux.baselibaray.loge
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
@@ -32,7 +34,6 @@ import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
 import com.empty.jinux.simplediary.util.PermissionUtil
 import com.empty.jinux.simplediary.util.getScreenHeight
-import com.squareup.picasso.Picasso
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.layout_diary_detail_edit_tool.*
 import kotlinx.android.synthetic.main.taskdetail_frag.*
@@ -104,7 +105,42 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             mPresenter.refreshLocation()
         }
 
+        toolWeather.adapter = object : ArrayAdapter<Int>(context, R.layout.drop_down_emotion_item, arrayListOf(R.drawable.ic_weather, R.drawable.ic_location, R.drawable.ic_emotion)) {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+                return createView(convertView, R.layout.spinner_emotion_item, parent, position)
+            }
 
+            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup?): View {
+                return createView(convertView, R.layout.drop_down_emotion_item, parent, position)
+            }
+
+            private fun createView(convertView: View?, itemRes: Int, parent: ViewGroup?, position: Int): View {
+                val view = convertView ?: layoutInflater.inflate(itemRes, parent, false)
+                val image = view.findViewById<ImageView>(R.id.list_item)
+                val item = getItem(position)
+                image.setImageResource(item)
+                return view
+            }
+        }
+
+        toolEmotion.adapter = object : ArrayAdapter<Int>(context, R.layout.drop_down_emotion_item, arrayListOf(R.drawable.ic_weather, R.drawable.ic_location, R.drawable.ic_emotion)) {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+                return createView(convertView, R.layout.spinner_emotion_item, parent, position)
+            }
+
+            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup?): View {
+                return createView(convertView, R.layout.drop_down_emotion_item, parent, position)
+            }
+
+            private fun createView(convertView: View?, itemRes: Int, parent: ViewGroup?, position: Int): View {
+                val view = convertView ?: layoutInflater.inflate(itemRes, parent, false)
+                val image = view.findViewById<ImageView>(R.id.list_item)
+                val item = getItem(position)
+                image.setImageResource(item)
+                return view
+            }
+        }
+//        toolEmotion.setOnItemClickListener()
     }
 
     private fun toggleInputMethod() {
