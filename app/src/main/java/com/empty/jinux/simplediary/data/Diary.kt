@@ -30,7 +30,7 @@ constructor(
         val meta: Meta
 )
 
-data class WeatherInfo(val description: String, val iconUri: String)
+data class WeatherInfo(val description: String, val icon: String)
 
 data class LocationInfo(val location: Location, val address: String)
 

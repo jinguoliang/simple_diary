@@ -8,8 +8,4 @@ data class CurrentWeatherResult(val weather: List<Weather>)
 data class Weather(val id: Long,
                    val main: String,
                    val description: String,
-                   val icon: String) {
-    fun iconUri(): String {
-        return "http://openweathermap.org/img/w/$icon.png"
-    }
-}
+                   val icon: String)

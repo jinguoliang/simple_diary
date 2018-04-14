@@ -33,6 +33,9 @@ class WeatherManagerRetrofitImpl @Inject constructor() : WeatherManager {
             .client(mOkHttpClientBuilder.build())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+
+//    icon uri "http://openweathermap.org/img/w/$icon.png"
+
     private val mWeatherService = mRetrofit.create(WeatherApi::class.java)
 
     override fun getCurrentWeather(lat: Double, lon: Double, callback: (Weather) -> Unit) {

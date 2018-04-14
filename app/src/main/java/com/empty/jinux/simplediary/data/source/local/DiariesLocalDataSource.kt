@@ -112,7 +112,7 @@ constructor(context: Context) : DiariesDataSource {
                     contentText = diary.diaryContent.content, displayTime = diary.diaryContent.displayTime,
                     weather = diary.diaryContent.weatherInfo?.run {
                         Weather(null, desc = description,
-                                icon = iconUri)
+                                icon = icon)
                     },
                     location = diary.diaryContent.locationInfo?.run {
                         Location(null, location.latitude, location.longitude, address)

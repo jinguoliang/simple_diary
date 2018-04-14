@@ -152,7 +152,7 @@ constructor(
             mDiaryDetailView.showContent(content)
 
             weatherInfo?.apply {
-                mDiaryDetailView.showWeather(description, iconUri)
+                mDiaryDetailView.showWeather(description, icon)
             }
 
             locationInfo?.apply {
@@ -174,8 +174,8 @@ constructor(
         mLocationManager.getLastLocation {
             mWeatherManager.getCurrentWeather(it.latitude, it.longitude) {
                 logi("current weatherInfo = $it")
-                currentDiaryContent.weatherInfo = WeatherInfo(it.description, it.iconUri())
-                mDiaryDetailView.showWeather(it.description, it.iconUri())
+                currentDiaryContent.weatherInfo = WeatherInfo(it.description, it.icon)
+                mDiaryDetailView.showWeather(it.description, it.icon)
             }
         }
     }
