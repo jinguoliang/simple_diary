@@ -5,5 +5,4 @@ package com.empty.jinux.simplediary.weather
  */
 interface WeatherManager {
     fun getCurrentWeather(lat: Double, lon: Double, callback: (Weather) -> Unit): Unit
-
 }

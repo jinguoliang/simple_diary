@@ -25,8 +25,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.ArrayAdapter
-import android.widget.ImageView
 import com.empty.jinux.baselibaray.loge
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
@@ -105,42 +103,15 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             mPresenter.refreshLocation()
         }
 
-        toolWeather.adapter = object : ArrayAdapter<Int>(context, R.layout.drop_down_emotion_item, arrayListOf(R.drawable.ic_weather, R.drawable.ic_location, R.drawable.ic_emotion)) {
-            override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-                return createView(convertView, R.layout.spinner_emotion_item, parent, position)
-            }
+        toolWeather.adapter = SpinnnerDrawableAdapter(context,
+                R.layout.spinner_emotion_item,
+                R.layout.drop_down_emotion_item,
+                MyWeatherIcons.getAllMyIcon())
 
-            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup?): View {
-                return createView(convertView, R.layout.drop_down_emotion_item, parent, position)
-            }
-
-            private fun createView(convertView: View?, itemRes: Int, parent: ViewGroup?, position: Int): View {
-                val view = convertView ?: layoutInflater.inflate(itemRes, parent, false)
-                val image = view.findViewById<ImageView>(R.id.list_item)
-                val item = getItem(position)
-                image.setImageResource(item)
-                return view
-            }
-        }
-
-        toolEmotion.adapter = object : ArrayAdapter<Int>(context, R.layout.drop_down_emotion_item, arrayListOf(R.drawable.ic_weather, R.drawable.ic_location, R.drawable.ic_emotion)) {
-            override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-                return createView(convertView, R.layout.spinner_emotion_item, parent, position)
-            }
-
-            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup?): View {
-                return createView(convertView, R.layout.drop_down_emotion_item, parent, position)
-            }
-
-            private fun createView(convertView: View?, itemRes: Int, parent: ViewGroup?, position: Int): View {
-                val view = convertView ?: layoutInflater.inflate(itemRes, parent, false)
-                val image = view.findViewById<ImageView>(R.id.list_item)
-                val item = getItem(position)
-                image.setImageResource(item)
-                return view
-            }
-        }
-//        toolEmotion.setOnItemClickListener()
+        toolEmotion.adapter = SpinnnerDrawableAdapter(context,
+                R.layout.spinner_emotion_item,
+                R.layout.drop_down_emotion_item,
+                arrayListOf(R.drawable.ic_weather, R.drawable.ic_location, R.drawable.ic_emotion))
     }
 
     private fun toggleInputMethod() {
@@ -243,9 +214,8 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         Snackbar.make(view!!, city, Snackbar.LENGTH_LONG).show()
     }
 
-    override fun showWeather(weather: String, weatherIconUrl: String) {
-//        weatherName.text = weather
-//        Picasso.with(context).load(weatherIconUrl).into(weatherIcon)
+    override fun showWeather(weather: String, icon: String) {
+        toolWeather.setSelection(MyWeatherIcons.getIconIndex(icon))
     }
 
     override fun showDiarySaved() {
@@ -268,3 +238,4 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
 
 }
+
