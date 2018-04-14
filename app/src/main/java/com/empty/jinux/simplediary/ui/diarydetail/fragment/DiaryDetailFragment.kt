@@ -25,6 +25,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.AdapterView
 import com.empty.jinux.baselibaray.loge
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
@@ -107,11 +108,30 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
                 R.layout.spinner_emotion_item,
                 R.layout.drop_down_emotion_item,
                 MyWeatherIcons.getAllMyIcon())
+        toolWeather.onItemSelectedListener = object :AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            }
+
+        }
 
         toolEmotion.adapter = SpinnnerDrawableAdapter(context,
                 R.layout.spinner_emotion_item,
                 R.layout.drop_down_emotion_item,
                 MyEmotionIcons.getAllMyIcon())
+        toolEmotion.onItemSelectedListener = object :AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                mPresenter.setEmotion(position.toLong())
+            }
+
+        }
     }
 
     private fun toggleInputMethod() {
@@ -216,6 +236,10 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     override fun showWeather(weather: String, icon: String) {
         toolWeather.setSelection(MyWeatherIcons.getIconIndex(icon))
+    }
+
+    override fun showEmotion(id: Long) {
+        toolEmotion.setSelection(id.toInt())
     }
 
     override fun showDiarySaved() {

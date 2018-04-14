@@ -22,6 +22,7 @@ import com.empty.jinux.simplediary.data.*
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
 import com.empty.jinux.simplediary.data.source.local.room.DATABASE_NAME
 import com.empty.jinux.simplediary.data.source.local.room.DiaryDatabase
+import com.empty.jinux.simplediary.data.source.local.room.entity.Emotion
 import com.empty.jinux.simplediary.data.source.local.room.entity.Location
 import com.empty.jinux.simplediary.data.source.local.room.entity.Weather
 import org.jetbrains.anko.doAsync
@@ -104,7 +105,8 @@ constructor(context: Context) : DiariesDataSource {
                     diary.contentText,
                     diary.displayTime,
                     weatherInfo = diary.weather?.run { WeatherInfo(desc, icon) },
-                    locationInfo = diary.location?.run { LocationInfo(com.empty.jinux.simplediary.location.Location(longitude, latitude), address) }
+                    locationInfo = diary.location?.run { LocationInfo(com.empty.jinux.simplediary.location.Location(longitude, latitude), address) },
+                    emotionInfo = diary.emotion?.run { EmotionInfo(icon) }
             ), meta = Meta(diary.createTime, diary.lastChangeTime, diary.deleted))
 
     private fun mapDiaryFromDataSourceToRoom(diary: Diary) =
@@ -117,6 +119,7 @@ constructor(context: Context) : DiariesDataSource {
                     location = diary.diaryContent.locationInfo?.run {
                         Location(null, location.latitude, location.longitude, address)
                     },
+                    emotion = diary.diaryContent.emotionInfo?.run { Emotion(null, id) },
                     createTime = diary.meta.createdTime,
                     lastChangeTime = diary.meta.lastChangeTime,
                     deleted = diary.meta.deleted)

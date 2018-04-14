@@ -158,6 +158,10 @@ constructor(
             locationInfo?.apply {
                 mDiaryDetailView.showLocation(address)
             }
+
+            emotionInfo?.apply {
+                mDiaryDetailView.showEmotion(id)
+            }
         }
     }
 
@@ -183,6 +187,12 @@ constructor(
     fun setDiaryId(diaryId: Long) {
         mDiaryId = diaryId
     }
+
+    override fun setEmotion(id: Long) {
+        currentDiaryContent.emotionInfo = EmotionInfo(id)
+    }
+
+
 
     fun onContentChange(newContent: String) {
         currentDiaryContent.content = newContent

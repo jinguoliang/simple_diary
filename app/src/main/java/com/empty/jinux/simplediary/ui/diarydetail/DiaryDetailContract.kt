@@ -45,6 +45,8 @@ interface DiaryDetailContract {
 
         fun showWeather(weather: String, weatherIconUrl: String)
 
+        fun showEmotion(id: Long)
+
         fun showDiarySaved()
 
         fun showEmptyDiaryError()
@@ -67,5 +69,8 @@ interface DiaryDetailContract {
         fun refreshWeather()
 
         fun stop()
+
+        fun setEmotion(id: Long)
+
     }
 }

@@ -34,11 +34,14 @@ data class WeatherInfo(val description: String, val icon: String)
 
 data class LocationInfo(val location: Location, val address: String)
 
+data class EmotionInfo(val id: Long)
+
 data class DiaryContent(var title: String,
                         var content: String,
                         var displayTime: Long,
                         var weatherInfo: WeatherInfo? = null,
-                        var locationInfo: LocationInfo? = null) {
+                        var locationInfo: LocationInfo? = null,
+                        var emotionInfo: EmotionInfo? = null) {
     fun getTitleFromContent(): String {
         return content.trim().let {
             return it.getFirstLine()

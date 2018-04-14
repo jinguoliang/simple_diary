@@ -28,20 +28,20 @@ data class Diary(
 )
 
 data class Weather(
-        var id: Int?,
+        var id: Long?,
         var name: String = "",
         var desc: String = "",
         var icon: String = ""
 )
 
 data class Location(
-        var id: Int?,
+        var id: Long?,
         var latitude: Double = 0.0,
         var longitude: Double = 0.0,
         var address: String = ""
 )
 
 data class Emotion(
-        var id: Int?,
-        var icon: String = ""
+        var id: Long?,
+        var icon: Long
 )
