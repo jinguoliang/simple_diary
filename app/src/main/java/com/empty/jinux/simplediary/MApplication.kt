@@ -24,24 +24,24 @@ class MApplication : DaggerApplication() {
     override fun onCreate() {
         super.onCreate()
 
-        val database = FirebaseDatabase.getInstance()
-        val myRef = database.getReference("message")
-        myRef.setValue("Hello, World!")
+//        val database = FirebaseDatabase.getInstance()
+//        val myRef = database.getReference("message")
+//        myRef.setValue("Hello, World!")
 
 
-        val mAuth = FirebaseAuth.getInstance()
-        mAuth.signInAnonymously().addOnCompleteListener {
-            if (it.isSuccessful) {
-                logw("login successfully")
-
-                logw(mAuth.currentUser?.displayName.toString())
-
-                mStorageRef = FirebaseStorage.getInstance().reference
-                upload()
-            } else {
-                loge("login failed")
-            }
-        }
+//        val mAuth = FirebaseAuth.getInstance()
+//        mAuth.signInAnonymously().addOnCompleteListener {
+//            if (it.isSuccessful) {
+//                logw("login successfully")
+//
+//                logw(mAuth.currentUser?.displayName.toString())
+//
+//                mStorageRef = FirebaseStorage.getInstance().reference
+//                upload()
+//            } else {
+//                loge("login failed")
+//            }
+//        }
 
 
 //
