@@ -111,7 +111,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         toolEmotion.adapter = SpinnnerDrawableAdapter(context,
                 R.layout.spinner_emotion_item,
                 R.layout.drop_down_emotion_item,
-                arrayListOf(R.drawable.ic_weather, R.drawable.ic_location, R.drawable.ic_emotion))
+                MyEmotionIcons.getAllMyIcon())
     }
 
     private fun toggleInputMethod() {
