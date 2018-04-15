@@ -4,14 +4,11 @@ import com.empty.jinux.simplediary.R
 
 object MyEmotionIcons {
     private val MAP_ICON_TO_MY_ICON = arrayListOf(
-            R.drawable.ic_01d,
-            R.drawable.ic_02d,
-            R.drawable.ic_03d,
-            R.drawable.ic_09d,
-            R.drawable.ic_10d,
-            R.drawable.ic_11d,
-            R.drawable.ic_13d,
-            R.drawable.ic_50d
+            R.drawable.ic_emotion_haha,
+            R.drawable.ic_emotion_smile,
+            R.drawable.ic_emotion_normal,
+            R.drawable.ic_emotion_sad,
+            R.drawable.ic_emotion_cry
     )
 
     fun getEmotion(index: Int): Int {
