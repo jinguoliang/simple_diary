@@ -4,15 +4,28 @@ import com.empty.jinux.simplediary.R
 
 object MyWeatherIcons {
     private val DEFAULT_WEATHER = R.drawable.ic_location
+    private val IconList = arrayOf(R.drawable.ic_01d,
+            R.drawable.ic_02d,
+            R.drawable.ic_03d,
+            R.drawable.ic_09d,
+            R.drawable.ic_10d,
+            R.drawable.ic_11d,
+            R.drawable.ic_13d,
+            R.drawable.ic_50d
+            )
+    private val IconCodeList = arrayListOf("01", "02", "03",
+            "09", "10", "11",
+            "13", "50")
+
     private val MAP_ICON_TO_MY_ICON = mapOf(
-            "01" to R.drawable.ic_01d,
-            "02" to R.drawable.ic_02d,
-            "03" to R.drawable.ic_03d,
-            "09" to R.drawable.ic_09d,
-            "10" to R.drawable.ic_10d,
-            "11" to R.drawable.ic_11d,
-            "13" to R.drawable.ic_13d,
-            "50" to R.drawable.ic_50d
+            IconCodeList[0] to IconList[0],
+            IconCodeList[1] to IconList[1],
+            IconCodeList[2] to IconList[2],
+            IconCodeList[3] to IconList[3],
+            IconCodeList[4] to IconList[4],
+            IconCodeList[5] to IconList[5],
+            IconCodeList[6] to IconList[6],
+            IconCodeList[7] to IconList[7]
     )
 
     fun mapToMyIcon(icon: String): Int {
@@ -20,14 +33,14 @@ object MyWeatherIcons {
     }
 
     fun getAllMyIcon(): List<Int> {
-        return MAP_ICON_TO_MY_ICON.values.toList()
+        return IconList.toList()
     }
 
     fun getIconIndex(icon: String): Int {
-        return getAllMyIcon().indexOf(mapToMyIcon(icon))
+        return IconList.indexOf(mapToMyIcon(icon))
     }
 
     fun getIconByIndex(position: Int): String {
-        return MAP_ICON_TO_MY_ICON.keys.toList()[position]
+        return IconCodeList.toList()[position]
     }
 }
