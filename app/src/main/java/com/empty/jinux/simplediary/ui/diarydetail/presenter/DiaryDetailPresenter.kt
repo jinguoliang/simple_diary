@@ -155,9 +155,9 @@ constructor(
                 mDiaryDetailView.showWeather(description, icon)
             }
 
-            locationInfo?.apply {
-                mDiaryDetailView.showLocation(address)
-            }
+//            locationInfo?.apply {
+//                mDiaryDetailView.showLocation(address)
+//            }
 
             emotionInfo?.apply {
                 mDiaryDetailView.showEmotion(id)
