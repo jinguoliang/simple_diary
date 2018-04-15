@@ -72,5 +72,7 @@ interface DiaryDetailContract {
 
         fun setEmotion(id: Long)
 
+        fun setWeather(icon: String)
+
     }
 }

@@ -114,6 +114,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                mPresenter.setWeather(MyWeatherIcons.getIconByIndex(position))
             }
 
         }

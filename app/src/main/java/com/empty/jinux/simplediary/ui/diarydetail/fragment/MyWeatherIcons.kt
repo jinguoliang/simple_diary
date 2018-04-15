@@ -26,4 +26,8 @@ object MyWeatherIcons {
     fun getIconIndex(icon: String): Int {
         return getAllMyIcon().indexOf(mapToMyIcon(icon))
     }
+
+    fun getIconByIndex(position: Int): String {
+        return MAP_ICON_TO_MY_ICON.keys.toList()[position]
+    }
 }

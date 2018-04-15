@@ -192,6 +192,11 @@ constructor(
         currentDiaryContent.emotionInfo = EmotionInfo(id)
     }
 
+    override fun setWeather(iconCode: String) {
+        currentDiaryContent.apply {
+            weatherInfo = WeatherInfo(weatherInfo?.description ?: "", iconCode)
+        }
+    }
 
 
     fun onContentChange(newContent: String) {
