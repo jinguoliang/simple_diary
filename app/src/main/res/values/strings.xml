@@ -20,4 +20,5 @@
     <string name="delete">Delete</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="punchcard_title">Punch Card</string>
 </resources>

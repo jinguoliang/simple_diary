@@ -19,6 +19,9 @@ package com.empty.jinux.simplediary.ui.main.statistics;
 
 import com.empty.jinux.simplediary.BasePresenter;
 import com.empty.jinux.simplediary.BaseView;
+import com.empty.jinux.simplediary.data.Diary;
+
+import java.util.List;
 
 /**
  * This specifies the contract between the view and the presenter.
@@ -29,7 +32,7 @@ public interface StatisticsContract {
 
         void setProgressIndicator(boolean active);
 
-        void showStatistics();
+        void showStatistics(List<Diary> diaries);
 
         void showLoadingStatisticsError();
 

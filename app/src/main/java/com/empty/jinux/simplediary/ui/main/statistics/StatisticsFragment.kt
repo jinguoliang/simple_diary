@@ -23,8 +23,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.empty.jinux.simplediary.R
+import com.empty.jinux.simplediary.data.Diary
+import com.empty.jinux.simplediary.ui.main.statistics.view.punchcard.PunchCheckItem
+import com.empty.jinux.simplediary.util.dayTime
+import com.empty.jinux.simplediary.util.today
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.statistics_frag.*
+import java.util.*
 import javax.inject.Inject
 
 
@@ -35,7 +40,8 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View {
 
     private lateinit var mStatisticsTV: TextView
 
-    @Inject internal
+    @Inject
+    internal
     lateinit var mPresenter: StatisticsPresenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -63,8 +69,23 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View {
         }
     }
 
-    override fun showStatistics() {
+    override fun showStatistics(diaries: MutableList<Diary>) {
+        showPunchCard(diaries)
+    }
 
+    private fun showPunchCard(diaries: MutableList<Diary>) {
+        // todo: may be we can do it better
+        val days = diaries.map { it.diaryContent.displayTime.dayTime() }
+                .map { Calendar.getInstance().apply { timeInMillis = it } }
+                .filter {
+                    it.run {
+                        it.add(Calendar.DAY_OF_MONTH, 100)
+                                .run { it.after(today()) }
+                    }
+                }
+                .map { it.apply { add(Calendar.DAY_OF_MONTH, -100) } }
+                .map { it.get(Calendar.DAY_OF_YEAR) }.toSet().toList()
+        punchCard.setWordCountOfEveryday(days.mapWithState())
     }
 
     override fun showLoadingStatisticsError() {
@@ -79,6 +100,24 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View {
 
         fun newInstance(): StatisticsFragment {
             return StatisticsFragment()
+        }
+    }
+}
+
+fun List<Int>.mapWithState(): List<PunchCheckItem> {
+    if (isEmpty()) {
+        return emptyList()
+    }
+
+    var last = first()
+    return flatMap { item ->
+        if (item == last) {
+            listOf(PunchCheckItem(item, true))
+        } else {
+            (last + 1 until item).toList().map { PunchCheckItem(it, false) }.run {
+                last = item
+                this + PunchCheckItem(item, true)
+            }
         }
     }
 }

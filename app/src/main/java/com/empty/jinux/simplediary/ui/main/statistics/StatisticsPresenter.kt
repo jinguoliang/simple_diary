@@ -46,7 +46,7 @@ constructor(@param:Repository private val mTasksRepository: DiariesDataSource,
                 }
                 mStatisticsView.setProgressIndicator(false)
 
-                mStatisticsView.showStatistics()
+                mStatisticsView.showStatistics(diaries)
             }
 
             override fun onDataNotAvailable() {
