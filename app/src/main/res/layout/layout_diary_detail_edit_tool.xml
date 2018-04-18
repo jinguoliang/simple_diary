@@ -3,7 +3,7 @@
     android:id="@+id/pencil"
     android:layout_width="match_parent"
     android:layout_height="@dimen/diary_detail_edit_tool_height"
-    android:background="#a3a1a3"
+    android:background="@color/colorPrimary"
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
