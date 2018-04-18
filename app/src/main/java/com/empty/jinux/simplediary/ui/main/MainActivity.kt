@@ -48,14 +48,22 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     private fun setupFragment() {
-        var diaryListFragment = supportFragmentManager.findFragmentById(R.id.contentFrame) as DiaryListFragment?
-        if (diaryListFragment == null) {
-            // Create the fragment
-            diaryListFragment = DiaryListFragment.newInstance()
-            ActivityUtils.addFragmentToActivity(
-                    supportFragmentManager, diaryListFragment, R.id.contentFrame)
+        val fragment = supportFragmentManager.findFragmentById(R.id.contentFrame)
+        when(fragment) {
+            is DiaryListFragment -> {
+                mDiaryListFragment = fragment
+                showDiaryListFragment()
+            }
+            is StatisticsFragment -> {
+                mStatisticFragment = fragment
+                showDiaryStatistics()
+            }
+            else -> {
+                mDiaryListFragment = DiaryListFragment.newInstance()
+                ActivityUtils.addFragmentToActivity(
+                        supportFragmentManager, mDiaryListFragment, R.id.contentFrame)
+            }
         }
-        mDiaryListFragment = diaryListFragment
     }
 
     private fun setupNavigationDrawer() {
