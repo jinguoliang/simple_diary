@@ -104,7 +104,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             mPresenter.refreshLocation()
         }
 
-        toolWeather.adapter = SpinnnerDrawableAdapter(context,
+        toolWeather.adapter = SpinnerDrawableAdapter(context,
                 R.layout.spinner_emotion_item,
                 R.layout.drop_down_emotion_item,
                 MyWeatherIcons.getAllMyIcon())
@@ -119,7 +119,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
         }
 
-        toolEmotion.adapter = SpinnnerDrawableAdapter(context,
+        toolEmotion.adapter = SpinnerDrawableAdapter(context,
                 R.layout.spinner_emotion_item,
                 R.layout.drop_down_emotion_item,
                 MyEmotionIcons.getAllMyIcon())
