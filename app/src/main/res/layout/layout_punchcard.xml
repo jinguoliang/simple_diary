@@ -8,20 +8,38 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/punchcard_title"
-        android:textSize="23dp"
-        android:textColor="@android:color/black"/>
+        android:textColor="@android:color/black"
+        android:textSize="23dp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/punchRecycleView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"/>
+        android:layout_marginTop="15dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="0dp"
+        android:background="@android:color/darker_gray"/>
 
     <TextView
+        android:id="@+id/currentPunch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="18"
+        android:textColor="@android:color/black"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/longestPunch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="18"
         android:textColor="@android:color/black"
-        android:textSize="20dp"
-        android:layout_marginTop="5dp"/>
+        android:textSize="20dp" />
+
+
 </LinearLayout>

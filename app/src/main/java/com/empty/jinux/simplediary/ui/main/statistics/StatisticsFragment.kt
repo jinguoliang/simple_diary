@@ -90,7 +90,8 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View {
                     it.apply { add(Calendar.DAY_OF_MONTH, -100) }
                             .apply { println("haha ${toStringPretty()}") }
                 }
-                .map { it.get(Calendar.DAY_OF_YEAR) }.toSet().toList()
+                .groupBy { it }
+                .map { it.value[0] }
                 .map { it.apply { println("ww ${it}") } }
         punchCard.setWordCountOfEveryday(days.mapWithState())
     }
@@ -111,17 +112,17 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View {
     }
 }
 
-fun List<Int>.mapWithState(): List<PunchCheckItem> {
+fun List<Calendar>.mapWithState(): List<PunchCheckItem> {
     if (isEmpty()) {
         return emptyList()
     }
 
-    var first = first()
-    return (first..today().get(Calendar.DAY_OF_YEAR)).map {
+    val first = first()
+    return (first..today()).map {
         PunchCheckItem(it, if (contains(it)) {
             PunchCheckState.STATE_CHECKED
         } else {
-            if (it == today().get(Calendar.DAY_OF_YEAR)) {
+            if (it == today()) {
                 PunchCheckState.STATE_NEED_CHECKED
             } else {
                 PunchCheckState.STATE_MISSED
@@ -129,4 +130,8 @@ fun List<Int>.mapWithState(): List<PunchCheckItem> {
         })
     }
 
+}
+
+operator fun Calendar.rangeTo(end: Calendar): CalendarRange {
+    return CalendarRange(this, end)
 }

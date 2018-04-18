@@ -28,6 +28,24 @@ class PunchCard : CardView {
         val adapter = punchRecycleView.adapter as MultiTypeAdapter
         adapter.items = counts
         adapter.notifyDataSetChanged()
+
+        val (current, longest) = computLongestPunch(counts)
+        currentPunch.text = context.getString(R.string.current_punch_fmt, current)
+        longestPunch.text = context.getString(R.string.longest_punch_fmt, longest)
+    }
+
+    private fun computLongestPunch(counts: List<PunchCheckItem>): List<Int> {
+        var longest = 0
+        var currentPunchs = 0
+        counts.forEach {
+            if (it.state == PunchCheckState.STATE_CHECKED) {
+                currentPunchs++
+            } else if (it.state == PunchCheckState.STATE_MISSED) {
+                longest = Math.max(longest, currentPunchs)
+                currentPunchs = 0
+            }
+        }
+        return listOf(currentPunchs, longest)
     }
 
 }

@@ -4,9 +4,11 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
+import android.widget.TextView
 import com.empty.jinux.simplediary.R
+import com.empty.jinux.simplediary.util.formatToWeekday
 import me.drakeet.multitype.ItemViewBinder
+import java.util.*
 
 class PunchCheckBinder : ItemViewBinder<PunchCheckItem, PunchCheckBinder.ViewHolder>() {
     override fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup): ViewHolder {
@@ -28,11 +30,14 @@ class PunchCheckBinder : ItemViewBinder<PunchCheckItem, PunchCheckBinder.ViewHol
                 holder.missed.visibility = View.INVISIBLE
             }
         }
+        item.data as Calendar
+        holder.weekName.text = item.data.timeInMillis.formatToWeekday()
     }
 
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val checked = view.findViewById<View>(R.id.stateChecked)
-        val missed = view.findViewById<View>(R.id.stateMissed)
+        val checked = view.findViewById<View>(R.id.stateChecked)!!
+        val missed = view.findViewById<View>(R.id.stateMissed)!!
+        val weekName = view.findViewById<TextView>(R.id.weekName)!!
     }
 }
