@@ -41,11 +41,8 @@ fun DiaryContent.formatDisplayTime(): String {
 fun Long.weekStartTime(): Long {
     val calendar = Calendar.getInstance()
     calendar.timeInMillis = this
-    calendar.set(Calendar.HOUR_OF_DAY, 0)
-    calendar.set(Calendar.MINUTE, 0)
-    calendar.set(Calendar.SECOND, 0)
-    calendar.set(Calendar.MILLISECOND, 0)
     calendar.set(Calendar.DAY_OF_WEEK, calendar.firstDayOfWeek)
+    calendar.setToDayStart()
 
     return calendar.timeInMillis
 }
@@ -53,10 +50,7 @@ fun Long.weekStartTime(): Long {
 fun Long.dayTime(): Long {
     val calendar = Calendar.getInstance()
     calendar.timeInMillis = this
-    calendar.set(Calendar.HOUR_OF_DAY, 0)
-    calendar.set(Calendar.MINUTE, 0)
-    calendar.set(Calendar.SECOND, 0)
-    calendar.set(Calendar.MILLISECOND, 0)
+    calendar.setToDayStart()
 
     return calendar.timeInMillis
 }
@@ -74,6 +68,23 @@ fun Long.formatToWeekday(): String {
 fun Long.formatToTime(): String {
     val formater = SimpleDateFormat("H:mm")
     return formater.format(this)
+}
+
+fun today(): Calendar {
+    return Calendar.getInstance().setToDayStart()
+
+}
+
+private fun Calendar.setToDayStart(): Calendar {
+    set(Calendar.HOUR_OF_DAY, 0)
+    set(Calendar.MINUTE, 0)
+    set(Calendar.SECOND, 0)
+    set(Calendar.MILLISECOND, 0)
+    return this
+}
+
+fun Calendar.toStringPretty(): String {
+    return "${get(Calendar.YEAR)}年${get(Calendar.MONTH) + 1}月${get(Calendar.DAY_OF_MONTH)}日 "
 }
 
 
