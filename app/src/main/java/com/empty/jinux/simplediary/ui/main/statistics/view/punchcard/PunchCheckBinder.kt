@@ -14,13 +14,25 @@ class PunchCheckBinder : ItemViewBinder<PunchCheckItem, PunchCheckBinder.ViewHol
     }
 
     override fun onBindViewHolder(holder: ViewHolder, item: PunchCheckItem) {
-        holder.check.apply {
-            isChecked = item.checked
+        when (item.state) {
+            PunchCheckState.STATE_CHECKED -> {
+                holder.checked.visibility = View.VISIBLE
+                holder.missed.visibility = View.INVISIBLE
+            }
+            PunchCheckState.STATE_MISSED -> {
+                holder.checked.visibility = View.INVISIBLE
+                holder.missed.visibility = View.VISIBLE
+            }
+            PunchCheckState.STATE_NEED_CHECKED -> {
+                holder.checked.visibility = View.INVISIBLE
+                holder.missed.visibility = View.INVISIBLE
+            }
         }
     }
 
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val check = view.findViewById<CheckBox>(R.id.punchCardCheckbox)
+        val checked = view.findViewById<View>(R.id.stateChecked)
+        val missed = view.findViewById<View>(R.id.stateMissed)
     }
 }

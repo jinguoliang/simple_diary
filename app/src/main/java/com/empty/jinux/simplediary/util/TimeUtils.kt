@@ -72,7 +72,6 @@ fun Long.formatToTime(): String {
 
 fun today(): Calendar {
     return Calendar.getInstance().setToDayStart()
-
 }
 
 private fun Calendar.setToDayStart(): Calendar {

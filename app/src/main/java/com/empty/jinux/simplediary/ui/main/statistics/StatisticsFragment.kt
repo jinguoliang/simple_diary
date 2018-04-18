@@ -25,7 +25,9 @@ import android.widget.TextView
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.ui.main.statistics.view.punchcard.PunchCheckItem
+import com.empty.jinux.simplediary.ui.main.statistics.view.punchcard.PunchCheckState
 import com.empty.jinux.simplediary.util.dayTime
+import com.empty.jinux.simplediary.util.toStringPretty
 import com.empty.jinux.simplediary.util.today
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.statistics_frag.*
@@ -77,14 +79,19 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View {
         // todo: may be we can do it better
         val days = diaries.map { it.diaryContent.displayTime.dayTime() }
                 .map { Calendar.getInstance().apply { timeInMillis = it } }
+                .filter { it.before(today()) or (it == today()) }
                 .filter {
                     it.run {
                         it.add(Calendar.DAY_OF_MONTH, 100)
                                 .run { it.after(today()) }
                     }
                 }
-                .map { it.apply { add(Calendar.DAY_OF_MONTH, -100) } }
+                .map {
+                    it.apply { add(Calendar.DAY_OF_MONTH, -100) }
+                            .apply { println("haha ${toStringPretty()}") }
+                }
                 .map { it.get(Calendar.DAY_OF_YEAR) }.toSet().toList()
+                .map { it.apply { println("ww ${it}") } }
         punchCard.setWordCountOfEveryday(days.mapWithState())
     }
 
@@ -109,15 +116,17 @@ fun List<Int>.mapWithState(): List<PunchCheckItem> {
         return emptyList()
     }
 
-    var last = first()
-    return flatMap { item ->
-        if (item == last) {
-            listOf(PunchCheckItem(item, true))
+    var first = first()
+    return (first..today().get(Calendar.DAY_OF_YEAR)).map {
+        PunchCheckItem(it, if (contains(it)) {
+            PunchCheckState.STATE_CHECKED
         } else {
-            (last + 1 until item).toList().map { PunchCheckItem(it, false) }.run {
-                last = item
-                this + PunchCheckItem(item, true)
+            if (it == today().get(Calendar.DAY_OF_YEAR)) {
+                PunchCheckState.STATE_NEED_CHECKED
+            } else {
+                PunchCheckState.STATE_MISSED
             }
-        }
+        })
     }
+
 }

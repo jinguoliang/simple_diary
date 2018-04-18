@@ -7,11 +7,21 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/punchcard_title"/>
+        android:text="@string/punchcard_title"
+        android:textSize="23dp"
+        android:textColor="@android:color/black"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/punchRecycleView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="18"
+        android:textColor="@android:color/black"
+        android:textSize="20dp"
+        android:layout_marginTop="5dp"/>
 </LinearLayout>

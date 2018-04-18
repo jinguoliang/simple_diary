@@ -6,16 +6,28 @@
     android:gravity="center_vertical"
     >
 
+    <View
+        android:layout_width="20dp"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
     <FrameLayout
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:background="#f0f"
-        android:layout_margin="5dp" />
-
-    <CheckBox
-        android:id="@+id/punchCardCheckbox"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:text="@null"/>
+        android:background="@drawable/ic_circle">
+        <View
+            android:id="@+id/stateChecked"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_check_black_24dp"
+            />
+        <View
+            android:id="@+id/stateMissed"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible"
+            android:background="@drawable/ic_close_black_24dp"
+            />
+    </FrameLayout>
 
 </LinearLayout>
