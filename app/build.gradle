@@ -17,6 +17,8 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
+        multiDexEnabled true
+
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
@@ -40,6 +42,13 @@ dependencies {
     implementation "com.android.support:design:$support_version"
     implementation "com.android.support:cardview-v7:$support_version"
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+
+
+    implementation "com.google.firebase:firebase-storage:$gms_version"
+    implementation "com.google.firebase:firebase-auth:$gms_version"
+    implementation "com.google.firebase:firebase-database:$gms_version"
+    implementation "com.google.android.gms:play-services-location:$gms_version"
+
     testImplementation 'junit:junit:4.12'
     testImplementation "org.mockito:mockito-all:1.10.19"
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
