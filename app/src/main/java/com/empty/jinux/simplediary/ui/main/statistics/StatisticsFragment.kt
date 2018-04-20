@@ -27,6 +27,7 @@ import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.ui.main.statistics.view.punchcard.PunchCheckItem
 import com.empty.jinux.simplediary.ui.main.statistics.view.punchcard.PunchCheckState
 import com.empty.jinux.simplediary.util.dayTime
+import com.empty.jinux.simplediary.util.toCalendar
 import com.empty.jinux.simplediary.util.toStringPretty
 import com.empty.jinux.simplediary.util.today
 import dagger.android.support.DaggerFragment
@@ -40,8 +41,6 @@ import javax.inject.Inject
  */
 class StatisticsFragment : DaggerFragment(), StatisticsContract.View {
 
-    private lateinit var mStatisticsTV: TextView
-
     @Inject
     internal
     lateinit var mPresenter: StatisticsPresenter
@@ -53,7 +52,6 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        mStatisticsTV = statistics
 
         activity?.findViewById<FloatingActionButton>(R.id.fab_add_diary)?.visibility = View.INVISIBLE
     }
@@ -64,18 +62,18 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View {
     }
 
     override fun setProgressIndicator(active: Boolean) {
-        if (active) {
-            mStatisticsTV.text = getString(R.string.loading)
-        } else {
-            mStatisticsTV.text = ""
-        }
     }
 
-    override fun showStatistics(diaries: MutableList<Diary>) {
+    override fun showStatistics(diaries: List<Diary>) {
         showPunchCard(diaries)
+        showStatisticChart(diaries)
     }
 
-    private fun showPunchCard(diaries: MutableList<Diary>) {
+    private fun showStatisticChart(diaries: List<Diary>) {
+        statistics.setDiaries(diaries)
+    }
+
+    private fun showPunchCard(diaries: List<Diary>) {
         // todo: may be we can do it better
         val days = diaries.map { it.diaryContent.displayTime.dayTime().toCalendar() }
                 .filter { it.before(today()) or (it == today()) }
@@ -96,7 +94,6 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View {
     }
 
     override fun showLoadingStatisticsError() {
-        mStatisticsTV.text = resources.getString(R.string.statistics_error)
     }
 
     override fun isActive(): Boolean {

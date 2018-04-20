@@ -7,10 +7,11 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
+import com.empty.jinux.simplediary.util.dayTime
+import com.empty.jinux.simplediary.util.toCalendar
+import com.github.mikephil.charting.data.*
 import kotlinx.android.synthetic.main.layout_statistic_chart.view.*
+import java.util.*
 
 class StatisticView
 @JvmOverloads
@@ -25,17 +26,19 @@ constructor(context: Context,
     }
 
     fun setDiaries(data: List<Diary>) {
-        val data = listOf(1, 2, 4, 5, 6)
-        val entries = data.map {
-            val f = it.toFloat()
-            Entry(f, f)
+        val entries = data.groupBy { it.diaryContent.displayTime.dayTime() }.map {
+            BarEntry(it.key.toCalendar().get(Calendar.DAY_OF_YEAR).toFloat(),
+                    it.value.fold(0, {s, c -> s+c.diaryContent.content.length}).toFloat())
         }
-        val dataSet = LineDataSet(entries, "Label1")
-        dataSet.setColor(Color.CYAN)
+        val dataSet = BarDataSet(entries, "")
+        dataSet.color = Color.CYAN
         dataSet.setValueTextColors(listOf(Color.BLACK, Color.RED))
+        dataSet.stackLabels = arrayOf("haha", "what")
 
-        val lineData = LineData(dataSet)
-        statisticChat.data = lineData
+        val data = BarData(dataSet)
+        statisticChat.data = data
         statisticChat.invalidate()
     }
 }
+
+

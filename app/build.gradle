@@ -83,6 +83,7 @@ dependencies {
 
     implementation "android.arch.persistence.room:runtime:1.1.0-beta2"
     kapt "android.arch.persistence.room:compiler:1.1.0-beta2"
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 }
 
 
