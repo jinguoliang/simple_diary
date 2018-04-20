@@ -86,4 +86,8 @@ fun Calendar.toStringPretty(): String {
     return "${get(Calendar.YEAR)}年${get(Calendar.MONTH) + 1}月${get(Calendar.DAY_OF_MONTH)}日 "
 }
 
+fun Long.toCalendar(): Calendar {
+    return Calendar.getInstance().also { it.timeInMillis = this }
+}
+
 

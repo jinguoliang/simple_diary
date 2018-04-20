@@ -77,8 +77,7 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View {
 
     private fun showPunchCard(diaries: MutableList<Diary>) {
         // todo: may be we can do it better
-        val days = diaries.map { it.diaryContent.displayTime.dayTime() }
-                .map { Calendar.getInstance().apply { timeInMillis = it } }
+        val days = diaries.map { it.diaryContent.displayTime.dayTime().toCalendar() }
                 .filter { it.before(today()) or (it == today()) }
                 .filter {
                     it.run {
