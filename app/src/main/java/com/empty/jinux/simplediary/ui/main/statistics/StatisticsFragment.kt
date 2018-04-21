@@ -21,14 +21,12 @@ import android.support.design.widget.FloatingActionButton
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.ui.main.statistics.view.punchcard.PunchCheckItem
 import com.empty.jinux.simplediary.ui.main.statistics.view.punchcard.PunchCheckState
 import com.empty.jinux.simplediary.util.dayTime
 import com.empty.jinux.simplediary.util.toCalendar
-import com.empty.jinux.simplediary.util.toStringPretty
 import com.empty.jinux.simplediary.util.today
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.statistics_frag.*
@@ -75,21 +73,13 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View {
 
     private fun showPunchCard(diaries: List<Diary>) {
         // todo: may be we can do it better
-        val days = diaries.map { it.diaryContent.displayTime.dayTime().toCalendar() }
-                .filter { it.before(today()) or (it == today()) }
+        val days = diaries
                 .filter {
-                    it.run {
-                        it.add(Calendar.DAY_OF_MONTH, 100)
-                                .run { it.after(today()) }
-                    }
-                }
-                .map {
-                    it.apply { add(Calendar.DAY_OF_MONTH, -100) }
-                            .apply { println("haha ${toStringPretty()}") }
-                }
-                .groupBy { it }
-                .map { it.value[0] }
-                .map { it.apply { println("ww ${it}") } }
+                    val t = it.diaryContent.displayTime.dayTime().toCalendar()
+                    ((t.before(today()) or (t == today()))
+                            and (t.add(Calendar.DAY_OF_MONTH, 100)
+                            .run { t.after(today()) }.apply { t.add(Calendar.DAY_OF_MONTH, -100) }))
+                }.groupBy { it.diaryContent.displayTime.dayTime().toCalendar() }
         punchCard.setWordCountOfEveryday(days.mapWithState())
     }
 
@@ -108,14 +98,14 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View {
     }
 }
 
-fun List<Calendar>.mapWithState(): List<PunchCheckItem> {
+private fun Map<Calendar, List<Diary>>.mapWithState(): List<PunchCheckItem> {
     if (isEmpty()) {
         return emptyList()
     }
 
-    val first = first()
+    val first = keys.first()
     return (first..today()).map {
-        PunchCheckItem(it, if (contains(it)) {
+        PunchCheckItem(it, if (get(it)?.fold(0){s,c -> s + c.diaryContent.content.length} ?: 0 > 25) {
             PunchCheckState.STATE_CHECKED
         } else {
             if (it == today()) {
@@ -125,8 +115,8 @@ fun List<Calendar>.mapWithState(): List<PunchCheckItem> {
             }
         })
     }
-
 }
+
 
 operator fun Calendar.rangeTo(end: Calendar): CalendarRange {
     return CalendarRange(this, end)
