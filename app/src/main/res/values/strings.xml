@@ -23,4 +23,5 @@
     <string name="punchcard_title">Punch Card</string>
     <string name="longest_punch_fmt">Longest Punch: %1$d</string>
     <string name="current_punch_fmt">Current Punch: %1$d</string>
+    <string name="statastics_for">Statastics For</string>
 </resources>
