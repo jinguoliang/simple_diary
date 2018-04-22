@@ -24,6 +24,28 @@ constructor(context: Context,
 
     init {
         LayoutInflater.from(context).inflate(R.layout.layout_statistic_chart, this)
+
+        yAxis.adapter = ArrayAdapter<String>(context,
+                R.layout.statistics_card_spinner_item,
+                arrayOf("Words", "Articles")).apply {
+            setDropDownViewResource(R.layout.statistics_card_spinner_drop_down_item)
+        }
+//        yAxis.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//            override fun onNothingSelected(parent: AdapterView<*>?) {
+//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//            }
+//
+//            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//            }
+//
+//        }
+
+        xAxis.adapter = ArrayAdapter<String>(context,
+                R.layout.statistics_card_spinner_item,
+                arrayOf("Day", "Week", "Month", "Year")).apply {
+            setDropDownViewResource(R.layout.statistics_card_spinner_drop_down_item)
+        }
     }
 
     fun setDiaries(data: List<Diary>) {

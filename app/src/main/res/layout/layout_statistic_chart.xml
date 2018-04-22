@@ -2,7 +2,8 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
         android:id="@+id/title"
@@ -14,7 +15,7 @@
         android:textColor="@android:color/white"
         android:textSize="@dimen/card_view_title_text_size" />
 
-    <Button
+    <Spinner
         android:id="@+id/yAxis"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,6 +24,7 @@
         android:text="Words"
         android:layout_marginStart="30dp"
         android:textColor="@color/colorAccent"
+        android:background="@null"
         android:textSize="@dimen/card_view_button_text_size" />
 
     <TextView
@@ -32,10 +34,10 @@
         android:layout_alignBaseline="@id/title"
         android:layout_toStartOf="@id/xAxis"
         android:text="/"
-        android:textColor="@color/colorAccent"
+        android:textColor="@android:color/white"
         android:textSize="19dp" />
 
-    <Button
+    <Spinner
         android:id="@+id/xAxis"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -44,6 +46,8 @@
         android:text="Day"
         android:textColor="@color/colorAccent"
         android:textSize="@dimen/card_view_button_text_size"
+        android:layout_marginStart="5dp"
+        android:background="@null"
         android:layout_marginEnd="12dp"/>
 
 
