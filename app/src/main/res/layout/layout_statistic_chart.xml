@@ -59,7 +59,7 @@
         app:contentPadding="5dp"
         app:elevation="0dp">
 
-        <com.github.mikephil.charting.charts.LineChart
+        <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/statisticChat"
             android:layout_width="match_parent"
             android:layout_height="200dp" />
