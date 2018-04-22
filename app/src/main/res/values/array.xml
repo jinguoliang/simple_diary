@@ -1,2 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+
+    <string-array name="statistics_xaxis_select_values">
+        <item>Day</item>
+        <item>Week</item>
+        <item>Month</item>
+        <item>Year</item>
+    </string-array>
+
+    <string-array name="statistics_yaxis_select_values">
+        <item>Words</item>
+        <item>Articles</item>
+    </string-array>
+</resources>

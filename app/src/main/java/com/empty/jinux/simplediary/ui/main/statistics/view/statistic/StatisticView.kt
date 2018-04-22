@@ -11,8 +11,8 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
-import com.empty.jinux.simplediary.util.dayTime
 import com.empty.jinux.simplediary.util.toCalendar
+import com.empty.jinux.simplediary.util.wordsCount
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -27,44 +27,71 @@ constructor(context: Context,
             attrs: AttributeSet? = null,
             defAttr: Int = 0) : CardView(context, attrs, defAttr) {
 
+    val CALENDAR_FEILDS = listOf(Calendar.DAY_OF_YEAR,
+            Calendar.WEEK_OF_YEAR,
+            Calendar.MONTH,
+            Calendar.YEAR)
+
+    private var currentXAxis: Int = 0
+
+    private var currentYAxis: Int = 0
+
     init {
         LayoutInflater.from(context).inflate(R.layout.layout_statistic_chart, this)
 
         yAxis.adapter = ArrayAdapter<String>(context,
                 R.layout.statistics_card_spinner_item,
-                arrayOf("Words", "Articles")).apply {
+                context.resources.getStringArray(R.array.statistics_yaxis_select_values)).apply {
             setDropDownViewResource(R.layout.statistics_card_spinner_drop_down_item)
         }
-//        yAxis.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-//            override fun onNothingSelected(parent: AdapterView<*>?) {
-//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//            }
-//
-//            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//            }
-//
-//        }
+        yAxis.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                currentYAxis = position
+                setDiaries(mDiaries)
+            }
+
+        }
 
         xAxis.adapter = ArrayAdapter<String>(context,
                 R.layout.statistics_card_spinner_item,
-                arrayOf("Day", "Week", "Month", "Year")).apply {
+                context.resources.getStringArray(R.array.statistics_xaxis_select_values)).apply {
             setDropDownViewResource(R.layout.statistics_card_spinner_drop_down_item)
         }
+
+        xAxis.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                currentXAxis = CALENDAR_FEILDS[position]
+                setDiaries(mDiaries)
+            }
+        }
+
+        initBarChart()
     }
 
-    fun setDiaries(data: List<Diary>) {
-        val entries = data.groupBy { it.diaryContent.displayTime.dayTime() }.map {
-            BarEntry((it.key.toCalendar().get(Calendar.DAY_OF_YEAR)).toFloat(),
-                    it.value.fold(0, { s, c -> s + c.diaryContent.content.length }).toFloat())
+    private lateinit var mDiaries: List<Diary>
+
+    fun setDiaries(diaries: List<Diary>) {
+        mDiaries = diaries
+        val entries = diaries.groupBy { it.diaryContent.displayTime.toCalendar().get(currentXAxis)}.map {
+            BarEntry((it.key).toFloat(), getYAxisData(it.value))
         }
-        val dataSet = BarDataSet(entries, "")
-        dataSet.color = Color.RED
-        dataSet.form = Legend.LegendForm.NONE
-        dataSet.barBorderWidth = 3f
-//        dataSet.mode = LineDataSet.Mode.HORIZONTAL_BEZIER
-        dataSet.isHighlightEnabled = false
-        statisticChat.data = BarData(dataSet).apply {
+
+        val dataSet = BarDataSet(entries, "").apply {
+            color = Color.RED
+            form = Legend.LegendForm.NONE
+            barBorderWidth = 3f
+            isHighlightEnabled = false
+        }
+
+
+        val data = BarData(dataSet).apply {
             setDrawValues(true)
             setValueTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
             setValueTextSize(15f)
@@ -72,16 +99,33 @@ constructor(context: Context,
                 value.toLong().toString()
             }
         }
+        statisticChat.data = data
+
         statisticChat.invalidate()
-        statisticChat.setVisibleXRangeMaximum(7f)
+
+    }
+
+    private fun getYAxisData(value: List<Diary>): Float {
+        if (currentYAxis == 0) {
+            return  value.fold(0, { s, c -> s + c.diaryContent.content.wordsCount() }).toFloat()
+        } else {
+            return value.size.toFloat()
+        }
+    }
+
+    private fun initBarChart() {
         statisticChat.setDrawGridBackground(false)
         statisticChat.setDrawBorders(false)
+
         statisticChat.xAxis.apply {
             isEnabled = true
             position = XAxis.XAxisPosition.BOTTOM
             setDrawGridLines(false)
             setDrawLabels(true)
             axisLineColor = Color.BLACK
+            setValueFormatter { value, axis ->
+                value.toInt().toString()
+            }
         }
 
         statisticChat.axisRight.isEnabled = false
@@ -94,7 +138,11 @@ constructor(context: Context,
         }
 
         statisticChat.description.isEnabled = false
+
+
     }
 }
+
+
 
 

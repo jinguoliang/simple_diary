@@ -43,7 +43,7 @@ data class DiaryContent(var title: String,
                         var locationInfo: LocationInfo? = null,
                         var emotionInfo: EmotionInfo? = null) {
     fun getTitleFromContent(): String {
-        return content.trim().let {
+        content.trim().let {
             return it.getFirstLine()
         }
     }
