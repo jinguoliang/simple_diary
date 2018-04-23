@@ -19,6 +19,8 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import kotlinx.android.synthetic.main.layout_statistic_chart.view.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import java.util.*
 
 class StatisticView
@@ -79,29 +81,34 @@ constructor(context: Context,
 
     fun setDiaries(diaries: List<Diary>) {
         mDiaries = diaries
-        val entries = diaries.groupBy { it.diaryContent.displayTime.toCalendar().get(currentXAxis)}.map {
-            BarEntry((it.key).toFloat(), getYAxisData(it.value))
-        }
+        doAsync {
+            val entries = diaries.groupBy { it.diaryContent.displayTime.toCalendar().get(currentXAxis)}.map {
+                BarEntry((it.key).toFloat(), getYAxisData(it.value))
+            }
 
-        val dataSet = BarDataSet(entries, "").apply {
-            color = Color.RED
-            form = Legend.LegendForm.NONE
-            barBorderWidth = 3f
-            isHighlightEnabled = false
-        }
+            val dataSet = BarDataSet(entries, "").apply {
+                color = Color.RED
+                form = Legend.LegendForm.NONE
+                barBorderWidth = 3f
+                isHighlightEnabled = false
+            }
 
 
-        val data = BarData(dataSet).apply {
-            setDrawValues(true)
-            setValueTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
-            setValueTextSize(15f)
-            setValueFormatter { value, entry, dataSetIndex, viewPortHandler ->
-                value.toLong().toString()
+            val data = BarData(dataSet).apply {
+                setDrawValues(true)
+                setValueTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
+                setValueTextSize(15f)
+                setValueFormatter { value, entry, dataSetIndex, viewPortHandler ->
+                    value.toLong().toString()
+                }
+            }
+            uiThread {
+                statisticChat.data = data
+                statisticChat.invalidate()
             }
         }
-        statisticChat.data = data
 
-        statisticChat.invalidate()
+
 
     }
 

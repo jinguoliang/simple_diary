@@ -28,6 +28,8 @@ import com.empty.jinux.simplediary.ui.main.statistics.view.punchcard.PunchCheckS
 import com.empty.jinux.simplediary.util.*
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.statistics_frag.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import java.util.*
 import javax.inject.Inject
 
@@ -71,11 +73,16 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View {
 
     private fun showPunchCard(diaries: List<Diary>) {
         // todo: may be we can do it better
-        val days = diaries
-                .filter { diary ->
-                    diary.day() in (today().apply { add(Calendar.DAY_OF_YEAR, -100) })..today()
-                }.groupBy { it.day() }
-        punchCard.setWordCountOfEveryday(days.mapWithState())
+        doAsync {
+            val days = diaries
+                    .filter { diary ->
+                        diary.day() in (today().apply { add(Calendar.DAY_OF_YEAR, -100) })..today()
+                    }.groupBy { it.day() }
+            val item = days.mapWithState()
+            uiThread {
+                punchCard.setWordCountOfEveryday(item)
+            }
+        }
     }
 
 
