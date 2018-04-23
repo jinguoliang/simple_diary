@@ -25,10 +25,7 @@ import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.ui.main.statistics.view.punchcard.PunchCheckItem
 import com.empty.jinux.simplediary.ui.main.statistics.view.punchcard.PunchCheckState
-import com.empty.jinux.simplediary.util.dayTime
-import com.empty.jinux.simplediary.util.rangeTo
-import com.empty.jinux.simplediary.util.toCalendar
-import com.empty.jinux.simplediary.util.today
+import com.empty.jinux.simplediary.util.*
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.statistics_frag.*
 import java.util.*
@@ -75,14 +72,12 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View {
     private fun showPunchCard(diaries: List<Diary>) {
         // todo: may be we can do it better
         val days = diaries
-                .filter {
-                    val t = it.diaryContent.displayTime.dayTime().toCalendar()
-                    ((t.before(today()) or (t == today()))
-                            and (t.add(Calendar.DAY_OF_MONTH, 100)
-                            .run { t.after(today()) }.apply { t.add(Calendar.DAY_OF_MONTH, -100) }))
-                }.groupBy { it.diaryContent.displayTime.dayTime().toCalendar() }
+                .filter { diary ->
+                    diary.day() in (today().apply { add(Calendar.DAY_OF_YEAR, -100) })..today()
+                }.groupBy { it.day() }
         punchCard.setWordCountOfEveryday(days.mapWithState())
     }
+
 
     override fun showLoadingStatisticsError() {
     }
@@ -99,21 +94,30 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View {
     }
 }
 
+private fun Diary.day() =
+        diaryContent.displayTime.dayTime().toCalendar()
+
 private fun Map<Calendar, List<Diary>>.mapWithState(): List<PunchCheckItem> {
     if (isEmpty()) {
         return emptyList()
     }
 
     val first = keys.first()
-    return (first..today()).map {
-        PunchCheckItem(it, if (get(it)?.fold(0) { s, c -> s + c.diaryContent.content.length } ?: 0 > 25) {
+    return (first..today()).map { day ->
+        PunchCheckItem(day, if (checkSatisfyForPunch(day)) {
             PunchCheckState.STATE_CHECKED
         } else {
-            if (it == today()) {
+            if (day == today()) {
                 PunchCheckState.STATE_NEED_CHECKED
             } else {
                 PunchCheckState.STATE_MISSED
             }
         })
     }
+}
+
+private fun Map<Calendar, List<Diary>>.checkSatisfyForPunch(day: Calendar): Boolean {
+    val minSatisfyForPunch = 25
+    val wordsCount = get(day)?.fold(0) { s, c -> s + c.diaryContent.content.wordsCount() } ?: 0
+    return wordsCount > minSatisfyForPunch
 }
