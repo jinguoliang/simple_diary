@@ -23,24 +23,24 @@ class PunchCard @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         adapter.items = counts
         adapter.notifyDataSetChanged()
 
-        val (current, longest) = computLongestPunch(counts)
+        val (current, longest) = computeLongestPunch(counts)
         currentPunch.text = context.getString(R.string.current_punch_fmt, current)
         longestPunch.text = context.getString(R.string.longest_punch_fmt, longest)
     }
 
-    private fun computLongestPunch(counts: List<PunchCheckItem>): List<Int> {
+    private fun computeLongestPunch(counts: List<PunchCheckItem>): List<Int> {
         var longest = 0
-        var currentPunchs = 0
+        var currentPunch = 0
         counts.forEach {
             if (it.state == PunchCheckState.STATE_CHECKED) {
-                currentPunchs++
+                currentPunch++
             } else if (it.state == PunchCheckState.STATE_MISSED) {
-                longest = Math.max(longest, currentPunchs)
-                currentPunchs = 0
+                longest = Math.max(longest, currentPunch)
+                currentPunch = 0
             }
         }
-        longest = Math.max(longest, currentPunchs)
-        return listOf(currentPunchs, longest)
+        longest = Math.max(longest, currentPunch)
+        return listOf(currentPunch, longest)
     }
 
     init {
