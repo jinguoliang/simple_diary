@@ -16,6 +16,4 @@
 
 package com.empty.jinux.simplediary
 
-interface BaseView<T> {
-
-}
+interface BaseView<T>

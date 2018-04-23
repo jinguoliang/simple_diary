@@ -6,7 +6,7 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-class DiaryListPresenterModule() {
+class DiaryListPresenterModule {
 
     @Provides
     fun providePresenter(

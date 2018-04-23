@@ -13,5 +13,5 @@ import com.empty.jinux.simplediary.data.source.local.room.entity.Diary
 
 @Database(entities = arrayOf(Diary::class), version = 1, exportSchema = false)
 abstract class DiaryDatabase : RoomDatabase() {
-    public abstract fun diaryDao(): DiaryDao
+    abstract fun diaryDao(): DiaryDao
 }

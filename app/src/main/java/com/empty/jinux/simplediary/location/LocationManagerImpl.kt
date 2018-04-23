@@ -19,7 +19,7 @@ import java.util.*
  * Location Manager Implement with gms
  */
 open class LocationManagerImpl constructor(val context: Activity) : LocationManager {
-    private val mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
+    private val mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 
     override fun getLastLocation(callback: (Location) -> Unit) {
         getLastLocation(true, callback)
@@ -56,7 +56,7 @@ open class LocationManagerImpl constructor(val context: Activity) : LocationMana
         }
         mFusedLocationClient.requestLocationUpdates(createLocationRequest(),
                 mLocationCallback,
-                null /* Looper */);
+                null /* Looper */)
     }
 
     private fun createLocationRequest(): LocationRequest {

@@ -19,7 +19,5 @@ import javax.inject.Singleton
 interface MAppComponent : AndroidInjector<MApplication> {
 
     @dagger.Component.Builder
-    abstract class Builder : AndroidInjector.Builder<MApplication>() {
-
-    }
+    abstract class Builder : AndroidInjector.Builder<MApplication>()
 }

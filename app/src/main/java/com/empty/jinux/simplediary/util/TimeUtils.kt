@@ -12,12 +12,12 @@ import java.util.*
  */
 
 fun formatTime(t: Long): String {
-    val formater = SimpleDateFormat("yyyy/MM/dd HH:mm")
+    val formater = SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.getDefault())
     return formater.format(t)
 }
 
 fun formatDateWithWeekday(t: Long): String {
-    val formater = SimpleDateFormat("M月d日 E")
+    val formater = SimpleDateFormat("M月d日 E", Locale.getDefault())
     return formater.format(t)
 }
 
@@ -55,18 +55,18 @@ fun Long.dayTime(): Long {
     return calendar.timeInMillis
 }
 
-fun Long.formatToYeayWeek(): String {
-    val formater = SimpleDateFormat("yyyy年  第 w 周")
-    return formater.format(this)
+fun Long.formatToYearWeek(): String {
+    val format = SimpleDateFormat("w'th week' 'of' yyyy ", Locale.getDefault())
+    return format.format(this)
 }
 
 fun Long.formatToWeekday(): String {
-    val formater = SimpleDateFormat("E")
+    val formater = SimpleDateFormat("E", Locale.getDefault())
     return formater.format(this)
 }
 
 fun Long.formatToTime(): String {
-    val formater = SimpleDateFormat("H:mm")
+    val formater = SimpleDateFormat("H:mm", Locale.getDefault())
     return formater.format(this)
 }
 

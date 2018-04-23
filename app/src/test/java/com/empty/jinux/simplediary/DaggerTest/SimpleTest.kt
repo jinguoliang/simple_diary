@@ -21,5 +21,4 @@ interface DogComponent {
     fun getDog(): Dog
 }
 
-class Dog @Inject constructor(val name: String) {
-}
+class Dog @Inject constructor(val name: String)

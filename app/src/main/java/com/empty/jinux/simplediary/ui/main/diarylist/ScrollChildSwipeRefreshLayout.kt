@@ -33,9 +33,9 @@ class ScrollChildSwipeRefreshLayout : SwipeRefreshLayout {
 
     private var mScrollUpChild: View? = null
 
-    constructor(context: Context) : super(context) {}
+    constructor(context: Context) : super(context)
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {}
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
     override fun canChildScrollUp(): Boolean {
         return mScrollUpChild?.canScrollVertically(-1) ?: super.canChildScrollUp()
