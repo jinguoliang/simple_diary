@@ -90,4 +90,8 @@ fun Long.toCalendar(): Calendar {
     return Calendar.getInstance().also { it.timeInMillis = this }
 }
 
+operator fun Calendar.rangeTo(end: Calendar): CalendarRange {
+    return CalendarRange(this, end)
+}
+
 

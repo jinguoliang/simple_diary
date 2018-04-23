@@ -26,6 +26,7 @@ import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.ui.main.statistics.view.punchcard.PunchCheckItem
 import com.empty.jinux.simplediary.ui.main.statistics.view.punchcard.PunchCheckState
 import com.empty.jinux.simplediary.util.dayTime
+import com.empty.jinux.simplediary.util.rangeTo
 import com.empty.jinux.simplediary.util.toCalendar
 import com.empty.jinux.simplediary.util.today
 import dagger.android.support.DaggerFragment
@@ -105,7 +106,7 @@ private fun Map<Calendar, List<Diary>>.mapWithState(): List<PunchCheckItem> {
 
     val first = keys.first()
     return (first..today()).map {
-        PunchCheckItem(it, if (get(it)?.fold(0){s,c -> s + c.diaryContent.content.length} ?: 0 > 25) {
+        PunchCheckItem(it, if (get(it)?.fold(0) { s, c -> s + c.diaryContent.content.length } ?: 0 > 25) {
             PunchCheckState.STATE_CHECKED
         } else {
             if (it == today()) {
@@ -115,9 +116,4 @@ private fun Map<Calendar, List<Diary>>.mapWithState(): List<PunchCheckItem> {
             }
         })
     }
-}
-
-
-operator fun Calendar.rangeTo(end: Calendar): CalendarRange {
-    return CalendarRange(this, end)
 }

@@ -1,10 +1,10 @@
-package com.empty.jinux.simplediary.ui.main.statistics
+package com.empty.jinux.simplediary.util
 
 import java.util.*
 
 class CalendarRange(val s: Calendar, val end: Calendar) : Iterable<Calendar>, ClosedRange<Calendar> {
     override fun iterator(): Iterator<Calendar> {
-        return CalendarInterator(s, end, 1, Calendar.DAY_OF_MONTH)
+        return CalendarIterator(s, end, 1, Calendar.DAY_OF_MONTH)
     }
 
     override val endInclusive: Calendar
@@ -14,7 +14,7 @@ class CalendarRange(val s: Calendar, val end: Calendar) : Iterable<Calendar>, Cl
 
 }
 
-class CalendarInterator(val first: Calendar, val last: Calendar, val step: Int, val feild: Int) : Iterator<Calendar> {
+class CalendarIterator(val first: Calendar, val last: Calendar, val step: Int, val feild: Int) : Iterator<Calendar> {
     private val finalElement = last
     private var hasNext: Boolean = if (step > 0) first <= last else first >= last
     private var next = if (hasNext) first else finalElement
@@ -22,7 +22,7 @@ class CalendarInterator(val first: Calendar, val last: Calendar, val step: Int, 
     override fun hasNext(): Boolean = hasNext
 
     override fun next(): Calendar {
-        var value = next
+        val value = next
         if (value == finalElement) {
             if (!hasNext) throw kotlin.NoSuchElementException()
             hasNext = false
