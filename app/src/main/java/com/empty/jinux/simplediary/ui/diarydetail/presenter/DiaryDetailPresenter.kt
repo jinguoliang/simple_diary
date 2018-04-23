@@ -16,7 +16,6 @@
 
 package com.empty.jinux.simplediary.ui.diarydetail.presenter
 
-import android.support.annotation.UiThread
 import android.text.TextUtils
 import com.empty.jinux.baselibaray.logi
 import com.empty.jinux.simplediary.data.*
@@ -27,8 +26,6 @@ import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.util.formatDateWithWeekday
 import com.empty.jinux.simplediary.util.formatDisplayTime
 import com.empty.jinux.simplediary.weather.WeatherManager
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 import javax.inject.Inject
 
 /**
