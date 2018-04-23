@@ -10,13 +10,7 @@ import com.empty.jinux.simplediary.R
 import kotlinx.android.synthetic.main.layout_punchcard.view.*
 import me.drakeet.multitype.MultiTypeAdapter
 
-class PunchCard : CardView {
-
-    @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : super(context, attrs, defStyleAttr) {
-        LayoutInflater.from(context).inflate(R.layout.layout_punchcard, this)
-        punchRecycleView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        punchRecycleView.adapter = initAdapter()
-    }
+class PunchCard @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : CardView(context, attrs, defStyleAttr) {
 
     private fun initAdapter(): RecyclerView.Adapter<*>? {
         return MultiTypeAdapter().apply {
@@ -47,6 +41,12 @@ class PunchCard : CardView {
         }
         longest = Math.max(longest, currentPunchs)
         return listOf(currentPunchs, longest)
+    }
+
+    init {
+        LayoutInflater.from(context).inflate(R.layout.layout_punchcard, this)
+        punchRecycleView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        punchRecycleView.adapter = initAdapter()
     }
 
 }
