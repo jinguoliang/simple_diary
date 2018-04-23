@@ -45,6 +45,7 @@ class PunchCard : CardView {
                 currentPunchs = 0
             }
         }
+        longest = Math.max(longest, currentPunchs)
         return listOf(currentPunchs, longest)
     }
 
