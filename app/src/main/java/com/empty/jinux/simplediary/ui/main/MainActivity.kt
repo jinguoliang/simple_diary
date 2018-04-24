@@ -25,6 +25,7 @@ import com.empty.jinux.simplediary.intent.helpTranslate
 import com.empty.jinux.simplediary.intent.rateApp
 import com.empty.jinux.simplediary.intent.sendFeedback
 import com.empty.jinux.simplediary.intent.shareApp
+import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.about.AboutActivity
 import com.empty.jinux.simplediary.ui.main.diarylist.DiaryListFragment
 import com.empty.jinux.simplediary.ui.main.statistics.StatisticsFragment
@@ -32,12 +33,16 @@ import com.empty.jinux.simplediary.util.ActivityUtils
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.diary_list_act.*
 import org.jetbrains.anko.intentFor
+import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity() {
 
-    lateinit var mDiaryListFragment: DiaryListFragment
+    private lateinit var mDiaryListFragment: DiaryListFragment
 
-    lateinit var mStatisticFragment: StatisticsFragment
+    private lateinit var mStatisticFragment: StatisticsFragment
+
+    @Inject
+    lateinit var mReporter: Reporter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +54,7 @@ class MainActivity : DaggerAppCompatActivity() {
 
     private fun setupFragment() {
         val fragment = supportFragmentManager.findFragmentById(R.id.contentFrame)
-        when(fragment) {
+        when (fragment) {
             is DiaryListFragment -> {
                 mDiaryListFragment = fragment
                 showDiaryListFragment()
@@ -96,24 +101,35 @@ class MainActivity : DaggerAppCompatActivity() {
             when (menuItem.itemId) {
                 R.id.list_navigation_menu_item -> {
                     showDiaryListFragment()
+                    mReporter.reportClick("main_menu_list")
                 }
                 R.id.statistics_navigation_menu_item -> {
                     showDiaryStatistics()
+                    mReporter.reportClick("main_menu_statistics")
                 }
                 R.id.rate_navigation_menu_item -> {
                     startActivity(rateApp(this))
+                    mReporter.reportClick("main_menu_rate")
                 }
                 R.id.share_navigation_menu_item -> {
                     startActivity(shareApp(this))
+                    mReporter.reportClick("main_menu_rate")
+
                 }
                 R.id.translate_navigation_menu_item -> {
                     startActivity(helpTranslate(this))
+                    mReporter.reportClick("main_menu_translate")
+
                 }
                 R.id.feedback_navigation_menu_item -> {
                     startActivity(sendFeedback(this))
+                    mReporter.reportClick("main_menu_feedback")
+
                 }
                 R.id.about_navigation_menu_item -> {
                     startActivity(intentFor<AboutActivity>())
+                    mReporter.reportClick("main_menu_about")
+
                 }
                 else -> {
                 }
@@ -140,7 +156,6 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     companion object {
-        val REQUEST_ADD_DIARY = 1
-        private val CURRENT_FILTERING_KEY = "CURRENT_FILTERING_KEY"
+        const val REQUEST_ADD_DIARY = 1
     }
 }

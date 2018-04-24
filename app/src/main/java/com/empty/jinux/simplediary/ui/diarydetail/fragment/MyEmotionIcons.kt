@@ -11,6 +11,14 @@ object MyEmotionIcons {
             R.drawable.ic_emotion_cry
     )
 
+    private val ICON_NAMES = arrayOf(
+            "haha", "smile", "normal", "sad", "cry"
+    )
+
+    fun getEmotionName(index: Int): String {
+        return ICON_NAMES[index]
+    }
+
     fun getEmotion(index: Int): Int {
         return MAP_ICON_TO_MY_ICON[index]
     }

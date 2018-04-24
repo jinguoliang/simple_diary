@@ -29,6 +29,7 @@ import android.widget.AdapterView
 import com.empty.jinux.baselibaray.loge
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
+import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
 import com.empty.jinux.simplediary.util.PermissionUtil
@@ -45,6 +46,9 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     @Inject internal
     lateinit var mPresenter: DiaryDetailPresenter
+
+    @Inject internal
+    lateinit var mReporter: Reporter
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -98,10 +102,12 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     private fun initEditToolbar() {
         toolInputMethod.setOnClickListener {
             toggleInputMethod()
+            mReporter.reportClick("detail_tool_toggle")
         }
 
         toolLocation.setOnClickListener {
             mPresenter.refreshLocation()
+            mReporter.reportClick("detail_tool_location")
         }
 
         toolWeather.adapter = SpinnerDrawableAdapter(context,
@@ -110,11 +116,12 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
                 MyWeatherIcons.getAllMyIcon())
         toolWeather.onItemSelectedListener = object :AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
-
+                mReporter.reportClick("detail_tool_weather", "no")
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 mPresenter.setWeather(MyWeatherIcons.getIconByIndex(position))
+                mReporter.reportClick("detail_tool_weather", MyWeatherIcons.getWeatherName(position))
             }
 
         }
@@ -125,11 +132,12 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
                 MyEmotionIcons.getAllMyIcon())
         toolEmotion.onItemSelectedListener = object :AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
-
+                mReporter.reportClick("detail_tool_emotion", "no")
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 mPresenter.setEmotion(position.toLong())
+                mReporter.reportClick("detail_tool_emotion", MyEmotionIcons.getEmotionName(position))
             }
 
         }
