@@ -30,7 +30,7 @@ class DiaryRepositoryTest {
     fun setupDiariesRepository() {
         MockitoAnnotations.initMocks(this)
 
-        diariesRepository = DiariesRepository(mDiariesLocalSource, mDiariesRemoteSource)
+        diariesRepository = DiariesRepository(mDiariesRemoteSource, mDiariesLocalSource)
     }
 
     @Test

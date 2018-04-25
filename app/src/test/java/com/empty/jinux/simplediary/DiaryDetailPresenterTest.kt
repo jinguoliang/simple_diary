@@ -6,9 +6,11 @@ import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
 import com.empty.jinux.simplediary.utils.any
 import com.empty.jinux.simplediary.weather.WeatherManager
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.mockito.*
+import org.mockito.Mockito.atLeastOnce
 import org.mockito.Mockito.verify
 
 /**
@@ -26,7 +28,7 @@ class DiaryDetailPresenterTest {
     lateinit var mWeatherManager: WeatherManager
 
     @Captor
-    lateinit var mGetDiaryCallbackCaptor: ArgumentCaptor<DiariesDataSource.GetDiaryCallback>
+    lateinit var mGetDiaryCallbackCaptor: ArgumentCaptor<out DiariesDataSource.GetDiaryCallback>
 
     lateinit var mPresenter: DiaryDetailPresenter
 
@@ -45,26 +47,25 @@ class DiaryDetailPresenterTest {
     @Test
     fun testStart_new() {
         Mockito.`when`(mLocationManager.getLastLocation(any())).thenAnswer {
-            mWeatherManager.getCurrentWeather(Matchers.anyDouble(),
-                    Matchers.anyDouble(), any())
+            mLocationManager.getCurrentAddress(any())
         }
         mPresenter.start()
 
 //        verify(mWeatherManager).getCurrentWeather(Matchers.anyDouble(),
 //                Matchers.anyDouble(), any())
-        verify(mLocationManager).getCurrentAddress(any())
+        verify(mLocationManager, atLeastOnce()).getCurrentAddress(any())
     }
 
     @Test
     fun testStart_view() {
-        mPresenter.setDiaryId(Matchers.anyLong())
+        mPresenter.setDiaryId(23L)
         mPresenter.start()
-
-        verify(mDiaryReposity).getDiary(Matchers.anyLong(), mGetDiaryCallbackCaptor.capture())
-        mGetDiaryCallbackCaptor.value.onDiaryLoaded(any())
+        val idArg = ArgumentCaptor.forClass(Long::class.java)
+        verify(mDiaryReposity).getDiary(idArg.capture(), any())
+        assertEquals(idArg.value, 23L)
 
 //        verify(mView).showWeather(Matchers.anyString(),
 //                Matchers.anyString())
-        verify(mView).showLocation(Matchers.anyString())
+//        verify(mView).showLocation(Matchers.anyString())
     }
 }
