@@ -43,8 +43,8 @@ constructor(
         private val mWeatherManager: WeatherManager) : DiaryDetailContract.Presenter {
 
     private var mDiaryId: Long = INVALID_DIARY_ID
-    private var currentDiaryContent: DiaryContent = EMPTY_CONTENT
-    private var currentDairyMeta = EMPTY_META
+    private var currentDiaryContent = DiaryContent("", "", -1, null, null)
+    private var currentDairyMeta = Meta(-1, -1, false)
 
     @Inject
     lateinit var mReporter: Reporter

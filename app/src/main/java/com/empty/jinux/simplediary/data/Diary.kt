@@ -20,8 +20,6 @@ import com.empty.jinux.simplediary.location.Location
 import com.empty.jinux.simplediary.util.getFirstLine
 
 const val INVALID_DIARY_ID = -1L
-val EMPTY_CONTENT = DiaryContent("", "", -1, null, null)
-val EMPTY_META = Meta(-1, -1, false)
 
 data class Diary
 constructor(
@@ -47,6 +45,7 @@ data class DiaryContent(var title: String,
             return it.getFirstLine()
         }
     }
+
 }
 
 data class Meta(val createdTime: Long,
