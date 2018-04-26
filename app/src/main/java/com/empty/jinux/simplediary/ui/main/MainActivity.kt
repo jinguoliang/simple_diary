@@ -19,7 +19,9 @@ package com.empty.jinux.simplediary.ui.main
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
+import android.support.v4.widget.DrawerLayout
 import android.view.MenuItem
+import android.view.View
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.intent.helpTranslate
 import com.empty.jinux.simplediary.intent.rateApp
@@ -73,10 +75,8 @@ class MainActivity : DaggerAppCompatActivity() {
 
     private fun setupNavigationDrawer() {
         drawer_layout.setStatusBarBackground(R.color.colorPrimaryDark)
-        val navigationView = nav_view
-        if (navigationView != null) {
-            setupDrawerContent(navigationView)
-        }
+        drawer_layout.setMDrawerListener()
+        nav_view.setMItemClickListener()
     }
 
     private fun setupToolbar() {
@@ -96,8 +96,37 @@ class MainActivity : DaggerAppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun setupDrawerContent(navigationView: NavigationView) {
-        navigationView.setNavigationItemSelectedListener { menuItem ->
+    private fun showDiaryStatistics() {
+        val fragment = StatisticsFragment.newInstance()
+        mStatisticFragment = fragment
+        ActivityUtils.replaceFragment(
+                supportFragmentManager, mStatisticFragment, R.id.contentFrame)
+    }
+
+    private fun showDiaryListFragment() {
+        ActivityUtils.replaceFragment(
+                supportFragmentManager, mDiaryListFragment, R.id.contentFrame)
+    }
+
+    private fun DrawerLayout.setMDrawerListener() {
+        addDrawerListener(object : DrawerLayout.DrawerListener {
+            override fun onDrawerStateChanged(newState: Int) {
+            }
+
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+            }
+
+            override fun onDrawerClosed(drawerView: View) {
+            }
+
+            override fun onDrawerOpened(drawerView: View) {
+            }
+
+        })
+    }
+
+    private fun NavigationView.setMItemClickListener() {
+        setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.list_navigation_menu_item -> {
                     showDiaryListFragment()
@@ -108,21 +137,21 @@ class MainActivity : DaggerAppCompatActivity() {
                     mReporter.reportClick("main_menu_statistics")
                 }
                 R.id.rate_navigation_menu_item -> {
-                    startActivity(rateApp(this))
+                    startActivity(rateApp(context))
                     mReporter.reportClick("main_menu_rate")
                 }
                 R.id.share_navigation_menu_item -> {
-                    startActivity(shareApp(this))
+                    startActivity(shareApp(context))
                     mReporter.reportClick("main_menu_rate")
 
                 }
                 R.id.translate_navigation_menu_item -> {
-                    startActivity(helpTranslate(this))
+                    startActivity(helpTranslate(context))
                     mReporter.reportClick("main_menu_translate")
 
                 }
                 R.id.feedback_navigation_menu_item -> {
-                    startActivity(sendFeedback(this))
+                    startActivity(sendFeedback(context))
                     mReporter.reportClick("main_menu_feedback")
 
                 }
@@ -143,19 +172,11 @@ class MainActivity : DaggerAppCompatActivity() {
         }
     }
 
-    private fun showDiaryStatistics() {
-        val fragment = StatisticsFragment.newInstance()
-        mStatisticFragment = fragment
-        ActivityUtils.replaceFragment(
-                supportFragmentManager, mStatisticFragment, R.id.contentFrame)
-    }
-
-    private fun showDiaryListFragment() {
-        ActivityUtils.replaceFragment(
-                supportFragmentManager, mDiaryListFragment, R.id.contentFrame)
-    }
-
     companion object {
         const val REQUEST_ADD_DIARY = 1
     }
 }
+
+
+
+
