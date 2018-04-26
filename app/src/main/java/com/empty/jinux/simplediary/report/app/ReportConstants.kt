@@ -1,8 +1,10 @@
 package com.empty.jinux.simplediary.report.app
 
-val EVENT_CLICK = "click"
-val EVENT_DRAWER_CLOSED = "drawer closed"
-val EVENT_DRAWER_OPENED = "drawer opened"
+const val EVENT_CLICK = "click"
+const val EVENT_COUNT = "count"
+const val EVENT_DRAWER_CLOSED = "drawer closed"
+const val EVENT_DRAWER_OPENED = "drawer opened"
 
-val ARG_WHERE = "where"
-val ARG_SELECTED_VALUE = "selected_value"
+const val ARG_WHERE = "where"
+const val ARG_WHAT = "what"
+const val ARG_VALUE = "value"

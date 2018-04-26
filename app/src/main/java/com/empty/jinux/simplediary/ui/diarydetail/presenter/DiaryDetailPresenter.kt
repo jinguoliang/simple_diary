@@ -22,9 +22,11 @@ import com.empty.jinux.simplediary.data.*
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
 import com.empty.jinux.simplediary.di.Repository
 import com.empty.jinux.simplediary.location.LocationManager
+import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.util.formatDateWithWeekday
 import com.empty.jinux.simplediary.util.formatDisplayTime
+import com.empty.jinux.simplediary.util.wordsCount
 import com.empty.jinux.simplediary.weather.WeatherManager
 import javax.inject.Inject
 
@@ -43,6 +45,9 @@ constructor(
     private var mDiaryId: Long = INVALID_DIARY_ID
     private var currentDiaryContent: DiaryContent = EMPTY_CONTENT
     private var currentDairyMeta = EMPTY_META
+
+    @Inject
+    lateinit var mReporter: Reporter
 
     private val isNewDiary: Boolean
         get() = mDiaryId == INVALID_DIARY_ID
@@ -96,6 +101,8 @@ constructor(
             deleteDiaryFromRepoIfNecessary()
             return
         }
+
+        mReporter.reportCount("words", currentDiaryContent.content.wordsCount())
 
         if (isNewDiary) {
             val createdTime = System.currentTimeMillis()

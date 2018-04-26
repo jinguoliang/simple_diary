@@ -17,7 +17,7 @@ interface Reporter {
         reportEvent(EVENT_CLICK, Bundle().apply {
             putString(ARG_WHERE, where)
             if (value != null) {
-                putString(ARG_SELECTED_VALUE, value)
+                putString(ARG_VALUE, value)
             }
         })
     }
@@ -28,5 +28,12 @@ interface Reporter {
 
     fun reportDrawerOpened() {
         reportEvent(EVENT_DRAWER_OPENED)
+    }
+
+    fun reportCount(what: String, count: Int) {
+        reportEvent(EVENT_COUNT, Bundle().apply {
+            putString(ARG_WHAT, what)
+            putInt(ARG_VALUE, count)
+        })
     }
 }

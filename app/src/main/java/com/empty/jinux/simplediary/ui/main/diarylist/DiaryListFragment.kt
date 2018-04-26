@@ -141,6 +141,8 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
 
         diaryRecyclerView.visibility = View.VISIBLE
         noDiaries.visibility = View.GONE
+
+        mReporter.reportCount("diaries all", diaries.size)
     }
 
     override fun showNoDiaries() {
