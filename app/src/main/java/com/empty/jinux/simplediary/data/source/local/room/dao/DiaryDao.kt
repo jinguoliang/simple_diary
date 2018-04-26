@@ -1,10 +1,7 @@
 package com.empty.jinux.simplediary.data.source.local.room.dao
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Delete
-import android.arch.persistence.room.Insert
+import android.arch.persistence.room.*
 import android.arch.persistence.room.OnConflictStrategy.REPLACE
-import android.arch.persistence.room.Query
 import com.empty.jinux.simplediary.data.source.local.room.COLUMN_ID
 import com.empty.jinux.simplediary.data.source.local.room.TABLE_DIARY
 import com.empty.jinux.simplediary.data.source.local.room.entity.Diary
@@ -30,6 +27,6 @@ interface DiaryDao {
     @Query("DELETE FROM $TABLE_DIARY WHERE $COLUMN_ID LIKE :id")
     fun deleteById(id: Long)
 
-    @Query("DELETE FROM $TABLE_DIARY")
-    fun deleteAll()
+    @Update()
+    fun updateState(diary: Diary)
 }
