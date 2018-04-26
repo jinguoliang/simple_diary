@@ -2,9 +2,7 @@ package com.empty.jinux.simplediary.report
 
 import android.os.Bundle
 import android.support.annotation.Size
-import com.empty.jinux.simplediary.report.app.ARG_SELECTED_VALUE
-import com.empty.jinux.simplediary.report.app.ARG_WHERE
-import com.empty.jinux.simplediary.report.app.EVENT_CLICK
+import com.empty.jinux.simplediary.report.app.*
 
 interface Reporter {
     fun reportEvent(@Size(min = 1L, max = 40L) event: String, args: Bundle = Bundle.EMPTY)
@@ -22,5 +20,13 @@ interface Reporter {
                 putString(ARG_SELECTED_VALUE, value)
             }
         })
+    }
+
+    fun reportDrawerClosed() {
+        reportEvent(EVENT_DRAWER_CLOSED)
+    }
+
+    fun reportDrawerOpened() {
+        reportEvent(EVENT_DRAWER_OPENED)
     }
 }

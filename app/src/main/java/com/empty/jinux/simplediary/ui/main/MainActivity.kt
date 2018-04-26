@@ -117,9 +117,11 @@ class MainActivity : DaggerAppCompatActivity() {
             }
 
             override fun onDrawerClosed(drawerView: View) {
+                mReporter.reportDrawerClosed()
             }
 
             override fun onDrawerOpened(drawerView: View) {
+                mReporter.reportDrawerOpened()
             }
 
         })
