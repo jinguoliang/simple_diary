@@ -27,6 +27,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
+import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivity
 import com.empty.jinux.simplediary.ui.main.MainActivity
 import com.empty.jinux.simplediary.ui.main.diarylist.adapter.DiariesRecyclerViewWithCategoriesAdapter
@@ -44,6 +45,9 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
     @Inject
     internal lateinit var mPresenter: DiaryListContract.Presenter
 
+    @Inject
+    internal lateinit var mReporter: Reporter
+
     private lateinit var mDiariesAdapter: DiariesRecyclerViewWithCategoriesAdapter
 
     /**
@@ -52,10 +56,12 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
     private var mItemListener: DiariesRecyclerViewWithCategoriesAdapter.DiaryItemListener = object : DiariesRecyclerViewWithCategoriesAdapter.DiaryItemListener {
         override fun onClick(diary: Diary) {
             mPresenter.openDiaryDetails(diary)
+            mReporter.reportClick("open diary")
         }
 
         override fun onDeleteClick(diary: Diary) {
             mPresenter.deleteDiary(diary)
+            mReporter.reportClick("delete diary")
         }
     }
 
@@ -100,7 +106,10 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
         activity?.findViewById<FloatingActionButton>(R.id.fab_add_diary)?.apply {
             visibility = View.VISIBLE
             setImageResource(R.drawable.ic_add)
-            setOnClickListener { mPresenter.addNewDiary() }
+            setOnClickListener {
+                mPresenter.addNewDiary()
+                mReporter.reportClick("add diary")
+            }
         }
 
         activity?.let { activity ->
