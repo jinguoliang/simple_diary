@@ -106,26 +106,26 @@ class SwipeView(v: View) : HorizontalScrollView(v.context) {
         smoothScrollTo(0, scrollY)
     }
 
-    fun smoothOpen() {
-        smoothScrollTo(swipeMenuWidth, scrollY)
+    fun open() {
+        scrollX = swipeMenuWidth
     }
 
     fun close() {
         scrollX = 0
     }
 
-    override fun onTouchEvent(ev: MotionEvent): Boolean {
-        if (ev.action == MotionEvent.ACTION_UP) {
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (ev?.action == MotionEvent.ACTION_UP) {
             toggle()
         }
-        return super.onTouchEvent(ev)
+        return super.dispatchTouchEvent(ev)
     }
 
     private fun toggle() {
         if (scrollX < swipeMenuWidth / 2) {
-            smoothClose()
+            close()
         } else {
-            smoothOpen()
+            open()
         }
     }
 
