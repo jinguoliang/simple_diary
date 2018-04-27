@@ -172,6 +172,7 @@ constructor(
     override fun refreshLocation() {
         mLocationManager.getLastLocation { location ->
             mLocationManager.getCurrentAddress { address ->
+                if (!mDiaryDetailView.isActive) return@getCurrentAddress
                 currentDiaryContent.locationInfo = LocationInfo(location, address)
                 mDiaryDetailView.showLocation(address)
             }
@@ -182,6 +183,7 @@ constructor(
         mLocationManager.getLastLocation {
             mWeatherManager.getCurrentWeather(it.latitude, it.longitude) {
                 logi("current weatherInfo = $it")
+                if (!mDiaryDetailView.isActive) return@getCurrentWeather
                 currentDiaryContent.weatherInfo = WeatherInfo(it.description, it.icon)
                 mDiaryDetailView.showWeather(it.description, it.icon)
             }
