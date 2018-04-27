@@ -9,6 +9,8 @@
         android:layout_width="@dimen/swipe_item_menu_item_width"
         android:layout_height="match_parent"
         android:text="@string/delete"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
         android:gravity="center"
         android:background="@android:color/holo_red_light"/>
 </LinearLayout>
