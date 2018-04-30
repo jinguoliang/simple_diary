@@ -22,6 +22,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.empty.jinux.simplediary.R
+import com.empty.jinux.simplediary.STREAK_MIN_WORDS_COUNTS
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.ui.main.statistics.view.punchcard.PunchCheckItem
 import com.empty.jinux.simplediary.ui.main.statistics.view.punchcard.PunchCheckState
@@ -90,6 +91,7 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View {
             val item = days.mapWithState()
             uiThread {
                 punchCard.setWordCountOfEveryday(item)
+                punchCard.setTitle(resources.getString(R.string.streak_card_title_fmt, STREAK_MIN_WORDS_COUNTS))
             }
         }
     }
@@ -133,7 +135,6 @@ private fun Map<Calendar, List<Diary>>.mapWithState(): List<PunchCheckItem> {
 }
 
 private fun Map<Calendar, List<Diary>>.checkSatisfyForPunch(day: Calendar): Boolean {
-    val minSatisfyForPunch = 25
     val wordsCount = get(day)?.fold(0) { s, c -> s + c.diaryContent.content.wordsCount() } ?: 0
-    return wordsCount > minSatisfyForPunch
+    return wordsCount > STREAK_MIN_WORDS_COUNTS
 }

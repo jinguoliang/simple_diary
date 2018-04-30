@@ -16,11 +16,12 @@
         <View
             android:layout_width="20dp"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"/>
+            android:background="@android:color/white"/>
 
         <FrameLayout
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:padding="2dp"
             android:background="@drawable/ic_circle">
             <View
                 android:id="@+id/stateChecked"
@@ -46,6 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:layout_marginTop="3dp"
+        android:textColor="@android:color/white"
         tools:text="周一"/>
 
 </LinearLayout>

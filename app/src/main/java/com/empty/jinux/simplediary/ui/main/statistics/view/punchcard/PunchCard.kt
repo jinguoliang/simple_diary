@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import com.empty.jinux.simplediary.R
+import com.empty.jinux.simplediary.STREAK_MIN_WORDS_COUNTS
 import kotlinx.android.synthetic.main.layout_punchcard.view.*
 import me.drakeet.multitype.MultiTypeAdapter
 
@@ -47,6 +48,10 @@ class PunchCard @JvmOverloads constructor(context: Context, attrs: AttributeSet?
         LayoutInflater.from(context).inflate(R.layout.layout_punchcard, this)
         punchRecycleView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         punchRecycleView.adapter = initAdapter()
+    }
+
+    fun setTitle(title: String) {
+        streakCardTitle.text = title
     }
 
 }
