@@ -60,6 +60,15 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View {
     }
 
     override fun setProgressIndicator(active: Boolean) {
+        if (active) {
+            loadingContainer.visibility = View.VISIBLE
+            statistics.visibility = View.GONE
+            punchCard.visibility = View.GONE
+        } else {
+            loadingContainer.visibility = View.GONE
+            statistics.visibility = View.VISIBLE
+            punchCard.visibility = View.VISIBLE
+        }
     }
 
     override fun showStatistics(diaries: List<Diary>) {
