@@ -28,6 +28,8 @@ import com.empty.jinux.simplediary.util.formatDateWithWeekday
 import com.empty.jinux.simplediary.util.formatDisplayTime
 import com.empty.jinux.simplediary.util.wordsCount
 import com.empty.jinux.simplediary.weather.WeatherManager
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import javax.inject.Inject
 
 /**
@@ -170,22 +172,31 @@ constructor(
     }
 
     override fun refreshLocation() {
-        mLocationManager.getLastLocation { location ->
-            mLocationManager.getCurrentAddress { address ->
-                if (!mDiaryDetailView.isActive) return@getCurrentAddress
-                currentDiaryContent.locationInfo = LocationInfo(location, address)
-                mDiaryDetailView.showLocation(address)
+        doAsync {
+            mLocationManager.getLastLocation { location ->
+                mLocationManager.getCurrentAddress { address ->
+                    if (!mDiaryDetailView.isActive) return@getCurrentAddress
+                    currentDiaryContent.locationInfo = LocationInfo(location, address)
+                    uiThread {
+                        mDiaryDetailView.showLocation(address)
+                    }
+                }
             }
         }
+
     }
 
     override fun refreshWeather() {
-        mLocationManager.getLastLocation {
-            mWeatherManager.getCurrentWeather(it.latitude, it.longitude) {
-                logi("current weatherInfo = $it")
-                if (!mDiaryDetailView.isActive) return@getCurrentWeather
-                currentDiaryContent.weatherInfo = WeatherInfo(it.description, it.icon)
-                mDiaryDetailView.showWeather(it.description, it.icon)
+        doAsync {
+            mLocationManager.getLastLocation {
+                mWeatherManager.getCurrentWeather(it.latitude, it.longitude) { weather ->
+                    logi("current weatherInfo = $weather")
+                    if (!mDiaryDetailView.isActive) return@getCurrentWeather
+                    currentDiaryContent.weatherInfo = WeatherInfo(weather.description, weather.icon)
+                    uiThread {
+                        mDiaryDetailView.showWeather(weather.description, weather.icon)
+                    }
+                }
             }
         }
     }
