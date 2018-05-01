@@ -44,10 +44,12 @@ import javax.inject.Inject
  */
 class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
-    @Inject internal
+    @Inject
+    internal
     lateinit var mPresenter: DiaryDetailPresenter
 
-    @Inject internal
+    @Inject
+    internal
     lateinit var mReporter: Reporter
 
     override fun onAttach(context: Context?) {
@@ -114,7 +116,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
                 R.layout.spinner_emotion_item,
                 R.layout.drop_down_emotion_item,
                 MyWeatherIcons.getAllMyIcon())
-        toolWeather.onItemSelectedListener = object :AdapterView.OnItemSelectedListener {
+        toolWeather.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 mReporter.reportClick("detail_tool_weather", "no")
             }
@@ -130,7 +132,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
                 R.layout.spinner_emotion_item,
                 R.layout.drop_down_emotion_item,
                 MyEmotionIcons.getAllMyIcon())
-        toolEmotion.onItemSelectedListener = object :AdapterView.OnItemSelectedListener {
+        toolEmotion.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 mReporter.reportClick("detail_tool_emotion", "no")
             }
