@@ -23,15 +23,15 @@
 
     <Spinner
         android:id="@+id/toolWeather"
-        android:layout_width="@dimen/diary_detail_edit_tool_item_size"
-        android:layout_height="@dimen/diary_detail_edit_tool_item_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/diary_detail_edit_tool_item_space"
         android:background="@null" />
 
     <Spinner
         android:id="@+id/toolEmotion"
-        android:layout_width="@dimen/diary_detail_edit_tool_item_size"
-        android:layout_height="@dimen/diary_detail_edit_tool_item_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/diary_detail_edit_tool_item_space"
         android:background="@null" />
 
