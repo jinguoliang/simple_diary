@@ -55,19 +55,20 @@ fun Long.dayTime(): Long {
     return calendar.timeInMillis
 }
 
-fun Long.formatToYearWeek(): String {
-    val format = SimpleDateFormat("w'th week' 'of' yyyy ", Locale.getDefault())
-    return format.format(this)
+fun Long.formatToWeekOfYear(): String {
+    return formatToTimeString("'Week' w")
+}
+
+fun Long.formatToTimeString(format: String): String {
+    return SimpleDateFormat(format, Locale.getDefault()).format(this)
 }
 
 fun Long.formatToWeekday(): String {
-    val formater = SimpleDateFormat("E", Locale.getDefault())
-    return formater.format(this)
+    return formatToTimeString("E")
 }
 
 fun Long.formatToTime(): String {
-    val formater = SimpleDateFormat("H:mm", Locale.getDefault())
-    return formater.format(this)
+    return formatToTimeString("H:mm")
 }
 
 fun today(): Calendar {
