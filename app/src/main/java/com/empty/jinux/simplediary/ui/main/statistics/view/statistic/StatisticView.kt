@@ -19,6 +19,7 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import kotlinx.android.synthetic.main.layout_statistic_chart.view.*
+import org.jetbrains.anko.dimen
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.util.*
@@ -87,16 +88,17 @@ constructor(context: Context,
             }
 
             val dataSet = BarDataSet(entries, "").apply {
-                color = Color.RED
+                color = ContextCompat.getColor(context, R.color.colorAccent)
                 form = Legend.LegendForm.NONE
-                barBorderWidth = 3f
+                barBorderWidth = 1f
+                barBorderColor = ContextCompat.getColor(context, android.R.color.white)
                 isHighlightEnabled = false
             }
 
 
             val data = BarData(dataSet).apply {
                 setDrawValues(true)
-                setValueTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
+                setValueTextColor(ContextCompat.getColor(context, android.R.color.white))
                 setValueTextSize(15f)
                 setValueFormatter { value, entry, dataSetIndex, viewPortHandler ->
                     value.toLong().toString()
@@ -124,15 +126,21 @@ constructor(context: Context,
         statisticChat.setDrawGridBackground(false)
         statisticChat.setDrawBorders(false)
 
+        val axisColor = Color.WHITE
+        val axisWidth = 1f
+
         statisticChat.xAxis.apply {
             isEnabled = true
             position = XAxis.XAxisPosition.BOTTOM
+            textColor = ContextCompat.getColor(context, android.R.color.white)
+            textSize = 12f
             setDrawGridLines(false)
             setDrawLabels(true)
-            axisLineColor = Color.BLACK
+            axisLineColor = axisColor
             setValueFormatter { value, axis ->
                 value.toInt().toString()
             }
+            axisLineWidth = axisWidth
         }
 
         statisticChat.axisRight.isEnabled = false
@@ -140,9 +148,11 @@ constructor(context: Context,
         statisticChat.axisLeft.apply {
             setDrawGridLines(false)
             setDrawLabels(false)
-            axisLineColor = Color.BLACK
-
+            axisLineColor = axisColor
+            axisLineWidth = axisWidth
         }
+
+        statisticChat.setFitBars(false)
 
         statisticChat.description.isEnabled = false
 
