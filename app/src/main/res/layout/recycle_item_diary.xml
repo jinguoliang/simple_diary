@@ -24,8 +24,7 @@
     <FrameLayout
         android:id="@+id/weekBlock"
         android:layout_width="@dimen/swipe_item_menu_item_width"
-        android:layout_height="match_parent"
-        android:background="@color/colorAccent">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -38,14 +37,25 @@
                 android:id="@+id/weekName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
-                android:textSize="20dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textSize="20sp"
                 tools:text="周二" />
-
-
         </LinearLayout>
-
     </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/splitor"
+        android:layout_width="14dp"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@id/weekBlock"
+        >
+        <View
+            android:layout_width="1.8dp"
+            android:layout_height="match_parent"
+            android:background="@color/time_line_color"
+            android:layout_gravity="center_horizontal"/>
+    </FrameLayout>
+
 
     <TextView
         android:id="@+id/title"
@@ -53,7 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_toEndOf="@+id/weekBlock"
+        android:layout_toEndOf="@+id/splitor"
         android:lines="1"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         tools:text="test title, it very long long long long long long " />

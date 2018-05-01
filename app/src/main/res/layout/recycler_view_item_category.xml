@@ -1,8 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
-    android:background="#b5d2e7"
-    android:gravity="center_vertical"
-    android:paddingStart="6dp"
-    android:id="@+id/label"/>
+    android:layout_height="wrap_content">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="7dp"
+        android:background="@color/time_line_color">
+
+        <TextView
+            android:id="@+id/weekth"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingStart="6dp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            tools:text="hahhaa" />
+
+        <TextView
+            android:id="@+id/year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="6dp"
+            android:text="2018"
+            android:textColor="@android:color/black"
+            android:textSize="13sp" />
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="14dp"
+        android:layout_height="8dp"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="@dimen/swipe_item_menu_item_width"
+        android:background="@drawable/ic_simple_diary_icon_time_line"
+        android:layout_marginBottom="-1dp"/>
+</FrameLayout>

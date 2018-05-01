@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#263238</color>
     <color name="colorAccent">#D50000</color>
     <color name="icon_color_primary">#bbffffff</color>
+    <color name="time_line_color">#6a96ac</color>
 
     <drawable name="touchFeedback">#CFD8DC</drawable>
 </resources>

@@ -6,7 +6,9 @@ import android.view.ViewGroup
 import com.droidcba.kedditbysteps.commons.adapter.ViewType
 import com.droidcba.kedditbysteps.commons.adapter.ViewTypeDelegateAdapter
 import com.empty.jinux.simplediary.R
-import com.empty.jinux.simplediary.util.formatToYearWeek
+import com.empty.jinux.simplediary.util.formatToWeekOfYear
+import com.empty.jinux.simplediary.util.toCalendar
+import java.util.*
 
 class CategoryDelegateAdapter : ViewTypeDelegateAdapter {
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
@@ -16,6 +18,7 @@ class CategoryDelegateAdapter : ViewTypeDelegateAdapter {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: ViewType) {
         holder as CategoryViewHolder
         item as CategoryItem
-        holder.bind(item.time.formatToYearWeek())
+        holder.bind(item.time.formatToWeekOfYear(),
+                "" + item.time.toCalendar().get(Calendar.YEAR))
     }
 }
