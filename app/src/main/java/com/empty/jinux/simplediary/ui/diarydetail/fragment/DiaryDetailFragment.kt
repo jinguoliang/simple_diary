@@ -240,7 +240,12 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     override fun showLocation(city: String) {
-        Snackbar.make(view!!, city, Snackbar.LENGTH_LONG).show()
+        Snackbar.make(view!!, city, Snackbar.LENGTH_LONG).apply {
+            setAction(R.string.ok) {
+                dismiss()
+            }
+            show()
+        }
     }
 
     override fun showWeather(weather: String, icon: String) {
