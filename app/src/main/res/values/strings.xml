@@ -25,4 +25,5 @@
     <string name="current_punch_fmt">Current Streak: %1$d</string>
     <string name="statastics_for">Statastics For</string>
     <string name="share_app_content_fmt">I like the diary book app so much, share it to you.\n %1$s</string>
+    <string name="slash">/</string>
 </resources>
