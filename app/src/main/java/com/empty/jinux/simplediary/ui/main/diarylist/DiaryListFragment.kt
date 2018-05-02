@@ -100,7 +100,10 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
         diaryRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         diaryRecyclerView.adapter = mDiariesAdapter
 
-        noDiaries.setOnClickListener { showAddDiary() }
+        noDiaries.setOnClickListener {
+            mPresenter.addNewDiary()
+            mReporter.reportClick("no diary icon")
+        }
 
         // Set up floating action button
         activity?.findViewById<FloatingActionButton>(R.id.fab_add_diary)?.apply {
