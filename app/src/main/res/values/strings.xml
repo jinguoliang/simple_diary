@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Uncommon Diary</string>
+    <string name="app_name">Write Diary</string>
     <string name="loading_diaries_error">Error while loading diaries</string>
     <string name="menu_delete_diary">Delete diary</string>
     <string name="navigation_view_header_title">Diaries</string>
