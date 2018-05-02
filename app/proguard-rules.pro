@@ -28,3 +28,8 @@
 -keepclassmembers class com.yourcompany.models.** {
   *;
 }
+
+-dontwarn com.squareup.okhttp.**
+-dontwarn com.google.errorprone.**
+-dontwarn com.bumptech.glide.**
+-dontwarn org.codehaus.mojo.animal_sniffer.**
