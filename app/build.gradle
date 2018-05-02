@@ -10,6 +10,14 @@ apply plugin: 'io.fabric'
 
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'key'
+            keyPassword '123123'
+            storeFile file('/home/jinux/my_keystore.jks')
+            storePassword '123123'
+        }
+    }
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.empty.jinux.simplediary"
@@ -34,6 +42,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
 }
