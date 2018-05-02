@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">非凡日记</string>
+    <string name="loading_diaries_error">加载日记时出错</string>
+    <string name="menu_delete_diary">删除日记</string>
+    <string name="navigation_view_header_title">日记</string>
+    <string name="successfully_saved_diary_message">日记保存成功</string>
+    <string name="list_title">日记列表</string>
+    <string name="statistics_title">统计</string>
+    <string name="statistics_error">加载统计出错</string>
+    <string name="loading">加载中</string>
+    <string name="no_diaries_all">你没有日记!</string>
+    <string name="untitled">未命名</string>
+    <string name="delete">删除</string>
+    <string name="ok">好的</string>
+    <string name="cancel">取消</string>
+    <string name="streak_card_title_fmt">每天 %1$d 字</string>
+    <string name="longest_punch_fmt">最长连击: %1$d</string>
+    <string name="current_punch_fmt">当前连击: %1$d</string>
+    <string name="statastics_for">统计: </string>
     <string name="about_app_intro_hint">介绍</string>
     <string name="feedback_title">反馈</string>
     <string name="rate_title">评价</string>
@@ -8,4 +25,5 @@
     <string name="translate_title">帮助翻译</string>
     <string name="about_title">关于</string>
     <string name="about_intro">很高兴遇到你！\n\n这是一个日记软件，非常简单，它会与你一同成长，但会一直保持简洁。</string>
+    <string name="share_app_content_fmt">这个日记软件真不错, 来试试吧。\n %1$s</string>
 </resources>
