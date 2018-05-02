@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/diary_detail_edit_tool_height"
     android:background="@color/colorPrimary"
-    android:gravity="center_vertical"
+    android:gravity="top"
     android:orientation="horizontal">
 
     <View
@@ -12,27 +12,32 @@
         android:layout_width="@dimen/diary_detail_edit_tool_item_size"
         android:layout_height="@dimen/diary_detail_edit_tool_item_size"
         android:layout_marginStart="@dimen/diary_detail_edit_tool_item_space"
-        android:background="@drawable/ic_keyboard" />
+        android:background="@drawable/ic_keyboard"
+        android:layout_marginTop="10dp"/>
 
     <View
         android:id="@+id/toolLocation"
         android:layout_width="@dimen/diary_detail_edit_tool_item_size"
         android:layout_height="@dimen/diary_detail_edit_tool_item_size"
         android:layout_marginStart="@dimen/diary_detail_edit_tool_item_space"
-        android:background="@drawable/ic_location" />
+        android:background="@drawable/ic_location"
+
+        android:layout_marginTop="10dp"/>
 
     <Spinner
         android:id="@+id/toolWeather"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/diary_detail_edit_tool_item_space"
-        android:background="@null" />
+        android:background="@null"
+        android:layout_marginTop="5dp"/>
 
     <Spinner
         android:id="@+id/toolEmotion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/diary_detail_edit_tool_item_space"
+        android:layout_marginTop="5dp"
         android:background="@null" />
 
 
