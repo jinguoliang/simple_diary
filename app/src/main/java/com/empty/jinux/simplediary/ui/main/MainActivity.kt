@@ -39,10 +39,6 @@ import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity() {
 
-    private lateinit var mDiaryListFragment: DiaryListFragment
-
-    private lateinit var mStatisticFragment: StatisticsFragment
-
     @Inject
     lateinit var mReporter: Reporter
 
@@ -51,26 +47,7 @@ class MainActivity : DaggerAppCompatActivity() {
         setContentView(R.layout.diary_list_act)
         setupToolbar()
         setupNavigationDrawer()
-        setupFragment()
-    }
-
-    private fun setupFragment() {
-        val fragment = supportFragmentManager.findFragmentById(R.id.contentFrame)
-        when (fragment) {
-            is DiaryListFragment -> {
-                mDiaryListFragment = fragment
-                showDiaryListFragment()
-            }
-            is StatisticsFragment -> {
-                mStatisticFragment = fragment
-                showDiaryStatistics()
-            }
-            else -> {
-                mDiaryListFragment = DiaryListFragment.newInstance()
-                ActivityUtils.addFragmentToActivity(
-                        supportFragmentManager, mDiaryListFragment, R.id.contentFrame)
-            }
-        }
+        showDiaryListFragment()
     }
 
     private fun setupNavigationDrawer() {
@@ -97,15 +74,25 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     private fun showDiaryStatistics() {
-        val fragment = StatisticsFragment.newInstance()
-        mStatisticFragment = fragment
-        ActivityUtils.replaceFragment(
-                supportFragmentManager, mStatisticFragment, R.id.contentFrame)
+        val fragment = supportFragmentManager.findFragmentById(R.id.contentFrame) as? StatisticsFragment
+        if (fragment == null) {
+            ActivityUtils.replaceFragment(
+                    supportFragmentManager, StatisticsFragment.newInstance(), R.id.contentFrame)
+        } else {
+            ActivityUtils.replaceFragment(
+                    supportFragmentManager, fragment, R.id.contentFrame)
+        }
     }
 
     private fun showDiaryListFragment() {
-        ActivityUtils.replaceFragment(
-                supportFragmentManager, mDiaryListFragment, R.id.contentFrame)
+        val fragment = supportFragmentManager.findFragmentById(R.id.contentFrame) as? DiaryListFragment
+        if (fragment == null) {
+            ActivityUtils.replaceFragment(
+                    supportFragmentManager, DiaryListFragment.newInstance(), R.id.contentFrame)
+        } else {
+            ActivityUtils.replaceFragment(
+                    supportFragmentManager, fragment, R.id.contentFrame)
+        }
     }
 
     private fun DrawerLayout.setMDrawerListener() {
