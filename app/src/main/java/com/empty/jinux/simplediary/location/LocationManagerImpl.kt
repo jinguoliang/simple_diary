@@ -78,7 +78,7 @@ open class LocationManagerImpl constructor(val context: Activity) : LocationMana
 
             if (addresses.isNotEmpty()) {
                 val address = addresses[0]
-                val addressStr = "${address.getAddressLine(0)}${address.getAddressLine(1)}${address.featureName}"
+                val addressStr = "${address.getAddressLine(0)}${address.getAddressLine(1)?:" "}${address.featureName}"
                 callback(addressStr)
             }
         }
