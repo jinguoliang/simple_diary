@@ -8,4 +8,5 @@
     android:singleLine="true"
     android:textSize="18sp"
     android:padding="5dp"
-    tools:text="hello" />
+    tools:text="hello"
+    android:gravity="end"/>
