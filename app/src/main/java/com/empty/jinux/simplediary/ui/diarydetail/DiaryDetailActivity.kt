@@ -43,13 +43,14 @@ class DiaryDetailActivity : DaggerAppCompatActivity() {
         // Get the requested task id
         val taskId = intent.getLongExtra(EXTRA_DIARY_ID, INVALID_DIARY_ID)
 
-        var diaryDetailFragment = supportFragmentManager
-                .findFragmentById(R.id.contentFrame) as DiaryDetailFragment?
+        val diaryDetailFragment = supportFragmentManager
+                .findFragmentById(R.id.contentFrame) as? DiaryDetailFragment
 
         if (diaryDetailFragment == null) {
-            diaryDetailFragment = DiaryDetailFragment.newInstance(taskId)
-
             ActivityUtils.addFragmentToActivity(supportFragmentManager,
+                    DiaryDetailFragment.newInstance(taskId), R.id.contentFrame)
+        } else {
+            ActivityUtils.replaceFragment(supportFragmentManager,
                     diaryDetailFragment, R.id.contentFrame)
         }
     }
