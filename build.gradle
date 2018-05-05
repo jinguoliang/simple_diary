@@ -25,6 +25,7 @@ buildscript {
         guava_version = '18.0'
         support_version = '27.1.1'
         gms_version='15.0.0' //
+        firebase_version='15.0.0' //
 
     }
 }
