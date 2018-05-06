@@ -17,7 +17,7 @@ fun formatTime(t: Long): String {
 }
 
 fun formatDateWithWeekday(t: Long): String {
-    val formater = SimpleDateFormat("M月d日 E", Locale.getDefault())
+    val formater = SimpleDateFormat("y/M/d EEEE", Locale.getDefault())
     return formater.format(t)
 }
 
