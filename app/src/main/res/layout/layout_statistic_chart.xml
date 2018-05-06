@@ -57,11 +57,5 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_below="@id/title" />
-
-    <com.empty.jinux.simplediary.ui.main.statistics.view.ScoreChart
-        android:id="@+id/scoreChart"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_below="@id/statisticChat" />
 </RelativeLayout>
 

@@ -114,10 +114,6 @@ constructor(context: Context,
             uiThread {
                 statisticChat.data = data
                 statisticChat.invalidate()
-
-                val scores = mDiaries.map { Timestamp(it.diaryContent.displayTime / Timestamp.DAY_LENGTH * Timestamp.DAY_LENGTH) }
-                        .map { Score(it, Math.random() * 10) }
-                scoreChart.populateWithRandomData()
             }
         }
 
