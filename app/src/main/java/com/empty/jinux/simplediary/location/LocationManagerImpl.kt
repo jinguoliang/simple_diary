@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.location.Address
 import android.location.Geocoder
-import android.os.HandlerThread
 import android.os.Looper
+import com.empty.jinux.baselibaray.logd
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
@@ -46,7 +46,6 @@ open class LocationManagerImpl constructor(val context: Activity) : LocationMana
     }
 
 
-
     @SuppressLint("MissingPermission")
     override fun refreshLocation(callback: (suc: Boolean) -> Unit) {
         val mLocationCallback = object : LocationCallback() {
@@ -82,8 +81,20 @@ open class LocationManagerImpl constructor(val context: Activity) : LocationMana
             }
 
             if (addresses.isNotEmpty()) {
+                logd(addresses)
                 val address = addresses[0]
-                val addressStr = "${address.getAddressLine(0)}${address.getAddressLine(1)?:" "}${address.featureName}"
+                val addressStr = if (Locale.getDefault().equals(Locale.CHINA)) {
+                    (address.getAddressLine(0) ?: "") +
+                            (address.getAddressLine(1) ?: " ") +
+                            (address.getAddressLine(2) ?: "")
+
+                } else {
+
+                    address.getAddressLine(2) +
+                            (address.getAddressLine(1)?.let { ", $it" }) +
+                            (address.getAddressLine(0)?.let { ", $it" })
+
+                }
                 callback(addressStr)
             }
         }
