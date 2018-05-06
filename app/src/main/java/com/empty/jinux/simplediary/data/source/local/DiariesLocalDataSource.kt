@@ -48,7 +48,7 @@ constructor(context: Context) : DiariesDataSource {
                 mapDiaryFromRoomToDataSource(diary)
             }
             uiThread {
-                callback.onDiariesLoaded(data)
+                callback.onDiariesLoaded(data.filter { !it.meta.deleted }.sortedBy { it.diaryContent.displayTime })
             }
         }
     }

@@ -91,7 +91,7 @@ constructor(@param:Repository private val mDiariesRepository: DiariesDataSource,
                     mDiariesView.setLoadingIndicator(false)
                 }
 
-                processDiaries(diaries.filter { !it.meta.deleted }.sortedBy { it.diaryContent.displayTime })
+                processDiaries(diaries)
             }
 
             override fun onDataNotAvailable() {
