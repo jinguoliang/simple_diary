@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.location.Address
 import android.location.Geocoder
+import android.os.HandlerThread
+import android.os.Looper
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
@@ -22,7 +24,9 @@ open class LocationManagerImpl constructor(val context: Activity) : LocationMana
     private val mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 
     override fun getLastLocation(callback: (Location) -> Unit) {
-        getLastLocation(true, callback)
+        refreshLocation {
+            getLastLocation(true, callback::invoke)
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -52,17 +56,18 @@ open class LocationManagerImpl constructor(val context: Activity) : LocationMana
                 } else {
                     callback(false)
                 }
+                mFusedLocationClient.removeLocationUpdates(this)
             }
         }
         mFusedLocationClient.requestLocationUpdates(createLocationRequest(),
                 mLocationCallback,
-                null /* Looper */)
+                Looper.getMainLooper() /* Looper */)
     }
 
     private fun createLocationRequest(): LocationRequest {
         val locationRequest = LocationRequest()
-        locationRequest.interval = 10000
-        locationRequest.fastestInterval = 5000
+        locationRequest.interval = 0
+        locationRequest.fastestInterval = 0
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         return locationRequest
     }
