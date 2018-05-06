@@ -11,8 +11,6 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
-import com.empty.jinux.simplediary.ui.main.statistics.view.Score
-import com.empty.jinux.simplediary.ui.main.statistics.view.Timestamp
 import com.empty.jinux.simplediary.util.toCalendar
 import com.empty.jinux.simplediary.util.wordsCount
 import com.github.mikephil.charting.components.Legend
@@ -86,12 +84,6 @@ constructor(context: Context,
         doAsync {
             val entries = diaries.groupBy { it.diaryContent.displayTime.toCalendar().get(currentXAxis) }.map {
                 BarEntry((it.key).toFloat(), getYAxisData(it.value))
-            }.run {
-                if (size >= 7) {
-                    this
-                } else {
-                    this + (1..7 - size).map { BarEntry(123f + it, 0f) }
-                }
             }
 
             val dataSet = BarDataSet(entries, "").apply {
@@ -102,7 +94,6 @@ constructor(context: Context,
                 isHighlightEnabled = false
             }
 
-
             val data = BarData(dataSet).apply {
                 setDrawValues(true)
                 setValueTextColor(ContextCompat.getColor(context, android.R.color.white))
@@ -112,6 +103,14 @@ constructor(context: Context,
                 }
             }
             uiThread {
+                statisticChat.xAxis.setValueFormatter { value, _ ->
+                    value.toInt().toString()
+                }
+                statisticChat.viewPortHandler.let {
+                    val xScale = entries.size / 7f
+                    it.setMinMaxScaleX(xScale, xScale)
+                    it.setMinMaxScaleY(1f, 1f)
+                }
                 statisticChat.data = data
                 statisticChat.invalidate()
             }
@@ -143,9 +142,6 @@ constructor(context: Context,
             setDrawGridLines(false)
             setDrawLabels(true)
             axisLineColor = axisColor
-            setValueFormatter { value, _ ->
-                value.toInt().toString() + "d"
-            }
             axisLineWidth = axisWidth
             granularity = 1f
             labelCount = 7
@@ -164,9 +160,7 @@ constructor(context: Context,
 
         statisticChat.description.isEnabled = false
         statisticChat.extraBottomOffset = 20f
-        statisticChat.viewPortHandler.let {
-            //            it.setMinMaxScaleX(2f, 2f)
-        }
+
 
 
     }
