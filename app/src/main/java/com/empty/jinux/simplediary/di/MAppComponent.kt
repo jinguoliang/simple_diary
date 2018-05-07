@@ -6,6 +6,7 @@ import com.empty.jinux.simplediary.config.ConfigModule
 import com.empty.jinux.simplediary.data.source.DiariesRepositoryModule
 import com.empty.jinux.simplediary.report.ReportModule
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivityModule
+import com.empty.jinux.simplediary.ui.lock.LockerActivityModule
 import com.empty.jinux.simplediary.ui.main.MainActivityModule
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
@@ -18,6 +19,7 @@ import javax.inject.Singleton
                 DiariesRepositoryModule::class,
                 DiaryDetailActivityModule::class,
                 MainActivityModule::class,
+                LockerActivityModule::class,
                 ConfigModule::class,
                 AppLockModule::class,
                 ReportModule::class)

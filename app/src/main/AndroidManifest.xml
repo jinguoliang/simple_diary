@@ -32,6 +32,7 @@
         <activity
             android:name="com.empty.jinux.simplediary.ui.about.AboutActivity"
             android:label="@string/app_name" />
+        <activity android:name=".ui.lock.LockActivity" />
     </application>
 
 </manifest>
