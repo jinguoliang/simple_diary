@@ -23,18 +23,21 @@ import android.support.v4.widget.DrawerLayout
 import android.view.MenuItem
 import android.view.View
 import com.empty.jinux.simplediary.R
+import com.empty.jinux.simplediary.applock.AppLockManager
 import com.empty.jinux.simplediary.intent.helpTranslate
 import com.empty.jinux.simplediary.intent.rateApp
 import com.empty.jinux.simplediary.intent.sendFeedback
 import com.empty.jinux.simplediary.intent.shareApp
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.about.AboutActivity
+import com.empty.jinux.simplediary.ui.lock.LockActivity
 import com.empty.jinux.simplediary.ui.main.diarylist.DiaryListFragment
 import com.empty.jinux.simplediary.ui.main.statistics.StatisticsFragment
 import com.empty.jinux.simplediary.util.ActivityUtils
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.diary_list_act.*
 import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.startActivity
 import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity() {
@@ -42,12 +45,27 @@ class MainActivity : DaggerAppCompatActivity() {
     @Inject
     lateinit var mReporter: Reporter
 
+    @Inject
+    lateinit var mAppLock: AppLockManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.diary_list_act)
         setupToolbar()
         setupNavigationDrawer()
         showDiaryListFragment()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (mAppLock.isLock()) {
+            startActivity<LockActivity>()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mAppLock.notifyLock()
     }
 
     private fun setupNavigationDrawer() {
