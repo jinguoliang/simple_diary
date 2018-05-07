@@ -1,3 +1,5 @@
+import org.ajoberstar.grgit.Grgit
+
 apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
@@ -7,6 +9,9 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 apply plugin: 'io.fabric'
+
+apply plugin: "org.ajoberstar.grgit"
+
 
 
 android {
@@ -23,7 +28,7 @@ android {
         applicationId "com.empty.jinux.simplediary"
         minSdkVersion 17
         targetSdkVersion 27
-        versionCode 4
+        versionCode Grgit.open().log().size()
         versionName "1.0.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
