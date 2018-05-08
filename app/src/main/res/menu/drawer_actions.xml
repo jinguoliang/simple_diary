@@ -31,29 +31,31 @@
 
     </group>
 
-    <item
-        android:id="@+id/rate_navigation_menu_item"
-        android:icon="@drawable/ic_star"
-        android:title="@string/rate_title" />
-    <item
-        android:id="@+id/feedback_navigation_menu_item"
-        android:icon="@drawable/ic_feedback"
-        android:title="@string/feedback_title" />
-    <item
-        android:id="@+id/translate_navigation_menu_item"
-        android:icon="@drawable/ic_translate"
-        android:title="@string/translate_title" />
-    <item
-        android:id="@+id/share_navigation_menu_item"
-        android:icon="@drawable/ic_share"
-        android:title="@string/share_title" />
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/rate_navigation_menu_item"
+            android:icon="@drawable/ic_star"
+            android:title="@string/rate_title" />
+        <item
+            android:id="@+id/feedback_navigation_menu_item"
+            android:icon="@drawable/ic_feedback"
+            android:title="@string/feedback_title" />
+        <item
+            android:id="@+id/translate_navigation_menu_item"
+            android:icon="@drawable/ic_translate"
+            android:title="@string/translate_title" />
+        <item
+            android:id="@+id/share_navigation_menu_item"
+            android:icon="@drawable/ic_share"
+            android:title="@string/share_title" />
 
-    <item
-        android:id="@+id/settings_navigation_menu_item"
-        android:icon="@drawable/ic_settings_black_24dp"
-        android:title="@string/settings_title" />
-    <item
-        android:id="@+id/about_navigation_menu_item"
-        android:icon="@drawable/ic_statistics"
-        android:title="@string/about_title" />
+        <item
+            android:id="@+id/settings_navigation_menu_item"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="@string/settings_title" />
+        <item
+            android:id="@+id/about_navigation_menu_item"
+            android:icon="@drawable/ic_statistics"
+            android:title="@string/about_title" />
+    </group>
 </menu>
