@@ -64,6 +64,12 @@ class MainActivity : DaggerAppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        nav_view.setCheckedItem(mCurrentItemRes)
+
+    }
+
     override fun onStop() {
         super.onStop()
         mAppLock.notifyLock()
@@ -133,14 +139,20 @@ class MainActivity : DaggerAppCompatActivity() {
         })
     }
 
+    private var mCurrentItemRes: Int = R.id.list_navigation_menu_item
+
     private fun NavigationView.setMItemClickListener() {
         setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.list_navigation_menu_item -> {
+                    mCurrentItemRes = R.id.list_navigation_menu_item
+
                     showDiaryListFragment()
                     mReporter.reportClick("main_menu_list")
                 }
                 R.id.statistics_navigation_menu_item -> {
+                    mCurrentItemRes = R.id.statistics_navigation_menu_item
+
                     showDiaryStatistics()
                     mReporter.reportClick("main_menu_statistics")
                 }
