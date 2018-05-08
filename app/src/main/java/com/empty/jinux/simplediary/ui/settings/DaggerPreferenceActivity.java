@@ -13,10 +13,14 @@ import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasFragmentInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 
-public abstract class DaggerPreferenceActivity extends PreferenceActivity implements HasFragmentInjector, HasSupportFragmentInjector {
+public abstract class DaggerPreferenceActivity
+        extends PreferenceActivity
+        implements HasFragmentInjector, HasSupportFragmentInjector {
+
     @Inject
     DispatchingAndroidInjector<Fragment> supportFragmentInjector;
-    @Inject DispatchingAndroidInjector<android.app.Fragment> frameworkFragmentInjector;
+    @Inject
+    DispatchingAndroidInjector<android.app.Fragment> frameworkFragmentInjector;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
