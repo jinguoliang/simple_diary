@@ -6,6 +6,7 @@
     <string name="successfully_saved_diary_message">Diary saved</string>
     <string name="list_title">Diary List</string>
     <string name="statistics_title">Statistics</string>
+    <string name="settings_title">Settings</string>
     <string name="statistics_error">Error loading statistics.</string>
     <string name="loading">LOADING</string>
     <string name="no_diaries_all">You have no diaries!</string>

@@ -33,6 +33,7 @@ import com.empty.jinux.simplediary.ui.about.AboutActivity
 import com.empty.jinux.simplediary.ui.lock.LockActivity
 import com.empty.jinux.simplediary.ui.main.diarylist.DiaryListFragment
 import com.empty.jinux.simplediary.ui.main.statistics.StatisticsFragment
+import com.empty.jinux.simplediary.ui.settings.SettingsActivity
 import com.empty.jinux.simplediary.util.ActivityUtils
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.diary_list_act.*
@@ -142,6 +143,10 @@ class MainActivity : DaggerAppCompatActivity() {
                 R.id.statistics_navigation_menu_item -> {
                     showDiaryStatistics()
                     mReporter.reportClick("main_menu_statistics")
+                }
+                R.id.settings_navigation_menu_item -> {
+                    startActivity<SettingsActivity>()
+                    mReporter.reportClick("main_menu_settings")
                 }
                 R.id.rate_navigation_menu_item -> {
                     startActivity(rateApp(context))

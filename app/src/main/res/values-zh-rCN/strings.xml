@@ -7,6 +7,7 @@
     <string name="successfully_saved_diary_message">日记保存成功</string>
     <string name="list_title">日记列表</string>
     <string name="statistics_title">统计</string>
+    <string name="settings_title">设置</string>
     <string name="statistics_error">加载统计出错</string>
     <string name="loading">加载中</string>
     <string name="no_diaries_all">你没有日记!</string>
