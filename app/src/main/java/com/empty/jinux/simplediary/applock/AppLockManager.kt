@@ -6,5 +6,5 @@ package com.empty.jinux.simplediary.applock
 interface AppLockManager {
     fun isLock(): Boolean
     fun notifyLock()
-    fun unlock(password: String): Boolean
+    fun unlock(password: String, input: String): Boolean
 }

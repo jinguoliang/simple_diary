@@ -24,6 +24,7 @@ import android.view.MenuItem
 import android.view.View
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.applock.AppLockManager
+import com.empty.jinux.simplediary.config.ConfigManager
 import com.empty.jinux.simplediary.intent.helpTranslate
 import com.empty.jinux.simplediary.intent.rateApp
 import com.empty.jinux.simplediary.intent.sendFeedback
@@ -49,6 +50,11 @@ class MainActivity : DaggerAppCompatActivity() {
     @Inject
     lateinit var mAppLock: AppLockManager
 
+    @Inject
+    lateinit var config: ConfigManager
+
+    var lockEnable: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.diary_list_act)
@@ -59,7 +65,8 @@ class MainActivity : DaggerAppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        if (mAppLock.isLock()) {
+        lockEnable = config.get("pref_app_lock_enable", false)
+        if (lockEnable && mAppLock.isLock()) {
             startActivity<LockActivity>()
         }
     }
@@ -72,7 +79,9 @@ class MainActivity : DaggerAppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        mAppLock.notifyLock()
+        if (lockEnable) {
+            mAppLock.notifyLock()
+        }
     }
 
     private fun setupNavigationDrawer() {

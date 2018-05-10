@@ -4,5 +4,5 @@
         android:key="pref_app_lock_enable"
         android:title="@string/pref_pin_lock"
         android:summary="@string/pref_pin_lock_summ"
-        android:defaultValue="true" />
+        android:defaultValue="false" />
 </PreferenceScreen>

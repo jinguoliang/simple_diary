@@ -5,7 +5,7 @@ import android.text.TextUtils
 import com.empty.jinux.simplediary.config.ConfigManager
 
 class AppLockImplement(val context: Context, var config: ConfigManager) : AppLockManager {
-    var locked = false
+    var locked: Boolean = true
 
     override fun isLock(): Boolean {
         return locked
@@ -15,8 +15,8 @@ class AppLockImplement(val context: Context, var config: ConfigManager) : AppLoc
         locked = true
     }
 
-    override fun unlock(password: String): Boolean {
-        val success = TextUtils.equals(password, config.getString("password"))
+    override fun unlock(password: String, input: String): Boolean {
+        val success = TextUtils.equals(password, input)
         locked = !success
         return success
     }
