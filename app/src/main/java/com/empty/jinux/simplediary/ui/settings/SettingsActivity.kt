@@ -17,6 +17,12 @@ class SettingsActivity : AppCompatActivity() {
         ActivityUtils.addFragmentToActivity(supportFragmentManager, SettingsFragment(), R.id.content)
     }
 
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
         val ab = supportActionBar
