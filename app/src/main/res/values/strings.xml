@@ -29,4 +29,7 @@
     <string name="app_version_fmt">v%1$s</string>
     <string name="pref_pin_lock">PIN Lock</string>
     <string name="pref_pin_lock_summ">Set a password to stop other to view your diary</string>
+    <string name="app_lock_set_password">Set Password</string>
+    <string name="app_lock_new_password_hint">Please input a new password</string>
+    <string name="app_lock_password_confirm_hint">Confirm password</string>
 </resources>

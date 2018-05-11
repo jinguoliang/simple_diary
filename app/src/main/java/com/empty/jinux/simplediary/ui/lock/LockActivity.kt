@@ -27,7 +27,7 @@ class LockActivity : DaggerAppCompatActivity() {
 
         password.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                if (appLockManager.unlock(s.toString(), config.get("password", ""))) {
+                if (appLockManager.unlock(s.toString(), config.get("pref_app_lock_password", ""))) {
                     toast("app lock unlock!!", Toast.LENGTH_LONG)
                     finish()
                 }
