@@ -32,4 +32,6 @@
     <string name="app_lock_set_password">Set Password</string>
     <string name="app_lock_new_password_hint">Please input a new password</string>
     <string name="app_lock_password_confirm_hint">Confirm password</string>
+    <string name="input_password_hint">Please Input Password</string>
+    <string name="password_set_dialog_title">Password Set</string>
 </resources>
