@@ -19,15 +19,21 @@ package com.empty.jinux.simplediary.ui.diarydetail
 import android.os.Bundle
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
+import com.empty.jinux.simplediary.ui.LockHelper
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.DiaryDetailFragment
 import com.empty.jinux.simplediary.util.ActivityUtils
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.diary_detail_act.*
+import javax.inject.Inject
 
 /**
  * Displays task details screen.
  */
 class DiaryDetailActivity : DaggerAppCompatActivity() {
+
+
+    @Inject
+    lateinit var mLockHelper: LockHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +59,17 @@ class DiaryDetailActivity : DaggerAppCompatActivity() {
             ActivityUtils.replaceFragment(supportFragmentManager,
                     diaryDetailFragment, R.id.contentFrame)
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mLockHelper.onStart(this)
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mLockHelper.onStop()
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -23,15 +23,13 @@ import android.support.v4.widget.DrawerLayout
 import android.view.MenuItem
 import android.view.View
 import com.empty.jinux.simplediary.R
-import com.empty.jinux.simplediary.applock.AppLockManager
-import com.empty.jinux.simplediary.config.ConfigManager
 import com.empty.jinux.simplediary.intent.helpTranslate
 import com.empty.jinux.simplediary.intent.rateApp
 import com.empty.jinux.simplediary.intent.sendFeedback
 import com.empty.jinux.simplediary.intent.shareApp
 import com.empty.jinux.simplediary.report.Reporter
+import com.empty.jinux.simplediary.ui.LockHelper
 import com.empty.jinux.simplediary.ui.about.AboutActivity
-import com.empty.jinux.simplediary.ui.lock.LockActivity
 import com.empty.jinux.simplediary.ui.main.diarylist.DiaryListFragment
 import com.empty.jinux.simplediary.ui.main.statistics.StatisticsFragment
 import com.empty.jinux.simplediary.ui.settings.SettingsActivity
@@ -48,12 +46,7 @@ class MainActivity : DaggerAppCompatActivity() {
     lateinit var mReporter: Reporter
 
     @Inject
-    lateinit var mAppLock: AppLockManager
-
-    @Inject
-    lateinit var config: ConfigManager
-
-    var lockEnable: Boolean = false
+    lateinit var mLockHelper: LockHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,23 +58,17 @@ class MainActivity : DaggerAppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        lockEnable = config.get("pref_app_lock_enable", false)
-        if (lockEnable && mAppLock.isLock()) {
-            startActivity<LockActivity>()
-        }
+        mLockHelper.onStart(this)
     }
 
     override fun onResume() {
         super.onResume()
         nav_view.setCheckedItem(mCurrentItemRes)
-
     }
 
     override fun onStop() {
         super.onStop()
-        if (lockEnable) {
-            mAppLock.notifyLock()
-        }
+        mLockHelper.onStop()
     }
 
     private fun setupNavigationDrawer() {
