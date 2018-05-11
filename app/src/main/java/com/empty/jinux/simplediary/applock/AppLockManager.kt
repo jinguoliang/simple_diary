@@ -7,4 +7,5 @@ interface AppLockManager {
     fun isLock(): Boolean
     fun notifyLock()
     fun unlock(password: String, input: String): Boolean
+    fun clearCountDown()
 }
