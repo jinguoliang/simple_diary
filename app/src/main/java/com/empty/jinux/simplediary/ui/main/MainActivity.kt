@@ -23,16 +23,16 @@ import android.support.v4.widget.DrawerLayout
 import android.view.MenuItem
 import android.view.View
 import com.empty.jinux.simplediary.R
-import com.empty.jinux.simplediary.applock.AppLockManager
 import com.empty.jinux.simplediary.intent.helpTranslate
 import com.empty.jinux.simplediary.intent.rateApp
 import com.empty.jinux.simplediary.intent.sendFeedback
 import com.empty.jinux.simplediary.intent.shareApp
 import com.empty.jinux.simplediary.report.Reporter
+import com.empty.jinux.simplediary.ui.LockHelper
 import com.empty.jinux.simplediary.ui.about.AboutActivity
-import com.empty.jinux.simplediary.ui.lock.LockActivity
 import com.empty.jinux.simplediary.ui.main.diarylist.DiaryListFragment
 import com.empty.jinux.simplediary.ui.main.statistics.StatisticsFragment
+import com.empty.jinux.simplediary.ui.settings.SettingsActivity
 import com.empty.jinux.simplediary.util.ActivityUtils
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.diary_list_act.*
@@ -46,7 +46,7 @@ class MainActivity : DaggerAppCompatActivity() {
     lateinit var mReporter: Reporter
 
     @Inject
-    lateinit var mAppLock: AppLockManager
+    lateinit var mLockHelper: LockHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,14 +58,17 @@ class MainActivity : DaggerAppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        if (mAppLock.isLock()) {
-            startActivity<LockActivity>()
-        }
+        mLockHelper.onStart(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        nav_view.setCheckedItem(mCurrentItemRes)
     }
 
     override fun onStop() {
         super.onStop()
-        mAppLock.notifyLock()
+        mLockHelper.onStop()
     }
 
     private fun setupNavigationDrawer() {
@@ -132,16 +135,26 @@ class MainActivity : DaggerAppCompatActivity() {
         })
     }
 
+    private var mCurrentItemRes: Int = R.id.list_navigation_menu_item
+
     private fun NavigationView.setMItemClickListener() {
         setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.list_navigation_menu_item -> {
+                    mCurrentItemRes = R.id.list_navigation_menu_item
+
                     showDiaryListFragment()
                     mReporter.reportClick("main_menu_list")
                 }
                 R.id.statistics_navigation_menu_item -> {
+                    mCurrentItemRes = R.id.statistics_navigation_menu_item
+
                     showDiaryStatistics()
                     mReporter.reportClick("main_menu_statistics")
+                }
+                R.id.settings_navigation_menu_item -> {
+                    startActivity<SettingsActivity>()
+                    mReporter.reportClick("main_menu_settings")
                 }
                 R.id.rate_navigation_menu_item -> {
                     startActivity(rateApp(context))

@@ -6,6 +6,7 @@
     <string name="successfully_saved_diary_message">Diary saved</string>
     <string name="list_title">Diary List</string>
     <string name="statistics_title">Statistics</string>
+    <string name="settings_title">Settings</string>
     <string name="statistics_error">Error loading statistics.</string>
     <string name="loading">LOADING</string>
     <string name="no_diaries_all">You have no diaries!</string>
@@ -26,4 +27,11 @@
     <string name="statastics_for">Statastics For</string>
     <string name="share_app_content_fmt">I like the diary book app so much, share it to you.\n %1$s</string>
     <string name="app_version_fmt">v%1$s</string>
+    <string name="pref_pin_lock">PIN Lock</string>
+    <string name="pref_pin_lock_summ">Set a password to stop other to view your diary</string>
+    <string name="app_lock_set_password">Set Password</string>
+    <string name="app_lock_new_password_hint">Please input a new password</string>
+    <string name="app_lock_password_confirm_hint">Confirm password</string>
+    <string name="input_password_hint">Please Input Password</string>
+    <string name="password_set_dialog_title">Password Set</string>
 </resources>
