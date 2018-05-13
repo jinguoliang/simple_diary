@@ -27,4 +27,10 @@
     <string name="about_title">关于</string>
     <string name="about_intro">很高兴遇到你！\n\n这是一个日记软件，非常简单，它会与你一同成长，但会一直保持简洁。</string>
     <string name="share_app_content_fmt">这个日记软件真不错, 来试试吧。\n %1$s</string>
+    <string name="pref_pin_lock">日记锁</string>
+    <string name="pref_pin_lock_summ">设置密码防止其他人查看你的日记</string>
+    <string name="app_lock_new_password_hint">请输入新密码</string>
+    <string name="app_lock_password_confirm_hint">确认密码</string>
+    <string name="input_password_hint">输入日记密码</string>
+    <string name="password_set_dialog_title">设置密码</string>
 </resources>

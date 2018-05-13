@@ -26,7 +26,6 @@ class SettingsFragment : PreferenceFragmentCompat(),
 
     private fun showLockPasswordSetDialog() {
         val dialog = Dialog(activity)
-        dialog.setTitle(R.string.app_lock_set_password)
         dialog.setContentView(R.layout.dialog_app_lock_set_password)
         val passwordChecker: TextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
