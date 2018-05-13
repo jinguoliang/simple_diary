@@ -10,16 +10,24 @@ import android.text.Editable
 import android.text.TextWatcher
 import androidx.core.content.edit
 import com.empty.jinux.simplediary.R
+import com.empty.jinux.simplediary.report.Reporter
 import kotlinx.android.synthetic.main.dialog_app_lock_set_password.*
+import javax.inject.Inject
 
-class SettingsFragment : PreferenceFragmentCompat(),
+class SettingsFragment : DaggerPreferenceFragment(),
         SharedPreferences.OnSharedPreferenceChangeListener {
 
+    @Inject
+    lateinit var mReporter: Reporter
+
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        if (key == "pref_app_lock_enable") {
-            if (sharedPreferences.getBoolean(key, false)) {
-                // open lock
-                showLockPasswordSetDialog()
+        when (key) {
+            "pref_app_lock_enable" -> sharedPreferences.getBoolean(key, false).let { checked ->
+                mReporter.reportClick(key, checked.toString())
+                if (checked) {
+                    // open lock
+                    showLockPasswordSetDialog()
+                }
             }
         }
     }
@@ -46,6 +54,8 @@ class SettingsFragment : PreferenceFragmentCompat(),
         dialog.passwordConfirm.addTextChangedListener(passwordChecker)
         dialog.negativeButton.setOnClickListener {
             dialog.cancel()
+            mReporter.reportClick("password_set_dialog_cancel")
+
             PreferenceManager.getDefaultSharedPreferences(activity).edit {
                 putBoolean("pref_app_lock_enable", false)
             }
@@ -56,6 +66,8 @@ class SettingsFragment : PreferenceFragmentCompat(),
         }
         dialog.positiveButton.setOnClickListener {
             dialog.dismiss()
+            mReporter.reportClick("password_set_dialog_ok")
+
             PreferenceManager.getDefaultSharedPreferences(activity).edit {
                 putString("pref_app_lock_password", dialog.newPassword.text.toString())
             }
