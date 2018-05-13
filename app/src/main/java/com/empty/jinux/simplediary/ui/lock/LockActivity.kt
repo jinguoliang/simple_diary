@@ -8,6 +8,7 @@ import androidx.core.widget.toast
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.applock.AppLockManager
 import com.empty.jinux.simplediary.config.ConfigManager
+import com.empty.jinux.simplediary.report.Reporter
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_lock.*
 import javax.inject.Inject
@@ -20,6 +21,9 @@ class LockActivity : DaggerAppCompatActivity() {
     @Inject
     lateinit var config: ConfigManager
 
+    @Inject
+    lateinit var mReporter: Reporter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -30,6 +34,7 @@ class LockActivity : DaggerAppCompatActivity() {
                 if (appLockManager.unlock(s.toString(), config.get("pref_app_lock_password", ""))) {
                     toast("app lock unlock!!", Toast.LENGTH_LONG)
                     finish()
+                    reportUnlockTime()
                 }
             }
 
@@ -41,6 +46,18 @@ class LockActivity : DaggerAppCompatActivity() {
 
         })
 
+    }
+
+    private fun reportUnlockTime() {
+        val elapse = (System.currentTimeMillis() - mInputPasswordBeginTime) / 1000
+        mReporter.reportEvent("unlock", Bundle().apply { putLong("elapse", elapse) })
+    }
+
+    private var mInputPasswordBeginTime: Long = 0L
+
+    override fun onResume() {
+        super.onResume()
+        mInputPasswordBeginTime = System.currentTimeMillis()
     }
 
     override fun onBackPressed() {
