@@ -4,15 +4,30 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.empty.jinux.simplediary.BuildConfig
 import com.empty.jinux.simplediary.R
+import com.empty.jinux.simplediary.ui.LockHelper
 import me.drakeet.multitype.Items
 import me.drakeet.support.about.*
+import javax.inject.Inject
 
-class AboutActivity : AbsAboutActivity() {
+class AboutActivity : DaggerAppCompatAboutActivity() {
+
+    @Inject
+    lateinit var lockHelper: LockHelper
+
+    override fun onStart() {
+        super.onStart()
+        lockHelper.onStart(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        lockHelper.onStop()
+    }
 
     override fun onCreateHeader(icon: ImageView, slogan: TextView, version: TextView) {
         icon.setImageResource(R.drawable.ic_app_launcher)
         slogan.text = getString(R.string.app_name)
-        version.text = "v" + BuildConfig.VERSION_NAME
+        version.text = getString(R.string.app_version_fmt, BuildConfig.VERSION_NAME)
     }
 
 

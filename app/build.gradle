@@ -1,3 +1,5 @@
+import org.ajoberstar.grgit.Grgit
+
 apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
@@ -7,6 +9,9 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 apply plugin: 'io.fabric'
+
+apply plugin: "org.ajoberstar.grgit"
+
 
 
 android {
@@ -23,8 +28,8 @@ android {
         applicationId "com.empty.jinux.simplediary"
         minSdkVersion 17
         targetSdkVersion 27
-        versionCode 4
-        versionName "1.0.4"
+        versionCode Grgit.open().log().size()
+        versionName Grgit.open().describe()
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         multiDexEnabled true
@@ -57,6 +62,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "com.android.support:appcompat-v7:$support_version"
     implementation "com.android.support:support-v4:$support_version"
+    implementation "com.android.support:preference-v7:$support_version"
     implementation "com.android.support:design:$support_version"
     implementation "com.android.support:cardview-v7:$support_version"
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
