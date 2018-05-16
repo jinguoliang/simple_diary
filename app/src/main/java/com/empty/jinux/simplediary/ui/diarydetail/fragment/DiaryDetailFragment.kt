@@ -33,6 +33,8 @@ import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
 import com.empty.jinux.simplediary.util.PermissionUtil
+import com.empty.jinux.simplediary.util.ThreadPools
+import com.empty.jinux.simplediary.util.adjustParagraphSpace
 import com.empty.jinux.simplediary.util.getScreenHeight
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.layout_diary_detail_edit_tool.*
@@ -85,6 +87,9 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                ThreadPools.postOnUI {
+                    diaryContent.adjustParagraphSpace(s)
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -202,6 +207,9 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         diaryContent.visibility = View.VISIBLE
         diaryContent.setText(content)
         diaryContent.setSelection(content.length)
+        ThreadPools.postOnUI {
+            diaryContent.adjustParagraphSpace(content)
+        }
     }
 
     override fun showDate(dateStr: String) {
