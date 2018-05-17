@@ -97,7 +97,6 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
         super.onActivityCreated(savedInstanceState)
 
         // Set up diaries view
-        diaryRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         diaryRecyclerView.adapter = mDiariesAdapter
 
         noDiaries.setOnClickListener {
