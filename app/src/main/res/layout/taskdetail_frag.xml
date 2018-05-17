@@ -26,19 +26,30 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <EditText
-            android:id="@+id/diaryContent"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/common_margin"
-            android:background="#0fff"
-            android:gravity="top|start"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:lineSpacingExtra="@dimen/edit_text_space_extra"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:textAppearance="@style/DiaryContentText"
-            android:textCursorDrawable="@drawable/edit_text_cursor"
-            tools:text="Medium Text" />
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/diaryContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/common_margin"
+                android:background="#0ff"
+                android:gravity="top|start"
+                android:imeOptions="flagNoExtractUi"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:lineSpacingExtra="@dimen/edit_text_space_extra"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:textAppearance="@style/DiaryContentText"
+                android:textCursorDrawable="@drawable/edit_text_cursor"
+                tools:text="Medium Text" />
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="300dp"/>
+        </LinearLayout>
+
     </ScrollView>
 
 

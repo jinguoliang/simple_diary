@@ -22,7 +22,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.text.Editable
-import android.text.TextWatcher
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
@@ -32,10 +31,7 @@ import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
-import com.empty.jinux.simplediary.util.PermissionUtil
-import com.empty.jinux.simplediary.util.ThreadPools
-import com.empty.jinux.simplediary.util.adjustParagraphSpace
-import com.empty.jinux.simplediary.util.getScreenHeight
+import com.empty.jinux.simplediary.util.*
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.layout_diary_detail_edit_tool.*
 import kotlinx.android.synthetic.main.taskdetail_frag.*
@@ -81,11 +77,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
         setHasOptionsMenu(true)
 
-        diaryContent.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
+        diaryContent.addTextChangedListener(object : TextWatcherAdapter() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 ThreadPools.postOnUI {
                     diaryContent.adjustParagraphSpace(s)
@@ -97,6 +89,16 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             }
 
         })
+        diaryContent.setOnTouchListener { v, event ->
+            when (event.actionMasked) {
+                MotionEvent.ACTION_UP -> {
+                    diaryContent.isLongClickable = true
+                }
+                MotionEvent.ACTION_MOVE -> diaryContent.isLongClickable = false
+            }
+            false
+        }
+
         activity?.let {
             if (PermissionUtil.getLocationPermissions(it, REQUEST_CODE_LOCATION_PERMISSION)) {
                 mPresenter.start()
