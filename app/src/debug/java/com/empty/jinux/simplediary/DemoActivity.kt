@@ -43,7 +43,7 @@ class DemoActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                editor.adjustParagraphSpace(s)
+                editor.adjustParagraphSpace()
             }
 
         })

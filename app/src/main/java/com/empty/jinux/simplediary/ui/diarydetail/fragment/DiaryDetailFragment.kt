@@ -19,23 +19,36 @@ package com.empty.jinux.simplediary.ui.diarydetail.fragment
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
+import android.graphics.Color
+import android.graphics.Point
+import android.graphics.Rect
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.text.Editable
+import android.text.TextWatcher
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.AdapterView
+import android.widget.*
+import com.empty.jinux.baselibaray.logd
 import com.empty.jinux.baselibaray.loge
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
-import com.empty.jinux.simplediary.util.*
+import com.empty.jinux.simplediary.util.PermissionUtil
+import com.empty.jinux.simplediary.util.ThreadPools
+import com.empty.jinux.simplediary.util.adjustParagraphSpace
+import com.empty.jinux.simplediary.util.getScreenHeight
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.activity_demo.*
+import kotlinx.android.synthetic.main.diary_detail_act.*
 import kotlinx.android.synthetic.main.layout_diary_detail_edit_tool.*
 import kotlinx.android.synthetic.main.taskdetail_frag.*
 import javax.inject.Inject
+
 
 /**
  * Main UI for the task detail screen.
@@ -72,23 +85,33 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     private val REQUEST_CODE_LOCATION_PERMISSION = 0x64
 
+    private var mWatcher: TextWatcher? = null
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         setHasOptionsMenu(true)
 
-        diaryContent.addTextChangedListener(object : TextWatcherAdapter() {
+        mWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                ThreadPools.postOnUI {
-                    diaryContent.adjustParagraphSpace(s)
-                }
+                if (editor == null) return
+
             }
 
             override fun afterTextChanged(s: Editable?) {
                 mPresenter.onContentChange(s.toString())
+                ThreadPools.postOnUI {
+                    diaryContent.adjustParagraphSpace()
+                    ThreadPools.postOnUI {
+                        adjustScrollPosition()
+                    }
+                }
             }
-
-        })
+        }
+        diaryContent.addTextChangedListener(mWatcher)
         diaryContent.setOnTouchListener { v, event ->
             when (event.actionMasked) {
                 MotionEvent.ACTION_UP -> {
@@ -106,6 +129,46 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         }
 
         initEditToolbar()
+
+        val keyboardHeightListener = KeyboardHeightProvider(activity!!)
+        ThreadPools.postOnUI {
+            keyboardHeightListener.observer = object : KeyboardHeightObserver {
+                override fun onKeyboardHeightChanged(height: Int, orientation: Int) {
+                    if (height == 0 || diaryContent == null) {
+                        return
+                    }
+                    diaryContent.isCursorVisible = true
+
+                    logd("current keyboard height = $height")
+                    val ori = bottomSpace.layoutParams
+                    ori.height = height
+                    bottomSpace.layoutParams = ori
+//                    keyboardHeightListener.observer = null
+//                    keyboardHeightListener.close()
+                    ThreadPools.postOnUI {
+                        adjustScrollPosition()
+                    }
+                }
+
+            }
+            keyboardHeightListener.start()
+        }
+    }
+
+    private fun adjustScrollPosition() {
+        val editor = diaryContent
+        val scrollView = scrollContainer
+
+        val cursorLine = editor.getLineForCursor()
+        val cursorLineBottom = editor.layout.getLineBottom(cursorLine)
+
+        val cursorYOffset = cursorLineBottom - scrollView.scrollY
+        val editorVisibleAreaheight = activity!!.window.decorView.height - bottomSpace.height - activity!!.getStatusbarHeight() - activity!!.toolbar.height - 50
+
+        if (cursorYOffset > editorVisibleAreaheight) {
+            val scroll = cursorYOffset - editorVisibleAreaheight
+            scrollView.scrollBy(0, scroll)
+        }
     }
 
     private fun initEditToolbar() {
@@ -207,10 +270,13 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     override fun showContent(content: String) {
         diaryContent.visibility = View.VISIBLE
+        diaryContent.removeTextChangedListener(mWatcher)
         diaryContent.setText(content)
-        diaryContent.setSelection(content.length)
+        diaryContent.addTextChangedListener(mWatcher)
+//        diaryContent.setSelection(content.length)
+        diaryContent.isCursorVisible = false
         ThreadPools.postOnUI {
-            diaryContent.adjustParagraphSpace(content)
+            diaryContent.adjustParagraphSpace()
         }
     }
 
@@ -287,5 +353,155 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
 
+}
+
+private fun TextView.getLineForCursor(): Int {
+    return layout.getLineForOffset(selectionStart)
+}
+
+class KeyboardHeightProvider
+/**
+ * Construct a new KeyboardHeightProvider
+ *
+ * @param activity The parent activity_main
+ */
+(
+        /** The root activity_main that uses this KeyboardHeightProvider  */
+        private val activity: Activity) : PopupWindow(activity) {
+
+    /** The cached landscape height of the keyboard  */
+    private var keyboardLandscapeHeight: Int = 0
+
+    /** The cached portrait height of the keyboard  */
+    private var keyboardPortraitHeight: Int = 0
+
+    /** The parent view  */
+    private val parentView: View
+
+    /**
+     * Get the screen orientation
+     *
+     * @return the screen orientation
+     */
+    private val screenOrientation: Int
+        get() = activity.resources.configuration.orientation
+
+    init {
+
+        contentView = FrameLayout(activity)
+
+        softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE
+        inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
+
+        parentView = activity.findViewById(android.R.id.content)
+
+        width = 0
+        height = WindowManager.LayoutParams.MATCH_PARENT
+
+        contentView.viewTreeObserver.addOnGlobalLayoutListener {
+            if (contentView != null) {
+                handleOnGlobalLayout()
+            }
+        }
+        setOnDismissListener {
+            logd("hello dismiss")
+        }
+    }
+
+    /**
+     * Start the KeyboardHeightProvider, this must be called after the onResume of the Activity.
+     * PopupWindows are not allowed to be registered before the onResume has finished
+     * of the Activity.
+     */
+    fun start() {
+
+        if (!isShowing && parentView.windowToken != null) {
+            setBackgroundDrawable(ColorDrawable(Color.RED))
+            showAtLocation(parentView, Gravity.NO_GRAVITY, 0, 0)
+        }
+    }
+
+    /**
+     * Close the keyboard height provider,
+     * this provider will not be used anymore.
+     */
+    fun close() {
+        dismiss()
+    }
+
+    /**
+     * Popup window itself is as big as the window of the Activity.
+     * The keyboard can then be calculated by extracting the popup view bottom
+     * from the activity_main window height.
+     */
+    private fun handleOnGlobalLayout() {
+
+        val screenSize = Point()
+        activity.windowManager.defaultDisplay.getSize(screenSize)
+
+        val rect = Rect()
+        contentView.getWindowVisibleDisplayFrame(rect)
+
+        // REMIND, you may like to change this using the fullscreen size of the phone
+        // and also using the status bar and navigation bar heights of the phone to calculate
+        // the keyboard height. But this worked fine on a Nexus.
+        val orientation = screenOrientation
+        val keyboardHeight = screenSize.y - rect.bottom
+
+        if (keyboardHeight == 0) {
+            notifyKeyboardHeightChanged(0, orientation)
+        } else {
+            val statusbarHeight = 0
+//            val statusbarHeight = activity.window.getStatusbarHeight()
+            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                this.keyboardPortraitHeight = keyboardHeight - statusbarHeight
+                notifyKeyboardHeightChanged(keyboardPortraitHeight, orientation)
+            } else {
+                this.keyboardLandscapeHeight = keyboardHeight - statusbarHeight
+                notifyKeyboardHeightChanged(keyboardLandscapeHeight, orientation)
+            }
+        }
+    }
+
+    var observer: KeyboardHeightObserver? = null
+
+    /**
+     *
+     */
+    private fun notifyKeyboardHeightChanged(height: Int, orientation: Int) {
+        if (observer != null) {
+            observer!!.onKeyboardHeightChanged(height, orientation)
+        }
+    }
+
+    companion object {
+
+        /** The tag for logging purposes  */
+        private val TAG = "sample_KeyboardHeightProvider"
+    }
+}
+
+interface KeyboardHeightObserver {
+
+    /**
+     * Called when the keyboard height has changed, 0 means keyboard is closed,
+     * >= 1 means keyboard is opened.
+     *
+     * @param height        The height of the keyboard in pixels
+     * @param orientation   The orientation either: Configuration.ORIENTATION_PORTRAIT or
+     * Configuration.ORIENTATION_LANDSCAPE
+     */
+    fun onKeyboardHeightChanged(height: Int, orientation: Int)
+}
+
+fun Activity.getStatusbarHeight(): Int {
+    val rectangle = Rect()
+    window.getDecorView().getWindowVisibleDisplayFrame(rectangle)
+    val statusBarHeight = rectangle.top
+    val contentViewTop = findViewById<View>(Window.ID_ANDROID_CONTENT).getTop()
+    val titleBarHeight = contentViewTop - statusBarHeight
+
+    return statusBarHeight
+    logd("StatusBar Height= $statusBarHeight , TitleBar Height = $titleBarHeight")
 }
 
