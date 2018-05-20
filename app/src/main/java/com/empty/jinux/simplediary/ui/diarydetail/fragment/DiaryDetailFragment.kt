@@ -34,9 +34,9 @@ import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
 import com.empty.jinux.simplediary.util.*
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.activity_demo.*
-import kotlinx.android.synthetic.main.diary_detail_act.*
 import kotlinx.android.synthetic.main.layout_diary_detail_edit_tool.*
 import kotlinx.android.synthetic.main.taskdetail_frag.*
+import org.jetbrains.anko.toast
 import javax.inject.Inject
 
 
@@ -110,6 +110,11 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             false
         }
 
+        bottomSpace.setOnClickListener {
+            diaryContent.apply { setSelection(text.length) }
+            showInputMethod()
+        }
+
         activity?.let {
             if (PermissionUtil.getLocationPermissions(it, REQUEST_CODE_LOCATION_PERMISSION)) {
                 mPresenter.start()
@@ -122,12 +127,19 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         ThreadPools.postOnUI {
             keyboardHeightListener.observer = object : KeyboardHeightObserver {
                 override fun onKeyboardHeightChanged(height: Int, orientation: Int) {
-                    if (height == 0 || diaryContent == null) {
+                    if (diaryContent == null) {
+                        return
+                    }
+
+                    editTools.layoutBottom = height
+
+                    if (height == 0) {
                         return
                     }
 
                     diaryContent.isCursorVisible = true
                     bottomSpace.layoutHeight = height
+                    editTools.layoutBottom = height
 
 //                    keyboardHeightListener.observer = null
 //                    keyboardHeightListener.close()
@@ -149,7 +161,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         val cursorLineBottom = editor.layout.getLineBottom(cursorLine)
 
         val cursorYOffset = cursorLineBottom - scrollView.scrollY
-        val editorVisibleAreaheight = activity!!.window.decorView.height - bottomSpace.height - activity!!.getStatusBarHeight() - activity!!.toolbar.height - 50
+        val editorVisibleAreaheight = editTools.top - 50
 
         if (cursorYOffset > editorVisibleAreaheight) {
             val scroll = cursorYOffset - editorVisibleAreaheight

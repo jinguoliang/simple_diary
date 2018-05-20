@@ -14,17 +14,15 @@
   ~ limitations under the License.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <ScrollView
         android:id="@+id/scrollContainer"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,23 +39,23 @@
                 android:lineSpacingExtra="@dimen/edit_text_space_extra"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:textAppearance="@style/DiaryContentText"
                 android:textCursorDrawable="@drawable/edit_cursor_shape"
                 tools:text="Medium Text" />
 
-            <Space
+            <View
                 android:id="@+id/bottomSpace"
-                android:layout_width="100dp"
-                android:layout_height="200dp"
-                android:background="#f0f"/>
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginBottom="@dimen/diary_detail_edit_tool_height"/>
         </LinearLayout>
 
     </ScrollView>
 
-
     <include
         layout="@layout/layout_diary_detail_edit_tool"
-        android:visibility="gone" />
+        android:visibility="visible"/>
 
-
-</LinearLayout>
+</FrameLayout>
