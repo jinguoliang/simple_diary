@@ -19,29 +19,19 @@ package com.empty.jinux.simplediary.ui.diarydetail.fragment
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
-import android.graphics.Color
-import android.graphics.Point
-import android.graphics.Rect
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
-import android.view.inputmethod.InputMethodManager
-import android.widget.*
-import com.empty.jinux.baselibaray.logd
+import android.widget.AdapterView
 import com.empty.jinux.baselibaray.loge
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
-import com.empty.jinux.simplediary.util.PermissionUtil
-import com.empty.jinux.simplediary.util.ThreadPools
-import com.empty.jinux.simplediary.util.adjustParagraphSpace
-import com.empty.jinux.simplediary.util.getScreenHeight
+import com.empty.jinux.simplediary.util.*
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.activity_demo.*
 import kotlinx.android.synthetic.main.diary_detail_act.*
@@ -83,8 +73,6 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         return inflater.inflate(R.layout.taskdetail_frag, container, false)
     }
 
-    private val REQUEST_CODE_LOCATION_PERMISSION = 0x64
-
     private var mWatcher: TextWatcher? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -112,7 +100,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             }
         }
         diaryContent.addTextChangedListener(mWatcher)
-        diaryContent.setOnTouchListener { v, event ->
+        diaryContent.setOnTouchListener { _, event ->
             when (event.actionMasked) {
                 MotionEvent.ACTION_UP -> {
                     diaryContent.isLongClickable = true
@@ -137,12 +125,10 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
                     if (height == 0 || diaryContent == null) {
                         return
                     }
-                    diaryContent.isCursorVisible = true
 
-                    logd("current keyboard height = $height")
-                    val ori = bottomSpace.layoutParams
-                    ori.height = height
-                    bottomSpace.layoutParams = ori
+                    diaryContent.isCursorVisible = true
+                    bottomSpace.layoutHeight = height
+
 //                    keyboardHeightListener.observer = null
 //                    keyboardHeightListener.close()
                     ThreadPools.postOnUI {
@@ -163,7 +149,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         val cursorLineBottom = editor.layout.getLineBottom(cursorLine)
 
         val cursorYOffset = cursorLineBottom - scrollView.scrollY
-        val editorVisibleAreaheight = activity!!.window.decorView.height - bottomSpace.height - activity!!.getStatusbarHeight() - activity!!.toolbar.height - 50
+        val editorVisibleAreaheight = activity!!.window.decorView.height - bottomSpace.height - activity!!.getStatusBarHeight() - activity!!.toolbar.height - 50
 
         if (cursorYOffset > editorVisibleAreaheight) {
             val scroll = cursorYOffset - editorVisibleAreaheight
@@ -173,7 +159,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     private fun initEditToolbar() {
         toolInputMethod.setOnClickListener {
-            toggleInputMethod()
+            //            toggleInputMethod()
             mReporter.reportClick("detail_tool_toggle")
         }
 
@@ -213,20 +199,6 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             }
 
         }
-    }
-
-    private fun toggleInputMethod() {
-        if (isInputMethodShowed()) {
-            hideInputMethod()
-        } else {
-            showInputMethod()
-        }
-    }
-
-    private fun isInputMethodShowed(): Boolean {
-        return activity?.run {
-            view!!.height < getScreenHeight() * 3 / 4
-        } ?: false
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -304,9 +276,11 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     companion object {
 
-        private val ARGUMENT_TASK_ID = "TASK_ID"
+        private const val REQUEST_CODE_LOCATION_PERMISSION = 0x64
 
-        private val REQUEST_EDIT_TASK = 1
+        private const val ARGUMENT_TASK_ID = "TASK_ID"
+
+        private const val REQUEST_EDIT_TASK = 1
 
         fun newInstance(taskId: Long): DiaryDetailFragment {
             val arguments = Bundle()
@@ -326,8 +300,9 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         }
     }
 
-    override fun showWeather(weather: String, icon: String) {
-        toolWeather.setSelection(MyWeatherIcons.getIconIndex(icon))
+    // todo weatherIconUrl what?
+    override fun showWeather(weather: String, weatherIconUrl: String) {
+        toolWeather.setSelection(MyWeatherIcons.getIconIndex(weatherIconUrl))
     }
 
     override fun showEmotion(id: Long) {
@@ -343,165 +318,15 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     override fun showInputMethod() {
-        val im = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-        im?.showSoftInput(diaryContent, InputMethodManager.SHOW_FORCED)
+        diaryContent.showInputMethod()
     }
 
     override fun hideInputMethod() {
-        val im = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-        im?.hideSoftInputFromWindow(diaryContent.windowToken, 0)
-    }
-
-
-}
-
-private fun TextView.getLineForCursor(): Int {
-    return layout.getLineForOffset(selectionStart)
-}
-
-class KeyboardHeightProvider
-/**
- * Construct a new KeyboardHeightProvider
- *
- * @param activity The parent activity_main
- */
-(
-        /** The root activity_main that uses this KeyboardHeightProvider  */
-        private val activity: Activity) : PopupWindow(activity) {
-
-    /** The cached landscape height of the keyboard  */
-    private var keyboardLandscapeHeight: Int = 0
-
-    /** The cached portrait height of the keyboard  */
-    private var keyboardPortraitHeight: Int = 0
-
-    /** The parent view  */
-    private val parentView: View
-
-    /**
-     * Get the screen orientation
-     *
-     * @return the screen orientation
-     */
-    private val screenOrientation: Int
-        get() = activity.resources.configuration.orientation
-
-    init {
-
-        contentView = FrameLayout(activity)
-
-        softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE
-        inputMethodMode = PopupWindow.INPUT_METHOD_NEEDED
-
-        parentView = activity.findViewById(android.R.id.content)
-
-        width = 0
-        height = WindowManager.LayoutParams.MATCH_PARENT
-
-        contentView.viewTreeObserver.addOnGlobalLayoutListener {
-            if (contentView != null) {
-                handleOnGlobalLayout()
-            }
-        }
-        setOnDismissListener {
-            logd("hello dismiss")
-        }
-    }
-
-    /**
-     * Start the KeyboardHeightProvider, this must be called after the onResume of the Activity.
-     * PopupWindows are not allowed to be registered before the onResume has finished
-     * of the Activity.
-     */
-    fun start() {
-
-        if (!isShowing && parentView.windowToken != null) {
-            setBackgroundDrawable(ColorDrawable(Color.RED))
-            showAtLocation(parentView, Gravity.NO_GRAVITY, 0, 0)
-        }
-    }
-
-    /**
-     * Close the keyboard height provider,
-     * this provider will not be used anymore.
-     */
-    fun close() {
-        dismiss()
-    }
-
-    /**
-     * Popup window itself is as big as the window of the Activity.
-     * The keyboard can then be calculated by extracting the popup view bottom
-     * from the activity_main window height.
-     */
-    private fun handleOnGlobalLayout() {
-
-        val screenSize = Point()
-        activity.windowManager.defaultDisplay.getSize(screenSize)
-
-        val rect = Rect()
-        contentView.getWindowVisibleDisplayFrame(rect)
-
-        // REMIND, you may like to change this using the fullscreen size of the phone
-        // and also using the status bar and navigation bar heights of the phone to calculate
-        // the keyboard height. But this worked fine on a Nexus.
-        val orientation = screenOrientation
-        val keyboardHeight = screenSize.y - rect.bottom
-
-        if (keyboardHeight == 0) {
-            notifyKeyboardHeightChanged(0, orientation)
-        } else {
-            val statusbarHeight = 0
-//            val statusbarHeight = activity.window.getStatusbarHeight()
-            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-                this.keyboardPortraitHeight = keyboardHeight - statusbarHeight
-                notifyKeyboardHeightChanged(keyboardPortraitHeight, orientation)
-            } else {
-                this.keyboardLandscapeHeight = keyboardHeight - statusbarHeight
-                notifyKeyboardHeightChanged(keyboardLandscapeHeight, orientation)
-            }
-        }
-    }
-
-    var observer: KeyboardHeightObserver? = null
-
-    /**
-     *
-     */
-    private fun notifyKeyboardHeightChanged(height: Int, orientation: Int) {
-        if (observer != null) {
-            observer!!.onKeyboardHeightChanged(height, orientation)
-        }
-    }
-
-    companion object {
-
-        /** The tag for logging purposes  */
-        private val TAG = "sample_KeyboardHeightProvider"
+        diaryContent.hideInputMethod()
     }
 }
 
-interface KeyboardHeightObserver {
 
-    /**
-     * Called when the keyboard height has changed, 0 means keyboard is closed,
-     * >= 1 means keyboard is opened.
-     *
-     * @param height        The height of the keyboard in pixels
-     * @param orientation   The orientation either: Configuration.ORIENTATION_PORTRAIT or
-     * Configuration.ORIENTATION_LANDSCAPE
-     */
-    fun onKeyboardHeightChanged(height: Int, orientation: Int)
-}
 
-fun Activity.getStatusbarHeight(): Int {
-    val rectangle = Rect()
-    window.getDecorView().getWindowVisibleDisplayFrame(rectangle)
-    val statusBarHeight = rectangle.top
-    val contentViewTop = findViewById<View>(Window.ID_ANDROID_CONTENT).getTop()
-    val titleBarHeight = contentViewTop - statusBarHeight
 
-    return statusBarHeight
-    logd("StatusBar Height= $statusBarHeight , TitleBar Height = $titleBarHeight")
-}
 

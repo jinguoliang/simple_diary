@@ -29,37 +29,36 @@ class MEditText : EditText {
     private fun adjustCursorHeight(pos: Int) {
         // first time
         if (layout == null) return
-        val editor = getMEditor()
-        val cursorDrawable = getCursorDrawable(editor)
+
+        val editor: Any = reflectFeild(TextView::class.java, "mEditor")
+        val cursorDrawables: Array<Drawable?> = editor.reflectFeild(editor.javaClass, "mCursorDrawable")
+
+        val cursorDrawable = getCursorDrawable(cursorDrawables)
 
         val line = layout.getLineForOffset(pos)
         val start = layout.getLineStart(line)
         val end = layout.getLineEnd(line)
-        if (text.getSpans(start, end, ParagrahEndLineSpan::class.java).isEmpty() || (pos == text.length) && text[pos - 1] == '\n') {
-            cursorDrawable.level = 9000
-        } else {
+        val isParagraphEnd = text.getSpans(start, end, ParagrahEndLineSpan::class.java).isNotEmpty()
+        // 本来只要判断是段尾行就行，但是当最后一行为空时，也被认为是段尾，所以需排除
+        // 这是　getSpans　的原因
+        if (isParagraphEnd && !((pos == text.length) && text[pos - 1] == '\n')) {
             cursorDrawable.level = 6500
+        } else {
+            cursorDrawable.level = 9000
         }
     }
 
-    private fun getCursorDrawable(editor: Any): Drawable {
-        val cursorArray = getMCursorDrawable(editor)
+    private fun getCursorDrawable(cursorArray: Array<Drawable?>): Drawable {
         if (cursorArray[0] !is ClipDrawable) {
             cursorArray[0] = ResourcesCompat.getDrawable(resources, R.drawable.edit_text_cursor, null)
         }
         return cursorArray[0]!!
     }
 
-    private fun getMCursorDrawable(editor: Any): Array<Drawable?> {
-        val mCursorDrawableFeild = editor.javaClass.getDeclaredField("mCursorDrawable")
-        mCursorDrawableFeild.isAccessible = true
-        return mCursorDrawableFeild.get(editor) as Array<Drawable?>
-    }
-
-    private fun getMEditor(): Any {
-        val mEditorFeild = TextView::class.java.getDeclaredField("mEditor")
-        mEditorFeild.isAccessible = true
-        return mEditorFeild.get(this)
+    private inline fun <reified T, reified D> D.reflectFeild(clazz: Class<D>, fieldName: String): T {
+        val field = clazz.getDeclaredField(fieldName)
+        field.isAccessible = true
+        return field.get(this) as T
     }
 
 }
