@@ -134,30 +134,34 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
                         return
                     }
 
-                    if (editTools.selectedTabPosition == 0) {
-                        toolArea.visibility = View.GONE
+                    val inputMethodShowed = height != 0
+                    if (inputMethodShowed) {
+                        onInputMedhodShowed(height)
                     } else {
-
-                    }
-
-                    if (height == 0) {
-                        return
-                    }
-
-                    diaryContent.isCursorVisible = true
-                    bottomArea.layoutHeight = height + toolArea.dimen(R.dimen.diary_detail_edit_tool_height)
-                    toolArea.layoutHeight = height
-                    toolArea.visibility = View.VISIBLE
-
-//                    keyboardHeightListener.observer = null
-//                    keyboardHeightListener.close()
-                    ThreadPools.postOnUI {
-                        adjustScrollPosition()
+                        onInputMedhodHided()
                     }
                 }
 
             }
             keyboardHeightListener.start()
+        }
+    }
+
+    private fun onInputMedhodHided() {
+        if (editTools.selectedTabPosition == 0) {
+            toolArea.visibility = View.GONE
+        }
+    }
+
+    private fun onInputMedhodShowed(height: Int) {
+        diaryContent.isCursorVisible = true
+
+        bottomArea.layoutHeight = height + toolArea.dimen(R.dimen.diary_detail_edit_tool_height)
+        toolArea.layoutHeight = height
+        toolArea.visibility = View.VISIBLE
+
+        ThreadPools.postOnUI {
+            adjustScrollPosition()
         }
     }
 
