@@ -40,6 +40,7 @@ import kotlinx.android.synthetic.main.activity_demo.*
 import kotlinx.android.synthetic.main.layout_diary_detail_edit_tool.*
 import kotlinx.android.synthetic.main.taskdetail_frag.*
 import org.jetbrains.anko.dimen
+import org.jetbrains.anko.toast
 import javax.inject.Inject
 
 
@@ -113,7 +114,11 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             false
         }
 
-        bottomArea.setOnClickListener {
+        editContainer.setOnClickListener {
+            diaryContent.apply { setSelection(text.length) }
+            showInputMethod()
+        }
+        fragmentContainer.setOnClickListener {
             diaryContent.apply { setSelection(text.length) }
             showInputMethod()
         }
