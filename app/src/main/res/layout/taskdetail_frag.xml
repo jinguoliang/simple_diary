@@ -33,29 +33,28 @@
                 android:id="@+id/diaryContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
                 android:gravity="top|start"
                 android:imeOptions="flagNoExtractUi"
-                android:background="@android:color/transparent"
                 android:lineSpacingExtra="@dimen/edit_text_space_extra"
+                android:paddingBottom="8dp"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="8dp"
-                android:paddingBottom="8dp"
                 android:textAppearance="@style/DiaryContentText"
                 android:textCursorDrawable="@drawable/edit_cursor_shape"
                 tools:text="Medium Text" />
 
             <View
-                android:id="@+id/bottomSpace"
+                android:id="@+id/bottomArea"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_marginBottom="@dimen/diary_detail_edit_tool_height"/>
+                android:layout_height="300dp" />
         </LinearLayout>
 
     </ScrollView>
 
     <include
         layout="@layout/layout_diary_detail_edit_tool"
-        android:visibility="visible"/>
+        android:visibility="visible" />
 
 </FrameLayout>

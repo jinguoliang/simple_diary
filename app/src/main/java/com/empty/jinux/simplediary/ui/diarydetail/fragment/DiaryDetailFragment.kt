@@ -19,12 +19,15 @@ package com.empty.jinux.simplediary.ui.diarydetail.fragment
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.design.widget.TabLayout
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentPagerAdapter
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
-import android.widget.AdapterView
 import com.empty.jinux.baselibaray.loge
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
@@ -36,7 +39,7 @@ import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.activity_demo.*
 import kotlinx.android.synthetic.main.layout_diary_detail_edit_tool.*
 import kotlinx.android.synthetic.main.taskdetail_frag.*
-import org.jetbrains.anko.toast
+import org.jetbrains.anko.dimen
 import javax.inject.Inject
 
 
@@ -110,7 +113,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             false
         }
 
-        bottomSpace.setOnClickListener {
+        bottomArea.setOnClickListener {
             diaryContent.apply { setSelection(text.length) }
             showInputMethod()
         }
@@ -131,15 +134,20 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
                         return
                     }
 
-                    editTools.layoutBottom = height
+                    if (editTools.selectedTabPosition == 0) {
+                        toolArea.visibility = View.GONE
+                    } else {
+
+                    }
 
                     if (height == 0) {
                         return
                     }
 
                     diaryContent.isCursorVisible = true
-                    bottomSpace.layoutHeight = height
-                    editTools.layoutBottom = height
+                    bottomArea.layoutHeight = height + toolArea.dimen(R.dimen.diary_detail_edit_tool_height)
+                    toolArea.layoutHeight = height
+                    toolArea.visibility = View.VISIBLE
 
 //                    keyboardHeightListener.observer = null
 //                    keyboardHeightListener.close()
@@ -170,47 +178,76 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     private fun initEditToolbar() {
-        toolInputMethod.setOnClickListener {
-            //            toggleInputMethod()
-            mReporter.reportClick("detail_tool_toggle")
-        }
-
-        toolLocation.setOnClickListener {
-            mPresenter.refreshLocation()
-            mReporter.reportClick("detail_tool_location")
-        }
-
-        toolWeather.adapter = SpinnerDrawableAdapter(context,
-                R.layout.spinner_emotion_item,
-                R.layout.drop_down_emotion_item,
-                MyWeatherIcons.getAllMyIcon())
-        toolWeather.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                mReporter.reportClick("detail_tool_weather", "no")
+        toolArea.adapter = object : FragmentPagerAdapter(fragmentManager) {
+            override fun getItem(position: Int): Fragment {
+                return MFragment()
             }
 
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                mPresenter.setWeather(MyWeatherIcons.getIconByIndex(position))
-                mReporter.reportClick("detail_tool_weather", MyWeatherIcons.getWeatherName(position))
-            }
+            override fun getCount() = 3
 
         }
+        editTools.setupWithViewPager(toolArea)
+        editTools.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
+            override fun onTabReselected(tab: TabLayout.Tab?) {
 
-        toolEmotion.adapter = SpinnerDrawableAdapter(context,
-                R.layout.spinner_emotion_item,
-                R.layout.drop_down_emotion_item,
-                MyEmotionIcons.getAllMyIcon())
-        toolEmotion.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                mReporter.reportClick("detail_tool_emotion", "no")
             }
 
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                mPresenter.setEmotion(position.toLong())
-                mReporter.reportClick("detail_tool_emotion", MyEmotionIcons.getEmotionName(position))
+            override fun onTabUnselected(tab: TabLayout.Tab) {
+
             }
 
-        }
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                when (tab.position) {
+                    0 -> {
+                        showInputMethod()
+                    }
+                    else -> {
+                        hideInputMethod()
+                    }
+                }
+            }
+        })
+//        toolInputMethod.setOnClickListener {
+//            //            toggleInputMethod()
+//            mReporter.reportClick("detail_tool_toggle")
+//        }
+//
+//        toolLocation.setOnClickListener {
+//            mPresenter.refreshLocation()
+//            mReporter.reportClick("detail_tool_location")
+//        }
+
+//        toolWeather.adapter = SpinnerDrawableAdapter(context,
+//                R.layout.spinner_emotion_item,
+//                R.layout.drop_down_emotion_item,
+//                MyWeatherIcons.getAllMyIcon())
+//        toolWeather.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//            override fun onNothingSelected(parent: AdapterView<*>?) {
+//                mReporter.reportClick("detail_tool_weather", "no")
+//            }
+//
+//            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+//                mPresenter.setWeather(MyWeatherIcons.getIconByIndex(position))
+//                mReporter.reportClick("detail_tool_weather", MyWeatherIcons.getWeatherName(position))
+//            }
+//
+//        }
+//
+//        toolEmotion.adapter = SpinnerDrawableAdapter(context,
+//                R.layout.spinner_emotion_item,
+//                R.layout.drop_down_emotion_item,
+//                MyEmotionIcons.getAllMyIcon())
+//        toolEmotion.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//            override fun onNothingSelected(parent: AdapterView<*>?) {
+//                mReporter.reportClick("detail_tool_emotion", "no")
+//            }
+//
+//            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+//                mPresenter.setEmotion(position.toLong())
+//                mReporter.reportClick("detail_tool_emotion", MyEmotionIcons.getEmotionName(position))
+//            }
+//
+//        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -314,11 +351,11 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     // todo weatherIconUrl what?
     override fun showWeather(weather: String, weatherIconUrl: String) {
-        toolWeather.setSelection(MyWeatherIcons.getIconIndex(weatherIconUrl))
+//        toolWeather.setSelection(MyWeatherIcons.getIconIndex(weatherIconUrl))
     }
 
     override fun showEmotion(id: Long) {
-        toolEmotion.setSelection(id.toInt())
+//        toolEmotion.setSelection(id.toInt())
     }
 
     override fun showDiarySaved() {
@@ -335,6 +372,15 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     override fun hideInputMethod() {
         diaryContent.hideInputMethod()
+    }
+}
+
+class MFragment : Fragment() {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return View(context).apply {
+            setBackgroundColor(Color.CYAN)
+            layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        }
     }
 }
 
