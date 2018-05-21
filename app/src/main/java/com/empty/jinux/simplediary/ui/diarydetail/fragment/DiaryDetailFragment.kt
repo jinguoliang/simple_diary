@@ -373,6 +373,9 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     override fun hideInputMethod() {
         diaryContent.hideInputMethod()
     }
+
+    fun onBackPressed(): Boolean {
+    }
 }
 
 class MFragment : Fragment() {
