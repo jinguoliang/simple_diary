@@ -379,6 +379,12 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     fun onBackPressed(): Boolean {
+        if (editTools.selectedTabPosition > 0 && toolArea.isShown) {
+            toolArea.visibility = View.GONE
+            return true
+        } else {
+            return false
+        }
     }
 }
 
