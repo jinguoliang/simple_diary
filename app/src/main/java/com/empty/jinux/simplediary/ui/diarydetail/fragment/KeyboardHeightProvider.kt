@@ -57,12 +57,10 @@ class KeyboardHeightProvider
     fun start() {
 
         contentView.viewTreeObserver.addOnGlobalLayoutListener {
-            logd("viewTreeObserver")
             if (contentView != null) {
                 handleOnGlobalLayout()
             }
         }
-        logd("isShowing: $isShowing, windowToken: ${parentView.windowToken}")
         if (!isShowing && parentView.windowToken != null) {
             setBackgroundDrawable(ColorDrawable(Color.RED))
             showAtLocation(parentView, Gravity.NO_GRAVITY, 0, 0)

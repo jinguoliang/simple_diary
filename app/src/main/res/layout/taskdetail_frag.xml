@@ -48,7 +48,7 @@
                 tools:text="Medium Text" />
 
             <Space
-                android:id="@+id/bottomArea"
+                android:id="@+id/bottomSpace"
                 android:layout_width="match_parent"
                 android:layout_height="300dp" />
         </LinearLayout>

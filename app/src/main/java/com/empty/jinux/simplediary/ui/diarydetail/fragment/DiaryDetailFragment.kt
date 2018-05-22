@@ -23,12 +23,17 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
+import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.content.res.ResourcesCompat
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import com.empty.jinux.baselibaray.loge
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
@@ -38,6 +43,7 @@ import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
 import com.empty.jinux.simplediary.util.*
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.activity_demo.*
+import kotlinx.android.synthetic.main.fragment_edit_status.*
 import kotlinx.android.synthetic.main.layout_diary_detail_edit_tool.*
 import kotlinx.android.synthetic.main.taskdetail_frag.*
 import org.jetbrains.anko.dimen
@@ -161,7 +167,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     private fun onInputMedhodHided() {
-        if (editTools.selectedTabPosition == 0) {
+        if (editToolsTab.selectedTabPosition == 0) {
             toolArea.visibility = View.GONE
         }
     }
@@ -169,7 +175,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     private fun onInputMedhodShowed(height: Int) {
         diaryContent.isCursorVisible = true
 
-        bottomArea.layoutHeight = height + toolArea.dimen(R.dimen.diary_detail_edit_tool_height)
+        bottomSpace.layoutHeight = height + toolArea.dimen(R.dimen.diary_detail_edit_tool_height)
         toolArea.setCurrentItem(0, false)
         toolArea.layoutHeight = height
         toolArea.visibility = View.VISIBLE
@@ -180,6 +186,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     private fun adjustScrollPosition() {
+
         val editor = diaryContent
         val scrollView = scrollContainer
 
@@ -187,33 +194,37 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         val cursorLineBottom = editor.layout.getLineBottom(cursorLine)
 
         val cursorYOffset = cursorLineBottom - scrollView.scrollY
-        val editorVisibleAreaheight = editTools.top - 50
+        val editorVisibleAreaheight = editTabContainer.top - 50
 
         if (cursorYOffset > editorVisibleAreaheight) {
             val scroll = cursorYOffset - editorVisibleAreaheight
-            scrollView.scrollBy(0, scroll)
+            scrollView.smoothScrollBy(0, scroll)
         }
     }
 
     private fun initEditToolbar() {
+        val fragments = listOf(
+                fragmentManager?.findFragmentByTag(makeFragmentName(toolArea.id, 0)) ?: MFragment(),
+                fragmentManager?.findFragmentByTag(makeFragmentName(toolArea.id, 1))
+                        ?: StatusFragment()
+        )
         toolArea.adapter = object : FragmentPagerAdapter(fragmentManager) {
             override fun getItem(position: Int): Fragment {
-                return MFragment()
+                return fragments[position]
             }
 
-            override fun getCount() = 3
+            override fun getCount() = fragments.size
 
         }
-        editTools.setupWithViewPager(toolArea)
-        editTools.tabGravity = Gravity.START
+        editToolsTab.setupWithViewPager(toolArea)
+        editToolsTab.tabGravity = Gravity.START
 
         val iconRes = listOf(R.drawable.ic_keyboard,
-                R.drawable.ic_location,
                 R.drawable.ic_emotion)
-        (0..2).map { editTools.getTabAt(it) }.forEachIndexed { i, it ->
+        (0 until iconRes.size).map { editToolsTab.getTabAt(it) }.forEachIndexed { i, it ->
             it?.customView = ImageView(context).apply { setImageDrawable(resources.getDrawable(iconRes[i])) }
         }
-        editTools.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        editToolsTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab) {
                 when (tab.position) {
                     0 -> {
@@ -417,7 +428,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     fun onBackPressed(): Boolean {
-        if (editTools.selectedTabPosition > 0 && toolArea.isShown) {
+        if (editToolsTab.selectedTabPosition > 0 && toolArea.isShown) {
             toolArea.visibility = View.GONE
             return true
         } else {
@@ -426,13 +437,42 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 }
 
+class StatusFragment : Fragment() {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_edit_status, container, false)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        val iconSize = resources.getDimensionPixelSize(R.dimen.edit_status_icon_size)
+
+        weatherRadioGroup.addRadios(MyWeatherIcons.getAllMyIcon(), iconSize)
+        emotionRadioGroup.addRadios(MyEmotionIcons.getAllMyIcon(), iconSize)
+    }
+}
+
+private fun RadioGroup.addRadios(iconReses: List<Int>, iconSize: Int) {
+    iconReses.map {
+        RadioButton(context).apply {
+            buttonDrawable = VectorDrawableCompat.create(resources, it, null)?.apply { setBounds(0, 0, 50, 50) }
+            buttonTintList = ResourcesCompat.getColorStateList(resources, R.color.button_selector, null)
+        }
+    }.forEach {
+        addView(it, LinearLayout.LayoutParams(iconSize, iconSize).apply { })
+    }
+}
+
 class MFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return View(context).apply {
-            setBackgroundColor(Color.CYAN)
+            setBackgroundColor(Color.WHITE)
             layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         }
     }
+}
+
+private fun makeFragmentName(viewId: Int, id: Long): String {
+    return "android:switcher:$viewId:$id"
 }
 
 
