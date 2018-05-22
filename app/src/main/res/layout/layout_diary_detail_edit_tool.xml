@@ -2,48 +2,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_gravity="bottom">
+    android:layout_gravity="bottom"
+    android:orientation="vertical">
 
-    <android.support.design.widget.TabLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/editTools"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/diary_detail_edit_tool_height"
-        android:background="@color/colorPrimary"
-        android:gravity="top"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary">
 
-        <android.support.design.widget.TabItem
-            android:id="@+id/toolInputMethod"
-            android:layout_width="@dimen/diary_detail_edit_tool_item_size"
-            android:layout_height="@dimen/diary_detail_edit_tool_item_size"
-            android:layout_marginStart="@dimen/diary_detail_edit_tool_item_space"
-            android:layout_marginTop="10dp"
-            android:text="键盘" />
-
-        <android.support.design.widget.TabItem
-            android:id="@+id/toolLocation"
-            android:layout_width="@dimen/diary_detail_edit_tool_item_size"
-            android:layout_height="@dimen/diary_detail_edit_tool_item_size"
-            android:layout_marginStart="@dimen/diary_detail_edit_tool_item_space"
-            android:layout_marginTop="10dp"
-
-            android:text="位置" />
-
-        <android.support.design.widget.TabItem
-            android:id="@+id/toolWeather"
+        <android.support.design.widget.TabLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/editTools"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/diary_detail_edit_tool_item_space"
-            android:layout_marginTop="5dp"
-            android:text="状态" />
-
-
-    </android.support.design.widget.TabLayout>
+            android:layout_height="@dimen/diary_detail_edit_tool_height"
+            android:gravity="top"
+            android:orientation="horizontal" />
+    </FrameLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/toolArea"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:layout_gravity="bottom"/>
+        android:layout_gravity="bottom" />
 </LinearLayout>

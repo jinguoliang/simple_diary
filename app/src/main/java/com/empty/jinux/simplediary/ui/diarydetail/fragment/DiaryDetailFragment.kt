@@ -28,6 +28,7 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
+import android.widget.ImageView
 import com.empty.jinux.baselibaray.loge
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
@@ -40,7 +41,6 @@ import kotlinx.android.synthetic.main.activity_demo.*
 import kotlinx.android.synthetic.main.layout_diary_detail_edit_tool.*
 import kotlinx.android.synthetic.main.taskdetail_frag.*
 import org.jetbrains.anko.dimen
-import org.jetbrains.anko.toast
 import javax.inject.Inject
 
 
@@ -95,7 +95,6 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (editor == null) return
-
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -171,6 +170,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         diaryContent.isCursorVisible = true
 
         bottomArea.layoutHeight = height + toolArea.dimen(R.dimen.diary_detail_edit_tool_height)
+        toolArea.setCurrentItem(0, false)
         toolArea.layoutHeight = height
         toolArea.visibility = View.VISIBLE
 
@@ -205,19 +205,43 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
         }
         editTools.setupWithViewPager(toolArea)
-        editTools.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
-            override fun onTabReselected(tab: TabLayout.Tab?) {
+        editTools.tabGravity = Gravity.START
+
+        val iconRes = listOf(R.drawable.ic_keyboard,
+                R.drawable.ic_location,
+                R.drawable.ic_emotion)
+        (0..2).map { editTools.getTabAt(it) }.forEachIndexed { i, it ->
+            it?.customView = ImageView(context).apply { setImageDrawable(resources.getDrawable(iconRes[i])) }
+        }
+        editTools.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabReselected(tab: TabLayout.Tab) {
+                when (tab.position) {
+                    0 -> {
+                        if (toolArea.isShown) {
+                            hideInputMethod()
+                        } else {
+                            showInputMethod()
+                        }
+                    }
+                    else -> {
+                        if (toolArea.isShown) {
+                            toolArea.visibility = View.GONE
+                        } else {
+                            toolArea.visibility = View.VISIBLE
+                        }
+                    }
+                }
 
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab) {
-
             }
 
             override fun onTabSelected(tab: TabLayout.Tab) {
                 when (tab.position) {
                     0 -> {
                         showInputMethod()
+
                     }
                     else -> {
                         hideInputMethod()
