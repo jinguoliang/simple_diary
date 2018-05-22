@@ -69,6 +69,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     override fun onPause() {
         super.onPause()
+        keyboardHeightListener.close()
         mPresenter.stop()
     }
 
@@ -79,10 +80,14 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     private var mWatcher: TextWatcher? = null
 
+    lateinit var keyboardHeightListener: KeyboardHeightProvider
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         setHasOptionsMenu(true)
+
+        keyboardHeightListener = KeyboardHeightProvider(activity!!)
 
         mWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -131,23 +136,27 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
         initEditToolbar()
 
-        val keyboardHeightListener = KeyboardHeightProvider(activity!!)
-        ThreadPools.postOnUI {
-            keyboardHeightListener.observer = object : KeyboardHeightObserver {
-                override fun onKeyboardHeightChanged(height: Int, orientation: Int) {
-                    if (diaryContent == null) {
-                        return
-                    }
-
-                    val inputMethodShowed = height != 0
-                    if (inputMethodShowed) {
-                        onInputMedhodShowed(height)
-                    } else {
-                        onInputMedhodHided()
-                    }
+        keyboardHeightListener.observer = object : KeyboardHeightObserver {
+            override fun onKeyboardHeightChanged(height: Int, orientation: Int) {
+                if (diaryContent == null) {
+                    return
                 }
 
+                val inputMethodShowed = height != 0
+                if (inputMethodShowed) {
+                    onInputMedhodShowed(height)
+                } else {
+                    onInputMedhodHided()
+                }
             }
+
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        ThreadPools.postOnUI {
             keyboardHeightListener.start()
         }
     }
