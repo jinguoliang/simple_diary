@@ -134,8 +134,10 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         }
 
         activity?.let {
-            if (PermissionUtil.getLocationPermissions(it, REQUEST_CODE_LOCATION_PERMISSION)) {
-                mPresenter.start()
+            ThreadPools.postOnUI {
+                if (PermissionUtil.getLocationPermissions(it, REQUEST_CODE_LOCATION_PERMISSION)) {
+                    mPresenter.start()
+                }
             }
         }
 
@@ -154,7 +156,6 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
                     onInputMedhodHided()
                 }
             }
-
         }
     }
 
@@ -202,12 +203,22 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         }
     }
 
+    private lateinit var keyboardFragment: KeyboardFragment
+
+    private lateinit var statusFragment: StatusFragment
+
     private fun initEditToolbar() {
-        val fragments = listOf(
-                fragmentManager?.findFragmentByTag(makeFragmentName(toolArea.id, 0)) ?: MFragment(),
-                fragmentManager?.findFragmentByTag(makeFragmentName(toolArea.id, 1))
-                        ?: StatusFragment()
-        )
+        keyboardFragment = ((fragmentManager?.findFragmentByTag(makeFragmentName(toolArea.id, 0)) as? KeyboardFragment)
+                ?: KeyboardFragment())
+        statusFragment = ((fragmentManager?.findFragmentByTag(makeFragmentName(toolArea.id, 1)) as? StatusFragment)
+                ?: StatusFragment())
+
+        val fragments = listOf(keyboardFragment, statusFragment)
+        fragments.forEach {
+            it.mPresenter = mPresenter
+            it.mReporter = mReporter
+        }
+
         toolArea.adapter = object : FragmentPagerAdapter(fragmentManager) {
             override fun getItem(position: Int): Fragment {
                 return fragments[position]
@@ -256,51 +267,11 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
                     }
                     else -> {
                         hideInputMethod()
+                        toolArea.visibility = View.VISIBLE
                     }
                 }
             }
         })
-//        toolInputMethod.setOnClickListener {
-//            //            toggleInputMethod()
-//            mReporter.reportClick("detail_tool_toggle")
-//        }
-//
-//        toolLocation.setOnClickListener {
-//            mPresenter.refreshLocation()
-//            mReporter.reportClick("detail_tool_location")
-//        }
-
-//        toolWeather.adapter = SpinnerDrawableAdapter(context,
-//                R.layout.spinner_emotion_item,
-//                R.layout.drop_down_emotion_item,
-//                MyWeatherIcons.getAllMyIcon())
-//        toolWeather.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-//            override fun onNothingSelected(parent: AdapterView<*>?) {
-//                mReporter.reportClick("detail_tool_weather", "no")
-//            }
-//
-//            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-//                mPresenter.setWeather(MyWeatherIcons.getIconByIndex(position))
-//                mReporter.reportClick("detail_tool_weather", MyWeatherIcons.getWeatherName(position))
-//            }
-//
-//        }
-//
-//        toolEmotion.adapter = SpinnerDrawableAdapter(context,
-//                R.layout.spinner_emotion_item,
-//                R.layout.drop_down_emotion_item,
-//                MyEmotionIcons.getAllMyIcon())
-//        toolEmotion.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-//            override fun onNothingSelected(parent: AdapterView<*>?) {
-//                mReporter.reportClick("detail_tool_emotion", "no")
-//            }
-//
-//            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-//                mPresenter.setEmotion(position.toLong())
-//                mReporter.reportClick("detail_tool_emotion", MyEmotionIcons.getEmotionName(position))
-//            }
-//
-//        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -404,11 +375,11 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     // todo weatherIconUrl what?
     override fun showWeather(weather: String, weatherIconUrl: String) {
-//        toolWeather.setSelection(MyWeatherIcons.getIconIndex(weatherIconUrl))
+        statusFragment.showWeather(weather, weatherIconUrl)
     }
 
     override fun showEmotion(id: Long) {
-//        toolEmotion.setSelection(id.toInt())
+        statusFragment.showEmotion(id)
     }
 
     override fun showDiarySaved() {
@@ -437,17 +408,54 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 }
 
-class StatusFragment : Fragment() {
+abstract class MFragment : Fragment() {
+    lateinit var mPresenter: DiaryDetailPresenter
+    lateinit var mReporter: Reporter
+}
+
+class StatusFragment : MFragment() {
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_edit_status, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val iconSize = resources.getDimensionPixelSize(R.dimen.edit_status_icon_size)
 
+        val iconSize = resources.getDimensionPixelSize(R.dimen.edit_status_icon_size)
         weatherRadioGroup.addRadios(MyWeatherIcons.getAllMyIcon(), iconSize)
         emotionRadioGroup.addRadios(MyEmotionIcons.getAllMyIcon(), iconSize)
+
+        weatherRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+            val index = group.indexOfChild(group.findViewById<RadioButton>(checkedId))
+            mPresenter.setWeather(MyWeatherIcons.getIconByIndex(index))
+            mReporter.reportClick("detail_tool_weather", MyWeatherIcons.getWeatherName(index))
+
+        }
+
+        emotionRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+            val index = group.indexOfChild(group.findViewById<RadioButton>(checkedId))
+            mPresenter.setEmotion(index.toLong())
+            mReporter.reportClick("detail_tool_emotion", MyEmotionIcons.getEmotionName(index))
+
+            //            mReporter.reportClick("detail_tool_toggle")
+            //            mReporter.reportClick("detail_tool_location")
+        }
+    }
+
+    fun showWeather(weather: String, weatherIconUrl: String) {
+        val iconIndex = MyWeatherIcons.getIconIndex(weatherIconUrl)
+        val child = emotionRadioGroup.getChildAt(iconIndex)
+                ?: emotionRadioGroup.getChildAt(0).apply {
+                    mReporter.reportEvent("exception", Bundle())
+                }
+        weatherRadioGroup.check(child.id)
+    }
+
+    fun showEmotion(id: Long) {
+        val child = emotionRadioGroup.getChildAt(id.toInt())
+                ?: emotionRadioGroup.getChildAt(0)
+        emotionRadioGroup.check(child.id)
     }
 }
 
@@ -462,7 +470,7 @@ private fun RadioGroup.addRadios(iconReses: List<Int>, iconSize: Int) {
     }
 }
 
-class MFragment : Fragment() {
+class KeyboardFragment : MFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return View(context).apply {
             setBackgroundColor(Color.WHITE)
@@ -470,6 +478,7 @@ class MFragment : Fragment() {
         }
     }
 }
+
 
 private fun makeFragmentName(viewId: Int, id: Long): String {
     return "android:switcher:$viewId:$id"
