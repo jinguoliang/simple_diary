@@ -445,8 +445,8 @@ class StatusFragment : MFragment() {
 
     fun showWeather(weather: String, weatherIconUrl: String) {
         val iconIndex = MyWeatherIcons.getIconIndex(weatherIconUrl)
-        val child = emotionRadioGroup.getChildAt(iconIndex)
-                ?: emotionRadioGroup.getChildAt(0).apply {
+        val child = weatherRadioGroup.getChildAt(iconIndex)
+                ?: weatherRadioGroup.getChildAt(0).apply {
                     mReporter.reportEvent("exception", Bundle())
                 }
         weatherRadioGroup.check(child.id)
