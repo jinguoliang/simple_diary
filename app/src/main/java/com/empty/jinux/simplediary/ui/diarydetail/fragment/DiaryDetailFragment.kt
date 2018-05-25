@@ -19,31 +19,26 @@ package com.empty.jinux.simplediary.ui.diarydetail.fragment
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
-import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.content.res.ResourcesCompat
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.RadioButton
-import android.widget.RadioGroup
 import com.empty.jinux.baselibaray.loge
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
+import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.KeyboardFragment
+import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.StatusFragment
 import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
 import com.empty.jinux.simplediary.util.*
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.activity_demo.*
-import kotlinx.android.synthetic.main.fragment_edit_status.*
 import kotlinx.android.synthetic.main.layout_diary_detail_edit_tool.*
 import kotlinx.android.synthetic.main.taskdetail_frag.*
 import org.jetbrains.anko.dimen
@@ -228,7 +223,6 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
         }
         editToolsTab.setupWithViewPager(toolArea)
-        editToolsTab.tabGravity = Gravity.START
 
         val iconRes = listOf(R.drawable.ic_keyboard,
                 R.drawable.ic_emotion)
@@ -238,7 +232,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         editToolsTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab) {
                 when (tab.position) {
-                    0 -> {
+                    TAB_KEYBOARD_POS -> {
                         if (toolArea.isShown) {
                             hideInputMethod()
                         } else {
@@ -251,6 +245,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
                         } else {
                             toolArea.visibility = View.VISIBLE
                         }
+                        hideInputMethod()
                     }
                 }
 
@@ -261,9 +256,8 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
             override fun onTabSelected(tab: TabLayout.Tab) {
                 when (tab.position) {
-                    0 -> {
+                    TAB_KEYBOARD_POS -> {
                         showInputMethod()
-
                     }
                     else -> {
                         hideInputMethod()
@@ -355,6 +349,9 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
         private const val REQUEST_EDIT_TASK = 1
 
+        private const val TAB_KEYBOARD_POS = 0
+
+
         fun newInstance(taskId: Long): DiaryDetailFragment {
             val arguments = Bundle()
             arguments.putLong(ARGUMENT_TASK_ID, taskId)
@@ -412,73 +409,6 @@ abstract class MFragment : Fragment() {
     lateinit var mPresenter: DiaryDetailPresenter
     lateinit var mReporter: Reporter
 }
-
-class StatusFragment : MFragment() {
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_edit_status, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        val iconSize = resources.getDimensionPixelSize(R.dimen.edit_status_icon_size)
-        weatherRadioGroup.addRadios(MyWeatherIcons.getAllMyIcon(), iconSize)
-        emotionRadioGroup.addRadios(MyEmotionIcons.getAllMyIcon(), iconSize)
-
-        weatherRadioGroup.setOnCheckedChangeListener { group, checkedId ->
-            val index = group.indexOfChild(group.findViewById<RadioButton>(checkedId))
-            mPresenter.setWeather(MyWeatherIcons.getIconByIndex(index))
-            mReporter.reportClick("detail_tool_weather", MyWeatherIcons.getWeatherName(index))
-
-        }
-
-        emotionRadioGroup.setOnCheckedChangeListener { group, checkedId ->
-            val index = group.indexOfChild(group.findViewById<RadioButton>(checkedId))
-            mPresenter.setEmotion(index.toLong())
-            mReporter.reportClick("detail_tool_emotion", MyEmotionIcons.getEmotionName(index))
-
-            //            mReporter.reportClick("detail_tool_toggle")
-            //            mReporter.reportClick("detail_tool_location")
-        }
-    }
-
-    fun showWeather(weather: String, weatherIconUrl: String) {
-        val iconIndex = MyWeatherIcons.getIconIndex(weatherIconUrl)
-        val child = weatherRadioGroup.getChildAt(iconIndex)
-                ?: weatherRadioGroup.getChildAt(0).apply {
-                    mReporter.reportEvent("exception", Bundle())
-                }
-        weatherRadioGroup.check(child.id)
-    }
-
-    fun showEmotion(id: Long) {
-        val child = emotionRadioGroup.getChildAt(id.toInt())
-                ?: emotionRadioGroup.getChildAt(0)
-        emotionRadioGroup.check(child.id)
-    }
-}
-
-private fun RadioGroup.addRadios(iconReses: List<Int>, iconSize: Int) {
-    iconReses.map {
-        RadioButton(context).apply {
-            buttonDrawable = VectorDrawableCompat.create(resources, it, null)?.apply { setBounds(0, 0, 50, 50) }
-            buttonTintList = ResourcesCompat.getColorStateList(resources, R.color.button_selector, null)
-        }
-    }.forEach {
-        addView(it, LinearLayout.LayoutParams(iconSize, iconSize).apply { })
-    }
-}
-
-class KeyboardFragment : MFragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return View(context).apply {
-            setBackgroundColor(Color.WHITE)
-            layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        }
-    }
-}
-
 
 private fun makeFragmentName(viewId: Int, id: Long): String {
     return "android:switcher:$viewId:$id"
