@@ -222,6 +222,9 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             override fun getCount() = fragments.size
 
         }
+        toolArea.setPageTransformer(false) { page, position ->
+            page.translationX = page.width * -position
+        }
         editToolsTab.setupWithViewPager(toolArea)
 
         val iconRes = listOf(R.drawable.ic_keyboard,
