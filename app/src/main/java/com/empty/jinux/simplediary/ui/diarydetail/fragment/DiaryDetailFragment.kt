@@ -128,14 +128,6 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             showInputMethod()
         }
 
-        activity?.let {
-            ThreadPools.postOnUI {
-                if (PermissionUtil.getLocationPermissions(it, REQUEST_CODE_LOCATION_PERMISSION)) {
-                    mPresenter.start()
-                }
-            }
-        }
-
         initEditToolbar()
 
         keyboardHeightListener.observer = object : KeyboardHeightObserver {
@@ -157,6 +149,11 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     override fun onResume() {
         super.onResume()
 
+        activity?.let {
+            if (PermissionUtil.getLocationPermissions(it, REQUEST_CODE_LOCATION_PERMISSION)) {
+                mPresenter.start()
+            }
+        }
         ThreadPools.postOnUI {
             keyboardHeightListener.start()
         }
