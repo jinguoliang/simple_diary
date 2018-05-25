@@ -1,6 +1,8 @@
 package com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools
 
+import android.os.Build
 import android.os.Bundle
+import android.support.annotation.RequiresApi
 import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.content.res.ResourcesCompat
 import android.view.LayoutInflater
@@ -61,6 +63,7 @@ class StatusFragment : MFragment() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 private fun RadioGroup.addRadios(iconReses: List<Int>, iconSize: Int) {
     iconReses.map {
         RadioButton(context).apply {
