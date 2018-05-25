@@ -16,6 +16,7 @@
 
 package com.empty.jinux.simplediary.ui.diarydetail
 
+import android.content.Context
 import android.os.Bundle
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
@@ -59,6 +60,7 @@ class DiaryDetailActivity : DaggerAppCompatActivity() {
             ActivityUtils.replaceFragment(supportFragmentManager,
                     diaryDetailFragment, R.id.contentFrame)
         }
+
     }
 
     override fun onStart() {
@@ -75,6 +77,14 @@ class DiaryDetailActivity : DaggerAppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    override fun onBackPressed() {
+        val diaryDetailFragment = supportFragmentManager
+                .findFragmentById(R.id.contentFrame) as? DiaryDetailFragment
+        if (diaryDetailFragment?.onBackPressed() == false) {
+            super.onBackPressed()
+        }
     }
 
     companion object {
