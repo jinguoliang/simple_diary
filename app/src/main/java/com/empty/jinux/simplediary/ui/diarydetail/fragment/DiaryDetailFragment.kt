@@ -19,11 +19,13 @@ package com.empty.jinux.simplediary.ui.diarydetail.fragment
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.content.res.ResourcesCompat
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
@@ -163,7 +165,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     private fun onInputMedhodHided() {
         if (editToolsTab.selectedTabPosition == 0) {
-            toolArea.visibility = View.GONE
+            hideToolArea()
         }
     }
 
@@ -173,7 +175,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         bottomSpace.layoutHeight = height + toolArea.dimen(R.dimen.diary_detail_edit_tool_height)
         toolArea.setCurrentItem(0, false)
         toolArea.layoutHeight = height
-        toolArea.visibility = View.VISIBLE
+        showToolArea()
 
         ThreadPools.postOnUI {
             adjustScrollPosition()
@@ -273,11 +275,13 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     private fun showToolArea() {
         if (mIsLoadFinished) {
             toolArea.visibility = View.VISIBLE
+            editToolsTab.setSelectedTabIndicatorColor(ResourcesCompat.getColor(resources, R.color.colorAccent, null))
         }
     }
 
     private fun hideToolArea() {
         toolArea.visibility = View.GONE
+        editToolsTab.setSelectedTabIndicatorColor(Color.TRANSPARENT)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -414,7 +418,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     fun onBackPressed(): Boolean {
         if (editToolsTab.selectedTabPosition > 0 && toolArea.isShown) {
-            toolArea.visibility = View.GONE
+            hideToolArea()
             return true
         } else {
             return false
