@@ -45,7 +45,8 @@
                 android:paddingTop="8dp"
                 android:textAppearance="@style/DiaryContentText"
                 android:textCursorDrawable="@drawable/edit_cursor_shape"
-                tools:text="Medium Text" />
+                tools:text="Medium Text"
+                android:visibility="invisible"/>
 
             <Space
                 android:id="@+id/bottomSpace"
