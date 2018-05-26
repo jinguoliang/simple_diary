@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.content.res.ResourcesCompat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,16 +26,24 @@ class StatusFragment : MFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         val iconSize = resources.getDimensionPixelSize(R.dimen.edit_status_icon_size)
         weatherRadioGroup.addRadios(MyWeatherIcons.getAllMyIcon(), iconSize)
         emotionRadioGroup.addRadios(MyEmotionIcons.getAllMyIcon(), iconSize)
+
+        val iconIndex = MyWeatherIcons.getIconIndex(mWeatherIcon)
+        val child = weatherRadioGroup.getChildAt(iconIndex)
+                ?: weatherRadioGroup.getChildAt(0).apply {
+                    mReporter.reportEvent("exception", Bundle())
+                }
+        weatherRadioGroup.check(child.id)
+        val child1 = emotionRadioGroup.getChildAt(mEmotionId)
+                ?: emotionRadioGroup.getChildAt(0)
+        emotionRadioGroup.check(child1.id)
 
         weatherRadioGroup.setOnCheckedChangeListener { group, checkedId ->
             val index = group.indexOfChild(group.findViewById<RadioButton>(checkedId))
             mPresenter.setWeather(MyWeatherIcons.getIconByIndex(index))
             mReporter.reportClick("detail_tool_weather", MyWeatherIcons.getWeatherName(index))
-
         }
 
         emotionRadioGroup.setOnCheckedChangeListener { group, checkedId ->
@@ -47,19 +56,16 @@ class StatusFragment : MFragment() {
         }
     }
 
+    private lateinit var mWeatherIcon: String
+
     fun showWeather(weather: String, weatherIconUrl: String) {
-        val iconIndex = MyWeatherIcons.getIconIndex(weatherIconUrl)
-        val child = weatherRadioGroup.getChildAt(iconIndex)
-                ?: weatherRadioGroup.getChildAt(0).apply {
-                    mReporter.reportEvent("exception", Bundle())
-                }
-        weatherRadioGroup.check(child.id)
+        mWeatherIcon = weatherIconUrl
     }
 
+    private var mEmotionId: Int = 0
+
     fun showEmotion(id: Long) {
-        val child = emotionRadioGroup.getChildAt(id.toInt())
-                ?: emotionRadioGroup.getChildAt(0)
-        emotionRadioGroup.check(child.id)
+        mEmotionId = id.toInt()
     }
 }
 

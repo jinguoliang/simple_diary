@@ -144,16 +144,18 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
                 }
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
 
         activity?.let {
             if (PermissionUtil.getLocationPermissions(it, REQUEST_CODE_LOCATION_PERMISSION)) {
                 mPresenter.start()
             }
         }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+
         ThreadPools.postOnUI {
             keyboardHeightListener.start()
         }
@@ -241,9 +243,9 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
                     }
                     else -> {
                         if (toolArea.isShown) {
-                            toolArea.visibility = View.GONE
+                            hideToolArea()
                         } else {
-                            toolArea.visibility = View.VISIBLE
+                            showToolArea()
                         }
                         hideInputMethod()
                     }
@@ -261,11 +263,21 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
                     }
                     else -> {
                         hideInputMethod()
-                        toolArea.visibility = View.VISIBLE
+                        showToolArea()
                     }
                 }
             }
         })
+    }
+
+    private fun showToolArea() {
+        if (mIsLoadFinished) {
+            toolArea.visibility = View.VISIBLE
+        }
+    }
+
+    private fun hideToolArea() {
+        toolArea.visibility = View.GONE
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -308,6 +320,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     override fun showContent(content: String) {
+        mIsLoadFinished = true
         diaryContent.visibility = View.VISIBLE
         diaryContent.removeTextChangedListener(mWatcher)
         diaryContent.setText(content)
@@ -387,8 +400,12 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     }
 
+    private var mIsLoadFinished: Boolean = false
+
     override fun showInputMethod() {
-        diaryContent.showInputMethod()
+        if (mIsLoadFinished) {
+            diaryContent.showInputMethod()
+        }
     }
 
     override fun hideInputMethod() {
