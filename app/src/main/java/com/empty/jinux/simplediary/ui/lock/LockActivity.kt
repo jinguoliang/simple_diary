@@ -61,6 +61,6 @@ class LockActivity : DaggerAppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        // forbid back pressed
+        moveTaskToBack(true)
     }
 }
