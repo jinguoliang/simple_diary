@@ -273,10 +273,8 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     private fun showToolArea() {
-        if (mIsLoadFinished) {
-            toolArea.visibility = View.VISIBLE
-            editToolsTab.setSelectedTabIndicatorColor(ResourcesCompat.getColor(resources, R.color.colorAccent, null))
-        }
+        toolArea.visibility = View.VISIBLE
+        editToolsTab.setSelectedTabIndicatorColor(ResourcesCompat.getColor(resources, R.color.colorAccent, null))
     }
 
     private fun hideToolArea() {
@@ -324,7 +322,6 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     override fun showContent(content: String) {
-        mIsLoadFinished = true
         diaryContent.visibility = View.VISIBLE
         diaryContent.removeTextChangedListener(mWatcher)
         diaryContent.setText(content)
@@ -404,12 +401,8 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     }
 
-    private var mIsLoadFinished: Boolean = false
-
     override fun showInputMethod() {
-        if (mIsLoadFinished) {
-            diaryContent.showInputMethod()
-        }
+        diaryContent.showInputMethod()
     }
 
     override fun hideInputMethod() {

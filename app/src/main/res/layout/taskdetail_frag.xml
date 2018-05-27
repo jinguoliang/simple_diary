@@ -46,7 +46,7 @@
                 android:textAppearance="@style/DiaryContentText"
                 android:textCursorDrawable="@drawable/edit_cursor_shape"
                 tools:text="Medium Text"
-                android:visibility="invisible"/>
+                android:visibility="visible"/>
 
             <Space
                 android:id="@+id/bottomSpace"
