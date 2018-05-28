@@ -24,6 +24,7 @@ import com.empty.jinux.simplediary.di.Repository
 import com.empty.jinux.simplediary.location.LocationManager
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
+import com.empty.jinux.simplediary.ui.diarydetail.fragment.MyEmotionIcons
 import com.empty.jinux.simplediary.util.formatDateWithWeekday
 import com.empty.jinux.simplediary.util.formatDisplayTime
 import com.empty.jinux.simplediary.util.wordsCount
@@ -69,6 +70,7 @@ constructor(
     private fun initForNewDiary() {
         refreshLocation()
         refreshWeather()
+        mDiaryDetailView.showEmotion(MyEmotionIcons.getEmotion(0).toLong())
         mDiaryDetailView.showDate(formatDateWithWeekday(System.currentTimeMillis()))
     }
 
@@ -161,9 +163,9 @@ constructor(
                 mDiaryDetailView.showWeather(description, icon)
             }
 
-//            locationInfo?.apply {
-//                mDiaryDetailView.showLocation(address)
-//            }
+            locationInfo?.apply {
+                mDiaryDetailView.showLocation(this)
+            }
 
             emotionInfo?.apply {
                 mDiaryDetailView.showEmotion(id)
@@ -178,7 +180,7 @@ constructor(
                     if (!mDiaryDetailView.isActive) return@getCurrentAddress
                     currentDiaryContent.locationInfo = LocationInfo(location, address)
                     uiThread {
-                        mDiaryDetailView.showLocation(address)
+                        mDiaryDetailView.showLocation(currentDiaryContent.locationInfo!!)
                     }
                 }
             }
@@ -213,6 +215,13 @@ constructor(
         currentDiaryContent.apply {
             weatherInfo = WeatherInfo(weatherInfo?.description ?: "", iconCode)
         }
+    }
+
+    override fun setLocation(locationInfo: LocationInfo) {
+        if (currentDiaryContent.locationInfo == locationInfo) return
+
+        currentDiaryContent.locationInfo = locationInfo
+        mDiaryDetailView.showLocation(locationInfo)
     }
 
 

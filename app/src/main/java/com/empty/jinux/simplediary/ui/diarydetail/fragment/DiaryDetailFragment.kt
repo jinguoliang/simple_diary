@@ -19,11 +19,13 @@ package com.empty.jinux.simplediary.ui.diarydetail.fragment
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.content.res.ResourcesCompat
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
@@ -31,6 +33,7 @@ import android.widget.ImageView
 import com.empty.jinux.baselibaray.loge
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
+import com.empty.jinux.simplediary.data.LocationInfo
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.KeyboardFragment
@@ -144,16 +147,18 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
                 }
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
 
         activity?.let {
             if (PermissionUtil.getLocationPermissions(it, REQUEST_CODE_LOCATION_PERMISSION)) {
                 mPresenter.start()
             }
         }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+
         ThreadPools.postOnUI {
             keyboardHeightListener.start()
         }
@@ -161,7 +166,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     private fun onInputMedhodHided() {
         if (editToolsTab.selectedTabPosition == 0) {
-            toolArea.visibility = View.GONE
+            hideToolArea()
         }
     }
 
@@ -171,7 +176,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         bottomSpace.layoutHeight = height + toolArea.dimen(R.dimen.diary_detail_edit_tool_height)
         toolArea.setCurrentItem(0, false)
         toolArea.layoutHeight = height
-        toolArea.visibility = View.VISIBLE
+        showToolArea()
 
         ThreadPools.postOnUI {
             adjustScrollPosition()
@@ -241,9 +246,9 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
                     }
                     else -> {
                         if (toolArea.isShown) {
-                            toolArea.visibility = View.GONE
+                            hideToolArea()
                         } else {
-                            toolArea.visibility = View.VISIBLE
+                            showToolArea()
                         }
                         hideInputMethod()
                     }
@@ -261,11 +266,21 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
                     }
                     else -> {
                         hideInputMethod()
-                        toolArea.visibility = View.VISIBLE
+                        showToolArea()
                     }
                 }
             }
         })
+    }
+
+    private fun showToolArea() {
+        toolArea.visibility = View.VISIBLE
+        editToolsTab.setSelectedTabIndicatorColor(ResourcesCompat.getColor(resources, R.color.colorAccent, null))
+    }
+
+    private fun hideToolArea() {
+        toolArea.visibility = View.GONE
+        editToolsTab.setSelectedTabIndicatorColor(Color.TRANSPARENT)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -361,13 +376,8 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         }
     }
 
-    override fun showLocation(city: String) {
-        Snackbar.make(view!!, city, Snackbar.LENGTH_LONG).apply {
-            setAction(R.string.ok) {
-                dismiss()
-            }
-            show()
-        }
+    override fun showLocation(location: LocationInfo) {
+        statusFragment.showLocation(location)
     }
 
     // todo weatherIconUrl what?
@@ -397,7 +407,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     fun onBackPressed(): Boolean {
         if (editToolsTab.selectedTabPosition > 0 && toolArea.isShown) {
-            toolArea.visibility = View.GONE
+            hideToolArea()
             return true
         } else {
             return false

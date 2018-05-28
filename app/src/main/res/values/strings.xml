@@ -36,4 +36,5 @@
     <string name="location">Location</string>
     <string name="weather">Weather</string>
     <string name="emotion">Emotion</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

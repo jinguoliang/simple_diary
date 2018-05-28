@@ -66,8 +66,10 @@ dependencies {
     implementation "com.android.support:design:$support_version"
     implementation "com.android.support:cardview-v7:$support_version"
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
-    implementation "com.google.firebase:firebase-database:$firebase_version"
+    implementation "com.google.firebase:firebase-core:$firebase_version"
     implementation "com.google.android.gms:play-services-location:$gms_version"
+    implementation 'com.google.android.gms:play-services-places:15.0.1'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-all:1.10.19'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
