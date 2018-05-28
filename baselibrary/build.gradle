@@ -43,9 +43,8 @@ repositories {
 
 apply plugin: 'maven' // 引入maven插件
 
-
 group = 'com.empty.jinux' // 会按照group生成.m2下的目录路径
-version = '1.0.0-RELEASE' // 指定版本
+version = '1.0.0' // 指定版本
 
 def localMavenRepo = 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath
 
@@ -53,11 +52,6 @@ uploadArchives {
     repositories {
         mavenDeployer {
             repository(url: localMavenRepo)
-
-            pom.project {
-                name = project.name
-                description = 'Some Utils Methods'
-            }
         }
     }
 }
