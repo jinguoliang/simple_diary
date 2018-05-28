@@ -33,6 +33,7 @@ import android.widget.ImageView
 import com.empty.jinux.baselibaray.loge
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
+import com.empty.jinux.simplediary.data.LocationInfo
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.KeyboardFragment
@@ -375,13 +376,8 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         }
     }
 
-    override fun showLocation(city: String) {
-        Snackbar.make(view!!, city, Snackbar.LENGTH_LONG).apply {
-            setAction(R.string.ok) {
-                dismiss()
-            }
-            show()
-        }
+    override fun showLocation(location: LocationInfo) {
+        statusFragment.showLocation(location)
     }
 
     // todo weatherIconUrl what?

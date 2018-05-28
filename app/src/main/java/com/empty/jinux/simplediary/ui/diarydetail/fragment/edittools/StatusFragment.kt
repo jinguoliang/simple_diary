@@ -1,5 +1,7 @@
 package com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
@@ -13,14 +15,21 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import com.empty.jinux.baselibaray.loge
 import com.empty.jinux.simplediary.R
+import com.empty.jinux.simplediary.data.LocationInfo
+import com.empty.jinux.simplediary.location.Location
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.MFragment
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.MyEmotionIcons
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.MyWeatherIcons
+import com.google.android.gms.location.places.ui.PlacePicker
 import kotlinx.android.synthetic.main.fragment_edit_status.*
 
 class StatusFragment : MFragment() {
 
-    val setWeathTask = object : TaskWaitingConditions(2) {
+    companion object {
+        final val PLACE_PICKER_REQUEST_ID = 0x23
+    }
+
+    val setWeathTask = object : TaskWaitingConditions(4) {
         override fun run() {
             val iconIndex = MyWeatherIcons.getIconIndex(mWeatherIcon!!)
             val child = weatherRadioGroup.getChildAt(iconIndex)
@@ -28,16 +37,13 @@ class StatusFragment : MFragment() {
                         mReporter.reportEvent("exception", Bundle())
                     }
             weatherRadioGroup.check(child.id)
-        }
-    }
 
-    val setEmotionTask = object : TaskWaitingConditions(2) {
-        override fun run() {
             val child1 = emotionRadioGroup.getChildAt(mEmotionId)
                     ?: emotionRadioGroup.getChildAt(0)
             emotionRadioGroup.check(child1.id)
-        }
 
+            address.text = mLocationInfo?.address
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -50,8 +56,7 @@ class StatusFragment : MFragment() {
         weatherRadioGroup.addRadios(MyWeatherIcons.getAllMyIcon(), iconSize)
         emotionRadioGroup.addRadios(MyEmotionIcons.getAllMyIcon(), iconSize)
 
-        setWeathTask.emit(2)
-        setEmotionTask.emit(2)
+        setWeathTask.emit(4)
 
         weatherRadioGroup.setOnCheckedChangeListener { group, checkedId ->
             val index = group.indexOfChild(group.findViewById<RadioButton>(checkedId))
@@ -67,6 +72,14 @@ class StatusFragment : MFragment() {
             //            mReporter.reportClick("detail_tool_toggle")
             //            mReporter.reportClick("detail_tool_location")
         }
+
+        edit.setOnClickListener {
+            mLocationInfo?.apply {
+                val intentBuilder = PlacePicker.IntentBuilder()
+                startActivityForResult(intentBuilder.build(activity), PLACE_PICKER_REQUEST_ID)
+            }
+
+        }
     }
 
     private var mWeatherIcon: String? = null
@@ -80,8 +93,31 @@ class StatusFragment : MFragment() {
 
     fun showEmotion(id: Long) {
         mEmotionId = id.toInt()
-        setEmotionTask.emit(1)
+        setWeathTask.emit(2)
     }
+
+    private var mLocationInfo: LocationInfo? = null
+
+    fun showLocation(location: LocationInfo) {
+        mLocationInfo = location
+        setWeathTask.emit(3)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == PLACE_PICKER_REQUEST_ID) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (data == null) return
+                val place = PlacePicker.getPlace(activity, data)
+                address.text = place.address
+                mPresenter.setLocation(LocationInfo(place.latLng.run { Location(latitude, longitude) }, place.address.toString()))
+            }
+        }
+
+    }
+
+
 }
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)

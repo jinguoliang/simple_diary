@@ -18,6 +18,7 @@ package com.empty.jinux.simplediary.ui.diarydetail
 
 import com.empty.jinux.simplediary.BasePresenter
 import com.empty.jinux.simplediary.BaseView
+import com.empty.jinux.simplediary.data.LocationInfo
 
 
 /**
@@ -41,7 +42,7 @@ interface DiaryDetailContract {
 
         fun showDate(dateStr: String)
 
-        fun showLocation(city: String)
+        fun showLocation(location: LocationInfo)
 
         fun showWeather(weather: String, weatherIconUrl: String)
 
@@ -73,6 +74,8 @@ interface DiaryDetailContract {
         fun setEmotion(id: Long)
 
         fun setWeather(icon: String)
+
+        fun setLocation(locationInfo: LocationInfo)
 
     }
 }
