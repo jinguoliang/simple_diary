@@ -6,5 +6,6 @@
     <color name="icon_color_primary">#bbffffff</color>
     <color name="time_line_color">#6a96ac</color>
 
+    <color name="green">#00ff00</color>
     <drawable name="touchFeedback">#CFD8DC</drawable>
 </resources>
