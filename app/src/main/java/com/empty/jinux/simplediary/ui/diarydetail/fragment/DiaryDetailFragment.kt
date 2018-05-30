@@ -103,11 +103,9 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
             override fun afterTextChanged(s: Editable?) {
                 mPresenter.onContentChange(s.toString())
+                diaryContent.adjustParagraphSpace()
                 ThreadPools.postOnUI {
-                    diaryContent.adjustParagraphSpace()
-                    ThreadPools.postOnUI {
-                        adjustScrollPosition()
-                    }
+                    adjustScrollPosition()
                 }
             }
         }
