@@ -42,7 +42,7 @@ class MEditText : EditText {
         // 本来只要判断是段尾行就行，但是当最后一行为空时，也被认为是段尾，所以需排除
         // 这是　getSpans　的原因
         if (isParagraphEnd && !((pos == text.length) && text[pos - 1] == '\n')) {
-            cursorDrawable.level = 6500
+            cursorDrawable.level = 5800
         } else {
             cursorDrawable.level = 9000
         }
