@@ -22,6 +22,7 @@ import android.os.CancellationSignal
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.support.annotation.RequiresApi
+import com.empty.jinux.baselibaray.logd
 import com.empty.jinux.simplediary.util.ThreadPools
 import java.io.IOException
 import java.security.*
@@ -37,6 +38,12 @@ internal constructor(private val fingerprintMgr: FingerprintManager,
                      private val callback: Callback
 ) : FingerprintManager.AuthenticationCallback() {
 
+    private val cryptoObject:FingerprintManager.CryptoObject
+
+    init {
+        cryptoObject = createCryptoObject()
+    }
+
     private var cancellationSignal: CancellationSignal? = null
     private var selfCancelled = false
 
@@ -49,13 +56,16 @@ internal constructor(private val fingerprintMgr: FingerprintManager,
         cancellationSignal = CancellationSignal()
         selfCancelled = false
 
+        fingerprintMgr.authenticate(cryptoObject, cancellationSignal, 0, this, null)
+    }
+
+    private fun createCryptoObject(): FingerprintManager.CryptoObject {
         val key = createKey(DEFAULT_KEY_NAME)
 
         val defaultCipher = setupCipher()
         defaultCipher.init(Cipher.ENCRYPT_MODE, key)
 
-        val cryptoObject = FingerprintManager.CryptoObject(defaultCipher)
-        fingerprintMgr.authenticate(cryptoObject, cancellationSignal, 0, this, null)
+        return FingerprintManager.CryptoObject(defaultCipher)
     }
 
     fun stopListening() {
@@ -82,8 +92,27 @@ internal constructor(private val fingerprintMgr: FingerprintManager,
         return defaultCipher
     }
 
+
     override fun onAuthenticationSucceeded(result: FingerprintManager.AuthenticationResult) {
         ThreadPools.postOnUIDelayed(SUCCESS_DELAY_MILLIS) { callback.onAuthenticated() }
+    }
+
+    override fun onAuthenticationFailed() {
+        super.onAuthenticationFailed()
+        logd("onAuthenticationFailed")
+        ThreadPools.postOnUIDelayed(SUCCESS_DELAY_MILLIS) { callback.onFailed() }
+    }
+
+    override fun onAuthenticationError(errorCode: Int, errString: CharSequence?) {
+        super.onAuthenticationError(errorCode, errString)
+        logd("onAuthenticationError: $errorCode $errString")
+        ThreadPools.postOnUIDelayed(SUCCESS_DELAY_MILLIS) { callback.onError(errorCode, errString.toString()) }
+    }
+
+    override fun onAuthenticationHelp(helpCode: Int, helpString: CharSequence?) {
+        super.onAuthenticationHelp(helpCode, helpString)
+        logd("onAuthenticationHelp: $helpCode $helpString")
+        ThreadPools.postOnUIDelayed(SUCCESS_DELAY_MILLIS) { callback.onHelper(helpString.toString()) }
     }
 
     private fun getAndroidKeyStore(): KeyStore? {
@@ -146,11 +175,14 @@ internal constructor(private val fingerprintMgr: FingerprintManager,
 
     interface Callback {
         fun onAuthenticated()
-        fun onError()
+        fun onFailed()
+        fun onError(errorCode: Int, msg: String)
+        fun onHelper(msg: String)
+        fun onStart()
     }
 
     companion object {
-        const val SUCCESS_DELAY_MILLIS: Long = 1300
+        const val SUCCESS_DELAY_MILLIS: Long = 300
         private const val ANDROID_KEY_STORE = "AndroidKeyStore"
         private const val DEFAULT_KEY_NAME = "test"
 

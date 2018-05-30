@@ -3,11 +3,13 @@ package com.empty.jinux.simplediary.ui.lock
 import android.hardware.fingerprint.FingerprintManager
 import android.os.Build
 import android.os.Bundle
+import android.support.annotation.ColorRes
+import android.support.v4.widget.ImageViewCompat
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
-import android.widget.Toast
-import androidx.core.widget.toast
+import android.view.View
+import android.widget.ImageView
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.applock.AppLockManager
 import com.empty.jinux.simplediary.config.ConfigManager
@@ -58,25 +60,46 @@ class LockActivity : DaggerAppCompatActivity() {
 
     private fun initFingerPrint() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val fingerprintMgr = getSystemService(FingerprintManager::class.java)
             fingerprintHelper = FingerprintHelper(
-                    getSystemService(FingerprintManager::class.java),
+                    fingerprintMgr,
                     object : FingerprintHelper.Callback {
+                        val fingerprintImageColorChanger = ImageColorChanger(fingerPrintIcon)
                         override fun onAuthenticated() {
                             unlockApp()
                             reportUnlockTime("fingerprint")
+                            fingerprintImageColorChanger.changeColorTemp(R.color.green)
                         }
 
-                        override fun onError() {
-                            toast("hello error").show()
+                        override fun onFailed() {
+                            fingerprintImageColorChanger.changeColorTemp(R.color.colorAccent)
+                        }
+
+                        override fun onError(errorCode: Int, msg: String) {
+                            showFingerprintMessage(msg)
+                        }
+
+                        override fun onHelper(msg: String) {
+                            showFingerprintMessage(msg)
+                        }
+
+
+                        override fun onStart() {
+                            fingerprintImageColorChanger.changeColor(R.color.colorPrimaryDark)
                         }
                     }
             )
+
         }
+    }
+
+    private fun showFingerprintMessage(msg: String) {
+        fingerPrintMessage.text = msg
+        fingerPrintMessage.visibility = View.VISIBLE
     }
 
     private fun unlockApp() {
         appLockManager.unlock()
-        toast("app lock unlock!!", Toast.LENGTH_LONG)
         finish()
     }
 
@@ -93,6 +116,7 @@ class LockActivity : DaggerAppCompatActivity() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             fingerprintHelper.startListening()
+            fingerPrintMessage.visibility = View.INVISIBLE
         }
     }
 
@@ -105,5 +129,33 @@ class LockActivity : DaggerAppCompatActivity() {
 
     override fun onBackPressed() {
         moveTaskToBack(true)
+    }
+}
+
+class ImageColorChanger(val imageView: ImageView) {
+    private var currentColorRes: Int = 0
+
+    fun changeColor(@ColorRes color: Int, isTemp: Boolean = false) {
+        if (!isTemp) {
+            currentColorRes = color
+        }
+
+        if (color == 0) {
+            ImageViewCompat.setImageTintList(imageView, null)
+        } else {
+            ImageViewCompat.setImageTintList(imageView, imageView.resources.getColorStateList(color))
+        }
+    }
+
+    fun changeColorDelay(@ColorRes color: Int, delay: Long) {
+        imageView.postDelayed({
+            changeColor(color)
+        }, delay)
+    }
+
+    fun changeColorTemp(@ColorRes color: Int) {
+        val ori = currentColorRes
+        changeColor(color, true)
+        changeColorDelay(ori, 2000)
     }
 }
