@@ -6,6 +6,9 @@
     <color name="icon_color_primary">#bbffffff</color>
     <color name="time_line_color">#6a96ac</color>
 
+    <color name="white">#FFFFFF</color>
     <color name="green">#00ff00</color>
+    <color name="edit_tools_panel_bg">#f5455A64</color>
+    <color name="transparent">#fa455A64</color>
     <drawable name="touchFeedback">#CFD8DC</drawable>
 </resources>

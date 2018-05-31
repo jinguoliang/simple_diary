@@ -228,7 +228,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         editToolsTab.setupWithViewPager(toolArea)
 
         val iconRes = listOf(R.drawable.ic_keyboard,
-                R.drawable.ic_emotion)
+                R.drawable.ic_info_outline_black_24dp)
         (0 until iconRes.size).map { editToolsTab.getTabAt(it) }.forEachIndexed { i, it ->
             it?.customView = ImageView(context).apply { setImageDrawable(resources.getDrawable(iconRes[i])) }
         }
