@@ -1,9 +1,11 @@
 package com.empty.jinux.simplediary.util
 
 import android.content.Context
+import android.os.RemoteException
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
+import com.empty.jinux.baselibaray.logd
 
 var View.layoutHeight: Int
     get() = layoutParams.height
@@ -19,7 +21,13 @@ var View.layoutBottom: Int
 
 fun View.showInputMethod() {
     val im = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-    im?.showSoftInput(this, InputMethodManager.SHOW_FORCED)
+    val showed: Boolean = try {
+        im?.showSoftInput(this@showInputMethod, InputMethodManager.SHOW_FORCED)!!
+    } catch (e: RemoteException) {
+        false
+    }
+
+    logd("showInputMethod: $showed")
 }
 
 fun View.hideInputMethod() {
