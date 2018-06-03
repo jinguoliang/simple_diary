@@ -19,6 +19,8 @@ class MEditText : EditText {
     override fun onSelectionChanged(selStart: Int, selEnd: Int) {
         super.onSelectionChanged(selStart, selEnd)
 
+        // first time
+        if (layout == null) return
         try {
             adjustCursorHeight(selStart)
         } catch (e: Exception) {
@@ -27,9 +29,6 @@ class MEditText : EditText {
     }
 
     private fun adjustCursorHeight(pos: Int) {
-        // first time
-        if (layout == null) return
-
         val editor: Any = reflectFeild(TextView::class.java, "mEditor")
         val cursorDrawables: Array<Drawable?> = editor.reflectFeild(editor.javaClass, "mCursorDrawable")
 
