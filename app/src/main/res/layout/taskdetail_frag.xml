@@ -43,6 +43,7 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="8dp"
+                android:textColorHighlight="@color/colorEditHighlight"
                 android:textAppearance="@style/DiaryContentText"
                 android:textCursorDrawable="@drawable/edit_cursor_shape"
                 tools:text="Medium Text"
