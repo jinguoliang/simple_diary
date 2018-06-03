@@ -184,9 +184,6 @@ class MainActivity : DaggerAppCompatActivity() {
                 }
             }
 
-            // Do nothing, we're already on that screen
-            // Close the navigation drawer when an item is selected.
-            menuItem.isChecked = true
             drawer_layout.closeDrawers()
             true
         }
