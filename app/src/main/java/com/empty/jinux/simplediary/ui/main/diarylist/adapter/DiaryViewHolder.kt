@@ -4,7 +4,9 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
-import android.widget.*
+import android.widget.HorizontalScrollView
+import android.widget.LinearLayout
+import android.widget.TextView
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.util.formatToTime
@@ -21,6 +23,7 @@ internal constructor(
     private val titleTV: TextView = v.findViewById(R.id.title)
     private val weekName: TextView = v.findViewById(R.id.weekName)
     private val time: TextView = v.findViewById(R.id.time)
+    private val topLine: View = v.findViewById(R.id.topLine)
 
     private lateinit var currentDiary: Diary
 
@@ -39,6 +42,8 @@ internal constructor(
 
     fun showWeekday(differentDay: Boolean) {
         weekName.visibility = if (differentDay) View.VISIBLE else View.INVISIBLE
+//        topLine.visibility = weekName.visibility
+        topLine.visibility = View.INVISIBLE
     }
 
     override fun onDeleteClick() {
@@ -85,6 +90,7 @@ class SwipeView(v: View) : HorizontalScrollView(v.context) {
         overScrollMode = View.OVER_SCROLL_NEVER
 
         val linearLayout = LinearLayout(context)
+
         linearLayout.addView(v, LinearLayout.LayoutParams(context.getScreenWidth(),
                 context.dimen(R.dimen.diary_list_item_height)))
         val menuLayout = inflateMenuLayout()

@@ -17,3 +17,12 @@ internal constructor(v: View) : RecyclerView.ViewHolder(v) {
     }
 
 }
+
+class CategoryEndViewHolder
+internal constructor(v: View) : RecyclerView.ViewHolder(v) {
+
+
+    fun bind(weekstr: String, yearStr: String) {
+    }
+
+}

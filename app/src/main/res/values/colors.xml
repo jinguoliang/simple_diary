@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#455A64</color>
-    <color name="colorPrimaryDark">#263238</color>
+    <color name="colorPrimary">#0048cd</color>
+    <color name="colorPrimaryDark">#002bab</color>
+    <color name="colorPrimaryLighter">#4463d5</color>
+    <color name="colorPrimaryLine">#c1c7f0</color>
+    <color name="colorPrimaryLine2">#e7e9f9</color>
     <color name="colorAccent">#D50000</color>
     <color name="icon_color_primary">#bbffffff</color>
-    <color name="time_line_color">#6a96ac</color>
 
     <color name="white">#FFFFFF</color>
     <color name="green">#00ff00</color>
-    <color name="edit_tools_panel_bg">#f5455A64</color>
-    <color name="transparent">#fa455A64</color>
-    <drawable name="touchFeedback">#CFD8DC</drawable>
+    <color name="edit_tools_panel_bg">#f50048cd</color>
+    <color name="transparent">#fa0048cd</color>
+    <color name="colorBg">#EBEBEB</color>
+    <color name="black">#353535</color>
+    <drawable name="touchFeedback">@color/colorPrimaryLighter</drawable>
+    <drawable name="item_normal">@color/white</drawable>
 </resources>

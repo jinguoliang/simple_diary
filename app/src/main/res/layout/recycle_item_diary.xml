@@ -24,23 +24,19 @@
     <FrameLayout
         android:id="@+id/weekBlock"
         android:layout_width="@dimen/swipe_item_menu_item_width"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginStart="16dp">
 
-        <LinearLayout
+
+        <TextView
+            android:id="@+id/weekName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/weekName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                android:textSize="20sp"
-                tools:text="周二" />
-        </LinearLayout>
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:layout_gravity="center_vertical"
+            tools:text="周二" />
     </FrameLayout>
 
     <FrameLayout
@@ -48,12 +44,13 @@
         android:layout_width="14dp"
         android:layout_height="match_parent"
         android:layout_toEndOf="@id/weekBlock"
-        >
+        android:visibility="invisible">
+
         <View
             android:layout_width="1.8dp"
             android:layout_height="match_parent"
-            android:background="@color/time_line_color"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            android:background="@color/colorPrimaryLine2" />
     </FrameLayout>
 
 
@@ -62,10 +59,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_toEndOf="@+id/splitor"
         android:lines="1"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/black"
         tools:text="test title, it very long long long long long long " />
 
     <TextView
@@ -74,7 +73,12 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@id/title"
         android:layout_below="@id/title"
-        android:textColor="@android:color/black"
+        android:textColor="@color/black"
         tools:text="22:54" />
 
+    <View
+        android:id="@+id/topLine"
+        android:layout_width="match_parent"
+        android:layout_height="1.8dp"
+        android:background="@color/colorPrimaryLine2" />
 </RelativeLayout>
