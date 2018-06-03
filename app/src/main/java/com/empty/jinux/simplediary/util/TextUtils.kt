@@ -18,15 +18,13 @@ private val span = BackgroundColorSpan(Color.CYAN)
 
 fun EditText.adjustParagraphSpace() {
     val s = text
-    if (s?.contains("\n") == true) {
-        text.getSpans(0, text.length, ParagrahEndLineSpan::class.java).forEach {
-            text.removeSpan(it)
-        }
+    text.getSpans(0, text.length, ParagrahEndLineSpan::class.java).forEach {
+        text.removeSpan(it)
+    }
 
-        val newLineIndexes = s.findNewLines()
-        newLineIndexes.forEach { newLinePos: Int ->
-            addParagraphEndSpan(newLinePos)
-        }
+    val newLineIndexes = s.findNewLines()
+    newLineIndexes.forEach { newLinePos: Int ->
+        addParagraphEndSpan(newLinePos)
     }
 }
 
