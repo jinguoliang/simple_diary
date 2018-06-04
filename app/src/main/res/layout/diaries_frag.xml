@@ -38,9 +38,8 @@
                 android:layout_height="wrap_content"
                 app:layoutManager="android.support.v7.widget.LinearLayoutManager"
                 app:reverseLayout="false"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="@dimen/diaries_list_recycle_view_margin_horizontal"
-                android:layout_marginTop="@dimen/diaries_list_recycle_view_margin_horizontal"/>
+                android:layout_marginStart="@dimen/diaries_list_recycle_view_margin_horizontal"
+                android:layout_marginEnd="@dimen/diaries_list_recycle_view_margin_horizontal" />
         </LinearLayout>
 
         <LinearLayout
