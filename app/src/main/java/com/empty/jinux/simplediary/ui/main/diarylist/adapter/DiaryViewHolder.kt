@@ -1,9 +1,11 @@
 package com.empty.jinux.simplediary.ui.main.diarylist.adapter
 
+import android.annotation.SuppressLint
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -82,22 +84,29 @@ abstract class ItemWithSwipeSettingsViewHolder(v: View) : RecyclerView.ViewHolde
     protected abstract fun onDeleteClick()
 }
 
+@SuppressLint("ViewConstructor")
 class SwipeView(v: View) : HorizontalScrollView(v.context) {
-    val swipeMenuWidth: Int
+    val swipeMenuWidth = context.dimen(R.dimen.swipe_item_menu_item_width)
+    val diariesListHorizontalMargin = context.dimen(R.dimen.diaries_list_recycle_view_margin_horizontal)
 
     init {
         scrollBarSize = 0
         overScrollMode = View.OVER_SCROLL_NEVER
+        layoutParams = v.layoutParams
 
-        val linearLayout = LinearLayout(context)
+        wrapContent(v)
+    }
 
-        linearLayout.addView(v, LinearLayout.LayoutParams(context.getScreenWidth(),
-                context.dimen(R.dimen.diary_list_item_height)))
-        val menuLayout = inflateMenuLayout()
-        swipeMenuWidth = context.dimen(R.dimen.swipe_item_menu_item_width)
-
-        linearLayout.addView(menuLayout)
-        addView(linearLayout)
+    private fun wrapContent(content: View) {
+        val linearLayout = LinearLayout(context).apply {
+            addView(content, LinearLayout.LayoutParams(context.getScreenWidth() - 2 * diariesListHorizontalMargin,
+                    context.dimen(R.dimen.diary_list_item_height)))
+            addView(inflateMenuLayout())
+        }
+        addView(linearLayout, FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+        ))
     }
 
     private fun inflateMenuLayout(): View {

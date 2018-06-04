@@ -35,5 +35,6 @@
     <dimen name="text_size">15sp</dimen>
     <dimen name="edit_status_icon_size">50dp</dimen>
     <dimen name="editor_paragraph_end">16dp</dimen>
+    <dimen name="diaries_list_recycle_view_margin_horizontal">10dp</dimen>
 
 </resources>

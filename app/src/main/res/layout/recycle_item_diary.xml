@@ -44,7 +44,7 @@
         android:layout_width="14dp"
         android:layout_height="match_parent"
         android:layout_toEndOf="@id/weekBlock"
-        android:visibility="invisible">
+        android:visibility="gone">
 
         <View
             android:layout_width="1.8dp"
