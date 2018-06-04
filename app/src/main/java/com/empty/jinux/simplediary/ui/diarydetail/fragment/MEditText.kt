@@ -54,10 +54,11 @@ class MEditText : EditText {
         return cursorArray[0]!!
     }
 
-    private inline fun <reified T, reified D> D.reflectFeild(clazz: Class<D>, fieldName: String): T {
-        val field = clazz.getDeclaredField(fieldName)
-        field.isAccessible = true
-        return field.get(this) as T
-    }
 
+
+}
+public inline fun <reified T, reified D> D.reflectFeild(clazz: Class<D>, fieldName: String): T {
+    val field = clazz.getDeclaredField(fieldName)
+    field.isAccessible = true
+    return field.get(this) as T
 }

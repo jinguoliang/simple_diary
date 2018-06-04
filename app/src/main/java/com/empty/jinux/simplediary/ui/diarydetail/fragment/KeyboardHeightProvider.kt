@@ -1,52 +1,50 @@
 package com.empty.jinux.simplediary.ui.diarydetail.fragment
 
 import android.app.Activity
+import android.content.Context
 import android.content.res.Configuration
-import android.graphics.Color
 import android.graphics.Point
 import android.graphics.Rect
-import android.graphics.drawable.ColorDrawable
-import android.view.Gravity
-import android.view.View
+import android.util.Log
+import android.view.ViewTreeObserver
 import android.view.WindowManager
 import android.widget.FrameLayout
-import android.widget.PopupWindow
+import com.empty.jinux.baselibaray.logw
 
-class KeyboardHeightProvider
-/**
- * Construct a new KeyboardHeightProvider
- *
- * @param activity The parent activity_main
- */
-(private val activity: Activity) : PopupWindow(activity) {
+class KeyboardHeightProvider(private val activity: Activity) {
 
-    /** The cached landscape height of the keyboard  */
     private var keyboardLandscapeHeight: Int = 0
 
-    /** The cached portrait height of the keyboard  */
     private var keyboardPortraitHeight: Int = 0
 
-    /** The parent view  */
-    private val parentView: View
-
-    /**
-     * Get the screen orientation
-     *
-     * @return the screen orientation
-     */
     private val screenOrientation: Int
         get() = activity.resources.configuration.orientation
 
-    init {
-        contentView = FrameLayout(activity)
 
-        softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE
-        inputMethodMode = INPUT_METHOD_NEEDED
+    private val contentView = FrameLayout(activity)
 
-        parentView = activity.findViewById(android.R.id.content)
+    private val wm = activity.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
+    private val params = WindowManager.LayoutParams().apply {
         width = 0
         height = WindowManager.LayoutParams.MATCH_PARENT
+        softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE
+        flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+        type = WindowManager.LayoutParams.TYPE_APPLICATION
+        try {
+            token = activity.reflectFeild(Activity::class.java, "mToken")
+        } catch (e: Exception) {
+            Log.e(Log.getStackTraceString(e), TAG)
+        }
+    }
+
+    private var isShowing: Boolean = false
+
+
+    val onLayoutListener = object : ViewTreeObserver.OnGlobalLayoutListener {
+        override fun onGlobalLayout() {
+            handleOnGlobalLayout()
+        }
     }
 
     /**
@@ -55,24 +53,27 @@ class KeyboardHeightProvider
      * of the Activity.
      */
     fun start() {
-
-        contentView.viewTreeObserver.addOnGlobalLayoutListener {
-            if (contentView != null) {
-                handleOnGlobalLayout()
+        contentView.viewTreeObserver.addOnGlobalLayoutListener(onLayoutListener)
+        if (!isShowing) {
+            isShowing = true
+            try {
+                wm.addView(contentView, params)
+            } catch (e: Exception) {
+                logw(Log.getStackTraceString(e), TAG)
+                contentView.viewTreeObserver.removeOnGlobalLayoutListener(onLayoutListener)
             }
-        }
-        if (!isShowing && parentView.windowToken != null) {
-            setBackgroundDrawable(ColorDrawable(Color.RED))
-            showAtLocation(parentView, Gravity.NO_GRAVITY, 0, 0)
         }
     }
 
-    /**
-     * Close the keyboard height provider,
-     * this provider will not be used anymore.
-     */
     fun close() {
-        dismiss()
+        try {
+            wm.removeView(contentView)
+            contentView.viewTreeObserver.removeOnGlobalLayoutListener(onLayoutListener)
+        } catch (e: Exception) {
+            logw(Log.getStackTraceString(e), TAG)
+        } finally {
+            isShowing = false
+        }
     }
 
     /**
@@ -111,11 +112,12 @@ class KeyboardHeightProvider
 
     var observer: KeyboardHeightObserver? = null
 
-    /**
-     *
-     */
     private fun notifyKeyboardHeightChanged(height: Int, orientation: Int) {
         observer?.onKeyboardHeightChanged(height, orientation)
+    }
+
+    companion object {
+        const val TAG = "KeyboardHeightProvider"
     }
 }
 
