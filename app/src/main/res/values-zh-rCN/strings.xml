@@ -33,4 +33,10 @@
     <string name="app_lock_password_confirm_hint">确认密码</string>
     <string name="input_password_hint">输入日记密码</string>
     <string name="password_set_dialog_title">设置密码</string>
+    <string name="keyboard">键盘</string>
+    <string name="location">定位</string>
+    <string name="weather">天气</string>
+    <string name="emotion">心情</string>
+    <string name="title_activity_maps">地图</string>
+    <string name="google_service_error">谷歌服务出现问题</string>
 </resources>

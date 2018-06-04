@@ -30,9 +30,8 @@ class AppLockImplement(val context: Context, var config: ConfigManager) : AppLoc
         countDownTimer.start()
     }
 
-    override fun unlock(password: String, input: String): Boolean {
-        val success = TextUtils.equals(password, input)
-        locked = !success
-        return success
+    override fun unlock(): Boolean {
+        locked = false
+        return locked
     }
 }

@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:background="#b7bab7">
 
@@ -43,6 +44,24 @@
                     android:padding="15dp" />
 
             </android.support.v7.widget.CardView>
+
+            <ImageView
+                android:id="@+id/fingerPrintIcon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:srcCompat="@drawable/ic_fingerprint_black_24dp"
+                android:layout_marginTop="50dp"
+                android:layout_gravity="center_horizontal"
+                android:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/fingerPrintMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_horizontal"
+                android:visibility="visible"
+                tools:text="hello fingerprint"/>
         </LinearLayout>
     </FrameLayout>
 

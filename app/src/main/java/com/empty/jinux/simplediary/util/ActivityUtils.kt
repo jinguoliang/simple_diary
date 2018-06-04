@@ -16,6 +16,8 @@
 
 package com.empty.jinux.simplediary.util
 
+import android.app.Activity
+import android.graphics.Rect
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 
@@ -43,4 +45,10 @@ object ActivityUtils {
         transaction.commit()
     }
 
+}
+
+fun Activity.getStatusBarHeight(): Int {
+    val rectangle = Rect()
+    window.getDecorView().getWindowVisibleDisplayFrame(rectangle)
+    return rectangle.top
 }

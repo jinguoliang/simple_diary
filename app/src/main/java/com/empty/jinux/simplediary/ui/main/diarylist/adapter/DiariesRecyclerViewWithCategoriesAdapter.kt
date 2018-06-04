@@ -8,6 +8,7 @@ import com.droidcba.kedditbysteps.commons.adapter.ViewTypeDelegateAdapter
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.util.dayTime
 import com.empty.jinux.simplediary.util.weekStartTime
+import org.jetbrains.anko.collections.forEachWithIndex
 
 class DiariesRecyclerViewWithCategoriesAdapter(
         diaries: List<Diary>,
@@ -20,6 +21,7 @@ class DiariesRecyclerViewWithCategoriesAdapter(
     init {
         setItems(diaries)
         mDelegateAdapters.put(VIEW_TYPE_CATEGORY, CategoryDelegateAdapter())
+        mDelegateAdapters.put(VIEW_TYPE_CATEGORY_END, CategoryEndDelegateAdapter())
         mDelegateAdapters.put(VIEW_TYPE_DIARY, DiaryDelegateAdapter(mItemListener))
     }
 
@@ -28,17 +30,23 @@ class DiariesRecyclerViewWithCategoriesAdapter(
 
         var preWeekStart = 0L
         var preDay = 0L
-        diaries.forEach {
+        diaries.forEachWithIndex { i, it ->
             val createdTime = it.meta.createdTime
             if (createdTime.weekStartTime() != preWeekStart) {
                 preWeekStart = createdTime.weekStartTime()
                 items.add(CategoryItem(preWeekStart))
+
             }
             val differentDay = createdTime.dayTime() != preDay
             if (differentDay) {
                 preDay = createdTime.dayTime()
             }
             items.add(DiaryItem(it, differentDay))
+
+            val nextDiaryWeekStart = if (i < diaries.size - 1) diaries[i + 1].meta.createdTime.weekStartTime() else -1
+            if (createdTime.weekStartTime() != nextDiaryWeekStart) {
+                items.add(CategoryEndItem())
+            }
         }
         mItems = items
     }

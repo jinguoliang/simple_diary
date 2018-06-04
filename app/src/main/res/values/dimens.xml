@@ -16,8 +16,8 @@
 
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="activity_horizontal_margin">8dp</dimen>
+    <dimen name="activity_vertical_margin">8dp</dimen>
 
     <dimen name="list_item_padding">8dp</dimen>
 
@@ -25,7 +25,7 @@
     <dimen name="common_margin">5dp</dimen>
     <dimen name="diary_list_item_height">70dp</dimen>
     <dimen name="swipe_item_menu_item_width">60dp</dimen>
-    <dimen name="edit_text_space_extra">6dp</dimen>
+    <dimen name="edit_text_space_extra">1dp</dimen>
     <dimen name="diary_detail_edit_tool_height">45dp</dimen>
     <dimen name="diary_detail_edit_tool_item_size" >24dp</dimen>
     <dimen name="diary_detail_edit_tool_item_space">20dp</dimen>
@@ -33,5 +33,8 @@
     <dimen name="card_view_title_text_size">25sp</dimen>
     <dimen name="card_view_button_text_size">15sp</dimen>
     <dimen name="text_size">15sp</dimen>
+    <dimen name="edit_status_icon_size">50dp</dimen>
+    <dimen name="editor_paragraph_end">16dp</dimen>
+    <dimen name="diaries_list_recycle_view_margin_horizontal">10dp</dimen>
 
 </resources>

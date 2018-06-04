@@ -18,8 +18,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/refresh_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/diariesContainer"
@@ -36,7 +35,11 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/diaryRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                app:reverseLayout="false"
+                android:layout_marginStart="@dimen/diaries_list_recycle_view_margin_horizontal"
+                android:layout_marginEnd="@dimen/diaries_list_recycle_view_margin_horizontal" />
         </LinearLayout>
 
         <LinearLayout

@@ -20,10 +20,10 @@ import com.empty.jinux.baselibaray.logThrowable
 import com.empty.jinux.baselibaray.logd
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+//import com.google.firebase.database.DataSnapshot
+//import com.google.firebase.database.DatabaseError
+//import com.google.firebase.database.FirebaseDatabase
+//import com.google.firebase.database.ValueEventListener
 import com.google.gson.Gson
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -37,26 +37,26 @@ import javax.inject.Singleton
 class DiariesRemoteDataSource : DiariesDataSource {
 
 
-    private var mEventListener: DatabaseDataChangeListener? = null
+//    private var mEventListener: DatabaseDataChangeListener? = null
 
     private val mDataList = mutableListOf<Diary>()
     private val mDataMap = mutableMapOf<Long, Diary>()
 
     private var mCacheDirty = true
 
-    private val mDatabase = FirebaseDatabase.getInstance().getReference(diaries_root).apply {
-        mEventListener = DatabaseDataChangeListener {
-            mDataList.clear()
-            mDataList.addAll(it)
-            mDataMap.clear()
-            it.forEach {
-                mDataMap.put(it.id, it)
-            }
-            mCacheDirty = true
-
-        }
-        this.addValueEventListener(mEventListener)
-    }
+//    private val mDatabase = FirebaseDatabase.getInstance().getReference(diaries_root).apply {
+//        mEventListener = DatabaseDataChangeListener {
+//            mDataList.clear()
+//            mDataList.addAll(it)
+//            mDataMap.clear()
+//            it.forEach {
+//                mDataMap.put(it.id, it)
+//            }
+//            mCacheDirty = true
+//
+//        }
+//        this.addValueEventListener(mEventListener)
+//    }
 
     override fun getDiaries(callback: DiariesDataSource.LoadDiariesCallback) {
         if (mCacheDirty) {
@@ -80,21 +80,21 @@ class DiariesRemoteDataSource : DiariesDataSource {
 
 
     override fun save(diary: Diary, callback: DiariesDataSource.OnCallback<Long>) {
-        mDatabase.child(diary.id.toString()).setValue(Gson().toJson(diary))
-        mCacheDirty = true
+//        mDatabase.child(diary.id.toString()).setValue(Gson().toJson(diary))
+//        mCacheDirty = true
     }
 
     override fun refreshDiaries() {
     }
 
     override fun deleteAllDiaries() {
-        mDatabase.removeValue()
+//        mDatabase.removeValue()
 
         mCacheDirty = true
     }
 
     override fun deleteDiary(diaryId: Long) {
-        mDatabase.child(diaryId.toString()).removeValue()
+//        mDatabase.child(diaryId.toString()).removeValue()
     }
 
     override fun deleteDiaryAsync(diaryId: Long, callback: DiariesDataSource.OnCallback<Boolean>) {
@@ -113,30 +113,30 @@ class DiariesRemoteDataSource : DiariesDataSource {
     /**
      * listen to data change, and parse the data
      */
-    private class DatabaseDataChangeListener(val listener: (data: List<Diary>) -> Unit) : ValueEventListener {
-        override fun onCancelled(p0: DatabaseError) {
-            logThrowable(p0.toException(), "FirebaseDatabase")
-        }
-
-        override fun onDataChange(ds: DataSnapshot) {
-            ds.value.apply {
-                when (this) {
-                    is HashMap<*, *> -> {
-                        listener(this.map { parseItem(it.value as String) })
-                    }
-                    is String -> {
-                        listener(listOf(parseItem(this)))
-                    }
-                    else -> {
-                        listener(listOf())
-                    }
-                }
-            }
-        }
-
-        private fun parseItem(json: String): Diary {
-            logd("json = $json")
-            return Gson().fromJson(json, Diary::class.java)
-        }
-    }
+//    private class DatabaseDataChangeListener(val listener: (data: List<Diary>) -> Unit) : ValueEventListener {
+//        override fun onCancelled(p0: DatabaseError) {
+//            logThrowable(p0.toException(), "FirebaseDatabase")
+//        }
+//
+//        override fun onDataChange(ds: DataSnapshot) {
+//            ds.value.apply {
+//                when (this) {
+//                    is HashMap<*, *> -> {
+//                        listener(this.map { parseItem(it.value as String) })
+//                    }
+//                    is String -> {
+//                        listener(listOf(parseItem(this)))
+//                    }
+//                    else -> {
+//                        listener(listOf())
+//                    }
+//                }
+//            }
+//        }
+//
+//        private fun parseItem(json: String): Diary {
+//            logd("json = $json")
+//            return Gson().fromJson(json, Diary::class.java)
+//        }
+//    }
 }

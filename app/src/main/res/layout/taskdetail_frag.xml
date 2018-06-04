@@ -14,35 +14,52 @@
   ~ limitations under the License.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragmentContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingTop="@dimen/activity_vertical_margin">
+    android:background="@color/paper_yellow">
 
     <ScrollView
+        android:id="@+id/scrollContainer"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/diaryContent"
+        <LinearLayout
+            android:id="@+id/editContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/common_margin"
-            android:background="#0fff"
-            android:gravity="top|start"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:lineSpacingExtra="@dimen/edit_text_space_extra"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:textAppearance="@style/DiaryContentText"
-            android:textCursorDrawable="@drawable/edit_text_cursor"
-            tools:text="Medium Text" />
+            android:orientation="vertical">
+
+            <com.empty.jinux.simplediary.ui.diarydetail.fragment.MEditText
+                android:id="@+id/diaryContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:gravity="top|start"
+                android:imeOptions="flagNoExtractUi"
+                android:lineSpacingExtra="@dimen/edit_text_space_extra"
+                android:paddingBottom="8dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="8dp"
+                android:textColorHighlight="@color/colorEditHighlight"
+                android:textAppearance="@style/DiaryContentText"
+                android:textCursorDrawable="@drawable/edit_cursor_shape"
+                tools:text="Medium Text"
+                android:visibility="visible"/>
+
+            <Space
+                android:id="@+id/bottomSpace"
+                android:layout_width="match_parent"
+                android:layout_height="300dp" />
+        </LinearLayout>
+
     </ScrollView>
 
+    <include
+        layout="@layout/layout_diary_detail_edit_tool"
+        android:visibility="visible" />
 
-    <include layout="@layout/layout_diary_detail_edit_tool"/>
-
-
-</LinearLayout>
+</FrameLayout>

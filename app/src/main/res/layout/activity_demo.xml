@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:text="从前有座山，山里有座庙，庙里有个老和尚，他在给小和尚讲故事，他在讲从前有座山，山里有座庙，庙里有个老和尚，他在给小和尚讲故事，他在讲从前有座山，山里有座庙，庙里有个老和尚，他在给小和尚讲故事"
+        />
+    <EditText
+        android:id="@+id/editor"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inputType="textMultiLine"/>
+</LinearLayout>

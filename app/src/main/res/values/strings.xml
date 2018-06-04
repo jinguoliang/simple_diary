@@ -32,4 +32,10 @@
     <string name="app_lock_password_confirm_hint">Confirm password</string>
     <string name="input_password_hint">Input Diary Password</string>
     <string name="password_set_dialog_title">Password Set</string>
+    <string name="keyboard">Keyboard</string>
+    <string name="location">Location</string>
+    <string name="weather">Weather</string>
+    <string name="emotion">Emotion</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="google_service_error">Google service error</string>
 </resources>

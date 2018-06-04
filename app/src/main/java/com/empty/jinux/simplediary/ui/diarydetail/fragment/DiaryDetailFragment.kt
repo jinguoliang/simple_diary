@@ -19,25 +19,34 @@ package com.empty.jinux.simplediary.ui.diarydetail.fragment
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.design.widget.TabLayout
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.content.res.ResourcesCompat
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
-import android.view.inputmethod.InputMethodManager
-import android.widget.AdapterView
+import android.widget.ImageView
 import com.empty.jinux.baselibaray.loge
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
+import com.empty.jinux.simplediary.data.LocationInfo
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
+import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.KeyboardFragment
+import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.StatusFragment
 import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
-import com.empty.jinux.simplediary.util.PermissionUtil
-import com.empty.jinux.simplediary.util.getScreenHeight
+import com.empty.jinux.simplediary.util.*
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.activity_demo.*
 import kotlinx.android.synthetic.main.layout_diary_detail_edit_tool.*
 import kotlinx.android.synthetic.main.taskdetail_frag.*
+import org.jetbrains.anko.dimen
 import javax.inject.Inject
+
 
 /**
  * Main UI for the task detail screen.
@@ -64,6 +73,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     override fun onPause() {
         super.onPause()
+        keyboardHeightListener.close()
         mPresenter.stop()
     }
 
@@ -72,91 +82,203 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         return inflater.inflate(R.layout.taskdetail_frag, container, false)
     }
 
-    private val REQUEST_CODE_LOCATION_PERMISSION = 0x64
+    private var mWatcher: TextWatcher? = null
+
+    lateinit var keyboardHeightListener: KeyboardHeightProvider
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         setHasOptionsMenu(true)
 
-        diaryContent.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        keyboardHeightListener = KeyboardHeightProvider(activity!!)
 
+        mWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (editor == null) return
             }
 
             override fun afterTextChanged(s: Editable?) {
                 mPresenter.onContentChange(s.toString())
+                diaryContent.adjustParagraphSpace()
+                ThreadPools.postOnUI {
+                    adjustScrollPosition()
+                }
             }
+        }
+        diaryContent.addTextChangedListener(mWatcher)
+        diaryContent.setOnTouchListener { _, event ->
+            when (event.actionMasked) {
+                MotionEvent.ACTION_UP -> {
+                    diaryContent.isLongClickable = true
+                }
+                MotionEvent.ACTION_MOVE -> diaryContent.isLongClickable = false
+            }
+            false
+        }
 
-        })
+        editContainer.setOnClickListener {
+            diaryContent.apply { setSelection(text.length) }
+            showInputMethod()
+        }
+        fragmentContainer.setOnClickListener {
+            diaryContent.apply { setSelection(text.length) }
+            showInputMethod()
+        }
+
+        initEditToolbar()
+
+        keyboardHeightListener.observer = object : KeyboardHeightObserver {
+            override fun onKeyboardHeightChanged(height: Int, orientation: Int) {
+                if (diaryContent == null) {
+                    return
+                }
+
+                val inputMethodShowed = height != 0
+                if (inputMethodShowed) {
+                    onInputMedhodShowed(height)
+                } else {
+                    onInputMedhodHided()
+                }
+            }
+        }
+
         activity?.let {
             if (PermissionUtil.getLocationPermissions(it, REQUEST_CODE_LOCATION_PERMISSION)) {
                 mPresenter.start()
             }
         }
 
-        initEditToolbar()
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        ThreadPools.postOnUI {
+            keyboardHeightListener.start()
+        }
+    }
+
+    private fun onInputMedhodHided() {
+        if (editToolsTab.selectedTabPosition == 0) {
+            hideToolArea()
+        }
+    }
+
+    private fun onInputMedhodShowed(height: Int) {
+        diaryContent.isCursorVisible = true
+
+        bottomSpace.layoutHeight = height + toolArea.dimen(R.dimen.diary_detail_edit_tool_height)
+        toolArea.setCurrentItem(0, false)
+        toolArea.layoutHeight = height
+        showToolArea()
+
+        ThreadPools.postOnUI {
+            adjustScrollPosition()
+        }
+    }
+
+    private fun adjustScrollPosition() {
+
+        val editor = diaryContent
+        val scrollView = scrollContainer
+
+        val cursorLine = editor.getLineForCursor()
+        val cursorLineBottom = editor.layout.getLineBottom(cursorLine)
+
+        val cursorYOffset = cursorLineBottom - scrollView.scrollY
+        val editorVisibleAreaheight = editTabContainer.top - 50
+
+        if (cursorYOffset > editorVisibleAreaheight) {
+            val scroll = cursorYOffset - editorVisibleAreaheight
+            scrollView.smoothScrollBy(0, scroll)
+        }
+    }
+
+    private lateinit var keyboardFragment: KeyboardFragment
+
+    private lateinit var statusFragment: StatusFragment
 
     private fun initEditToolbar() {
-        toolInputMethod.setOnClickListener {
-            toggleInputMethod()
-            mReporter.reportClick("detail_tool_toggle")
+        keyboardFragment = ((fragmentManager?.findFragmentByTag(makeFragmentName(toolArea.id, 0)) as? KeyboardFragment)
+                ?: KeyboardFragment())
+        statusFragment = ((fragmentManager?.findFragmentByTag(makeFragmentName(toolArea.id, 1)) as? StatusFragment)
+                ?: StatusFragment())
+
+        val fragments = listOf(keyboardFragment, statusFragment)
+        fragments.forEach {
+            it.mPresenter = mPresenter
+            it.mReporter = mReporter
         }
 
-        toolLocation.setOnClickListener {
-            mPresenter.refreshLocation()
-            mReporter.reportClick("detail_tool_location")
-        }
-
-        toolWeather.adapter = SpinnerDrawableAdapter(context,
-                R.layout.spinner_emotion_item,
-                R.layout.drop_down_emotion_item,
-                MyWeatherIcons.getAllMyIcon())
-        toolWeather.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                mReporter.reportClick("detail_tool_weather", "no")
+        toolArea.adapter = object : FragmentPagerAdapter(fragmentManager) {
+            override fun getItem(position: Int): Fragment {
+                return fragments[position]
             }
 
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                mPresenter.setWeather(MyWeatherIcons.getIconByIndex(position))
-                mReporter.reportClick("detail_tool_weather", MyWeatherIcons.getWeatherName(position))
-            }
+            override fun getCount() = fragments.size
 
         }
-
-        toolEmotion.adapter = SpinnerDrawableAdapter(context,
-                R.layout.spinner_emotion_item,
-                R.layout.drop_down_emotion_item,
-                MyEmotionIcons.getAllMyIcon())
-        toolEmotion.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                mReporter.reportClick("detail_tool_emotion", "no")
-            }
-
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                mPresenter.setEmotion(position.toLong())
-                mReporter.reportClick("detail_tool_emotion", MyEmotionIcons.getEmotionName(position))
-            }
-
+        toolArea.setPageTransformer(false) { page, position ->
+            page.translationX = page.width * -position
         }
+        editToolsTab.setupWithViewPager(toolArea)
+
+        val iconRes = listOf(R.drawable.ic_keyboard,
+                R.drawable.ic_info_outline_black_24dp)
+        (0 until iconRes.size).map { editToolsTab.getTabAt(it) }.forEachIndexed { i, it ->
+            it?.customView = ImageView(context).apply { setImageDrawable(resources.getDrawable(iconRes[i])) }
+        }
+        editToolsTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabReselected(tab: TabLayout.Tab) {
+                when (tab.position) {
+                    TAB_KEYBOARD_POS -> {
+                        if (toolArea.isShown) {
+                            hideInputMethod()
+                        } else {
+                            showInputMethod()
+                        }
+                    }
+                    else -> {
+                        if (toolArea.isShown) {
+                            hideToolArea()
+                        } else {
+                            showToolArea()
+                        }
+                        hideInputMethod()
+                    }
+                }
+
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {
+            }
+
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                when (tab.position) {
+                    TAB_KEYBOARD_POS -> {
+                        showInputMethod()
+                    }
+                    else -> {
+                        hideInputMethod()
+                        showToolArea()
+                    }
+                }
+            }
+        })
     }
 
-    private fun toggleInputMethod() {
-        if (isInputMethodShowed()) {
-            hideInputMethod()
-        } else {
-            showInputMethod()
-        }
+    private fun showToolArea() {
+        toolArea.visibility = View.VISIBLE
+        editToolsTab.setSelectedTabIndicatorColor(ResourcesCompat.getColor(resources, R.color.colorAccent, null))
     }
 
-    private fun isInputMethodShowed(): Boolean {
-        return activity?.run {
-            view!!.height < getScreenHeight() * 3 / 4
-        } ?: false
+    private fun hideToolArea() {
+        toolArea.visibility = View.GONE
+        editToolsTab.setSelectedTabIndicatorColor(Color.TRANSPARENT)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -200,8 +322,14 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     override fun showContent(content: String) {
         diaryContent.visibility = View.VISIBLE
+        diaryContent.removeTextChangedListener(mWatcher)
         diaryContent.setText(content)
-        diaryContent.setSelection(content.length)
+        diaryContent.addTextChangedListener(mWatcher)
+//        diaryContent.setSelection(content.length)
+        diaryContent.isCursorVisible = false
+        ThreadPools.postOnUI {
+            diaryContent.adjustParagraphSpace()
+        }
     }
 
     override fun showDate(dateStr: String) {
@@ -228,9 +356,14 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     companion object {
 
-        private val ARGUMENT_TASK_ID = "TASK_ID"
+        private const val REQUEST_CODE_LOCATION_PERMISSION = 0x64
 
-        private val REQUEST_EDIT_TASK = 1
+        private const val ARGUMENT_TASK_ID = "TASK_ID"
+
+        private const val REQUEST_EDIT_TASK = 1
+
+        private const val TAB_KEYBOARD_POS = 0
+
 
         fun newInstance(taskId: Long): DiaryDetailFragment {
             val arguments = Bundle()
@@ -241,21 +374,17 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         }
     }
 
-    override fun showLocation(city: String) {
-        Snackbar.make(view!!, city, Snackbar.LENGTH_LONG).apply {
-            setAction(R.string.ok) {
-                dismiss()
-            }
-            show()
-        }
+    override fun showLocation(location: LocationInfo) {
+        statusFragment.showLocation(location)
     }
 
-    override fun showWeather(weather: String, icon: String) {
-        toolWeather.setSelection(MyWeatherIcons.getIconIndex(icon))
+    // todo weatherIconUrl what?
+    override fun showWeather(weather: String, weatherIconUrl: String) {
+        statusFragment.showWeather(weather, weatherIconUrl)
     }
 
     override fun showEmotion(id: Long) {
-        toolEmotion.setSelection(id.toInt())
+        statusFragment.showEmotion(id)
     }
 
     override fun showDiarySaved() {
@@ -267,15 +396,33 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     override fun showInputMethod() {
-        val im = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-        im?.showSoftInput(diaryContent, InputMethodManager.SHOW_FORCED)
+        diaryContent.showInputMethod()
     }
 
     override fun hideInputMethod() {
-        val im = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-        im?.hideSoftInputFromWindow(diaryContent.windowToken, 0)
+        diaryContent.hideInputMethod()
     }
 
-
+    fun onBackPressed(): Boolean {
+        if (editToolsTab.selectedTabPosition > 0 && toolArea.isShown) {
+            hideToolArea()
+            return true
+        } else {
+            return false
+        }
+    }
 }
+
+abstract class MFragment : Fragment() {
+    lateinit var mPresenter: DiaryDetailPresenter
+    lateinit var mReporter: Reporter
+}
+
+private fun makeFragmentName(viewId: Int, id: Long): String {
+    return "android:switcher:$viewId:$id"
+}
+
+
+
+
 

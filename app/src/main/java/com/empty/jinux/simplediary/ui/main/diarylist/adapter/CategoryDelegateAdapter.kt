@@ -22,3 +22,12 @@ class CategoryDelegateAdapter : ViewTypeDelegateAdapter {
                 "" + item.time.toCalendar().get(Calendar.YEAR))
     }
 }
+
+class CategoryEndDelegateAdapter : ViewTypeDelegateAdapter {
+    override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+        return CategoryEndViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.recycler_view_item_category_end, parent, false))
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: ViewType) {
+    }
+}

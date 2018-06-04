@@ -27,6 +27,7 @@ class SharePreferenceConfig(context: Context) : ConfigManager {
                 sharedPreferencesEditor.putBoolean(key, value)
             }
         }
+        sharedPreferencesEditor.apply()
     }
 
     private val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
