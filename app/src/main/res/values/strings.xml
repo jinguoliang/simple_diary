@@ -37,4 +37,5 @@
     <string name="weather">Weather</string>
     <string name="emotion">Emotion</string>
     <string name="title_activity_maps">Map</string>
+    <string name="google_service_error">Google service error</string>
 </resources>

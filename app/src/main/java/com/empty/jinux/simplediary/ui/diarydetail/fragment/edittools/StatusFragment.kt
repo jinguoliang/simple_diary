@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.content.res.ResourcesCompat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import com.empty.jinux.baselibaray.loge
+import com.empty.jinux.baselibaray.logw
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.LocationInfo
 import com.empty.jinux.simplediary.location.Location
@@ -22,6 +24,7 @@ import com.empty.jinux.simplediary.ui.diarydetail.fragment.MyEmotionIcons
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.MyWeatherIcons
 import com.google.android.gms.location.places.ui.PlacePicker
 import kotlinx.android.synthetic.main.fragment_edit_status.*
+import org.jetbrains.anko.toast
 
 class StatusFragment : MFragment() {
 
@@ -74,11 +77,19 @@ class StatusFragment : MFragment() {
         }
 
         edit.setOnClickListener {
-            mLocationInfo?.apply {
-                val intentBuilder = PlacePicker.IntentBuilder()
-                startActivityForResult(intentBuilder.build(activity), PLACE_PICKER_REQUEST_ID)
+            val intentBuilder = PlacePicker.IntentBuilder()
+            val intent = try {
+                intentBuilder.build(activity)
+            } catch (e: Exception) {
+                logw(Log.getStackTraceString(e), "google service")
+                null
             }
 
+            intent?.also {
+                startActivityForResult(it, PLACE_PICKER_REQUEST_ID)
+            } ?: context?.apply {
+                toast(R.string.google_service_error).show()
+            }
         }
     }
 
