@@ -38,4 +38,5 @@
     <string name="weather">天气</string>
     <string name="emotion">心情</string>
     <string name="title_activity_maps">地图</string>
+    <string name="google_service_error">谷歌服务出现问题</string>
 </resources>
