@@ -1,11 +1,14 @@
 package com.empty.jinux.simplediary.util
 
+import android.content.Context
 import android.graphics.Color
 import android.text.Spannable
 import android.text.TextPaint
 import android.text.style.BackgroundColorSpan
 import android.text.style.MetricAffectingSpan
 import android.widget.EditText
+import com.empty.jinux.simplediary.R
+import org.jetbrains.anko.dimen
 import java.util.regex.Pattern
 
 
@@ -30,7 +33,7 @@ fun EditText.adjustParagraphSpace() {
 
 private fun EditText.addParagraphEndSpan(pos: Int) {
     val lineStart = layout.getLineStart(layout.getLineForOffset(pos))
-    text.setSpan(ParagrahEndLineSpan(), lineStart, pos + 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+    text.setSpan(ParagrahEndLineSpan(context), lineStart, pos + 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
 }
 
 fun CharSequence.findNewLines(): List<Int> {
@@ -42,9 +45,9 @@ fun CharSequence.findNewLines(): List<Int> {
     return positions
 }
 
-class ParagrahEndLineSpan : MetricAffectingSpan() {
+class ParagrahEndLineSpan(val context: Context) : MetricAffectingSpan() {
     override fun updateMeasureState(tp: TextPaint) {
-        tp.baselineShift = 50
+        tp.baselineShift = context.dimen(R.dimen.editor_paragraph_end)
     }
 
     override fun updateDrawState(tp: TextPaint) {
