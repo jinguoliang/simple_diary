@@ -11,6 +11,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
+import com.empty.jinux.simplediary.util.formatToDay
 import com.empty.jinux.simplediary.util.formatToTime
 import com.empty.jinux.simplediary.util.formatToWeekday
 import com.empty.jinux.simplediary.util.getScreenWidth
@@ -24,6 +25,7 @@ internal constructor(
 
     private val titleTV: TextView = v.findViewById(R.id.title)
     private val weekName: TextView = v.findViewById(R.id.weekName)
+    private val day: TextView = v.findViewById(R.id.day)
     private val time: TextView = v.findViewById(R.id.time)
     private val topLine: View = v.findViewById(R.id.topLine)
 
@@ -36,6 +38,7 @@ internal constructor(
         titleTV.text = diary.diaryContent.getTitleFromContent().takeIf { it.isNotEmpty() }
                 ?: itemView.resources.getString(R.string.untitled)
         weekName.text = diary.diaryContent.displayTime.formatToWeekday()
+        day.text = diary.diaryContent.displayTime.formatToDay()
         time.text = diary.diaryContent.displayTime.formatToTime()
 
         currentDiary = diary
@@ -44,6 +47,7 @@ internal constructor(
 
     fun showWeekday(differentDay: Boolean) {
         weekName.visibility = if (differentDay) View.VISIBLE else View.INVISIBLE
+        day.visibility = weekName.visibility
 //        topLine.visibility = weekName.visibility
         topLine.visibility = View.INVISIBLE
     }

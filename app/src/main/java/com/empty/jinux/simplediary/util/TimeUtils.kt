@@ -71,6 +71,10 @@ fun Long.formatToTime(): String {
     return formatToTimeString("H:mm")
 }
 
+fun Long.formatToDay(): String {
+    return formatToTimeString("M-d")
+}
+
 fun today(): Calendar {
     return Calendar.getInstance().setToDayStart()
 }

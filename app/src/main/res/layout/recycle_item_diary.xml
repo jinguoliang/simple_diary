@@ -14,66 +14,63 @@
   ~ limitations under the License.
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/diary_list_item_height"
     android:background="@drawable/touch_feedback"
     android:orientation="horizontal">
 
-    <FrameLayout
-        android:id="@+id/weekBlock"
-        android:layout_width="@dimen/swipe_item_menu_item_width"
-        android:layout_height="match_parent"
-        android:layout_marginStart="16dp">
+    <TextView
+        android:id="@+id/weekName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="2dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="周二" />
 
-
-        <TextView
-            android:id="@+id/weekName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:layout_gravity="center_vertical"
-            tools:text="周二" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/splitor"
-        android:layout_width="14dp"
-        android:layout_height="match_parent"
-        android:layout_toEndOf="@id/weekBlock"
-        android:visibility="gone">
-
-        <View
-            android:layout_width="1.8dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:background="@color/colorPrimaryLine2" />
-    </FrameLayout>
-
+    <TextView
+        android:id="@+id/day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="@+id/weekName"
+        app:layout_constraintStart_toStartOf="@+id/weekName"
+        app:layout_constraintTop_toBottomOf="@+id/weekName"
+        tools:text="6-2" />
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_toEndOf="@+id/splitor"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="2dp"
         android:lines="1"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:textColor="@color/black"
-        tools:text="test title, it very long long long long long long " />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/weekName"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="test title, it very a a a a long long a a a long long long long " />
 
     <TextView
         android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@id/title"
-        android:layout_below="@id/title"
         android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="@+id/title"
+        app:layout_constraintTop_toBottomOf="@+id/title"
         tools:text="22:54" />
 
     <View
@@ -81,4 +78,4 @@
         android:layout_width="match_parent"
         android:layout_height="1.8dp"
         android:background="@color/colorPrimaryLine2" />
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
