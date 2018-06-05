@@ -83,18 +83,9 @@ open class LocationManagerImpl constructor(val context: Activity) : LocationMana
             if (addresses.isNotEmpty()) {
                 logd(addresses)
                 val address = addresses[0]
-                val addressStr = if (Locale.getDefault().equals(Locale.CHINA)) {
-                    (address.getAddressLine(0) ?: "") +
-                            (address.getAddressLine(1) ?: " ") +
-                            (address.getAddressLine(2) ?: "")
-
-                } else {
-
-                    address.getAddressLine(2) +
-                            (address.getAddressLine(1)?.let { ", $it" }) +
-                            (address.getAddressLine(0)?.let { ", $it" })
-
-                }
+                val addressStr =
+                        if (Locale.getDefault() == Locale.CHINESE) (0..2).mapNotNull { address.getAddressLine(it) }.joinToString(" ")
+                        else (2 downTo 0).mapNotNull { address.getAddressLine(it) }.joinToString(", ")
                 callback(addressStr)
             }
         }
