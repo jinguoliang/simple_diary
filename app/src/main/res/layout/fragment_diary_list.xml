@@ -52,15 +52,15 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_gravity="center"
-                app:srcCompat="@drawable/ic_assignment_turned_in_24dp" />
+                app:srcCompat="@drawable/ic_no_diary" />
 
             <TextView
                 android:id="@+id/noDiariesMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/no_diaries_all"
-                android:layout_marginBottom="@dimen/list_item_padding" />
+                android:layout_marginTop="8dp"
+                android:text="@string/no_diaries_all" />
 
         </LinearLayout>
     </RelativeLayout>

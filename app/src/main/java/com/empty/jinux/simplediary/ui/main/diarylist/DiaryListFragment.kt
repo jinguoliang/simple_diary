@@ -21,7 +21,6 @@ import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +31,7 @@ import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivity
 import com.empty.jinux.simplediary.ui.main.MainActivity
 import com.empty.jinux.simplediary.ui.main.diarylist.adapter.DiariesRecyclerViewWithCategoriesAdapter
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.diaries_frag.*
+import kotlinx.android.synthetic.main.fragment_diary_list.*
 import org.jetbrains.anko.intentFor
 import java.util.*
 import javax.inject.Inject
@@ -90,7 +89,7 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.diaries_frag, container, false)
+        return inflater.inflate(R.layout.fragment_diary_list, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -150,7 +149,7 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
     override fun showNoDiaries() {
         showNoDiariesViews(
                 resources.getString(R.string.no_diaries_all),
-                R.drawable.ic_assignment_turned_in_24dp
+                R.drawable.ic_no_diary
         )
     }
 

@@ -16,7 +16,6 @@
 
 package com.empty.jinux.simplediary.ui.diarydetail
 
-import android.content.Context
 import android.os.Bundle
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
@@ -24,7 +23,7 @@ import com.empty.jinux.simplediary.ui.LockHelper
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.DiaryDetailFragment
 import com.empty.jinux.simplediary.util.ActivityUtils
 import dagger.android.support.DaggerAppCompatActivity
-import kotlinx.android.synthetic.main.diary_detail_act.*
+import kotlinx.android.synthetic.main.activity_diary_detail.*
 import javax.inject.Inject
 
 /**
@@ -39,7 +38,7 @@ class DiaryDetailActivity : DaggerAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.diary_detail_act)
+        setContentView(R.layout.activity_diary_detail)
 
         // Set up the toolbar.
         setSupportActionBar(toolbar)

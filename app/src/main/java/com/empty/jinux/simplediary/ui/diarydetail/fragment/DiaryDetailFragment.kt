@@ -43,7 +43,7 @@ import com.empty.jinux.simplediary.util.*
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.activity_demo.*
 import kotlinx.android.synthetic.main.layout_diary_detail_edit_tool.*
-import kotlinx.android.synthetic.main.taskdetail_frag.*
+import kotlinx.android.synthetic.main.fragment_taskdetail.*
 import org.jetbrains.anko.dimen
 import javax.inject.Inject
 
@@ -79,7 +79,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.taskdetail_frag, container, false)
+        return inflater.inflate(R.layout.fragment_taskdetail, container, false)
     }
 
     private var mWatcher: TextWatcher? = null

@@ -35,7 +35,7 @@ import com.empty.jinux.simplediary.ui.main.statistics.StatisticsFragment
 import com.empty.jinux.simplediary.ui.settings.SettingsActivity
 import com.empty.jinux.simplediary.util.ActivityUtils
 import dagger.android.support.DaggerAppCompatActivity
-import kotlinx.android.synthetic.main.diary_list_act.*
+import kotlinx.android.synthetic.main.activity_diary_list.*
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.startActivity
 import javax.inject.Inject
@@ -50,7 +50,7 @@ class MainActivity : DaggerAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.diary_list_act)
+        setContentView(R.layout.activity_diary_list)
         setupToolbar()
         setupNavigationDrawer()
         showDiaryListFragment()

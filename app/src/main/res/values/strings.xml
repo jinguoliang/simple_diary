@@ -40,4 +40,5 @@
     <string name="google_service_error">Google service error</string>
     <string name="week_of_year_fmt">Week %1$d</string>
     <string name="edit_tools_status_location_default">You can select location by clicking the edit button</string>
+    <string name="editor_hint">Please Input Here</string>
 </resources>

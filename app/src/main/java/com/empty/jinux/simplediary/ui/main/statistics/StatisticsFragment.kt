@@ -28,7 +28,7 @@ import com.empty.jinux.simplediary.ui.main.statistics.view.punchcard.PunchCheckI
 import com.empty.jinux.simplediary.ui.main.statistics.view.punchcard.PunchCheckState
 import com.empty.jinux.simplediary.util.*
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.statistics_frag.*
+import kotlinx.android.synthetic.main.fragment_statistics.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.util.*
@@ -45,7 +45,7 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View {
     lateinit var mPresenter: StatisticsPresenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.statistics_frag, container, false)
+        return inflater.inflate(R.layout.fragment_statistics, container, false)
     }
 
 
