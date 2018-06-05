@@ -26,14 +26,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ellipsize="middle"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:scrollHorizontally="true"
             tools:text="test location very loooooooooooooooooooooooooooooooooooooooog"
+            android:text="@string/edit_tools_status_location_default"
             android:textColor="@color/paper_yellow"
             android:textSize="15sp"
-            android:singleLine="true"/>
+            android:maxLines="2"/>
 
         <ImageView
             android:id="@+id/edit"
