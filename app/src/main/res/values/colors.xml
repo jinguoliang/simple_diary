@@ -3,7 +3,6 @@
     <color name="colorPrimary">#0048cd</color>
     <color name="colorPrimaryDark">#002bab</color>
     <color name="colorPrimaryLighter">#4463d5</color>
-    <color name="colorPrimaryLine">#c1c7f0</color>
     <color name="colorPrimaryLine2">#e7e9f9</color>
     <color name="colorAccent">#D50000</color>
     <color name="icon_color_primary">#bbffffff</color>
@@ -12,7 +11,6 @@
     <color name="green">#00ff00</color>
     <color name="edit_tools_panel_bg">#f50048cd</color>
     <color name="transparent">#fa0048cd</color>
-    <color name="colorBg">#EBEBEB</color>
     <color name="black">#353535</color>
     <color name="colorEditHighlight">#66000000</color>
     <drawable name="touchFeedback">@color/colorPrimaryLighter</drawable>
