@@ -20,6 +20,8 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/diary_list_item_height"
     android:background="@drawable/touch_feedback"
+    android:layout_marginStart="@dimen/diaries_list_recycle_view_margin_horizontal"
+    android:layout_marginEnd="@dimen/diaries_list_recycle_view_margin_horizontal"
     android:orientation="horizontal">
 
     <TextView

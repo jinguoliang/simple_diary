@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="40dp"
     android:layout_marginTop="8dp"
+    android:layout_marginStart="@dimen/diaries_list_recycle_view_margin_horizontal"
+    android:layout_marginEnd="@dimen/diaries_list_recycle_view_margin_horizontal"
     android:background="@drawable/bg_category_head">
 
     <TextView
