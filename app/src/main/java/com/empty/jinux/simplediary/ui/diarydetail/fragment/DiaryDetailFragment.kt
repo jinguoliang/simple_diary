@@ -230,7 +230,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         val iconRes = listOf(R.drawable.ic_keyboard,
                 R.drawable.ic_emotion_location_weather)
         (0 until iconRes.size).map { editToolsTab.getTabAt(it) }.forEachIndexed { i, it ->
-            it?.customView = ImageView(context).apply { setImageDrawable(resources.getDrawable(iconRes[i])) }
+            it?.customView = ImageView(context).apply { setImageDrawable(ResourcesCompat.getDrawable(resources, iconRes[i], null)) }
         }
         editToolsTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab) {

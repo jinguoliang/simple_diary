@@ -4,6 +4,7 @@ import android.hardware.fingerprint.FingerprintManager
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.ColorRes
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v4.widget.ImageViewCompat
 import android.text.Editable
 import android.text.TextUtils
@@ -143,7 +144,7 @@ class ImageColorChanger(val imageView: ImageView) {
         if (color == 0) {
             ImageViewCompat.setImageTintList(imageView, null)
         } else {
-            ImageViewCompat.setImageTintList(imageView, imageView.resources.getColorStateList(color))
+            ImageViewCompat.setImageTintList(imageView, ResourcesCompat.getColorStateList(imageView.resources, color, null))
         }
     }
 

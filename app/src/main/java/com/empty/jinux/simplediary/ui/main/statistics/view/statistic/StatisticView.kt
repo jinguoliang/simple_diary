@@ -98,7 +98,7 @@ constructor(context: Context,
                 setDrawValues(true)
                 setValueTextColor(ContextCompat.getColor(context, android.R.color.white))
                 setValueTextSize(15f)
-                setValueFormatter { value, entry, dataSetIndex, viewPortHandler ->
+                setValueFormatter { value, _, _, _ ->
                     value.toLong().toString()
                 }
             }

@@ -14,7 +14,7 @@ class DiaryDelegateAdapter internal constructor(private val mItemListener: Diari
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: ViewType) {
-        val holder = holder as DiaryViewHolder
+        holder as DiaryViewHolder
         item as DiaryItem
         holder.bind(item.data)
         holder.showWeekday(item.differentDay)
