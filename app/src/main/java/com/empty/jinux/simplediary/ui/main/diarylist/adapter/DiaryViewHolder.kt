@@ -96,6 +96,8 @@ class SwipeView(v: View) : HorizontalScrollView(v.context) {
     init {
         scrollBarSize = 0
         overScrollMode = View.OVER_SCROLL_NEVER
+        isHorizontalScrollBarEnabled = false
+        isHorizontalFadingEdgeEnabled = false
         layoutParams = v.layoutParams
 
         wrapContent(v)
