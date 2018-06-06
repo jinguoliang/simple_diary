@@ -58,7 +58,7 @@ object PermissionUtil {
      */
     fun getLocationPermissions(context: Activity, requestCode: Int): Boolean {
         return requestPermissions(context, requestCode,
-                Manifest.permission.ACCESS_COARSE_LOCATION)
+                Manifest.permission.ACCESS_FINE_LOCATION)
     }
 
     /**
