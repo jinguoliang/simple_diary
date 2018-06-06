@@ -14,8 +14,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
         android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:textColor="@color/black"
+        android:typeface="sans"
         android:textSize="20sp"
         tools:text="hahhaa" />
 
@@ -24,11 +27,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
         android:layout_marginEnd="16dp"
-        android:text="2018"
+        tools:text="2018"
         android:textColor="@color/black"
-        android:textSize="13sp" />
+        android:textSize="13sp"
+        android:layout_alignBaseline="@id/weekth"/>
 
 
 </RelativeLayout>
