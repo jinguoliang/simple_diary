@@ -10,6 +10,7 @@ import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.widget.Toast
+import com.empty.jinux.simplediary.R
 import com.google.common.collect.Lists
 
 object PermissionUtil {
@@ -130,7 +131,7 @@ object PermissionUtil {
      * 在 onActivityResult() 中还需要对权限进行判断，因为用户有可能没有授权就返回了！<br></br>
      */
     private fun startPermissionSettings(context: Activity, requestCode: Int) {
-        Toast.makeText(context, "点击权限，并打开全部权限", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, context.getString(R.string.guide_open_permission), Toast.LENGTH_LONG).show()
 
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
         val uri = Uri.fromParts("package", context.packageName, null)
