@@ -16,6 +16,7 @@
 
 package com.empty.jinux.simplediary.ui.main
 
+import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -38,6 +39,7 @@ import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_diary_list.*
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.toast
 import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity() {
@@ -157,7 +159,11 @@ class MainActivity : DaggerAppCompatActivity() {
                     mReporter.reportClick("main_menu_settings")
                 }
                 R.id.rate_navigation_menu_item -> {
-                    startActivity(rateApp(context))
+                    try {
+                        startActivity(rateApp(context))
+                    } catch (e: ActivityNotFoundException) {
+                        toast(R.string.no_google_play_error).show()
+                    }
                     mReporter.reportClick("main_menu_rate")
                 }
                 R.id.share_navigation_menu_item -> {
