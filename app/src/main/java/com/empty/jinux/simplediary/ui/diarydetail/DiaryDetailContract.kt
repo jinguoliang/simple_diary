@@ -55,6 +55,8 @@ interface DiaryDetailContract {
         fun showInputMethod()
         fun hideInputMethod()
 
+        fun hasLocationPermission(): Boolean
+
     }
 
     interface Presenter : BasePresenter {

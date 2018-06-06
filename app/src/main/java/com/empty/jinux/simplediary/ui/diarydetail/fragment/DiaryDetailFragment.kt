@@ -42,8 +42,8 @@ import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
 import com.empty.jinux.simplediary.util.*
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.activity_demo.*
-import kotlinx.android.synthetic.main.layout_diary_detail_edit_tool.*
 import kotlinx.android.synthetic.main.fragment_taskdetail.*
+import kotlinx.android.synthetic.main.layout_diary_detail_edit_tool.*
 import org.jetbrains.anko.dimen
 import javax.inject.Inject
 
@@ -146,12 +146,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             }
         }
 
-        activity?.let {
-            if (PermissionUtil.getLocationPermissions(it, REQUEST_CODE_LOCATION_PERMISSION)) {
-                mPresenter.start()
-            }
-        }
-
+        mPresenter.start()
     }
 
     override fun onResume() {
@@ -286,7 +281,8 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         PermissionUtil.onRequestPermissionsResult(requestCode, permissions, grantResults, object : PermissionUtil.OnRequestPermissionsResultCallbacks {
             override fun onPermissionsGranted(requestCode: Int, perms: List<String>, isAllGranted: Boolean) {
                 if (requestCode == REQUEST_CODE_LOCATION_PERMISSION) {
-                    mPresenter.start()
+                    mPresenter.refreshLocation()
+                    mPresenter.refreshWeather()
                 }
             }
 
@@ -401,6 +397,12 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     override fun hideInputMethod() {
         diaryContent.hideInputMethod()
+    }
+
+    override fun hasLocationPermission(): Boolean {
+        return activity?.let {
+            PermissionUtil.getLocationPermissions(it, DiaryDetailFragment.REQUEST_CODE_LOCATION_PERMISSION)
+        } ?: false
     }
 
     fun onBackPressed(): Boolean {
