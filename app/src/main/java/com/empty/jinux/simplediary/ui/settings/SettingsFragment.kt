@@ -26,6 +26,9 @@ class SettingsFragment : DaggerPreferenceFragment(),
                 mReporter.reportClick(key, checked.toString())
                 if (checked) {
                     // open lock
+                    PreferenceManager.getDefaultSharedPreferences(activity).edit {
+                        putBoolean("pref_app_lock_enable", false)
+                    }
                     showLockPasswordSetDialog()
                 }
             }
@@ -56,10 +59,6 @@ class SettingsFragment : DaggerPreferenceFragment(),
             dialog.cancel()
             mReporter.reportClick("password_set_dialog_cancel")
 
-            PreferenceManager.getDefaultSharedPreferences(activity).edit {
-                putBoolean("pref_app_lock_enable", false)
-            }
-
             val checkbox = preferenceManager.findPreference("pref_app_lock_enable") as CheckBoxPreference
             checkbox.isChecked = false
 
@@ -70,6 +69,7 @@ class SettingsFragment : DaggerPreferenceFragment(),
 
             PreferenceManager.getDefaultSharedPreferences(activity).edit {
                 putString("pref_app_lock_password", dialog.newPassword.text.toString())
+                putBoolean("pref_app_lock_enable", true)
             }
         }
         dialog.show()
