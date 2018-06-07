@@ -2,7 +2,7 @@
     <string name="app_name">Write Diary</string>
     <string name="loading_diaries_error">Error while loading diaries</string>
     <string name="menu_delete_diary">Delete diary</string>
-    <string name="navigation_view_header_title">Diaries</string>
+    <string name="navigation_view_header_title">Recording Good Times</string>
     <string name="successfully_saved_diary_message">Diary saved</string>
     <string name="list_title">Diary List</string>
     <string name="statistics_title">Statistics</string>
