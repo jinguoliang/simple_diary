@@ -268,7 +268,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     private fun showToolArea() {
         toolArea.visibility = View.VISIBLE
-        editToolsTab.setSelectedTabIndicatorColor(ResourcesCompat.getColor(resources, R.color.colorAccent, null))
+        editToolsTab.setSelectedTabIndicatorColor(ResourcesCompat.getColor(resources, R.color.icon_color_primary, null))
     }
 
     private fun hideToolArea() {
