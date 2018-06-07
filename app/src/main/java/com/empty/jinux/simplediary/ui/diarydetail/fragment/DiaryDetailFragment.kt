@@ -23,6 +23,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
+import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.content.res.ResourcesCompat
@@ -225,7 +226,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         val iconRes = listOf(R.drawable.ic_keyboard,
                 R.drawable.ic_emotion_location_weather)
         (0 until iconRes.size).map { editToolsTab.getTabAt(it) }.forEachIndexed { i, it ->
-            it?.customView = ImageView(context).apply { setImageDrawable(ResourcesCompat.getDrawable(resources, iconRes[i], null)) }
+            it?.customView = ImageView(context).apply { setImageDrawable(VectorDrawableCompat.create(resources, iconRes[i], null)) }
         }
         editToolsTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab) {

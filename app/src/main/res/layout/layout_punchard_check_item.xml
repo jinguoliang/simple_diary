@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
@@ -23,18 +24,18 @@
             android:layout_height="30dp"
             android:padding="2dp"
             android:background="@drawable/ic_circle">
-            <View
+            <ImageView
                 android:id="@+id/stateChecked"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/ic_check_black_24dp"
+                app:srcCompat="@drawable/ic_check_black_24dp"
                 />
-            <View
+            <ImageView
                 android:id="@+id/stateMissed"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="invisible"
-                android:background="@drawable/ic_close_black_24dp"
+                app:srcCompat="@drawable/ic_close_black_24dp"
                 />
         </FrameLayout>
 

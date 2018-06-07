@@ -20,6 +20,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
+import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
@@ -162,7 +163,7 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
         noDiaries.visibility = View.VISIBLE
 
         noDiariesMessage.text = mainText
-        noDiariesIcon.setImageDrawable(resources.getDrawable(iconRes))
+        noDiariesIcon.setImageDrawable(VectorDrawableCompat.create(resources, R.drawable.ic_no_diary, null))
     }
 
     override fun showAddDiary() {
