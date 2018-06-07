@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">写日记</string>
+    <string name="app_name">今日记</string>
     <string name="loading_diaries_error">加载日记时出错</string>
     <string name="menu_delete_diary">删除日记</string>
     <string name="navigation_view_header_title">记录那些美好时光</string>
