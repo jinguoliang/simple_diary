@@ -41,6 +41,6 @@
     <string name="week_of_year_fmt">Week %1$d</string>
     <string name="edit_tools_status_location_default">You can select location by clicking the edit button</string>
     <string name="editor_hint">Please Input Here</string>
-    <string name="no_google_play_error">Google Play isn\'t installed.</string>
+    <string name="error_no_google_play">Google Play isn\'t installed.</string>
     <string name="guide_open_permission">Please open permissions</string>
 </resources>

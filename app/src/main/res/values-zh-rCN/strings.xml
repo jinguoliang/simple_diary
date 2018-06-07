@@ -42,5 +42,6 @@
     <string name="week_of_year_fmt">第 %1$d 周</string>
     <string name="edit_tools_status_location_default">你可以点击编辑按钮选择位置</string>
     <string name="editor_hint">就从这里输入吧</string>
+    <string name="error_no_google_play">手机上没有安装 Google Play</string>
     <string name="guide_open_permission">请打开所有权限</string>
 </resources>

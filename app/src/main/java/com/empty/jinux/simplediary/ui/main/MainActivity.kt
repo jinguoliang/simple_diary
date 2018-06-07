@@ -45,6 +45,7 @@ import javax.inject.Inject
 class MainActivity : DaggerAppCompatActivity() {
 
     @Inject
+    internal
     lateinit var mReporter: Reporter
 
     @Inject
@@ -162,7 +163,7 @@ class MainActivity : DaggerAppCompatActivity() {
                     try {
                         startActivity(rateApp(context))
                     } catch (e: ActivityNotFoundException) {
-                        toast(R.string.no_google_play_error).show()
+                        toast(R.string.error_no_google_play).show()
                     }
                     mReporter.reportClick("main_menu_rate")
                 }
