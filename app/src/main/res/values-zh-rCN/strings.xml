@@ -25,7 +25,7 @@
     <string name="share_title">分享</string>
     <string name="translate_title">帮助翻译</string>
     <string name="about_title">关于</string>
-    <string name="about_intro">很高兴遇到你！\n\n这是一个日记软件，非常简单，它会与你一同成长，但会一直保持简洁。</string>
+    <string name="about_intro">今日记是一款免费的日记软件。你可以用它来记录你生活的点滴，而这些点滴就组成了我们的美好的时光。</string>
     <string name="share_app_content_fmt">这个日记软件真不错, 来试试吧。\n %1$s</string>
     <string name="pref_pin_lock">日记锁</string>
     <string name="pref_pin_lock_summ">设置密码防止其他人查看你的日记</string>
