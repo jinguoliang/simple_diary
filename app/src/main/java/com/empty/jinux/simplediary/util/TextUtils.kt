@@ -32,6 +32,8 @@ fun EditText.adjustParagraphSpace() {
 }
 
 private fun EditText.addParagraphEndSpan(pos: Int) {
+    if (layout == null) return
+
     val lineStart = layout.getLineStart(layout.getLineForOffset(pos))
     text.setSpan(ParagrahEndLineSpan(context), lineStart, pos + 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
 }

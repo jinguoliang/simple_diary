@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">写日记</string>
+    <string name="app_name">今日记</string>
     <string name="loading_diaries_error">加载日记时出错</string>
     <string name="menu_delete_diary">删除日记</string>
-    <string name="navigation_view_header_title">日记</string>
+    <string name="navigation_view_header_title">记录那些美好时光</string>
     <string name="successfully_saved_diary_message">日记保存成功</string>
     <string name="list_title">日记列表</string>
     <string name="statistics_title">统计</string>
@@ -25,11 +25,11 @@
     <string name="share_title">分享</string>
     <string name="translate_title">帮助翻译</string>
     <string name="about_title">关于</string>
-    <string name="about_intro">很高兴遇到你！\n\n这是一个日记软件，非常简单，它会与你一同成长，但会一直保持简洁。</string>
+    <string name="about_intro">今日记是一款免费的日记软件。你可以用它来记录你生活的点滴，而这些点滴就组成了我们的美好的时光。</string>
     <string name="share_app_content_fmt">这个日记软件真不错, 来试试吧。\n %1$s</string>
     <string name="pref_pin_lock">日记锁</string>
     <string name="pref_pin_lock_summ">设置密码防止其他人查看你的日记</string>
-    <string name="app_lock_new_password_hint">请输入新密码</string>
+    <string name="app_lock_new_password_hint">新密码</string>
     <string name="app_lock_password_confirm_hint">确认密码</string>
     <string name="input_password_hint">输入日记密码</string>
     <string name="password_set_dialog_title">设置密码</string>
@@ -39,4 +39,9 @@
     <string name="emotion">心情</string>
     <string name="title_activity_maps">地图</string>
     <string name="google_service_error">谷歌服务出现问题</string>
+    <string name="week_of_year_fmt">第 %1$d 周</string>
+    <string name="edit_tools_status_location_default">你可以点击编辑按钮选择位置</string>
+    <string name="editor_hint">就从这里输入吧</string>
+    <string name="error_no_google_play">手机上没有安装 Google Play</string>
+    <string name="guide_open_permission">请打开所有权限</string>
 </resources>

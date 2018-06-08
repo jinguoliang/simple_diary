@@ -15,6 +15,7 @@
         />
     <EditText
         android:id="@+id/editor"
+        android:hint="@string/editor_hint"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:inputType="textMultiLine"/>

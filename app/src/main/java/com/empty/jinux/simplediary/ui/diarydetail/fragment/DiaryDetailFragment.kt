@@ -23,6 +23,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
+import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.content.res.ResourcesCompat
@@ -42,8 +43,8 @@ import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
 import com.empty.jinux.simplediary.util.*
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.activity_demo.*
+import kotlinx.android.synthetic.main.fragment_taskdetail.*
 import kotlinx.android.synthetic.main.layout_diary_detail_edit_tool.*
-import kotlinx.android.synthetic.main.taskdetail_frag.*
 import org.jetbrains.anko.dimen
 import javax.inject.Inject
 
@@ -79,7 +80,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.taskdetail_frag, container, false)
+        return inflater.inflate(R.layout.fragment_taskdetail, container, false)
     }
 
     private var mWatcher: TextWatcher? = null
@@ -146,12 +147,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             }
         }
 
-        activity?.let {
-            if (PermissionUtil.getLocationPermissions(it, REQUEST_CODE_LOCATION_PERMISSION)) {
-                mPresenter.start()
-            }
-        }
-
+        mPresenter.start()
     }
 
     override fun onResume() {
@@ -228,9 +224,9 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         editToolsTab.setupWithViewPager(toolArea)
 
         val iconRes = listOf(R.drawable.ic_keyboard,
-                R.drawable.ic_info_outline_black_24dp)
+                R.drawable.ic_emotion_location_weather)
         (0 until iconRes.size).map { editToolsTab.getTabAt(it) }.forEachIndexed { i, it ->
-            it?.customView = ImageView(context).apply { setImageDrawable(resources.getDrawable(iconRes[i])) }
+            it?.customView = ImageView(context).apply { setImageDrawable(VectorDrawableCompat.create(resources, iconRes[i], null)) }
         }
         editToolsTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab) {
@@ -273,7 +269,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     private fun showToolArea() {
         toolArea.visibility = View.VISIBLE
-        editToolsTab.setSelectedTabIndicatorColor(ResourcesCompat.getColor(resources, R.color.colorAccent, null))
+        editToolsTab.setSelectedTabIndicatorColor(ResourcesCompat.getColor(resources, R.color.icon_color_primary, null))
     }
 
     private fun hideToolArea() {
@@ -286,7 +282,8 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         PermissionUtil.onRequestPermissionsResult(requestCode, permissions, grantResults, object : PermissionUtil.OnRequestPermissionsResultCallbacks {
             override fun onPermissionsGranted(requestCode: Int, perms: List<String>, isAllGranted: Boolean) {
                 if (requestCode == REQUEST_CODE_LOCATION_PERMISSION) {
-                    mPresenter.start()
+                    mPresenter.refreshLocation()
+                    mPresenter.refreshWeather()
                 }
             }
 
@@ -401,6 +398,12 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     override fun hideInputMethod() {
         diaryContent.hideInputMethod()
+    }
+
+    override fun hasLocationPermission(): Boolean {
+        return activity?.let {
+            PermissionUtil.getLocationPermissions(it, DiaryDetailFragment.REQUEST_CODE_LOCATION_PERMISSION)
+        } ?: false
     }
 
     fun onBackPressed(): Boolean {

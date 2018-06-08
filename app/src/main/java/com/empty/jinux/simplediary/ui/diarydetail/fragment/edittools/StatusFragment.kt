@@ -2,15 +2,19 @@ package com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.Resources
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.LayerDrawable
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.RequiresApi
 import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.content.res.ResourcesCompat
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CompoundButton
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
@@ -22,6 +26,7 @@ import com.empty.jinux.simplediary.location.Location
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.MFragment
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.MyEmotionIcons
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.MyWeatherIcons
+import com.empty.jinux.simplediary.ui.diarydetail.fragment.reflectFeild
 import com.google.android.gms.location.places.ui.PlacePicker
 import kotlinx.android.synthetic.main.fragment_edit_status.*
 import org.jetbrains.anko.toast
@@ -131,17 +136,40 @@ class StatusFragment : MFragment() {
 
 }
 
-@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 private fun RadioGroup.addRadios(iconReses: List<Int>, iconSize: Int) {
-    iconReses.map {
-        RadioButton(context).apply {
-            buttonDrawable = VectorDrawableCompat.create(resources, it, null)?.apply { setBounds(0, 0, 50, 50) }
-            buttonTintList = ResourcesCompat.getColorStateList(resources, R.color.button_selector, null)
-        }
-    }.forEach {
-        addView(it, LinearLayout.LayoutParams(iconSize, iconSize).apply { })
+    iconReses.map { VectorDrawableCompat.create(resources, it, null)!! }
+            .map { drawableNormal: Drawable ->
+                RadioButton(context).apply {
+                    buttonDrawable = getDrawableNormal(resources, drawableNormal)
+                    setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
+                        if (isChecked) {
+                            buttonDrawable = getDrawableSelected(resources, drawableNormal)
+                        } else {
+                            buttonDrawable = getDrawableNormal(resources, drawableNormal)
+                        }
+                    }
+                }
+            }.forEach {
+                addView(it, LinearLayout.LayoutParams(iconSize, iconSize).apply { })
+            }
+}
+
+private fun getDrawableSelected(resources: Resources, origin: Drawable) = LayerDrawable(arrayOf(ResourcesCompat.getDrawable(resources, R.drawable.radio_group_checked_circle, null)!!.apply {  }, origin)).apply {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        setLayerGravity(1, Gravity.CENTER)
+    } else {
+
     }
 }
+
+private fun getDrawableNormal(resources: Resources, origin: Drawable) = LayerDrawable(arrayOf(ResourcesCompat.getDrawable(resources, R.drawable.radio_group_checked_circle_hide, null)!!.apply {  }, origin)).apply {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        setLayerGravity(1, Gravity.CENTER)
+    } else {
+
+    }
+}
+
 
 abstract class TaskWaitingConditions(val maxCount: Int) {
     var count = 0

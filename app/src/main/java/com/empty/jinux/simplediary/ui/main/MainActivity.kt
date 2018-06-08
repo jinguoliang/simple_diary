@@ -16,6 +16,7 @@
 
 package com.empty.jinux.simplediary.ui.main
 
+import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -35,14 +36,16 @@ import com.empty.jinux.simplediary.ui.main.statistics.StatisticsFragment
 import com.empty.jinux.simplediary.ui.settings.SettingsActivity
 import com.empty.jinux.simplediary.util.ActivityUtils
 import dagger.android.support.DaggerAppCompatActivity
-import kotlinx.android.synthetic.main.diary_list_act.*
+import kotlinx.android.synthetic.main.activity_diary_list.*
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.toast
 import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity() {
 
     @Inject
+    internal
     lateinit var mReporter: Reporter
 
     @Inject
@@ -50,7 +53,7 @@ class MainActivity : DaggerAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.diary_list_act)
+        setContentView(R.layout.activity_diary_list)
         setupToolbar()
         setupNavigationDrawer()
         showDiaryListFragment()
@@ -157,7 +160,11 @@ class MainActivity : DaggerAppCompatActivity() {
                     mReporter.reportClick("main_menu_settings")
                 }
                 R.id.rate_navigation_menu_item -> {
-                    startActivity(rateApp(context))
+                    try {
+                        startActivity(rateApp(context))
+                    } catch (e: ActivityNotFoundException) {
+                        toast(R.string.error_no_google_play).show()
+                    }
                     mReporter.reportClick("main_menu_rate")
                 }
                 R.id.share_navigation_menu_item -> {

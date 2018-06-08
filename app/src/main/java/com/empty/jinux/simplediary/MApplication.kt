@@ -5,10 +5,11 @@ import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 
 
-class MApplication : DaggerApplication() {
+class MApplication : MDaggerApplication() {
 
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
+    override fun applicationInjector(): AndroidInjector<out MDaggerApplication> {
         return DaggerMAppComponent.builder().create(this)
     }
 
 }
+

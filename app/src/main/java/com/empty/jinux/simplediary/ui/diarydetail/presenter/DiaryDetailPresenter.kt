@@ -69,8 +69,10 @@ constructor(
     }
 
     private fun initForNewDiary() {
-        refreshLocation()
-        refreshWeather()
+        if (mDiaryDetailView.hasLocationPermission()) {
+            refreshLocation()
+            refreshWeather()
+        }
         ThreadPools.postOnUIDelayed(200) {
             mDiaryDetailView.showInputMethod()
         }
@@ -178,12 +180,12 @@ constructor(
     }
 
     override fun refreshLocation() {
-        doAsync {
+        ThreadPools.postOnQuene {
             mLocationManager.getLastLocation { location ->
                 mLocationManager.getCurrentAddress { address ->
                     if (!mDiaryDetailView.isActive) return@getCurrentAddress
                     currentDiaryContent.locationInfo = LocationInfo(location, address)
-                    uiThread {
+                    ThreadPools.postOnUI {
                         mDiaryDetailView.showLocation(currentDiaryContent.locationInfo!!)
                     }
                 }
@@ -193,13 +195,13 @@ constructor(
     }
 
     override fun refreshWeather() {
-        doAsync {
+        ThreadPools.postOnQuene {
             mLocationManager.getLastLocation {
                 mWeatherManager.getCurrentWeather(it.latitude, it.longitude) { weather ->
                     logi("current weatherInfo = $weather")
                     if (!mDiaryDetailView.isActive) return@getCurrentWeather
                     currentDiaryContent.weatherInfo = WeatherInfo(weather.description, weather.icon)
-                    uiThread {
+                    ThreadPools.postOnUI{
                         mDiaryDetailView.showWeather(weather.description, weather.icon)
                     }
                 }

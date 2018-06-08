@@ -48,6 +48,7 @@
                 android:textAppearance="@style/DiaryContentText"
                 android:textCursorDrawable="@drawable/edit_cursor_shape"
                 tools:text="Medium Text"
+                android:hint="@string/editor_hint"
                 android:visibility="visible"/>
 
             <Space
