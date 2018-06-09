@@ -33,6 +33,7 @@ import android.view.*
 import android.widget.ImageView
 import com.empty.jinux.baselibaray.loge
 import com.empty.jinux.simplediary.R
+import com.empty.jinux.simplediary.config.ConfigManager
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
 import com.empty.jinux.simplediary.data.LocationInfo
 import com.empty.jinux.simplediary.intent.shareContentIntent
@@ -63,6 +64,10 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     internal
     lateinit var mReporter: Reporter
 
+    @Inject
+    internal
+    lateinit var mConfig: ConfigManager
+
     override fun onAttach(context: Context?) {
         super.onAttach(context)
 
@@ -77,6 +82,13 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         super.onPause()
         keyboardHeightListener.close()
         mPresenter.stop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (mKeyboardHeightCached > 0) {
+            mConfig.put(CONFIG_KEY_KEYBOARD_HEIGHT, mKeyboardHeightCached)
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -165,16 +177,26 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         }
     }
 
+    var mKeyboardHeightCached = 0
+
     private fun onInputMedhodShowed(height: Int) {
+        mKeyboardHeightCached = height
+
         diaryContent.isCursorVisible = true
 
-        bottomSpace.layoutHeight = height + toolArea.dimen(R.dimen.diary_detail_edit_tool_height)
+        setToolAreaHeight(height)
         toolArea.setCurrentItem(0, false)
-        toolArea.layoutHeight = height
         showToolArea()
 
         ThreadPools.postOnUI {
             adjustScrollPosition()
+        }
+    }
+
+    private fun setToolAreaHeight(height: Int) {
+        if (height != toolArea.layoutHeight) {
+            bottomSpace.layoutHeight = height + toolArea.dimen(R.dimen.diary_detail_edit_tool_height)
+            toolArea.layoutHeight = height
         }
     }
 
@@ -266,6 +288,8 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
                 }
             }
         })
+
+        setToolAreaHeight(mConfig.get(CONFIG_KEY_KEYBOARD_HEIGHT, context!!.dimen(R.dimen.editor_tool_area_init_height)))
     }
 
     private fun showToolArea() {
@@ -361,6 +385,8 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         private const val REQUEST_EDIT_TASK = 1
 
         private const val TAB_KEYBOARD_POS = 0
+
+        private const val CONFIG_KEY_KEYBOARD_HEIGHT = "key_keyboard_height"
 
 
         fun newInstance(taskId: Long): DiaryDetailFragment {
