@@ -321,8 +321,8 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         })
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item!!.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.menu_share -> {
                 mPresenter.shareContent()
                 return true
@@ -331,8 +331,8 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         return false
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater!!.inflate(R.menu.diary_detail_options, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.diary_detail_options, menu)
     }
 
     override fun setLoadingIndicator(active: Boolean) {
