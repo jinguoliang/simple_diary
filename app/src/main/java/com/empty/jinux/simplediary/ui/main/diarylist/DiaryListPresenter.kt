@@ -57,7 +57,6 @@ constructor(@param:Repository private val mDiariesRepository: DiariesDataSource,
     }
 
     override fun result(requestCode: Int, resultCode: Int) {
-        // If a diary was successfully added, show snackbar
         if (MainActivity.REQUEST_ADD_DIARY == requestCode && Activity.RESULT_OK == resultCode) {
             mDiariesView.showSuccessfullySavedMessage()
         }

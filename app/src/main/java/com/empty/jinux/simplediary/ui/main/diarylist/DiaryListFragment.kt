@@ -69,10 +69,59 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
     override val isActive: Boolean
         get() = isAdded
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        mDiariesAdapter = DiariesRecyclerViewWithCategoriesAdapter(ArrayList(0), mItemListener)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_diary_list, container, false)
     }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        setHasOptionsMenu(true)
+
+        setUpDiariesView()
+        setUpNoDiaryView()
+        setUpFloatButton()
+        setUpRefreshView()
+    }
+
+    private fun setUpDiariesView() {
+        mDiariesAdapter = DiariesRecyclerViewWithCategoriesAdapter(ArrayList(0), mItemListener)
+        diaryRecyclerView.adapter = mDiariesAdapter
+    }
+
+    private fun setUpNoDiaryView() {
+        noDiaries.setOnClickListener {
+            mPresenter.addNewDiary()
+            mReporter.reportClick("no diary icon")
+        }
+    }
+
+    private fun setUpRefreshView() {
+        activity?.let { activity ->
+            // Set up progress indicator
+            refresh_layout.setColorSchemeColors(
+                    ContextCompat.getColor(activity, R.color.colorPrimary),
+                    ContextCompat.getColor(activity, R.color.colorAccent),
+                    ContextCompat.getColor(activity, R.color.colorPrimaryDark)
+            )
+            // Set the scrolling view in the custom SwipeRefreshLayout.
+            refresh_layout.setScrollUpChild(diaryRecyclerView)
+            refresh_layout.setOnRefreshListener { mPresenter.loadDiaries(false) }
+        }
+    }
+
+    private fun setUpFloatButton() {
+        activity?.findViewById<FloatingActionButton>(R.id.fab_add_diary)?.apply {
+            visibility = View.VISIBLE
+            setImageResource(R.drawable.ic_add)
+            setOnClickListener {
+                mPresenter.addNewDiary()
+                mReporter.reportClick("add diary")
+            }
+        }
+    }
+
 
     override fun onResume() {
         super.onResume()
@@ -88,56 +137,18 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
         searchView.isIconified = true
     }
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         mPresenter.result(requestCode, resultCode)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_diary_list, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        setHasOptionsMenu(true)
-
-        // Set up diaries view
-        diaryRecyclerView.adapter = mDiariesAdapter
-
-        noDiaries.setOnClickListener {
-            mPresenter.addNewDiary()
-            mReporter.reportClick("no diary icon")
-        }
-
-        // Set up floating action button
-        activity?.findViewById<FloatingActionButton>(R.id.fab_add_diary)?.apply {
-            visibility = View.VISIBLE
-            setImageResource(R.drawable.ic_add)
-            setOnClickListener {
-                mPresenter.addNewDiary()
-                mReporter.reportClick("add diary")
-            }
-        }
-
-        activity?.let { activity ->
-            // Set up progress indicator
-            refresh_layout.setColorSchemeColors(
-                    ContextCompat.getColor(activity, R.color.colorPrimary),
-                    ContextCompat.getColor(activity, R.color.colorAccent),
-                    ContextCompat.getColor(activity, R.color.colorPrimaryDark)
-            )
-            // Set the scrolling view in the custom SwipeRefreshLayout.
-            refresh_layout.setScrollUpChild(diaryRecyclerView)
-            refresh_layout.setOnRefreshListener { mPresenter.loadDiaries(false) }
-        }
     }
 
     private lateinit var searchView: SearchView
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.main_options, menu)
+        setUpSearchView(menu)
+    }
+
+    private fun setUpSearchView(menu: Menu) {
         activity?.let {
             val searchManager = it.getSystemService(Context.SEARCH_SERVICE) as SearchManager
             searchView = menu.findItem(R.id.search).actionView as SearchView
@@ -193,7 +204,7 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
         noDiaries.visibility = View.VISIBLE
 
         noDiariesMessage.text = mainText
-        noDiariesIcon.setImageDrawable(VectorDrawableCompat.create(resources, R.drawable.ic_no_diary, null))
+        noDiariesIcon.setImageDrawable(VectorDrawableCompat.create(resources, iconRes, null))
     }
 
     override fun showAddDiary() {
