@@ -28,6 +28,8 @@ fun sendFeedback(context: Context) =
 fun shareApp(context: Context) = buildSendIntent(context.getString(R.string.share_app_content_fmt,
         context.getString(R.string.playStoreHttpsURL, context.packageName)))
 
+fun shareContentIntent(context: Context, content: String) = buildSendIntent(content)
+
 private fun buildSendIntent(content: String) = Intent().apply {
     action = Intent.ACTION_SEND
     type = "text/plain"

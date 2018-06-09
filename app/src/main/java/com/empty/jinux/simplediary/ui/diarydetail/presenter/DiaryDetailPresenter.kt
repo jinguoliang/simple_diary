@@ -21,6 +21,7 @@ import com.empty.jinux.baselibaray.logi
 import com.empty.jinux.simplediary.data.*
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
 import com.empty.jinux.simplediary.di.Repository
+import com.empty.jinux.simplediary.intent.shareContentIntent
 import com.empty.jinux.simplediary.location.LocationManager
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
@@ -238,5 +239,9 @@ constructor(
     override fun stop() {
         mDiaryDetailView.hideInputMethod()
         saveDiary()
+    }
+
+    fun shareContent() {
+        mDiaryDetailView.shareContent(currentDiaryContent.content)
     }
 }

@@ -35,6 +35,7 @@ import com.empty.jinux.baselibaray.loge
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
 import com.empty.jinux.simplediary.data.LocationInfo
+import com.empty.jinux.simplediary.intent.shareContentIntent
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.KeyboardFragment
@@ -298,8 +299,8 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
-            R.id.menu_delete -> {
-                mPresenter.deleteDiary()
+            R.id.menu_share -> {
+                mPresenter.shareContent()
                 return true
             }
         }
@@ -307,7 +308,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater!!.inflate(R.menu.taskdetail_fragment_menu, menu)
+        inflater!!.inflate(R.menu.diary_detail_options, menu)
     }
 
     override fun setLoadingIndicator(active: Boolean) {
@@ -406,6 +407,12 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         } ?: false
     }
 
+    override fun shareContent(content: String) {
+        context?.let { ctx: Context ->
+            startActivity(shareContentIntent(ctx, content))
+        }
+    }
+
     fun onBackPressed(): Boolean {
         if (editToolsTab.selectedTabPosition > 0 && toolArea.isShown) {
             hideToolArea()
@@ -414,6 +421,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             return false
         }
     }
+
 }
 
 abstract class MFragment : Fragment() {
