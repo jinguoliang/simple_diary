@@ -12,6 +12,9 @@ class SharePreferenceConfig(context: Context) : ConfigManager {
             is Boolean -> {
                 return sharedPreferences.getBoolean(key, defaultValue) as T
             }
+            is Int -> {
+                return sharedPreferences.getInt(key, defaultValue) as T
+            }
             else -> {
                 throw IllegalArgumentException("error argument")
             }
@@ -25,6 +28,9 @@ class SharePreferenceConfig(context: Context) : ConfigManager {
             }
             is Boolean -> {
                 sharedPreferencesEditor.putBoolean(key, value)
+            }
+            is Int -> {
+                sharedPreferencesEditor.putInt(key, value)
             }
         }
         sharedPreferencesEditor.apply()
