@@ -44,4 +44,6 @@
     <string name="editor_hint">就从这里输入吧</string>
     <string name="error_no_google_play">手机上没有安装 Google Play</string>
     <string name="guide_open_permission">请打开所有权限</string>
+    <string name="search">搜索</string>
+    <string name="search_hint">请搜索</string>
 </resources>

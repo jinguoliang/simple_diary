@@ -43,4 +43,6 @@
     <string name="editor_hint">Please Input Here</string>
     <string name="error_no_google_play">Google Play isn\'t installed.</string>
     <string name="guide_open_permission">Please open permissions</string>
+    <string name="search">Search</string>
+    <string name="search_hint">Please Search</string>
 </resources>

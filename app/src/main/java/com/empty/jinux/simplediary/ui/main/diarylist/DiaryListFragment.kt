@@ -16,15 +16,16 @@
 
 package com.empty.jinux.simplediary.ui.main.diarylist
 
+import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.content.ContextCompat
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.SearchView
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.report.Reporter
@@ -96,6 +97,8 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        setHasOptionsMenu(true)
+
         // Set up diaries view
         diaryRecyclerView.adapter = mDiariesAdapter
 
@@ -124,6 +127,26 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
             // Set the scrolling view in the custom SwipeRefreshLayout.
             refresh_layout.setScrollUpChild(diaryRecyclerView)
             refresh_layout.setOnRefreshListener { mPresenter.loadDiaries(false) }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.main_options, menu)
+        activity?.let {
+            val searchManager = it.getSystemService(Context.SEARCH_SERVICE) as SearchManager
+            val searchView = menu.findItem(R.id.search).actionView as SearchView
+            searchView.setSearchableInfo(
+                    searchManager.getSearchableInfo(it.componentName))
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    handleSearch(newText ?: "")
+                    return true
+                }
+            })
         }
     }
 
@@ -182,6 +205,10 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
 
     private fun showMessage(message: String) {
         Snackbar.make(view!!, message, Snackbar.LENGTH_LONG).show()
+    }
+
+    fun handleSearch(query: String) {
+        mPresenter.searchDiary(query)
     }
 
     companion object {

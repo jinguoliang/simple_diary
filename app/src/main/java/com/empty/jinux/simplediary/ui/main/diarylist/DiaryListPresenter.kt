@@ -69,6 +69,8 @@ constructor(@param:Repository private val mDiariesRepository: DiariesDataSource,
         mFirstLoad = false
     }
 
+    var mDiariesCached: List<Diary>? = null
+
     /**
      * @param forceUpdate   Pass in true to refresh the data in the [DiariesDataSource]
      * @param showLoadingUI Pass in true to display a loading icon in the UI
@@ -83,6 +85,8 @@ constructor(@param:Repository private val mDiariesRepository: DiariesDataSource,
 
         mDiariesRepository.getDiaries(object : DiariesDataSource.LoadDiariesCallback {
             override fun onDiariesLoaded(diaries: List<Diary>) {
+                mDiariesCached = diaries
+
                 // The view may not be able to handle UI updates anymore
                 if (!mDiariesView.isActive) {
                     return
@@ -133,5 +137,17 @@ constructor(@param:Repository private val mDiariesRepository: DiariesDataSource,
                 loadDiaries(true, true)
             }
         })
+    }
+
+    override fun searchDiary(query: String) {
+
+        mDiariesCached?.let {
+            if (query.isEmpty()) {
+                processDiaries(it)
+            } else {
+                val result = it.filter { it.diaryContent.content.contains(query) }
+                processDiaries(result)
+            }
+        }
     }
 }
