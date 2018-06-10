@@ -178,7 +178,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     private fun adjustScrollPosition() {
-        if (editor.layout == null) {
+        if (editor?.layout == null) {
             return
         }
 
