@@ -133,15 +133,15 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
         mPresenter.stop()
 
         // wow the isIconified is not nice, it's just like onCloseClicked when pass true， so we need two times
-        searchView.isIconified = true
-        searchView.isIconified = true
+        searchView?.isIconified = true
+        searchView?.isIconified = true
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         mPresenter.result(requestCode, resultCode)
     }
 
-    private lateinit var searchView: SearchView
+    private var searchView: SearchView? = null
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.main_options, menu)
@@ -152,10 +152,10 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
         activity?.let {
             val searchManager = it.getSystemService(Context.SEARCH_SERVICE) as SearchManager
             searchView = menu.findItem(R.id.search).actionView as SearchView
-            searchView.setSearchableInfo(
+            searchView?.setSearchableInfo(
                     searchManager.getSearchableInfo(it.componentName))
 
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     return true
                 }
