@@ -178,6 +178,9 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     private fun adjustScrollPosition() {
+        if (editor.layout == null) {
+            return
+        }
 
         val editor = diaryContent
         val scrollView = scrollContainer
