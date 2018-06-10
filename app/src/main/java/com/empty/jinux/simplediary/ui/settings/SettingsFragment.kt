@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v7.preference.CheckBoxPreference
-import android.support.v7.preference.PreferenceFragmentCompat
 import android.support.v7.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextWatcher
@@ -17,23 +16,17 @@ import javax.inject.Inject
 class SettingsFragment : DaggerPreferenceFragment(),
         SharedPreferences.OnSharedPreferenceChangeListener {
 
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+
+    }
+
     @Inject
     lateinit var mReporter: Reporter
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        when (key) {
-            "pref_app_lock_enable" -> sharedPreferences.getBoolean(key, false).let { checked ->
-                mReporter.reportClick(key, checked.toString())
-                if (checked) {
-                    // open lock
-                    showLockPasswordSetDialog()
-                }
-            }
-        }
-    }
+    private var mIsConfirmEnableLock: Boolean = false
 
-    private fun showLockPasswordSetDialog() {
-        val dialog = Dialog(activity)
+    private fun showLockPasswordSetDialog(checkBoxPreference: CheckBoxPreference) {
+        val dialog = Dialog(activity!!)
         dialog.setContentView(R.layout.dialog_app_lock_set_password)
         val passwordChecker: TextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -53,30 +46,42 @@ class SettingsFragment : DaggerPreferenceFragment(),
         dialog.newPassword.addTextChangedListener(passwordChecker)
         dialog.passwordConfirm.addTextChangedListener(passwordChecker)
         dialog.negativeButton.setOnClickListener {
+            mIsConfirmEnableLock = false
             dialog.cancel()
+            checkBoxPreference.isChecked = false
             mReporter.reportClick("password_set_dialog_cancel")
-
-            PreferenceManager.getDefaultSharedPreferences(activity).edit {
-                putBoolean("pref_app_lock_enable", false)
-            }
-
-            val checkbox = preferenceManager.findPreference("pref_app_lock_enable") as CheckBoxPreference
-            checkbox.isChecked = false
-
         }
-        dialog.positiveButton.setOnClickListener {
-            dialog.dismiss()
-            mReporter.reportClick("password_set_dialog_ok")
 
-            PreferenceManager.getDefaultSharedPreferences(activity).edit {
-                putString("pref_app_lock_password", dialog.newPassword.text.toString())
-            }
+        dialog.positiveButton.setOnClickListener {
+            mIsConfirmEnableLock = true
+            dialog.dismiss()
+            checkBoxPreference.isChecked = true
+            mReporter.reportClick("password_set_dialog_ok")
         }
         dialog.show()
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preferences)
+        onLockChecked()
+
+    private fun onLockChecked() {
+        val checkBoxPreference = findPreference(getString(R.string.pref_lock_enable)) as CheckBoxPreference
+        checkBoxPreference.setOnPreferenceChangeListener { preference, newValue ->
+            val checked = newValue as Boolean
+            mReporter.reportClick(preference.key, "" + checked)
+            if (checked && needConfirmWithInputPassword()) {
+                // open lock
+                showLockPasswordSetDialog(checkBoxPreference)
+                false
+            } else {
+                mIsConfirmEnableLock = false
+                true
+            }
+        }
+    }
+
+    private fun needConfirmWithInputPassword() = !mIsConfirmEnableLock
     }
 
     override fun onResume() {
