@@ -27,6 +27,7 @@ class AboutActivity : DaggerAppCompatAboutActivity() {
     override fun onCreateHeader(icon: ImageView, slogan: TextView, version: TextView) {
         icon.setImageResource(R.drawable.ic_app_launcher)
         slogan.text = getString(R.string.app_name)
+        slogan.updatePadding(top = dimen(R.dimen.about_page_slogin_padding_top))
         version.text = getString(R.string.app_version_fmt, BuildConfig.VERSION_NAME)
     }
 
