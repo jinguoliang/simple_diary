@@ -6,23 +6,25 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import com.empty.jinux.baselibaray.view.Item
+import com.empty.jinux.baselibaray.view.ItemController
+import com.empty.jinux.baselibaray.view.withItems
 import com.empty.jinux.simplediary.R
-import com.empty.jinux.simplediary.STREAK_MIN_WORDS_COUNTS
+import com.empty.jinux.simplediary.util.formatToWeekday
 import kotlinx.android.synthetic.main.layout_punchcard.view.*
-import me.drakeet.multitype.MultiTypeAdapter
+import java.util.*
 
-class PunchCard @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : CardView(context, attrs, defStyleAttr) {
-
-    private fun initAdapter(): RecyclerView.Adapter<*>? {
-        return MultiTypeAdapter().apply {
-            register(PunchCheckItem::class.java, PunchCheckBinder())
-        }
-    }
+class PunchCard @JvmOverloads constructor(
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyleAttr: Int = 0
+) : CardView(context, attrs, defStyleAttr) {
 
     fun setWordCountOfEveryday(counts: List<PunchCheckItem>) {
-        val adapter = punchRecycleView.adapter as MultiTypeAdapter
-        adapter.items = counts
-        adapter.notifyDataSetChanged()
+        punchRecycleView.withItems(counts.map { PunchCheck(it.data, it.state) })
 
         val (current, longest) = computeLongestPunch(counts)
         currentPunch.text = context.getString(R.string.current_punch_fmt, current)
@@ -47,11 +49,49 @@ class PunchCard @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     init {
         LayoutInflater.from(context).inflate(R.layout.layout_punchcard, this)
         punchRecycleView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        punchRecycleView.adapter = initAdapter()
     }
 
     fun setTitle(title: String) {
         streakCardTitle.text = title
     }
 
+}
+
+private class PunchCheck(val data: Any,
+                         val state: PunchCheckState) : Item {
+    override val controller: ItemController
+        get() = Controller
+
+    private companion object Controller : ItemController {
+            override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+                return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.layout_punchard_check_item, parent, false))
+            }
+
+            override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: Item) {
+                holder as ViewHolder
+                item as PunchCheck
+                when (item.state) {
+                    PunchCheckState.STATE_CHECKED -> {
+                        holder.checked.visibility = View.VISIBLE
+                        holder.missed.visibility = View.INVISIBLE
+                    }
+                    PunchCheckState.STATE_MISSED -> {
+                        holder.checked.visibility = View.INVISIBLE
+                        holder.missed.visibility = View.VISIBLE
+                    }
+                    PunchCheckState.STATE_NEED_CHECKED -> {
+                        holder.checked.visibility = View.INVISIBLE
+                        holder.missed.visibility = View.INVISIBLE
+                    }
+                }
+                item.data as Calendar
+                holder.weekName.text = item.data.timeInMillis.formatToWeekday()
+            }
+        }
+
+    private class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val checked = view.findViewById<View>(R.id.stateChecked)!!
+        val missed = view.findViewById<View>(R.id.stateMissed)!!
+        val weekName = view.findViewById<TextView>(R.id.weekName)!!
+    }
 }
