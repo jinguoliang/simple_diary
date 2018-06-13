@@ -102,6 +102,10 @@ constructor(@param:Repository private val mDiariesRepository: DiariesDataSource,
                 if (!mDiariesView.isActive) {
                     return
                 }
+
+                if (showLoadingUI) {
+                    mDiariesView.setLoadingIndicator(false)
+                }
                 mDiariesView.showLoadingDiariesError()
             }
         })

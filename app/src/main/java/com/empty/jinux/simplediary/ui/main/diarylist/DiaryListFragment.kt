@@ -107,7 +107,7 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
             )
             // Set the scrolling view in the custom SwipeRefreshLayout.
             refresh_layout.setScrollUpChild(diaryRecyclerView)
-            refresh_layout.setOnRefreshListener { mPresenter.loadDiaries(false) }
+            refresh_layout.setOnRefreshListener { mPresenter.loadDiaries(true) }
         }
     }
 

@@ -3,7 +3,7 @@ package com.empty.jinux.simplediary.ui.settings
 import dagger.Subcomponent
 import dagger.android.AndroidInjector
 
-@Subcomponent(modules = arrayOf(SettingsFragmentModule::class))
+@Subcomponent(modules = [(SettingsFragmentModule::class)])
 internal interface SettingsActivityComponent : AndroidInjector<SettingsActivity> {
 
     @Subcomponent.Builder

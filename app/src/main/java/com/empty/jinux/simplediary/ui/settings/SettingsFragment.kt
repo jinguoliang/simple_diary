@@ -1,15 +1,27 @@
 package com.empty.jinux.simplediary.ui.settings
 
+import android.app.Activity
 import android.app.Dialog
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.support.annotation.StringRes
 import android.support.v7.preference.CheckBoxPreference
-import android.support.v7.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.core.content.edit
+import android.util.Log
+import android.widget.Toast
+import com.empty.jinux.baselibaray.loge
 import com.empty.jinux.simplediary.R
+import com.empty.jinux.simplediary.data.backup.Backup
+import com.empty.jinux.simplediary.data.backup.GoogleDriverBackup
+import com.empty.jinux.simplediary.data.backup.GoogleDriverBackup.Companion.REQUEST_CODE_CREATION
+import com.empty.jinux.simplediary.data.backup.GoogleDriverBackup.Companion.REQUEST_CODE_OPENING
+import com.empty.jinux.simplediary.data.backup.GoogleDriverBackup.Companion.REQUEST_CODE_SIGN_IN
+import com.empty.jinux.simplediary.di.Remote
 import com.empty.jinux.simplediary.report.Reporter
+import com.google.android.gms.drive.DriveId
+import com.google.android.gms.drive.OpenFileActivityOptions
 import kotlinx.android.synthetic.main.dialog_app_lock_set_password.*
 import javax.inject.Inject
 
@@ -23,10 +35,15 @@ class SettingsFragment : DaggerPreferenceFragment(),
     @Inject
     lateinit var mReporter: Reporter
 
+    @Inject
+    @Remote
+    lateinit var backup: Backup
+
+
     private var mIsConfirmEnableLock: Boolean = false
 
     private fun showLockPasswordSetDialog(checkBoxPreference: CheckBoxPreference) {
-        val dialog = Dialog(activity!!)
+        val dialog = Dialog(context!!)
         dialog.setContentView(R.layout.dialog_app_lock_set_password)
         val passwordChecker: TextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -64,7 +81,23 @@ class SettingsFragment : DaggerPreferenceFragment(),
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preferences)
         onLockChecked()
+        onPreferenceClick(R.string.pref_back_to_local) {
+            onBackupToLocalClick()
+        }
 
+        onPreferenceClick(R.string.pref_restore_from_local) {
+            onRestorFromLocalClick()
+        }
+    }
+
+
+    /**
+     * Interface used for modifying values in a {@link SharedPreferences}
+     * object.  All changes you make in an editor are batched, and not copied
+     * back to the original {@link SharedPreferences} until you call {@link #commit}
+     * or {@link #apply}
+     * @see hello
+     */
     private fun onLockChecked() {
         val checkBoxPreference = findPreference(getString(R.string.pref_lock_enable)) as CheckBoxPreference
         checkBoxPreference.setOnPreferenceChangeListener { preference, newValue ->
@@ -82,7 +115,19 @@ class SettingsFragment : DaggerPreferenceFragment(),
     }
 
     private fun needConfirmWithInputPassword() = !mIsConfirmEnableLock
+
+    private fun onBackupToLocalClick() {
+        backup.performBackup("test")
     }
+
+    private fun onRestorFromLocalClick() {
+        backup.performImport("test")
+    }
+
+    private fun onPreferenceClick(@StringRes key: Int, onClickListener: () -> Unit) {
+        findPreference(getString(key)).setOnPreferenceClickListener { onClickListener();true }
+    }
+
 
     override fun onResume() {
         super.onResume()
@@ -94,6 +139,36 @@ class SettingsFragment : DaggerPreferenceFragment(),
         preferenceScreen.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
     }
 
+    private val TAG: String = "settings"
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        loge("request = $requestCode result = $resultCode", "JIN")
+        when (requestCode) {
+
+            REQUEST_CODE_SIGN_IN -> {
+                Log.i(TAG, "Sign in request code")
+                // Called after user is signed in.
+                if (resultCode == Activity.RESULT_OK) {
+                    backup.performBackup("test")
+                }
+            }
+
+            REQUEST_CODE_CREATION ->
+                // Called after a file is saved to Drive.
+                if (resultCode == Activity.RESULT_OK) {
+                    Log.i(TAG, "Backup successfully saved.")
+                    Toast.makeText(activity, "Backup successufly loaded!", Toast.LENGTH_SHORT).show()
+                }
+
+            REQUEST_CODE_OPENING -> if (resultCode == Activity.RESULT_OK && data != null) {
+                val driveId = data.getParcelableExtra<DriveId>(
+                        OpenFileActivityOptions.EXTRA_RESPONSE_DRIVE_ID)
+                loge("driveId = $driveId")
+                (backup as GoogleDriverBackup).mOpenItemTaskSource.setResult(driveId)
+            } else {
+                (backup as GoogleDriverBackup).mOpenItemTaskSource.setException(RuntimeException("Unable to open file"))
+            }
+        }
+    }
 }
 

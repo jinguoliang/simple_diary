@@ -6,7 +6,7 @@ import dagger.android.AndroidInjector
 import dagger.android.support.FragmentKey
 import dagger.multibindings.IntoMap
 
-@dagger.Module(subcomponents = arrayOf(DiaryListFragmentComponent::class))
+@dagger.Module(subcomponents = [(DiaryListFragmentComponent::class)])
 internal abstract class DiaryListFragmentModule {
 
     @Binds

@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <CheckBoxPreference
-        android:key="pref_app_lock_enable"
-        android:title="@string/pref_pin_lock"
-        android:summary="@string/pref_pin_lock_summ"
-        android:defaultValue="false" />
+    <PreferenceCategory android:title="Privacy">
+
+        <CheckBoxPreference
+            android:key="@string/pref_lock_enable"
+            android:title="@string/pref_pin_lock"
+            android:icon="@drawable/ic_lock_black_24dp"
+            android:summary="@string/pref_pin_lock_summ"
+            android:defaultValue="false"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Backup Restore" >
+        <Preference android:title="Backup to local" android:key="@string/pref_back_to_local"/>
+        <Preference android:title="Restore from local"  android:key="@string/pref_restore_from_local"/>
+
+        <Preference android:title="Backup to Google Driver" android:key="@string/pref_back_to_google_driver"/>
+        <Preference android:title="Restore from Google Driver" android:key="@string/pref_restore_from_google_driver"/>
+    </PreferenceCategory>
 </PreferenceScreen>
