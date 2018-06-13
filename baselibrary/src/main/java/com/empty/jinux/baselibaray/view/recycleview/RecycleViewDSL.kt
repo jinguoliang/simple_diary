@@ -1,4 +1,4 @@
-package com.empty.jinux.baselibaray.view
+package com.empty.jinux.baselibaray.view.recycleview
 
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
