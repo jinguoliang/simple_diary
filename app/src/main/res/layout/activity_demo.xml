@@ -14,7 +14,7 @@
         android:text="从前有座山，山里有座庙，庙里有个老和尚，他在给小和尚讲故事，他在讲从前有座山，山里有座庙，庙里有个老和尚，他在给小和尚讲故事，他在讲从前有座山，山里有座庙，庙里有个老和尚，他在给小和尚讲故事"
         />
     <EditText
-        android:id="@+id/editor"
+        android:id="@+id/mEditor"
         android:hint="@string/editor_hint"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

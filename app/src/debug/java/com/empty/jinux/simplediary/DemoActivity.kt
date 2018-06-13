@@ -16,7 +16,7 @@ class DemoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_demo)
-        editor.text = SpannableStringBuilder().apply {
+        mEditor.text = SpannableStringBuilder().apply {
             val drawable = ContextCompat.getDrawable(this@DemoActivity, R.drawable.ic_drawer_top_bg)!!
             drawable.bounds = Rect(0, 0, 500, 500)
             append("a123123", ImageSpan(drawable))
@@ -34,7 +34,7 @@ class DemoActivity : AppCompatActivity() {
 
         }
 
-        editor.addTextChangedListener(object : TextWatcher {
+        mEditor.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 
             }
@@ -43,7 +43,7 @@ class DemoActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                editor.adjustParagraphSpace()
+                mEditor.adjustParagraphSpace()
             }
 
         })

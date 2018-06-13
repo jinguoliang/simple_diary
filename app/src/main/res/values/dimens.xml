@@ -35,5 +35,5 @@
     <dimen name="radio_group_selected_circle_size">35dp</dimen>
     <dimen name="statusbar_height">26dp</dimen>
     <dimen name="editor_tool_area_init_height">300dp</dimen>
-
+    <dimen name="detail_diary_editor_bottom">15dp</dimen>
 </resources>
