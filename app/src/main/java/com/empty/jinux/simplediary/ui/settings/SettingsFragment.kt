@@ -11,7 +11,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.widget.Toast
-import com.empty.jinux.baselibaray.loge
+import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.backup.Backup
 import com.empty.jinux.simplediary.data.backup.GoogleDriverBackup

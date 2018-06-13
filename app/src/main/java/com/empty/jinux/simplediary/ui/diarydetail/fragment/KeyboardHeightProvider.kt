@@ -9,7 +9,7 @@ import android.util.Log
 import android.view.ViewTreeObserver
 import android.view.WindowManager
 import android.widget.FrameLayout
-import com.empty.jinux.baselibaray.logw
+import com.empty.jinux.baselibaray.log.logw
 
 class KeyboardHeightProvider(private val activity: Activity) {
 

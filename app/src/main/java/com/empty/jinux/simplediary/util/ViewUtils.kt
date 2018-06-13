@@ -5,7 +5,7 @@ import android.os.RemoteException
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
-import com.empty.jinux.baselibaray.logd
+import com.empty.jinux.baselibaray.log.logd
 
 var View.layoutHeight: Int
     get() = layoutParams.height

@@ -20,7 +20,7 @@ import android.arch.persistence.room.Room
 import android.content.Context
 import android.database.sqlite.SQLiteDiskIOException
 import android.util.Log
-import com.empty.jinux.baselibaray.loge
+import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.simplediary.data.*
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
 import com.empty.jinux.simplediary.data.source.local.room.DATABASE_NAME

@@ -18,8 +18,8 @@ import android.widget.CompoundButton
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
-import com.empty.jinux.baselibaray.loge
-import com.empty.jinux.baselibaray.logw
+import com.empty.jinux.baselibaray.log.loge
+import com.empty.jinux.baselibaray.log.logw
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.LocationInfo
 import com.empty.jinux.simplediary.location.Location

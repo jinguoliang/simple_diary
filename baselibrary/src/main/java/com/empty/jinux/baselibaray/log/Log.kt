@@ -1,7 +1,7 @@
-package com.empty.jinux.baselibaray
+package com.empty.jinux.baselibaray.log
 
-import android.content.ContentValues.TAG
 import android.util.Log
+import com.empty.jinux.baselibaray.BuildConfig
 
 /**
  * Created by Jinux on 2018/2/10.

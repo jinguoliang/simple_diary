@@ -31,7 +31,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import android.widget.ImageView
-import com.empty.jinux.baselibaray.loge
+import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.config.ConfigManager
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID

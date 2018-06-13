@@ -1,6 +1,6 @@
 package com.empty.jinux.simplediary.weather
 
-import com.empty.jinux.baselibaray.loge
+import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.simplediary.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

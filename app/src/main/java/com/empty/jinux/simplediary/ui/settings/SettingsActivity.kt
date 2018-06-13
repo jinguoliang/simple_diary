@@ -1,8 +1,6 @@
 package com.empty.jinux.simplediary.ui.settings
 
-import android.content.Intent
 import android.os.Bundle
-import com.empty.jinux.baselibaray.loge
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.ui.LockHelper
 import com.empty.jinux.simplediary.util.ActivityUtils

@@ -17,7 +17,7 @@
 package com.empty.jinux.simplediary.ui.diarydetail.presenter
 
 import android.text.TextUtils
-import com.empty.jinux.baselibaray.logi
+import com.empty.jinux.baselibaray.log.logi
 import com.empty.jinux.simplediary.data.*
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
 import com.empty.jinux.simplediary.di.Repository

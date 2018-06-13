@@ -5,7 +5,7 @@ import android.app.Activity
 import android.location.Address
 import android.location.Geocoder
 import android.os.Looper
-import com.empty.jinux.baselibaray.logd
+import com.empty.jinux.baselibaray.log.logd
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult

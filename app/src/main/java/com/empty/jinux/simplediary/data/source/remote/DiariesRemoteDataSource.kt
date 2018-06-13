@@ -16,18 +16,14 @@
 
 package com.empty.jinux.simplediary.data.source.remote
 
-import com.empty.jinux.baselibaray.logThrowable
-import com.empty.jinux.baselibaray.logd
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
 //import com.google.firebase.database.DataSnapshot
 //import com.google.firebase.database.DatabaseError
 //import com.google.firebase.database.FirebaseDatabase
 //import com.google.firebase.database.ValueEventListener
-import com.google.gson.Gson
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-import java.util.*
 import javax.inject.Singleton
 
 /**

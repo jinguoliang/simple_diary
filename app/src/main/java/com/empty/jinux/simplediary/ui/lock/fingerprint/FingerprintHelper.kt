@@ -22,7 +22,7 @@ import android.os.CancellationSignal
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.support.annotation.RequiresApi
-import com.empty.jinux.baselibaray.logd
+import com.empty.jinux.baselibaray.log.logd
 import com.empty.jinux.simplediary.util.ThreadPools
 import java.io.IOException
 import java.security.*

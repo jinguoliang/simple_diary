@@ -6,13 +6,12 @@ import android.os.Environment
 import android.support.v7.app.AlertDialog
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import com.empty.jinux.baselibaray.loge
+import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.source.local.room.DATABASE_NAME
 import com.google.common.io.Files
 import org.jetbrains.anko.toast
 import java.io.File
-import java.util.*
 
 
 class LocalBackup(private val activity: Activity) : Backup {
