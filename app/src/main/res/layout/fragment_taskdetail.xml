@@ -49,7 +49,8 @@
                 android:textCursorDrawable="@drawable/edit_cursor_shape"
                 tools:text="Medium Text"
                 android:hint="@string/editor_hint"
-                android:visibility="visible"/>
+                android:visibility="visible"
+                android:layout_marginBottom="@dimen/detail_diary_editor_bottom"/>
 
             <Space
                 android:id="@+id/bottomSpace"

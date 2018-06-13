@@ -99,7 +99,6 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (editor == null) return
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -178,7 +177,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     private fun adjustScrollPosition() {
-        if (editor?.layout == null) {
+        if (diaryContent?.layout == null) {
             return
         }
 
@@ -189,11 +188,13 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         val cursorLineBottom = editor.layout.getLineBottom(cursorLine)
 
         val cursorYOffset = cursorLineBottom - scrollView.scrollY
-        val editorVisibleAreaheight = editTabContainer.top - 50
+        val editorVisibleAreaHeight = editTabContainer.top - context!!.dimen(R.dimen.detail_diary_editor_bottom)
 
-        if (cursorYOffset > editorVisibleAreaheight) {
-            val scroll = cursorYOffset - editorVisibleAreaheight
-            scrollView.smoothScrollBy(0, scroll)
+        if (cursorYOffset > editorVisibleAreaHeight) {
+            val scroll = cursorYOffset - editorVisibleAreaHeight
+            scrollView.post {
+                scrollView.smoothScrollBy(0, scroll)
+            }
         }
     }
 
