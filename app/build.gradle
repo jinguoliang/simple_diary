@@ -97,9 +97,6 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
 
     implementation 'com.squareup.picasso:picasso:2.5.2'
-    implementation 'me.drakeet.multitype:multitype:3.4.4'
-    implementation 'me.drakeet.multitype:multitype-kotlin:3.4.4'
-    implementation 'me.drakeet.support:about:2.0.2'
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'org.jetbrains.anko:anko-commons:0.10.4'
     implementation 'androidx.core:core-ktx:0.3'
