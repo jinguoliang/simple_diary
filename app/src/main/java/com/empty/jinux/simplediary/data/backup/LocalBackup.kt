@@ -1,20 +1,21 @@
 package com.empty.jinux.simplediary.data.backup
 
-import android.app.Activity
 import android.content.Context
 import android.os.Environment
+import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.core.widget.toast
 import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.source.local.room.DATABASE_NAME
 import com.google.common.io.Files
-import org.jetbrains.anko.toast
 import java.io.File
 
 
-class LocalBackup(private val activity: Activity) : Backup {
+class LocalBackup(private val fragment: Fragment) : Backup {
+    val activity = fragment.activity!!
 
     //ask to the user a name for the backup and perform it. The backup will be saved to a custom folder.
     override fun performBackup(outFileName: String) {

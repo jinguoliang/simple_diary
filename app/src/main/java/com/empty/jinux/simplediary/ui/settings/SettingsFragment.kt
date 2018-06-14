@@ -18,6 +18,7 @@ import com.empty.jinux.simplediary.data.backup.GoogleDriverBackup
 import com.empty.jinux.simplediary.data.backup.GoogleDriverBackup.Companion.REQUEST_CODE_CREATION
 import com.empty.jinux.simplediary.data.backup.GoogleDriverBackup.Companion.REQUEST_CODE_OPENING
 import com.empty.jinux.simplediary.data.backup.GoogleDriverBackup.Companion.REQUEST_CODE_SIGN_IN
+import com.empty.jinux.simplediary.di.Local
 import com.empty.jinux.simplediary.di.Remote
 import com.empty.jinux.simplediary.report.Reporter
 import com.google.android.gms.drive.DriveId
@@ -36,7 +37,7 @@ class SettingsFragment : DaggerPreferenceFragment(),
     lateinit var mReporter: Reporter
 
     @Inject
-    @Remote
+    @Local
     lateinit var backup: Backup
 
 
