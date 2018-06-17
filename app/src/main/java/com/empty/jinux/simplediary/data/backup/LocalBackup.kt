@@ -17,7 +17,7 @@ import java.io.File
 class LocalBackup(private val fragment: Fragment) : Backup {
     val activity = fragment.activity!!
 
-    //ask to the user a name for the backup and perform it. The backup will be saved to a custom folder.
+    //ask to the user a name for the local and perform it. The local will be saved to a custom folder.
     override fun performBackup(outFileName: String) {
         val folder = File(Environment.getExternalStorageDirectory().toString() + File.separator + activity.getString(R.string.app_name))
 
@@ -28,13 +28,13 @@ class LocalBackup(private val fragment: Fragment) : Backup {
         if (success) {
             val out = "$folder/$outFileName.db"
             backupDb(activity, out)
-            activity.toast("backup successfully $out")
+            activity.toast("local successfully $out")
         } else
             Toast.makeText(activity, "Unable to create directory. Retry", Toast.LENGTH_SHORT).show()
     }
 
 
-    //ask to the user what backup to restore
+    //ask to the user what local to restore
     override fun performImport(inFileName: String) {
         val folder = File(Environment.getExternalStorageDirectory().toString() + File.separator + activity.getString(R.string.app_name))
         if (folder.exists()) {
@@ -62,7 +62,7 @@ class LocalBackup(private val fragment: Fragment) : Backup {
             }
             builderSingle.show()
         } else
-            Toast.makeText(activity, "Backup folder not present.\nDo a backup before a restore!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, "Backup folder not present.\nDo a local before a restore!", Toast.LENGTH_SHORT).show()
     }
 
 

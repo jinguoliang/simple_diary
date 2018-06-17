@@ -15,14 +15,14 @@ abstract class BackupModule {
         @JvmStatic
         @Provides
         @Local
-        fun provideRemoteBackup(context: Fragment): Backup {
+        fun provideLocalBackup(context: Fragment): Backup {
             return LocalBackup(context)
         }
 
         @JvmStatic
         @Provides
         @Remote
-        fun provideRemoteBackup1(context: Fragment): Backup {
+        fun provideRemoteBackup(context: Fragment): Backup {
             return GoogleDriverBackup(context)
         }
     }

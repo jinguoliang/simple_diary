@@ -1,6 +1,5 @@
 package com.empty.jinux.simplediary.ui.settings
 
-import android.app.Activity
 import android.support.v4.app.Fragment
 import dagger.Binds
 import dagger.android.AndroidInjector

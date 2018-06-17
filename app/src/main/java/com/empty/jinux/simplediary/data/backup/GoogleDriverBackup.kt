@@ -1,5 +1,6 @@
 package com.empty.jinux.simplediary.data.backup
 
+import android.content.IntentSender
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.widget.Toast
@@ -14,6 +15,7 @@ import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.TaskCompletionSource
 import com.google.common.io.ByteStreams
 import com.google.common.io.Files
+import org.jetbrains.anko.toast
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -48,7 +50,7 @@ class GoogleDriverBackup(val fragment: Fragment) : Backup {
 
     lateinit var mOpenItemTaskSource: TaskCompletionSource<DriveId>
 
-    fun connectToDrive(backup: Boolean) {
+    private fun connectToDrive(backup: Boolean) {
         val account = GoogleSignIn.getLastSignedInAccount(activity)
         if (account == null) {
             signIn()
@@ -66,8 +68,8 @@ class GoogleDriverBackup(val fragment: Fragment) : Backup {
 
     private fun signIn() {
         Log.i(TAG, "Start sign in")
-        val GoogleSignInClient = buildGoogleSignInClient()
-        fragment.startActivityForResult(GoogleSignInClient.getSignInIntent(), REQUEST_CODE_SIGN_IN)
+        val googleSignInClient = buildGoogleSignInClient()
+        fragment.startActivityForResult(googleSignInClient.getSignInIntent(), REQUEST_CODE_SIGN_IN)
     }
 
     private fun buildGoogleSignInClient(): GoogleSignInClient {
@@ -81,14 +83,16 @@ class GoogleDriverBackup(val fragment: Fragment) : Backup {
     private fun startDriveBackup() {
         mDriveResourceClient!!
                 .createContents()
-                .continueWithTask(
-                        { task -> createFileIntentSender(task.result) })
-                .addOnFailureListener(
-                        { e -> Log.w(TAG, "Failed to create new contents.", e) })
+                .continueWithTask { task -> createFileIntentSender(task.result) }
+                .addOnSuccessListener {
+                    fragment.activity?.toast("hello successfully")
+                }.addOnFailureListener {
+                    fragment.activity?.toast("hello failed ${Log.getStackTraceString(it)}")
+                }
     }
 
 
-    private fun createFileIntentSender(driveContents: DriveContents): Task<Void> {
+    private fun createFileIntentSender(driveContents: DriveContents): Task<IntentSender> {
 
         val inFileName = activity.getDatabasePath(DATABASE_NAME).toString()
 
@@ -112,11 +116,11 @@ class GoogleDriverBackup(val fragment: Fragment) : Backup {
 
         return mDriveClient!!
                 .newCreateFileActivityIntentSender(createFileActivityOptions)
-                .continueWith(
-                        { task ->
-                            fragment.startIntentSenderForResult(task.result, REQUEST_CODE_CREATION, null, 0, 0, 0, null)
-                            null
-                        })
+                .continueWith {
+                    fragment.startIntentSenderForResult(
+                            it.result, REQUEST_CODE_CREATION, null, 0, 0, 0, null)
+                    it.result
+                }
     }
 
 
@@ -124,7 +128,7 @@ class GoogleDriverBackup(val fragment: Fragment) : Backup {
         pickFile()
                 .addOnSuccessListener(activity
                 ) { driveId -> retrieveContents(driveId.asDriveFile()) }
-                .addOnFailureListener(activity, { e -> Log.e(TAG, "No file selected", e) })
+                .addOnFailureListener(activity) { e -> Log.e(TAG, "No file selected", e) }
     }
 
     private fun retrieveContents(file: DriveFile) {
@@ -135,7 +139,7 @@ class GoogleDriverBackup(val fragment: Fragment) : Backup {
         val openFileTask = mDriveResourceClient!!.openFile(file, DriveFile.MODE_READ_ONLY)
 
         openFileTask
-                .continueWithTask({ task ->
+                .continueWithTask { task ->
                     val contents = task.result
                     try {
                         val parcelFileDescriptor = contents.parcelFileDescriptor
@@ -159,21 +163,23 @@ class GoogleDriverBackup(val fragment: Fragment) : Backup {
                     }
 
                     task
-                })
-                .addOnFailureListener({ e ->
+                }
+                .addOnFailureListener { e ->
                     Log.e(TAG, "Unable to read contents", e)
                     Toast.makeText(activity, "Error on import", Toast.LENGTH_SHORT).show()
-                })
+                }
     }
 
     private fun pickItem(openOptions: OpenFileActivityOptions): Task<DriveId> {
-        mOpenItemTaskSource = TaskCompletionSource()
+
         mDriveClient!!
                 .newOpenFileActivityIntentSender(openOptions)
                 .continueWith { task ->
                     fragment.startIntentSenderForResult(
                             task.result, REQUEST_CODE_OPENING, null, 0, 0, 0, null)
                 }
+
+        mOpenItemTaskSource = TaskCompletionSource()
         return mOpenItemTaskSource.task
     }
 
