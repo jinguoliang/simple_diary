@@ -50,4 +50,9 @@
     <string name="pref_backup_restore_title"><![CDATA[Backup&Restore]]></string>
     <string name="pref_backup_to_local_title">Backup to local</string>
     <string name="pref_restore_from_local_title">Restore from local</string>
+    <string name="restore_from_local_dialog_title">Restore from local:</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="saving">Saving...</string>
+    <string name="restore">Restoring...</string>
+    <string name="pref_category_privacy">Privacy</string>
 </resources>
