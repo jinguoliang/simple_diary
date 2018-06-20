@@ -116,8 +116,11 @@ constructor(@param:Repository private val mDiariesRepository: DiariesDataSource,
             // Show a message indicating there are no diaries for that filter type.
             processEmptyDiaries()
         } else {
-            // Show the list of diaries
-            mDiariesView.showDiaries(diaries)
+            if (mCurrentQuery.isEmpty()) {
+                mDiariesView.showDiaries(diaries)
+            } else {
+                mDiariesView.showDiaries(diaries.filter { it.diaryContent.content.contains(mCurrentQuery) })
+            }
         }
 
     }
@@ -142,15 +145,10 @@ constructor(@param:Repository private val mDiariesRepository: DiariesDataSource,
         })
     }
 
-    override fun searchDiary(query: String) {
+    private var mCurrentQuery = ""
 
-        mDiariesCached?.let {
-            if (query.isEmpty()) {
-                processDiaries(it)
-            } else {
-                val result = it.filter { it.diaryContent.content.contains(query) }
-                processDiaries(result)
-            }
-        }
+    override fun searchDiary(query: String) {
+        mCurrentQuery = query
+        mDiariesCached?.apply { processDiaries(this) }
     }
 }
