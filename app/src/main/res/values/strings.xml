@@ -45,4 +45,9 @@
     <string name="guide_open_permission">Please open permissions</string>
     <string name="search">Search</string>
     <string name="search_hint">Please Search</string>
+    <string name="pref_back_to_local_summary">You can backup all the diary and restore them at any time</string>
+    <string name="pref_restore_from_local_summary">You can restore the diary which you backup</string>
+    <string name="pref_backup_restore_title"><![CDATA[Backup&Restore]]></string>
+    <string name="pref_backup_to_local_title">Backup to local</string>
+    <string name="pref_restore_from_local_title">Restore from local</string>
 </resources>

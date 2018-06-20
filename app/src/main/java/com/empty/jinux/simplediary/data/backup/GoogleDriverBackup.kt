@@ -1,9 +1,11 @@
 package com.empty.jinux.simplediary.data.backup
 
+import android.content.Context
 import android.content.IntentSender
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.widget.Toast
+import com.empty.jinux.baselibaray.log.logd
 import com.empty.jinux.simplediary.data.source.local.room.DATABASE_NAME
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -33,15 +35,47 @@ import java.io.IOException
  * @return Returns a reference to the same Editor object, so you can
  * chain put calls together.
  */
-class GoogleDriverBackup(val fragment: Fragment) : Backup {
+class GoogleDriverBackup(val fragment: Fragment) : Backup() {
     val activity = fragment.activity!!
 
-    override fun performBackup(outFileName: String) {
-        connectToDrive(true)
+    override val needLogin: Boolean = true
+
+    override fun login(): Boolean {
+        val account = GoogleSignIn.getLastSignedInAccount(activity)
+        if (account == null) {
+            signIn()
+            return false
+        } else {
+            //Initialize the drive api
+            mDriveClient = Drive.getDriveClient(activity, account)
+            // Build a drive resource client.
+            mDriveResourceClient = Drive.getDriveResourceClient(activity, account)
+            return true
+        }
     }
 
-    override fun performImport(inFileName: String) {
-        connectToDrive(false)
+    override fun importDb(path: String) {
+
+    }
+
+    override fun backupDb(out: String) {
+        mDriveResourceClient?.apply {
+            val children = listChildren(rootFolder.result).result
+            val backupFolder = children.filter { it.title == BACKUP_FOLDER }.get(0)
+            if (backupFolder == null) {
+//                backupFolder = createFolder(rootFolder.result, MetadataChangeSet().apply {  })
+            } else {
+                createContents().continueWith {
+                    it.result.outputStream.bufferedWriter().apply { write("hello");close() };
+
+                    createFile(backupFolder.driveId.asDriveFolder(), MetadataChangeSet.Builder().apply {
+                        setTitle(out)
+                        setMimeType("application/db")
+                    }.build(), it.result)
+                }
+
+            }
+        }
     }
 
 
@@ -67,9 +101,9 @@ class GoogleDriverBackup(val fragment: Fragment) : Backup {
     }
 
     private fun signIn() {
-        Log.i(TAG, "Start sign in")
+        logd("Start sign in", TAG)
         val googleSignInClient = buildGoogleSignInClient()
-        fragment.startActivityForResult(googleSignInClient.getSignInIntent(), REQUEST_CODE_SIGN_IN)
+        fragment.startActivityForResult(googleSignInClient.signInIntent, REQUEST_CODE_SIGN_IN)
     }
 
     private fun buildGoogleSignInClient(): GoogleSignInClient {

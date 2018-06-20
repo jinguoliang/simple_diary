@@ -3,19 +3,24 @@
     <PreferenceCategory android:title="Privacy">
 
         <CheckBoxPreference
-            android:key="@string/pref_lock_enable"
-            android:title="@string/pref_pin_lock"
-            android:icon="@drawable/ic_lock_black_24dp"
-            android:summary="@string/pref_pin_lock_summ"
             android:defaultValue="false"
-            />
+            android:icon="@drawable/ic_lock_black_24dp"
+            android:key="@string/pref_lock_enable"
+            android:singleLineTitle="true"
+            android:summary="@string/pref_pin_lock_summ"
+            android:title="@string/pref_pin_lock" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Backup Restore" >
-        <Preference android:title="Backup to local" android:key="@string/pref_back_to_local"/>
-        <Preference android:title="Restore from local"  android:key="@string/pref_restore_from_local"/>
-
-        <Preference android:title="Backup to Google Driver" android:key="@string/pref_back_to_google_driver"/>
-        <Preference android:title="Restore from Google Driver" android:key="@string/pref_restore_from_google_driver"/>
+    <PreferenceCategory android:title="@string/pref_backup_restore_title">
+        <Preference
+            android:key="@string/pref_back_to_local"
+            android:singleLineTitle="true"
+            android:title="@string/pref_backup_to_local_title"
+            android:summary="@string/pref_back_to_local_summary"/>
+        <Preference
+            android:key="@string/pref_restore_from_local"
+            android:singleLineTitle="true"
+            android:title="@string/pref_restore_from_local_title"
+            android:summary="@string/pref_restore_from_local_summary"/>
     </PreferenceCategory>
 </PreferenceScreen>
