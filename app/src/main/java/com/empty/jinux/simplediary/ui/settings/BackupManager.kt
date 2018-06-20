@@ -4,6 +4,7 @@ import android.R
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.widget.ArrayAdapter
+import com.empty.jinux.baselibaray.view.loading.doTaskWithLoadingDialog
 import com.empty.jinux.simplediary.data.backup.Backup
 import com.empty.jinux.simplediary.di.Local
 import com.empty.jinux.simplediary.di.Remote
@@ -17,10 +18,12 @@ class BackupManager
     val activity = fragment.activity!!
 
     fun performLocalBackup() {
-        if (local.tryLogin()) {
-            val outFileName = "jdiary_backup_${System.currentTimeMillis()}"
-            local.performBackup(outFileName)
-            fragment.activity!!.toast("Backup Successfully")
+        doTaskWithLoadingDialog(activity) {
+            if (local.tryLogin()) {
+                val outFileName = "jdiary_backup_${System.currentTimeMillis()}"
+                local.performBackup(outFileName)
+                fragment.activity!!.toast("Backup Successfully")
+            }
         }
     }
 
