@@ -32,6 +32,7 @@ import android.text.TextWatcher
 import android.view.*
 import android.widget.ImageView
 import com.empty.jinux.baselibaray.log.loge
+import com.empty.jinux.baselibaray.thread.ThreadPools
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.config.ConfigManager
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
@@ -44,7 +45,6 @@ import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.StatusFragm
 import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
 import com.empty.jinux.simplediary.util.*
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.activity_demo.*
 import kotlinx.android.synthetic.main.fragment_taskdetail.*
 import kotlinx.android.synthetic.main.layout_diary_detail_edit_tool.*
 import org.jetbrains.anko.dimen

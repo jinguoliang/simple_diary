@@ -21,18 +21,15 @@ import com.empty.jinux.baselibaray.log.logi
 import com.empty.jinux.simplediary.data.*
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
 import com.empty.jinux.simplediary.di.Repository
-import com.empty.jinux.simplediary.intent.shareContentIntent
 import com.empty.jinux.simplediary.location.LocationManager
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.MyEmotionIcons
-import com.empty.jinux.simplediary.util.ThreadPools
+import com.empty.jinux.baselibaray.thread.ThreadPools
 import com.empty.jinux.simplediary.util.formatDateWithWeekday
 import com.empty.jinux.simplediary.util.formatDisplayTime
 import com.empty.jinux.simplediary.util.wordsCount
 import com.empty.jinux.simplediary.weather.WeatherManager
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 import javax.inject.Inject
 
 /**

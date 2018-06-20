@@ -4,7 +4,7 @@ import android.content.Context
 import com.empty.jinux.simplediary.applock.AppLockManager
 import com.empty.jinux.simplediary.config.ConfigManager
 import com.empty.jinux.simplediary.ui.lock.LockActivity
-import com.empty.jinux.simplediary.util.ThreadPools
+import com.empty.jinux.baselibaray.thread.ThreadPools
 import org.jetbrains.anko.startActivity
 import javax.inject.Inject
 
