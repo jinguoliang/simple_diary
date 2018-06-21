@@ -34,7 +34,7 @@ class SettingsFragment : DaggerPreferenceFragment(),
     lateinit var mReporter: Reporter
 
     @Inject
-    lateinit var mBackupContainer: BackupContainer
+    lateinit var mBackupManager: BackupManager
 
     private var mIsConfirmEnableLock: Boolean = false
 
@@ -86,13 +86,13 @@ class SettingsFragment : DaggerPreferenceFragment(),
             onRestorFromLocalClick()
         }
 
-        onPreferenceClick(R.string.pref_back_to_google_driver) {
-            onBackupToRemoteClick()
-        }
-
-        onPreferenceClick(R.string.pref_restore_from_google_driver) {
-            onRestorFromRemoteClick()
-        }
+//        onPreferenceClick(R.string.pref_back_to_google_driver) {
+//            onBackupToRemoteClick()
+//        }
+//
+//        onPreferenceClick(R.string.pref_restore_from_google_driver) {
+//            onRestorFromRemoteClick()
+//        }
     }
 
 
@@ -122,25 +122,24 @@ class SettingsFragment : DaggerPreferenceFragment(),
     private fun needConfirmWithInputPassword() = !mIsConfirmEnableLock
 
     private fun onBackupToLocalClick() {
-        mBackupContainer.local.performBackup("test")
+        mBackupManager.performLocalBackup()
     }
 
     private fun onRestorFromLocalClick() {
-        mBackupContainer.local.performImport("test")
+        mBackupManager.performLocalRestore()
     }
 
     private fun onBackupToRemoteClick() {
-        mBackupContainer.remote.performBackup("test")
+        mBackupManager.remote.performBackup("test")
     }
 
     private fun onRestorFromRemoteClick() {
-        mBackupContainer.remote.performImport("test")
+        mBackupManager.remote.performImport("test")
     }
 
     private fun onPreferenceClick(@StringRes key: Int, onClickListener: () -> Unit) {
         findPreference(getString(key)).setOnPreferenceClickListener { onClickListener();true }
     }
-
 
     override fun onResume() {
         super.onResume()
@@ -161,9 +160,9 @@ class SettingsFragment : DaggerPreferenceFragment(),
             REQUEST_CODE_SIGN_IN -> {
                 Log.i(TAG, "Sign in request code")
                 // Called after user is signed in.
-                if (resultCode == Activity.RESULT_OK) {
-                    mBackupContainer.remote.performBackup("test")
-                }
+//                if (resultCode == Activity.RESULT_OK) {
+//                    mBackupManager.performLocalBackup()
+//                }
             }
 
             REQUEST_CODE_CREATION ->
@@ -177,9 +176,9 @@ class SettingsFragment : DaggerPreferenceFragment(),
                 val driveId = data.getParcelableExtra<DriveId>(
                         OpenFileActivityOptions.EXTRA_RESPONSE_DRIVE_ID)
                 loge("driveId = $driveId")
-                (mBackupContainer.remote as GoogleDriverBackup).mOpenItemTaskSource.setResult(driveId)
+                (mBackupManager.remote as GoogleDriverBackup).mOpenItemTaskSource.setResult(driveId)
             } else {
-                (mBackupContainer.remote as GoogleDriverBackup).mOpenItemTaskSource.setException(RuntimeException("Unable to open file"))
+                (mBackupManager.remote as GoogleDriverBackup).mOpenItemTaskSource.setException(RuntimeException("Unable to open file"))
             }
         }
     }

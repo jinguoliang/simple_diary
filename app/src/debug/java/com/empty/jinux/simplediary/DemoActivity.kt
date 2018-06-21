@@ -7,7 +7,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.text.*
 import android.text.style.*
-import com.empty.jinux.simplediary.util.ThreadPools
+import com.empty.jinux.baselibaray.thread.ThreadPools
 import com.empty.jinux.simplediary.util.adjustParagraphSpace
 import kotlinx.android.synthetic.main.activity_demo.*
 import org.jetbrains.anko.append

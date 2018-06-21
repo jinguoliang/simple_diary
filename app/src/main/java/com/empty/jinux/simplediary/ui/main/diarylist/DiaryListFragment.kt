@@ -131,10 +131,6 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
     override fun onPause() {
         super.onPause()
         mPresenter.stop()
-
-        // wow the isIconified is not nice, it's just like onCloseClicked when pass true， so we need two times
-        searchView?.isIconified = true
-        searchView?.isIconified = true
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

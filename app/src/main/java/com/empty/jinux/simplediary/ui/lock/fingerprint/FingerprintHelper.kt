@@ -23,7 +23,7 @@ import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.support.annotation.RequiresApi
 import com.empty.jinux.baselibaray.log.logd
-import com.empty.jinux.simplediary.util.ThreadPools
+import com.empty.jinux.baselibaray.thread.ThreadPools
 import java.io.IOException
 import java.security.*
 import java.security.cert.CertificateException

@@ -53,13 +53,13 @@ constructor(val context: Context) : DiariesDataSource {
                 diaryDao.getAll().map { diary ->
                     mapDiaryFromRoomToDataSource(diary)
                 }
-            } catch (e: SQLiteDiskIOException) {
+            } catch (e: Throwable) {
                 loge(Log.getStackTraceString(e), "DiariesLocalDataSource")
                 e
             }
 
             when (result) {
-                is SQLiteDiskIOException -> {
+                is Throwable -> {
                     uiThread {
                         callback.onDataNotAvailable()
                     }
