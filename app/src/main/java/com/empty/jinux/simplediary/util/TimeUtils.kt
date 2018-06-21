@@ -63,6 +63,10 @@ fun Long.formatToTimeString(format: String): String {
     return SimpleDateFormat(format, Locale.getDefault()).format(this)
 }
 
+fun Long.formatBackupDate(): String {
+    return formatToTimeString("yyyy-MM-dd_HH:mm:ss")
+}
+
 fun Long.formatToWeekday(): String {
     return formatToTimeString("E")
 }
@@ -98,5 +102,7 @@ fun Long.toCalendar(): Calendar {
 operator fun Calendar.rangeTo(end: Calendar): CalendarRange {
     return CalendarRange(this, end)
 }
+
+
 
 

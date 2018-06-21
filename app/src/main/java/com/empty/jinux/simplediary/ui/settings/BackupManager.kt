@@ -1,13 +1,16 @@
 package com.empty.jinux.simplediary.ui.settings
 
+import android.os.Build
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import com.empty.jinux.baselibaray.view.loading.doTaskWithLoadingDialog
+import com.empty.jinux.simplediary.BuildConfig
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.backup.Backup
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
 import com.empty.jinux.simplediary.di.Local
 import com.empty.jinux.simplediary.di.Remote
+import com.empty.jinux.simplediary.util.formatBackupDate
 import org.jetbrains.anko.toast
 import java.io.File
 import javax.inject.Inject
@@ -24,7 +27,7 @@ class BackupManager
     fun performLocalBackup() {
         activity.doTaskWithLoadingDialog(activity.getString(R.string.saving)) {
             if (local.tryLogin()) {
-                val outFileName = "jdiary_backup_${System.currentTimeMillis()}"
+                val outFileName = "${if (BuildConfig.DEBUG) "debug_" else ""}${System.currentTimeMillis().formatBackupDate()}"
                 local.performBackup(outFileName)
                 fragment.activity!!.toast("Backup Successfully")
             }
