@@ -6,7 +6,7 @@ import android.support.v7.widget.AppCompatImageView
 import android.util.AttributeSet
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.util.getStatusBarHeight
-import com.empty.jinux.simplediary.util.layoutTop
+import com.empty.jinux.baselibaray.utils.layoutTop
 
 class MImageView : AppCompatImageView {
     constructor(context: Context) : super(context) {
