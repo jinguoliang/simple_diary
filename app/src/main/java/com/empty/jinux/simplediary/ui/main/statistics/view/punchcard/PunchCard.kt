@@ -24,7 +24,7 @@ class PunchCard @JvmOverloads constructor(
 ) : CardView(context, attrs, defStyleAttr) {
 
     fun setWordCountOfEveryday(counts: List<PunchCheckItem>) {
-        punchRecycleView.withItems(counts.map { PunchCheck(it.data, it.state) })
+        punchRecycleView.withItems(counts.map { PunchCheck(it.data as Calendar, it.state) })
 
         val (current, longest) = computeLongestPunch(counts)
         currentPunch.text = context.getString(R.string.current_punch_fmt, current)
@@ -57,7 +57,7 @@ class PunchCard @JvmOverloads constructor(
 
 }
 
-private class PunchCheck(val data: Any,
+private class PunchCheck(val data: Calendar,
                          val state: PunchCheckState) : Item {
     override val controller: ItemController
         get() = Controller
@@ -84,7 +84,6 @@ private class PunchCheck(val data: Any,
                         holder.missed.visibility = View.INVISIBLE
                     }
                 }
-                item.data as Calendar
                 holder.weekName.text = item.data.timeInMillis.formatToWeekday()
             }
         }
