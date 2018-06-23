@@ -72,7 +72,9 @@ constructor(
             refreshWeather()
         }
         ThreadPools.postOnUIDelayed(200) {
-            mDiaryDetailView.showInputMethod()
+            if (mDiaryDetailView.isActive) {
+                mDiaryDetailView.showInputMethod()
+            }
         }
         mDiaryDetailView.showEmotion(MyEmotionIcons.getEmotion(0).toLong())
         mDiaryDetailView.showDate(formatDateWithWeekday(System.currentTimeMillis()))
