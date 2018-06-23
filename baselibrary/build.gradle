@@ -2,6 +2,8 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
+    defaultPublishConfig "debug"
+
     compileSdkVersion 27
 
     defaultConfig {
@@ -39,6 +41,8 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation "com.android.support:design:$support_version"
     implementation 'androidx.core:core-ktx:0.3'
+    implementation 'org.jetbrains.anko:anko-commons:0.10.4'
+
 
 }
 repositories {
@@ -48,7 +52,7 @@ repositories {
 apply plugin: 'maven' // 引入maven插件
 
 group = 'com.empty.jinux' // 会按照group生成.m2下的目录路径
-version = '1.0.0' // 指定版本
+version = '1.1.1' // 指定版本
 
 def localMavenRepo = 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath
 
