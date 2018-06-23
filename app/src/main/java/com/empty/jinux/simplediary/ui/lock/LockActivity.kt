@@ -36,6 +36,11 @@ class LockActivity : DaggerAppCompatActivity() {
 
         setContentView(R.layout.activity_lock)
 
+        setupPasswordInputView()
+        initFingerprint()
+    }
+
+    private fun setupPasswordInputView() {
         password.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 val password = config.get("pref_app_lock_password", "")
@@ -53,13 +58,11 @@ class LockActivity : DaggerAppCompatActivity() {
             }
 
         })
-
-        initFingerPrint()
     }
 
     private lateinit var fingerprintHelper: FingerprintHelper
 
-    private fun initFingerPrint() {
+    private fun initFingerprint() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val fingerprintMgr = getSystemService(FingerprintManager::class.java)
             fingerprintHelper = FingerprintHelper(
