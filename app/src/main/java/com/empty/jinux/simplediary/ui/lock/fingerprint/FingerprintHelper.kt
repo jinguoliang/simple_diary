@@ -30,24 +30,24 @@ internal constructor(private val fingerprintMgr: FingerprintManager,
                      private val callback: Callback
 ) {
 
-    private val cryptoObject = createCryptoObject()
+//    private val cryptoObject = createCryptoObject()
 
     private var cancellationSignal: CancellationSignal? = null
     private var selfCancelled = false
 
-    private fun createCryptoObject(): FingerprintManager.CryptoObject {
-        val key = CriperHelper.createKey(DEFAULT_KEY_NAME)
-
-        val defaultCipher = CriperHelper.setupCipher()
-
-        try {
-            defaultCipher.init(Cipher.ENCRYPT_MODE, key)
-        } catch (e: Throwable) {
-            return createCryptoObject()
-        }
-
-        return FingerprintManager.CryptoObject(defaultCipher)
-    }
+//    private fun createCryptoObject(): FingerprintManager.CryptoObject {
+//        val key = CriperHelper.createKey(DEFAULT_KEY_NAME)
+//
+//        val defaultCipher = CriperHelper.setupCipher()
+//
+//        try {
+//            defaultCipher.init(Cipher.ENCRYPT_MODE, key)
+//        } catch (e: Throwable) {
+//            return createCryptoObject()
+//        }
+//
+//        return FingerprintManager.CryptoObject(defaultCipher)
+//    }
 
     private val isFingerprintAuthAvailable: Boolean
         get() = fingerprintMgr.isHardwareDetected && fingerprintMgr.hasEnrolledFingerprints()
@@ -58,7 +58,7 @@ internal constructor(private val fingerprintMgr: FingerprintManager,
         cancellationSignal = CancellationSignal()
         selfCancelled = false
 
-        fingerprintMgr.authenticate(cryptoObject, cancellationSignal, 0, listener, null)
+        fingerprintMgr.authenticate(null, cancellationSignal, 0, listener, null)
     }
 
     fun stopListening() {
