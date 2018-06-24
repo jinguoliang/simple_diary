@@ -77,6 +77,7 @@ internal constructor(@param:EmptyData private val mRemoteDataSource: DiariesData
     }
 
     override fun refreshDiaries() {
+        mLocalDataSource.refreshDiaries()
     }
 
     override fun deleteAllDiaries() {

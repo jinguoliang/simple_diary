@@ -42,9 +42,8 @@ class DiaryDetailActivity : DaggerAppCompatActivity() {
 
         // Set up the toolbar.
         setSupportActionBar(toolbar)
-        val ab = supportActionBar
-        ab!!.setDisplayHomeAsUpEnabled(true)
-        ab.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
         // Get the requested task id
         val taskId = intent.getLongExtra(EXTRA_DIARY_ID, INVALID_DIARY_ID)

@@ -21,6 +21,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 
+import com.empty.jinux.baselibaray.view.about.AbsAboutActivity;
+
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
@@ -29,7 +31,6 @@ import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasFragmentInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 import dagger.internal.Beta;
-import me.drakeet.support.about.AbsAboutActivity;
 
 /**
  * An {@link AppCompatActivity} that injects its members in {@link #onCreate(Bundle)} and can be

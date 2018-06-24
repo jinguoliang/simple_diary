@@ -57,7 +57,6 @@ constructor(@param:Repository private val mDiariesRepository: DiariesDataSource,
     }
 
     override fun result(requestCode: Int, resultCode: Int) {
-        // If a diary was successfully added, show snackbar
         if (MainActivity.REQUEST_ADD_DIARY == requestCode && Activity.RESULT_OK == resultCode) {
             mDiariesView.showSuccessfullySavedMessage()
         }
@@ -68,6 +67,8 @@ constructor(@param:Repository private val mDiariesRepository: DiariesDataSource,
         loadDiaries(forceUpdate || mFirstLoad, true)
         mFirstLoad = false
     }
+
+    var mDiariesCached: List<Diary>? = null
 
     /**
      * @param forceUpdate   Pass in true to refresh the data in the [DiariesDataSource]
@@ -83,6 +84,8 @@ constructor(@param:Repository private val mDiariesRepository: DiariesDataSource,
 
         mDiariesRepository.getDiaries(object : DiariesDataSource.LoadDiariesCallback {
             override fun onDiariesLoaded(diaries: List<Diary>) {
+                mDiariesCached = diaries
+
                 // The view may not be able to handle UI updates anymore
                 if (!mDiariesView.isActive) {
                     return
@@ -99,6 +102,10 @@ constructor(@param:Repository private val mDiariesRepository: DiariesDataSource,
                 if (!mDiariesView.isActive) {
                     return
                 }
+
+                if (showLoadingUI) {
+                    mDiariesView.setLoadingIndicator(false)
+                }
                 mDiariesView.showLoadingDiariesError()
             }
         })
@@ -109,8 +116,11 @@ constructor(@param:Repository private val mDiariesRepository: DiariesDataSource,
             // Show a message indicating there are no diaries for that filter type.
             processEmptyDiaries()
         } else {
-            // Show the list of diaries
-            mDiariesView.showDiaries(diaries)
+            if (mCurrentQuery.isEmpty()) {
+                mDiariesView.showDiaries(diaries)
+            } else {
+                mDiariesView.showDiaries(diaries.filter { it.diaryContent.content.contains(mCurrentQuery) })
+            }
         }
 
     }
@@ -133,5 +143,12 @@ constructor(@param:Repository private val mDiariesRepository: DiariesDataSource,
                 loadDiaries(true, true)
             }
         })
+    }
+
+    private var mCurrentQuery = ""
+
+    override fun searchDiary(query: String) {
+        mCurrentQuery = query
+        mDiariesCached?.apply { processDiaries(this) }
     }
 }

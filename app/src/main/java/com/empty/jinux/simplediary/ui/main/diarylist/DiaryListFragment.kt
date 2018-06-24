@@ -16,15 +16,16 @@
 
 package com.empty.jinux.simplediary.ui.main.diarylist
 
+import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.content.ContextCompat
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.SearchView
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.report.Reporter
@@ -68,10 +69,59 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
     override val isActive: Boolean
         get() = isAdded
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        mDiariesAdapter = DiariesRecyclerViewWithCategoriesAdapter(ArrayList(0), mItemListener)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_diary_list, container, false)
     }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        setHasOptionsMenu(true)
+
+        setUpDiariesView()
+        setUpNoDiaryView()
+        setUpFloatButton()
+        setUpRefreshView()
+    }
+
+    private fun setUpDiariesView() {
+        mDiariesAdapter = DiariesRecyclerViewWithCategoriesAdapter(ArrayList(0), mItemListener)
+        diaryRecyclerView.adapter = mDiariesAdapter
+    }
+
+    private fun setUpNoDiaryView() {
+        noDiaries.setOnClickListener {
+            mPresenter.addNewDiary()
+            mReporter.reportClick("no diary icon")
+        }
+    }
+
+    private fun setUpRefreshView() {
+        activity?.let { activity ->
+            // Set up progress indicator
+            refresh_layout.setColorSchemeColors(
+                    ContextCompat.getColor(activity, R.color.colorPrimary),
+                    ContextCompat.getColor(activity, R.color.colorAccent),
+                    ContextCompat.getColor(activity, R.color.colorPrimaryDark)
+            )
+            // Set the scrolling view in the custom SwipeRefreshLayout.
+            refresh_layout.setScrollUpChild(diaryRecyclerView)
+            refresh_layout.setOnRefreshListener { mPresenter.loadDiaries(true) }
+        }
+    }
+
+    private fun setUpFloatButton() {
+        activity?.findViewById<FloatingActionButton>(R.id.fab_add_diary)?.apply {
+            visibility = View.VISIBLE
+            setImageResource(R.drawable.ic_add)
+            setOnClickListener {
+                mPresenter.addNewDiary()
+                mReporter.reportClick("add diary")
+            }
+        }
+    }
+
 
     override fun onResume() {
         super.onResume()
@@ -83,47 +133,34 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
         mPresenter.stop()
     }
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         mPresenter.result(requestCode, resultCode)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_diary_list, container, false)
+    private var searchView: SearchView? = null
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.main_options, menu)
+        setUpSearchView(menu)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    private fun setUpSearchView(menu: Menu) {
+        activity?.let {
+            val searchManager = it.getSystemService(Context.SEARCH_SERVICE) as SearchManager
+            searchView = menu.findItem(R.id.search).actionView as SearchView
+            searchView?.setSearchableInfo(
+                    searchManager.getSearchableInfo(it.componentName))
 
-        // Set up diaries view
-        diaryRecyclerView.adapter = mDiariesAdapter
+            searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return true
+                }
 
-        noDiaries.setOnClickListener {
-            mPresenter.addNewDiary()
-            mReporter.reportClick("no diary icon")
-        }
-
-        // Set up floating action button
-        activity?.findViewById<FloatingActionButton>(R.id.fab_add_diary)?.apply {
-            visibility = View.VISIBLE
-            setImageResource(R.drawable.ic_add)
-            setOnClickListener {
-                mPresenter.addNewDiary()
-                mReporter.reportClick("add diary")
-            }
-        }
-
-        activity?.let { activity ->
-            // Set up progress indicator
-            refresh_layout.setColorSchemeColors(
-                    ContextCompat.getColor(activity, R.color.colorPrimary),
-                    ContextCompat.getColor(activity, R.color.colorAccent),
-                    ContextCompat.getColor(activity, R.color.colorPrimaryDark)
-            )
-            // Set the scrolling view in the custom SwipeRefreshLayout.
-            refresh_layout.setScrollUpChild(diaryRecyclerView)
-            refresh_layout.setOnRefreshListener { mPresenter.loadDiaries(false) }
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    handleSearch(newText ?: "")
+                    return true
+                }
+            })
         }
     }
 
@@ -163,7 +200,7 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
         noDiaries.visibility = View.VISIBLE
 
         noDiariesMessage.text = mainText
-        noDiariesIcon.setImageDrawable(VectorDrawableCompat.create(resources, R.drawable.ic_no_diary, null))
+        noDiariesIcon.setImageDrawable(VectorDrawableCompat.create(resources, iconRes, null))
     }
 
     override fun showAddDiary() {
@@ -182,6 +219,10 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
 
     private fun showMessage(message: String) {
         Snackbar.make(view!!, message, Snackbar.LENGTH_LONG).show()
+    }
+
+    fun handleSearch(query: String) {
+        mPresenter.searchDiary(query)
     }
 
     companion object {

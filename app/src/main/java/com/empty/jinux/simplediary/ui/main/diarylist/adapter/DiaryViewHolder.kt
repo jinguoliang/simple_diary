@@ -14,7 +14,7 @@ import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.util.formatToDay
 import com.empty.jinux.simplediary.util.formatToTime
 import com.empty.jinux.simplediary.util.formatToWeekday
-import com.empty.jinux.simplediary.util.getScreenWidth
+import com.empty.jinux.baselibaray.utils.getScreenWidth
 import org.jetbrains.anko.dimen
 
 class DiaryViewHolder

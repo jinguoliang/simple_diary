@@ -8,7 +8,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.widget.EditText
 import android.widget.TextView
-import com.empty.jinux.baselibaray.loge
+import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.util.ParagrahEndLineSpan
 

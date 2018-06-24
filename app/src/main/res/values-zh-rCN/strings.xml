@@ -44,4 +44,17 @@
     <string name="editor_hint">就从这里输入吧</string>
     <string name="error_no_google_play">手机上没有安装 Google Play</string>
     <string name="guide_open_permission">请打开所有权限</string>
+    <string name="search">搜索</string>
+    <string name="search_hint">请搜索</string>
+    <string name="pref_back_to_local_summary">你可以备份所有的日记，在需要的时候恢复它们</string>
+    <string name="pref_restore_from_local_summary">你可以恢复你备份的日记</string>
+    <string name="pref_backup_restore_title"><![CDATA[备份和恢复]]></string>
+    <string name="pref_backup_to_local_title">备份到本地</string>
+    <string name="pref_restore_from_local_title">从本地恢复</string>
+    <string name="restore_from_local_dialog_title">从本地恢复:</string>
+    <string name="dialog_cancel">取消</string>
+    <string name="saving">保存中...</string>
+    <string name="restore">恢复中...</string>
+    <string name="pref_category_privacy">隐私</string>
+    <string name="app_slogan">记录当下，勿忘当年</string>
 </resources>

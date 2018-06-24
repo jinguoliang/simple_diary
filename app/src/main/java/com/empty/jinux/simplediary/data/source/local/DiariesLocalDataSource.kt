@@ -18,6 +18,9 @@ package com.empty.jinux.simplediary.data.source.local
 
 import android.arch.persistence.room.Room
 import android.content.Context
+import android.database.sqlite.SQLiteDiskIOException
+import android.util.Log
+import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.simplediary.data.*
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
 import com.empty.jinux.simplediary.data.source.local.room.DATABASE_NAME
@@ -37,18 +40,36 @@ import javax.inject.Singleton
 @Singleton
 class DiariesLocalDataSource
 @Inject
-constructor(context: Context) : DiariesDataSource {
+constructor(val context: Context) : DiariesDataSource {
 
-    private var diaryDao = Room.databaseBuilder(context.applicationContext,
-            DiaryDatabase::class.java, DATABASE_NAME).build().diaryDao()
+    private var database = Room.databaseBuilder(context.applicationContext,
+            DiaryDatabase::class.java, DATABASE_NAME).build()
+
+    private var diaryDao = database.diaryDao()
 
     override fun getDiaries(callback: DiariesDataSource.LoadDiariesCallback) {
         doAsync {
-            val data = diaryDao.getAll().map { diary ->
-                mapDiaryFromRoomToDataSource(diary)
+            val result = try {
+                diaryDao.getAll().map { diary ->
+                    mapDiaryFromRoomToDataSource(diary)
+                }
+            } catch (e: Throwable) {
+                loge(Log.getStackTraceString(e), "DiariesLocalDataSource")
+                e
             }
-            uiThread {
-                callback.onDiariesLoaded(data.filter { !it.meta.deleted }.sortedBy { it.diaryContent.displayTime })
+
+            when (result) {
+                is Throwable -> {
+                    uiThread {
+                        callback.onDataNotAvailable()
+                    }
+                }
+                else -> {
+                    val data = result as List<Diary>
+                    uiThread {
+                        callback.onDiariesLoaded(data.filter { !it.meta.deleted }.sortedBy { it.diaryContent.displayTime })
+                    }
+                }
             }
         }
     }
@@ -78,6 +99,10 @@ constructor(context: Context) : DiariesDataSource {
     }
 
     override fun refreshDiaries() {
+        database.close()
+        database = Room.databaseBuilder(context.applicationContext,
+                DiaryDatabase::class.java, DATABASE_NAME).build()
+        diaryDao = database.diaryDao()
     }
 
     override fun deleteAllDiaries() {

@@ -7,3 +7,5 @@ class PunchCheckItem(
 enum class PunchCheckState {
     STATE_CHECKED, STATE_MISSED, STATE_NEED_CHECKED
 }
+
+

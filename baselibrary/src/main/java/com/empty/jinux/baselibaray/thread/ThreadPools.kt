@@ -1,4 +1,4 @@
-package com.empty.jinux.simplediary.util
+package com.empty.jinux.baselibaray.thread
 
 import android.os.Handler
 import android.os.HandlerThread

@@ -40,10 +40,11 @@ class SettingsActivity : DaggerAppCompatActivity() {
 
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
-        val ab = supportActionBar
-        ab!!.setDisplayHomeAsUpEnabled(true)
-        ab.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
     }
+
+
 
 
 }

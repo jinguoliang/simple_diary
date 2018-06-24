@@ -57,6 +57,8 @@ interface DiaryDetailContract {
 
         fun hasLocationPermission(): Boolean
 
+        fun shareContent(content: String)
+
     }
 
     interface Presenter : BasePresenter {

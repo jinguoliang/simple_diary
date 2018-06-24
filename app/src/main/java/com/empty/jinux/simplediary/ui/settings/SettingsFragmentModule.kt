@@ -14,4 +14,6 @@ internal abstract class SettingsFragmentModule {
     @FragmentKey(SettingsFragment::class)
     internal abstract fun bind(builder: SettingsFragmentComponent.Builder): AndroidInjector.Factory<out Fragment>
 
+    @Binds
+    internal abstract fun bindView(v: SettingsFragment): Fragment
 }
