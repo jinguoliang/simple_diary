@@ -26,6 +26,7 @@ import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.content.ContextCompat
 import android.view.*
 import android.widget.SearchView
+import com.empty.jinux.baselibaray.utils.hideInputMethod
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.report.Reporter
@@ -79,25 +80,25 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
 
         setHasOptionsMenu(true)
 
-        setUpDiariesView()
-        setUpNoDiaryView()
-        setUpFloatButton()
-        setUpRefreshView()
+        setupDiariesView()
+        setupNoDiaryView()
+        setupFloatButton()
+        setupRefreshView()
     }
 
-    private fun setUpDiariesView() {
+    private fun setupDiariesView() {
         mDiariesAdapter = DiariesRecyclerViewWithCategoriesAdapter(ArrayList(0), mItemListener)
         diaryRecyclerView.adapter = mDiariesAdapter
     }
 
-    private fun setUpNoDiaryView() {
+    private fun setupNoDiaryView() {
         noDiaries.setOnClickListener {
             mPresenter.addNewDiary()
             mReporter.reportClick("no diary icon")
         }
     }
 
-    private fun setUpRefreshView() {
+    private fun setupRefreshView() {
         activity?.let { activity ->
             // Set up progress indicator
             refresh_layout.setColorSchemeColors(
@@ -111,7 +112,7 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
         }
     }
 
-    private fun setUpFloatButton() {
+    private fun setupFloatButton() {
         activity?.findViewById<FloatingActionButton>(R.id.fab_add_diary)?.apply {
             visibility = View.VISIBLE
             setImageResource(R.drawable.ic_add)
@@ -131,6 +132,7 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
     override fun onPause() {
         super.onPause()
         mPresenter.stop()
+        searchView?.hideInputMethod()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -141,10 +143,10 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.main_options, menu)
-        setUpSearchView(menu)
+        setupSearchView(menu)
     }
 
-    private fun setUpSearchView(menu: Menu) {
+    private fun setupSearchView(menu: Menu) {
         activity?.let {
             val searchManager = it.getSystemService(Context.SEARCH_SERVICE) as SearchManager
             searchView = menu.findItem(R.id.search).actionView as SearchView
