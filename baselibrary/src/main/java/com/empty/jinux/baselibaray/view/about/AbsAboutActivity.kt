@@ -65,7 +65,7 @@ abstract class AbsAboutActivity : AppCompatActivity() {
         }
     }
 
-    fun startAlphaAnimation(v: View, duration: Long, visibility: Int) {
+    private fun startAlphaAnimation(v: View, duration: Long, visibility: Int) {
         val alphaAnimation = if (visibility == View.VISIBLE)
             AlphaAnimation(0f, 1f)
         else
