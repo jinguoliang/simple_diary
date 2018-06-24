@@ -26,6 +26,7 @@ import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.content.ContextCompat
 import android.view.*
 import android.widget.SearchView
+import com.empty.jinux.baselibaray.utils.hideInputMethod
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.report.Reporter
@@ -131,6 +132,7 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
     override fun onPause() {
         super.onPause()
         mPresenter.stop()
+        searchView?.hideInputMethod()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
