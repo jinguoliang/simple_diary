@@ -46,7 +46,6 @@ abstract class AbsAboutActivity : AppCompatActivity() {
     }
 
     private var mIsTheTitleVisible = false
-    private val ALPHA_ANIMATIONS_DURATION = 200L
 
 
     private fun handleToolbarTitleVisibility(percentage: Float) {
@@ -75,6 +74,12 @@ abstract class AbsAboutActivity : AppCompatActivity() {
         alphaAnimation.duration = duration
         alphaAnimation.fillAfter = true
         v.startAnimation(alphaAnimation)
+    }
+
+
+    companion object {
+        private const val ALPHA_ANIMATIONS_DURATION = 200L
+
     }
 
 
