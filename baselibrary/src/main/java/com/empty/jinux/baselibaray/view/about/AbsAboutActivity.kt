@@ -76,6 +76,10 @@ abstract class AbsAboutActivity : AppCompatActivity() {
         v.startAnimation(alphaAnimation)
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
 
     companion object {
         private const val ALPHA_ANIMATIONS_DURATION = 200L
