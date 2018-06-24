@@ -4,10 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/white">
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2px"
-        android:background="#9c9c9c" />
+
 
     <ImageView
         android:id="@+id/head"
@@ -32,9 +29,5 @@
         android:layout_toEndOf="@id/head"
         tools:text="Developer"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1.5dp"
-        android:layout_alignParentBottom="true"
-        android:background="#9c9c9c" />
+
 </RelativeLayout>

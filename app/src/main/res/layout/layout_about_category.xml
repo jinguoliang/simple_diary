@@ -4,6 +4,12 @@
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="top"
+        android:background="#c19c9c9c" />
+
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
@@ -11,4 +17,10 @@
         android:layout_margin="10dp"
         tools:text="hello world"
         android:textColor="@color/black"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_gravity="bottom"
+        android:background="#e39c9c9c" />
 </FrameLayout>
