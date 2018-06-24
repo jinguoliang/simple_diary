@@ -41,7 +41,7 @@ private fun buildSendToIntent(url: String) = Intent().apply {
     data = Uri.parse(url)
 }
 
-private fun buildViewIntent(url: String) = Intent().apply {
+fun buildViewIntent(url: String) = Intent().apply {
     action = Intent.ACTION_VIEW
     data = Uri.parse(url)
 }

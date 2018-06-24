@@ -33,6 +33,9 @@ import android.view.*
 import android.widget.ImageView
 import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.baselibaray.thread.ThreadPools
+import com.empty.jinux.baselibaray.utils.hideInputMethod
+import com.empty.jinux.baselibaray.utils.layoutHeight
+import com.empty.jinux.baselibaray.utils.showInputMethod
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.config.ConfigManager
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
