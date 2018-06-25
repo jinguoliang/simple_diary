@@ -11,6 +11,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.edit
 import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.backup.GoogleDriverBackup
@@ -69,6 +70,9 @@ class SettingsFragment : DaggerPreferenceFragment(),
             mIsConfirmEnableLock = true
             dialog.dismiss()
             checkBoxPreference.isChecked = true
+            PreferenceManager.getDefaultSharedPreferences(activity).edit {
+                putString(getString(R.string.pref_lock_password), dialog.newPassword.text.toString())
+            }
             mReporter.reportClick("password_set_dialog_ok")
         }
         dialog.show()
