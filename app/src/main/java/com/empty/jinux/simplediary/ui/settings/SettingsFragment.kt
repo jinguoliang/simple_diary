@@ -7,6 +7,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.v7.preference.CheckBoxPreference
+import android.support.v7.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -99,14 +100,6 @@ class SettingsFragment : DaggerPreferenceFragment(),
 //        }
     }
 
-
-    /**
-     * Interface used for modifying values in a {@link SharedPreferences}
-     * object.  All changes you make in an editor are batched, and not copied
-     * back to the original {@link SharedPreferences} until you call {@link #commit}
-     * or {@link #apply}
-     * @see hello
-     */
     private fun onLockChecked() {
         val checkBoxPreference = findPreference(getString(R.string.pref_lock_enable)) as CheckBoxPreference
         checkBoxPreference.setOnPreferenceChangeListener { preference, newValue ->
