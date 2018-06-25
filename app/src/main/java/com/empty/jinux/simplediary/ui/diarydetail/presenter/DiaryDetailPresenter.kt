@@ -80,6 +80,8 @@ constructor(
         mDiaryDetailView.showDate(formatDateWithWeekday(System.currentTimeMillis()))
     }
 
+    private var mLoadFinished = false
+
     private fun openDiary() {
         mDiaryDetailView.setLoadingIndicator(true)
         mDiariesRepository.getDiary(mDiaryId, object : DiariesDataSource.GetDiaryCallback {
@@ -94,6 +96,7 @@ constructor(
                 currentDiaryContent.weatherInfo = diary.diaryContent.weatherInfo
                 currentDairyMeta = diary.meta
                 showDiary()
+                mLoadFinished = true
             }
 
             override fun onDataNotAvailable() {
@@ -131,7 +134,6 @@ constructor(
             override fun onResult(id: Long) {
                 mDiaryId = id
             }
-
         })
         mDiaryDetailView.showDiarySaved()
     }
@@ -237,7 +239,9 @@ constructor(
 
     override fun stop() {
         mDiaryDetailView.hideInputMethod()
-        saveDiary()
+        if (isNewDiary || mLoadFinished) {
+            saveDiary()
+        }
     }
 
     fun shareContent() {
