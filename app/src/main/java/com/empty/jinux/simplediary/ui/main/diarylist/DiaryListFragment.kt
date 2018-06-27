@@ -29,6 +29,7 @@ import android.view.*
 import android.widget.SearchView
 import com.empty.jinux.baselibaray.utils.hideInputMethod
 import com.empty.jinux.baselibaray.view.recycleview.Item
+import com.empty.jinux.baselibaray.view.recycleview.ItemAdapter
 import com.empty.jinux.baselibaray.view.recycleview.withItems
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
@@ -261,5 +262,7 @@ private fun RecyclerView.refreshFromDiariesList(diaries: List<Diary>, itemListen
         }
     }
 
-    withItems(items)
+    val itemAdapter = adapter as ItemAdapter
+    itemAdapter.clear()
+    itemAdapter.itemManager.addAll(items)
 }
