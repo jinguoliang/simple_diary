@@ -103,6 +103,9 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     lateinit var keyboardHeightListener: KeyboardHeightProvider
 
+    private var mShowedGoodView = false
+    private var mNeedSayGood = false
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -123,6 +126,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
                 ThreadPools.postOnUI {
                     adjustScrollPosition()
                 }
+                s?.apply { if (length > 25) mNeedSayGood = true}
             }
         }
         diaryContent.addTextChangedListener(mWatcher)
@@ -176,6 +180,10 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     private fun onInputMedhodHided() {
         if (editToolsTab.selectedTabPosition == 0) {
             hideToolArea()
+        }
+        if (!mShowedGoodView && mPresenter.isNewDiary && mNeedSayGood) {
+            goodView.visibility = View.VISIBLE
+            mShowedGoodView = true
         }
     }
 

@@ -51,7 +51,7 @@ constructor(
     @Inject
     lateinit var mReporter: Reporter
 
-    private val isNewDiary: Boolean
+    val isNewDiary: Boolean
         get() = mDiaryId == INVALID_DIARY_ID
 
     override fun start() {
@@ -131,8 +131,8 @@ constructor(
                 currentDairyMeta
         )
         mDiariesRepository.save(newDiary, object : DiariesDataSource.OnCallback<Long> {
-            override fun onResult(id: Long) {
-                mDiaryId = id
+            override fun onResult(result: Long) {
+                mDiaryId = result
             }
         })
         mDiaryDetailView.showDiarySaved()
