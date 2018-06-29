@@ -40,14 +40,11 @@ class DiaryDetailActivity : DaggerAppCompatActivity() {
 
         setContentView(R.layout.activity_diary_detail)
 
-        // Set up the toolbar.
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
+        setupActionBar()
+        setupDetailFragment()
+    }
 
-        // Get the requested task id
-        val taskId = intent.getLongExtra(EXTRA_DIARY_ID, INVALID_DIARY_ID)
-
+    private fun setupDetailFragment() {
         val diaryDetailFragment = supportFragmentManager
                 .findFragmentById(R.id.contentFrame) as? DiaryDetailFragment
 
@@ -58,7 +55,12 @@ class DiaryDetailActivity : DaggerAppCompatActivity() {
             ActivityUtils.replaceFragment(supportFragmentManager,
                     diaryDetailFragment, R.id.contentFrame)
         }
+    }
 
+    private fun setupActionBar() {
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
     override fun onStart() {
