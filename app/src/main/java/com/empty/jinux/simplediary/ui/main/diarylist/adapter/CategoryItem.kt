@@ -49,8 +49,8 @@ class DiaryItem(val data: Diary, val differentDay: Boolean, val onItemListener: 
                 } else {
                     item.onItemListener.onItemClick(item.data)
                 }
-                holder.itemView.swipe_settings_delete.setOnClickListener { item.onItemListener.onDeleteClick(item.data) }
             }
+            holder.itemView.swipe_settings_delete.setOnClickListener { item.onItemListener.onDeleteClick(item.data) }
         }
 
         class ViewHolder(val originView: View) : RecyclerView.ViewHolder(SwipeView(originView)) {
