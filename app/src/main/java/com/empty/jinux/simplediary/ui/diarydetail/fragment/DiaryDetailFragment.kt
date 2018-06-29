@@ -471,8 +471,6 @@ abstract class MFragment : Fragment() {
 }
 
 private fun makeFragmentName(viewId: Int, id: Long): String {
-    val d = 2 shr 3
-
     return "android:switcher:$viewId:$id"
 }
 
