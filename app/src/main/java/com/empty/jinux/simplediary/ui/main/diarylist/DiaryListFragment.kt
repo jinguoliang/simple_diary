@@ -30,6 +30,7 @@ import android.widget.SearchView
 import com.empty.jinux.baselibaray.utils.hideInputMethod
 import com.empty.jinux.baselibaray.view.recycleview.Item
 import com.empty.jinux.baselibaray.view.recycleview.ItemAdapter
+import com.empty.jinux.baselibaray.view.recycleview.ItemManager
 import com.empty.jinux.baselibaray.view.recycleview.withItems
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
@@ -207,14 +208,15 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
         noDiariesIcon.setImageDrawable(VectorDrawableCompat.create(resources, iconRes, null))
     }
 
-    override fun showAddDiary() {
-        startActivityForResult(context?.intentFor<DiaryDetailActivity>(),
+    override fun showAddDiary(todayWords: Int) {
+        startActivityForResult(context?.intentFor<DiaryDetailActivity>(DiaryDetailActivity.EXTRA_TODAY_WORD_COUNT_OF_OTHER to todayWords),
                 MainActivity.REQUEST_ADD_DIARY)
     }
 
-    override fun showDiaryDetailsUI(diaryId: Long) {
+    override fun showDiaryDetailsUI(diaryId: Long, todayWords: Int) {
         startActivity(context?.intentFor<DiaryDetailActivity>(
-                DiaryDetailActivity.EXTRA_DIARY_ID to diaryId))
+                DiaryDetailActivity.EXTRA_DIARY_ID to diaryId,
+                DiaryDetailActivity.EXTRA_TODAY_WORD_COUNT_OF_OTHER to todayWords))
     }
 
     override fun showLoadingDiariesError() {

@@ -47,11 +47,11 @@ class DiaryDetailActivity : DaggerAppCompatActivity() {
     private fun setupDetailFragment() {
         val diaryDetailFragment = supportFragmentManager
                 .findFragmentById(R.id.contentFrame) as? DiaryDetailFragment
-
         if (diaryDetailFragment == null) {
             ActivityUtils.addFragmentToActivity(supportFragmentManager,
-                    DiaryDetailFragment.newInstance(taskId), R.id.contentFrame)
+                    DiaryDetailFragment.newInstance(intent.extras), R.id.contentFrame)
         } else {
+            diaryDetailFragment.arguments = intent.extras
             ActivityUtils.replaceFragment(supportFragmentManager,
                     diaryDetailFragment, R.id.contentFrame)
         }
@@ -90,5 +90,6 @@ class DiaryDetailActivity : DaggerAppCompatActivity() {
     companion object {
 
         val EXTRA_DIARY_ID = "TASK_ID"
+        val EXTRA_TODAY_WORD_COUNT_OF_OTHER = "TODAY_WORD_COUNT"
     }
 }

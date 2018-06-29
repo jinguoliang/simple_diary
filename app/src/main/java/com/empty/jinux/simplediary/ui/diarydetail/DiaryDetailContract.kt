@@ -59,6 +59,8 @@ interface DiaryDetailContract {
 
         fun shareContent(content: String)
 
+        fun showGoodView()
+
     }
 
     interface Presenter : BasePresenter {

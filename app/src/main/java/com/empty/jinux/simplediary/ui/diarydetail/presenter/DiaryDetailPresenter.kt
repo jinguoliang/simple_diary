@@ -47,6 +47,7 @@ constructor(
     private var mDiaryId: Long = INVALID_DIARY_ID
     private var currentDiaryContent = DiaryContent("", "", -1, null, null)
     private var currentDairyMeta = Meta(-1, -1, false)
+    private var mWordCountOfOtherArticleToday: Int = 0
 
     @Inject
     lateinit var mReporter: Reporter
@@ -215,6 +216,10 @@ constructor(
         mDiaryId = diaryId
     }
 
+    fun setWordCountOfOtherArticleToday(otherArticleOfToday: Int) {
+        mWordCountOfOtherArticleToday = otherArticleOfToday
+    }
+
     override fun setEmotion(id: Long) {
         currentDiaryContent.emotionInfo = EmotionInfo(id)
     }
@@ -247,4 +252,19 @@ constructor(
     fun shareContent() {
         mDiaryDetailView.shareContent(currentDiaryContent.content)
     }
+
+
+    /**
+     * the words count of articles of today > 25
+     */
+    fun showGoodViewIfNeed(): Boolean {
+        return if (mWordCountOfOtherArticleToday < 25 && currentDiaryContent.content.length + mWordCountOfOtherArticleToday > 25) {
+            mDiaryDetailView.showGoodView()
+            true
+        } else {
+            false
+        }
+    }
+
+
 }

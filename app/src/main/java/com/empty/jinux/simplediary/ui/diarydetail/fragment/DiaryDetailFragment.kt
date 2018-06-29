@@ -42,6 +42,7 @@ import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
 import com.empty.jinux.simplediary.data.LocationInfo
 import com.empty.jinux.simplediary.intent.shareContentIntent
 import com.empty.jinux.simplediary.report.Reporter
+import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivity
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.KeyboardFragment
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.StatusFragment
@@ -74,8 +75,10 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
 
-        val taskId = arguments?.getLong(ARGUMENT_TASK_ID, INVALID_DIARY_ID) ?: INVALID_DIARY_ID
+        val otherArticleOfToday = arguments?.getInt(DiaryDetailActivity.EXTRA_TODAY_WORD_COUNT_OF_OTHER, 0) ?: 0
+        val taskId = arguments?.getLong(DiaryDetailActivity.EXTRA_DIARY_ID, INVALID_DIARY_ID) ?: INVALID_DIARY_ID
         mPresenter.setDiaryId(taskId)
+        mPresenter.setWordCountOfOtherArticleToday(otherArticleOfToday)
     }
 
     override val isActive: Boolean
@@ -104,7 +107,6 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     lateinit var keyboardHeightListener: KeyboardHeightProvider
 
     private var mShowedGoodView = false
-    private var mNeedSayGood = false
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -126,7 +128,6 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
                 ThreadPools.postOnUI {
                     adjustScrollPosition()
                 }
-                s?.apply { if (length > 25) mNeedSayGood = true}
             }
         }
         diaryContent.addTextChangedListener(mWatcher)
@@ -181,10 +182,13 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         if (editToolsTab.selectedTabPosition == 0) {
             hideToolArea()
         }
-        if (!mShowedGoodView && mPresenter.isNewDiary && mNeedSayGood) {
-            goodView.visibility = View.VISIBLE
-            mShowedGoodView = true
+        if (!mShowedGoodView) {
+            mShowedGoodView = mPresenter.showGoodViewIfNeed()
         }
+    }
+
+    override fun showGoodView() {
+        goodView.visibility = View.VISIBLE
     }
 
     var mKeyboardHeightCached = 0
@@ -395,8 +399,6 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
         private const val REQUEST_CODE_LOCATION_PERMISSION = 0x64
 
-        private const val ARGUMENT_TASK_ID = "TASK_ID"
-
         private const val REQUEST_EDIT_TASK = 1
 
         private const val TAB_KEYBOARD_POS = 0
@@ -404,9 +406,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         private const val CONFIG_KEY_KEYBOARD_HEIGHT = "key_keyboard_height"
 
 
-        fun newInstance(taskId: Long): DiaryDetailFragment {
-            val arguments = Bundle()
-            arguments.putLong(ARGUMENT_TASK_ID, taskId)
+        fun newInstance(arguments: Bundle): DiaryDetailFragment {
             val fragment = DiaryDetailFragment()
             fragment.arguments = arguments
             return fragment
