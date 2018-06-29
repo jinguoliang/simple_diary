@@ -45,7 +45,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:visibility="invisible"
-                    app:srcCompat="@drawable/ic_check_black_24dp" />
+                    app:srcCompat="@drawable/ic_check_white_24dp" />
             </LinearLayout>
 
         </android.support.v7.widget.Toolbar>

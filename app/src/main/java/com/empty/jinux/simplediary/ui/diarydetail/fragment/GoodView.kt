@@ -34,7 +34,7 @@ class GoodView : FrameLayout {
     var currentCenterX: Float? = null
     var currentCenterY: Float? = null
     val checkDrawableSize = dimen(R.dimen.good_view_check_size)
-    val checkDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_check_black_24dp, null)
+    val checkDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_check_white_24dp, null)
 
     override fun dispatchDraw(canvas: Canvas) {
 
