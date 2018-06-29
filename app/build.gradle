@@ -100,8 +100,8 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'org.jetbrains.anko:anko-commons:0.10.4'
     implementation 'androidx.core:core-ktx:0.3'
-    implementation 'android.arch.persistence.room:runtime:1.1.1-rc1'
-    kapt "android.arch.persistence.room:compiler:1.1.1-rc1"
+    implementation 'android.arch.persistence.room:runtime:1.1.1'
+    kapt "android.arch.persistence.room:compiler:1.1.1"
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.3'
 
