@@ -264,5 +264,6 @@ private fun RecyclerView.refreshFromDiariesList(diaries: List<Diary>, itemListen
 
     val itemAdapter = adapter as ItemAdapter
     itemAdapter.clear()
-    itemAdapter.itemManager.addAll(items)
+    itemAdapter.addAll(items)
+    itemAdapter.notifyDataSetChanged()
 }
