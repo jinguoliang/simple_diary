@@ -19,6 +19,7 @@ package com.empty.jinux.simplediary.ui.diarydetail.presenter
 import android.text.TextUtils
 import com.empty.jinux.baselibaray.log.logi
 import com.empty.jinux.baselibaray.thread.ThreadPools
+import com.empty.jinux.simplediary.STREAK_MIN_WORDS_COUNTS
 import com.empty.jinux.simplediary.data.*
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
 import com.empty.jinux.simplediary.di.Repository
@@ -47,6 +48,8 @@ constructor(
     private var mDiaryId: Long = INVALID_DIARY_ID
     private var currentDiaryContent = DiaryContent("", "", -1, null, null)
     private var currentDairyMeta = Meta(-1, -1, false)
+
+    private var mWordCountToday: Int = 0
     private var mWordCountOfOtherArticleToday: Int = 0
 
     @Inject
@@ -79,6 +82,8 @@ constructor(
         }
         mDiaryDetailView.showEmotion(MyEmotionIcons.getEmotion(0).toLong())
         mDiaryDetailView.showDate(formatDateWithWeekday(System.currentTimeMillis()))
+
+        computeWordCount(null)
     }
 
     private var mLoadFinished = false
@@ -168,6 +173,8 @@ constructor(
             mDiaryDetailView.showDate(formatDisplayTime())
             mDiaryDetailView.showContent(content)
 
+            computeWordCount(content)
+
             weatherInfo?.apply {
                 mDiaryDetailView.showWeather(description, icon)
             }
@@ -180,6 +187,12 @@ constructor(
                 mDiaryDetailView.showEmotion(id)
             }
         }
+    }
+
+    private fun computeWordCount(content: String?) {
+        mWordCountOfOtherArticleToday = mWordCountToday - (content?.length ?: 0)
+        mDiaryDetailView.setTodayGood(show = mWordCountToday > STREAK_MIN_WORDS_COUNTS)
+        preWordCountToday = mWordCountToday
     }
 
     override fun refreshLocation() {
@@ -216,8 +229,8 @@ constructor(
         mDiaryId = diaryId
     }
 
-    fun setWordCountOfOtherArticleToday(otherArticleOfToday: Int) {
-        mWordCountOfOtherArticleToday = otherArticleOfToday
+    fun setWordCountToday(wordCountToday: Int) {
+        mWordCountToday = wordCountToday
     }
 
     override fun setEmotion(id: Long) {
@@ -240,6 +253,20 @@ constructor(
 
     fun onContentChange(newContent: String) {
         currentDiaryContent.content = newContent
+
+        showOrHideGoodView(newContent.length)
+    }
+
+    private var preWordCountToday = 25
+
+    private fun showOrHideGoodView(length: Int) {
+        val currentWordCountToday = mWordCountOfOtherArticleToday + length
+        if (currentWordCountToday >= STREAK_MIN_WORDS_COUNTS && preWordCountToday < STREAK_MIN_WORDS_COUNTS) {
+            mDiaryDetailView.showGoodView()
+        } else if (currentWordCountToday < STREAK_MIN_WORDS_COUNTS && preWordCountToday >= STREAK_MIN_WORDS_COUNTS) {
+            mDiaryDetailView.setTodayGood(show = false)
+        }
+        preWordCountToday = currentWordCountToday
     }
 
     override fun stop() {
@@ -251,19 +278,6 @@ constructor(
 
     fun shareContent() {
         mDiaryDetailView.shareContent(currentDiaryContent.content)
-    }
-
-
-    /**
-     * the words count of articles of today > 25
-     */
-    fun showGoodViewIfNeed(): Boolean {
-        return if (mWordCountOfOtherArticleToday < 25 && currentDiaryContent.content.length + mWordCountOfOtherArticleToday > 25) {
-            mDiaryDetailView.showGoodView()
-            true
-        } else {
-            false
-        }
     }
 
 

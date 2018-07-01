@@ -62,6 +62,13 @@ class GoodView : FrameLayout {
         super.dispatchDraw(canvas)
     }
 
+    override fun onVisibilityChanged(changedView: View?, visibility: Int) {
+        super.onVisibilityChanged(changedView, visibility)
+        if (visibility == View.GONE) {
+            currentRadius = null
+        }
+    }
+
     private fun startCheckAnim() {
         val anim = ValueAnimator.ofFloat(maxSize!!, MIN_SIZE)
         anim.duration = DURATION
@@ -72,16 +79,13 @@ class GoodView : FrameLayout {
         anim.addListener(onEnd = {
             loge("anim end")
             setOnClickListener {
-                check {
-                    val activity = context as Activity
-                    activity.action_check.visibility = View.VISIBLE
-                }
+                check()
             }
         })
         anim.start()
     }
 
-    fun check(onEnd: (() -> Unit)) {
+    private fun check() {
         val actionbarCheck = (context as Activity).action_check
         actionbarCheck.alpha = 0f
         actionbarCheck.visibility = View.VISIBLE

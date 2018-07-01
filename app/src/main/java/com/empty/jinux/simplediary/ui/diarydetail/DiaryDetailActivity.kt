@@ -89,7 +89,7 @@ class DiaryDetailActivity : DaggerAppCompatActivity() {
 
     companion object {
 
-        val EXTRA_DIARY_ID = "TASK_ID"
-        val EXTRA_TODAY_WORD_COUNT_OF_OTHER = "TODAY_WORD_COUNT"
+        const val EXTRA_DIARY_ID = "TASK_ID"
+        const val EXTRA_TODAY_WORD_COUNT = "TODAY_WORD_COUNT"
     }
 }

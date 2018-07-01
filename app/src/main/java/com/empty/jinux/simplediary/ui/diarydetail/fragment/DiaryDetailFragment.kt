@@ -47,8 +47,11 @@ import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.KeyboardFragment
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.StatusFragment
 import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
-import com.empty.jinux.simplediary.util.*
+import com.empty.jinux.simplediary.util.PermissionUtil
+import com.empty.jinux.simplediary.util.adjustParagraphSpace
+import com.empty.jinux.simplediary.util.getLineForCursor
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.activity_diary_detail.*
 import kotlinx.android.synthetic.main.fragment_taskdetail.*
 import kotlinx.android.synthetic.main.layout_diary_detail_edit_tool.*
 import org.jetbrains.anko.dimen
@@ -75,10 +78,12 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
 
-        val otherArticleOfToday = arguments?.getInt(DiaryDetailActivity.EXTRA_TODAY_WORD_COUNT_OF_OTHER, 0) ?: 0
-        val taskId = arguments?.getLong(DiaryDetailActivity.EXTRA_DIARY_ID, INVALID_DIARY_ID) ?: INVALID_DIARY_ID
+        val wordCountToday = arguments?.getInt(DiaryDetailActivity.EXTRA_TODAY_WORD_COUNT, 0)
+                ?: 0
+        val taskId = arguments?.getLong(DiaryDetailActivity.EXTRA_DIARY_ID, INVALID_DIARY_ID)
+                ?: INVALID_DIARY_ID
         mPresenter.setDiaryId(taskId)
-        mPresenter.setWordCountOfOtherArticleToday(otherArticleOfToday)
+        mPresenter.setWordCountToday(wordCountToday)
     }
 
     override val isActive: Boolean
@@ -160,7 +165,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
                 val inputMethodShowed = height != 0
                 if (inputMethodShowed) {
-                    onInputMedhodShowed(height)
+                    onInputMethodShowed(height)
                 } else {
                     onInputMedhodHided()
                 }
@@ -182,22 +187,29 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         if (editToolsTab.selectedTabPosition == 0) {
             hideToolArea()
         }
-        if (!mShowedGoodView) {
-            mShowedGoodView = mPresenter.showGoodViewIfNeed()
-        }
     }
 
-    override fun showGoodView() {
+    override fun showGoodView(): Boolean {
         goodView.visibility = View.VISIBLE
+        return true
+    }
+
+    override fun setTodayGood(show: Boolean) {
+        val actionbarCheck = (context as Activity).action_check
+        actionbarCheck.visibility = if (show) View.VISIBLE else View.INVISIBLE
+        if (!show) {
+            goodView.visibility = View.GONE
+        }
     }
 
     var mKeyboardHeightCached = 0
 
-    private fun onInputMedhodShowed(height: Int) {
+    private fun onInputMethodShowed(height: Int) {
         mKeyboardHeightCached = height
 
         diaryContent.isCursorVisible = true
 
+        setGoodViewHeight(height)
         setToolAreaHeight(height)
         toolArea.setCurrentItem(0, false)
         showToolArea()
@@ -205,6 +217,10 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         ThreadPools.postOnUI {
             adjustScrollPosition()
         }
+    }
+
+    private fun setGoodViewHeight(keyboardHeight: Int) {
+        goodView.layoutHeight = fragmentContainer.height - keyboardHeight
     }
 
     private fun setToolAreaHeight(height: Int) {

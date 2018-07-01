@@ -133,14 +133,14 @@ constructor(@param:Repository private val mDiariesRepository: DiariesDataSource,
     }
 
     override fun addNewDiary() {
-        mDiariesView.showAddDiary(wordCountOfOtherArticleToday())
+        mDiariesView.showAddDiary(wordCountToday())
     }
 
     override fun openDiaryDetails(diary: Diary) {
-        mDiariesView.showDiaryDetailsUI(diary.id, wordCountOfOtherArticleToday())
+        mDiariesView.showDiaryDetailsUI(diary.id, wordCountToday())
     }
 
-    private fun wordCountOfOtherArticleToday(): Int {
+    private fun wordCountToday(): Int {
         return mDiariesCached?.run {
             filter { it.diaryContent.displayTime.dayTime() == today().timeInMillis }
                     .fold(0) { s, d -> s + d.diaryContent.content.wordsCount() }
