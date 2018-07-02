@@ -51,6 +51,9 @@ class MainActivity : DaggerAppCompatActivity() {
     @Inject
     lateinit var mLockHelper: LockHelper
 
+    private lateinit var mCurrentFragment: BackPressPrecessor
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_diary_list)
@@ -72,6 +75,14 @@ class MainActivity : DaggerAppCompatActivity() {
     override fun onStop() {
         super.onStop()
         mLockHelper.onStop()
+    }
+
+    override fun onBackPressed() {
+        if (mCurrentFragment.onBackPress()) {
+            return
+        }  else {
+            super.onBackPressed()
+        }
     }
 
     private fun setupNavigationDrawer() {
@@ -102,6 +113,7 @@ class MainActivity : DaggerAppCompatActivity() {
                 ?: StatisticsFragment.newInstance()
         ActivityUtils.replaceFragment(
                 supportFragmentManager, fragment, R.id.contentFrame)
+        mCurrentFragment = fragment
     }
 
     private fun showDiaryListFragment() {
@@ -109,6 +121,7 @@ class MainActivity : DaggerAppCompatActivity() {
                 ?: DiaryListFragment.newInstance()
         ActivityUtils.replaceFragment(
                 supportFragmentManager, fragment, R.id.contentFrame)
+        mCurrentFragment = fragment
     }
 
     private fun DrawerLayout.setMDrawerListener() {
@@ -193,6 +206,11 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 }
 
+interface BackPressPrecessor {
+    fun onBackPress(): Boolean {
+        return false
+    }
+}
 
 
 
