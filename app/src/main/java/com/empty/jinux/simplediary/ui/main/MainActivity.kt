@@ -99,24 +99,16 @@ class MainActivity : DaggerAppCompatActivity() {
 
     private fun showDiaryStatistics() {
         val fragment = supportFragmentManager.findFragmentById(R.id.contentFrame) as? StatisticsFragment
-        if (fragment == null) {
-            ActivityUtils.replaceFragment(
-                    supportFragmentManager, StatisticsFragment.newInstance(), R.id.contentFrame)
-        } else {
-            ActivityUtils.replaceFragment(
-                    supportFragmentManager, fragment, R.id.contentFrame)
-        }
+                ?: StatisticsFragment.newInstance()
+        ActivityUtils.replaceFragment(
+                supportFragmentManager, fragment, R.id.contentFrame)
     }
 
     private fun showDiaryListFragment() {
         val fragment = supportFragmentManager.findFragmentById(R.id.contentFrame) as? DiaryListFragment
-        if (fragment == null) {
-            ActivityUtils.replaceFragment(
-                    supportFragmentManager, DiaryListFragment.newInstance(), R.id.contentFrame)
-        } else {
-            ActivityUtils.replaceFragment(
-                    supportFragmentManager, fragment, R.id.contentFrame)
-        }
+                ?: DiaryListFragment.newInstance()
+        ActivityUtils.replaceFragment(
+                supportFragmentManager, fragment, R.id.contentFrame)
     }
 
     private fun DrawerLayout.setMDrawerListener() {
