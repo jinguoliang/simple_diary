@@ -46,7 +46,8 @@ import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.KeyboardFragment
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.StatusFragment
 import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
-import com.empty.jinux.simplediary.util.*
+import com.empty.jinux.simplediary.util.PermissionUtil
+import com.empty.jinux.simplediary.util.adjustParagraphSpace
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_taskdetail.*
 import kotlinx.android.synthetic.main.layout_diary_detail_edit_tool.*
@@ -108,8 +109,44 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
         setHasOptionsMenu(true)
 
-        keyboardHeightListener = KeyboardHeightProvider(activity!!)
+        setupEditView()
+        setupContainer()
+        initEditToolbar()
+        setupKeyboardHeightListener()
 
+        mPresenter.start()
+    }
+
+    private fun setupKeyboardHeightListener() {
+        keyboardHeightListener = KeyboardHeightProvider(activity!!)
+        keyboardHeightListener.observer = object : KeyboardHeightObserver {
+            override fun onKeyboardHeightChanged(height: Int, orientation: Int) {
+                if (diaryContent == null) {
+                    return
+                }
+
+                val inputMethodShowed = height != 0
+                if (inputMethodShowed) {
+                    onInputMedhodShowed(height)
+                } else {
+                    onInputMedhodHided()
+                }
+            }
+        }
+    }
+
+    private fun setupContainer() {
+        editContainer.setOnClickListener {
+            diaryContent.apply { setSelection(text.length) }
+            showInputMethod()
+        }
+        fragmentContainer.setOnClickListener {
+            diaryContent.apply { setSelection(text.length) }
+            showInputMethod()
+        }
+    }
+
+    private fun setupEditView() {
         mWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -135,34 +172,6 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             }
             false
         }
-
-        editContainer.setOnClickListener {
-            diaryContent.apply { setSelection(text.length) }
-            showInputMethod()
-        }
-        fragmentContainer.setOnClickListener {
-            diaryContent.apply { setSelection(text.length) }
-            showInputMethod()
-        }
-
-        initEditToolbar()
-
-        keyboardHeightListener.observer = object : KeyboardHeightObserver {
-            override fun onKeyboardHeightChanged(height: Int, orientation: Int) {
-                if (diaryContent == null) {
-                    return
-                }
-
-                val inputMethodShowed = height != 0
-                if (inputMethodShowed) {
-                    onInputMedhodShowed(height)
-                } else {
-                    onInputMedhodHided()
-                }
-            }
-        }
-
-        mPresenter.start()
     }
 
     override fun onResume() {
