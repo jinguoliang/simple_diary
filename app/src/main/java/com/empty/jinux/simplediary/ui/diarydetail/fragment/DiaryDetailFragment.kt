@@ -155,8 +155,10 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                mPresenter.onContentChange(s.toString())
-                diaryContent.adjustParagraphSpace()
+                ThreadPools.postOnUI {
+                    mPresenter.onContentChange(s.toString())
+                    diaryContent.adjustParagraphSpace()
+                }
             }
         }
         diaryContent.addTextChangedListener(mWatcher)
