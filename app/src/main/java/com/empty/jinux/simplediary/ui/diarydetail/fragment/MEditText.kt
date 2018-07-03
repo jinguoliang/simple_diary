@@ -7,17 +7,25 @@ import android.support.v4.content.res.ResourcesCompat
 import android.util.AttributeSet
 import android.util.Log
 import android.widget.EditText
+import android.widget.ScrollView
 import android.widget.TextView
 import com.empty.jinux.baselibaray.log.loge
+import com.empty.jinux.baselibaray.thread.ThreadPools
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.util.ParagrahEndLineSpan
+import com.empty.jinux.simplediary.util.getLineForCursor
 
 class MEditText : EditText {
+    var mScrollParent: ScrollView? = null
+    private var mEditVisibleHeight: Int = -1
+
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
 
     override fun onSelectionChanged(selStart: Int, selEnd: Int) {
         super.onSelectionChanged(selStart, selEnd)
+
+        loge("current end $selEnd", "jin")
 
         // first time
         if (layout == null) return
@@ -25,6 +33,34 @@ class MEditText : EditText {
             adjustCursorHeight(selStart)
         } catch (e: Exception) {
             loge("adjustCursorHeight failed: ${Log.getStackTraceString(e)}")
+        }
+
+        ThreadPools.postOnUI {
+            adjustScrollPosition(mScrollParent, -1)
+        }
+    }
+
+
+    fun adjustScrollPosition(scrollView: ScrollView?, editorVisibleAreaHeight: Int) {
+        if (editorVisibleAreaHeight != -1) {
+            mEditVisibleHeight = editorVisibleAreaHeight
+        }
+
+        if (layout == null || scrollView == null || mEditVisibleHeight == -1) {
+            return
+        }
+
+        loge("edit visible height = $mEditVisibleHeight")
+        val cursorLine = getLineForCursor()
+        val cursorLineBottom = layout.getLineBottom(cursorLine)
+
+        val cursorYOffset = cursorLineBottom - scrollView.scrollY
+
+        if (cursorYOffset > mEditVisibleHeight) {
+            val scroll = cursorYOffset - mEditVisibleHeight
+            scrollView.post {
+                scrollView.smoothScrollBy(0, scroll)
+            }
         }
     }
 
@@ -55,8 +91,8 @@ class MEditText : EditText {
     }
 
 
-
 }
+
 public inline fun <reified T, reified D> D.reflectFeild(clazz: Class<D>, fieldName: String): T {
     val field = clazz.getDeclaredField(fieldName)
     field.isAccessible = true

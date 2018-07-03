@@ -38,7 +38,11 @@ class BackupManager
         if (local.tryLogin()) {
             val folder = local.getBackupFolder()
             if (folder.exists()) {
-                showSingleSelectDialog(folder.listFiles()!!)
+                folder.listFiles()?.apply {
+                    sortBy { it.lastModified() }
+                    reverse()
+                    showSingleSelectDialog(this)
+                }
             }
         }
     }
