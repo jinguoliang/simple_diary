@@ -49,7 +49,6 @@ import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.StatusFragm
 import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
 import com.empty.jinux.simplediary.util.PermissionUtil
 import com.empty.jinux.simplediary.util.adjustParagraphSpace
-import com.empty.jinux.simplediary.util.getLineForCursor
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.activity_diary_detail.*
 import kotlinx.android.synthetic.main.fragment_taskdetail.*
@@ -118,45 +117,16 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
         setHasOptionsMenu(true)
 
-        keyboardHeightListener = KeyboardHeightProvider(activity!!)
-
-        mWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                mPresenter.onContentChange(s.toString())
-                diaryContent.adjustParagraphSpace()
-                ThreadPools.postOnUI {
-                    adjustScrollPosition()
-                }
-            }
-        }
-        diaryContent.addTextChangedListener(mWatcher)
-        diaryContent.setOnTouchListener { _, event ->
-            when (event.actionMasked) {
-                MotionEvent.ACTION_UP -> {
-                    diaryContent.isLongClickable = true
-                }
-                MotionEvent.ACTION_MOVE -> diaryContent.isLongClickable = false
-            }
-            false
-        }
-
-        editContainer.setOnClickListener {
-            diaryContent.apply { setSelection(text.length) }
-            showInputMethod()
-        }
-        fragmentContainer.setOnClickListener {
-            diaryContent.apply { setSelection(text.length) }
-            showInputMethod()
-        }
-
+        setupEditView()
+        setupContainer()
         initEditToolbar()
+        setupKeyboardHeightListener()
 
+        mPresenter.start()
+    }
+
+    private fun setupKeyboardHeightListener() {
+        keyboardHeightListener = KeyboardHeightProvider(activity!!)
         keyboardHeightListener.observer = object : KeyboardHeightObserver {
             override fun onKeyboardHeightChanged(height: Int, orientation: Int) {
                 if (diaryContent == null) {
@@ -171,8 +141,46 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
                 }
             }
         }
+    }
 
-        mPresenter.start()
+    private fun setupContainer() {
+        editContainer.setOnClickListener {
+            diaryContent.apply { setSelection(text.length) }
+            showInputMethod()
+        }
+        fragmentContainer.setOnClickListener {
+            diaryContent.apply { setSelection(text.length) }
+            showInputMethod()
+        }
+    }
+
+    private fun setupEditView() {
+        mWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                ThreadPools.postOnUI {
+                    mPresenter.onContentChange(s.toString())
+                    diaryContent.adjustParagraphSpace()
+                }
+            }
+        }
+        diaryContent.addTextChangedListener(mWatcher)
+        diaryContent.setOnTouchListener { _, event ->
+            when (event.actionMasked) {
+                MotionEvent.ACTION_UP -> {
+                    diaryContent.isLongClickable = true
+                }
+                MotionEvent.ACTION_MOVE -> diaryContent.isLongClickable = false
+            }
+            false
+        }
+
+        diaryContent.mScrollParent = scrollContainer
     }
 
     override fun onResume() {
@@ -215,7 +223,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         showToolArea()
 
         ThreadPools.postOnUI {
-            adjustScrollPosition()
+            diaryContent.adjustScrollPosition(scrollContainer, editTabContainer.top - context!!.dimen(R.dimen.detail_diary_editor_bottom))
         }
     }
 
@@ -227,28 +235,6 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         if (height != toolArea.layoutHeight) {
             bottomSpace.layoutHeight = height + toolArea.dimen(R.dimen.diary_detail_edit_tool_height)
             toolArea.layoutHeight = height
-        }
-    }
-
-    private fun adjustScrollPosition() {
-        if (diaryContent?.layout == null) {
-            return
-        }
-
-        val editor = diaryContent
-        val scrollView = scrollContainer
-
-        val cursorLine = editor.getLineForCursor()
-        val cursorLineBottom = editor.layout.getLineBottom(cursorLine)
-
-        val cursorYOffset = cursorLineBottom - scrollView.scrollY
-        val editorVisibleAreaHeight = editTabContainer.top - context!!.dimen(R.dimen.detail_diary_editor_bottom)
-
-        if (cursorYOffset > editorVisibleAreaHeight) {
-            val scroll = cursorYOffset - editorVisibleAreaHeight
-            scrollView.post {
-                scrollView.smoothScrollBy(0, scroll)
-            }
         }
     }
 

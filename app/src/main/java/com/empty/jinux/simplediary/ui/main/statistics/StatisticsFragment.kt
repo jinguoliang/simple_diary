@@ -24,6 +24,7 @@ import android.view.ViewGroup
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.STREAK_MIN_WORDS_COUNTS
 import com.empty.jinux.simplediary.data.Diary
+import com.empty.jinux.simplediary.ui.main.BackPressPrecessor
 import com.empty.jinux.simplediary.ui.main.statistics.view.punchcard.PunchCheckItem
 import com.empty.jinux.simplediary.ui.main.statistics.view.punchcard.PunchCheckState
 import com.empty.jinux.simplediary.util.*
@@ -38,7 +39,7 @@ import javax.inject.Inject
 /**
  * Main UI for the statistics screen.
  */
-class StatisticsFragment : DaggerFragment(), StatisticsContract.View {
+class StatisticsFragment : DaggerFragment(), StatisticsContract.View, BackPressPrecessor {
 
     @Inject
     internal

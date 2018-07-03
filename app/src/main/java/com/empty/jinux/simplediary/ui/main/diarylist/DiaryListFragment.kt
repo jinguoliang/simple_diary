@@ -35,6 +35,7 @@ import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivity
+import com.empty.jinux.simplediary.ui.main.BackPressPrecessor
 import com.empty.jinux.simplediary.ui.main.MainActivity
 import com.empty.jinux.simplediary.ui.main.diarylist.adapter.CategoryEndItem
 import com.empty.jinux.simplediary.ui.main.diarylist.adapter.CategoryItem
@@ -50,7 +51,18 @@ import javax.inject.Inject
 /**
  * Display a grid of [Diary]s. User can choose to view all, active or completed diaries.
  */
-class DiaryListFragment : DaggerFragment(), DiaryListContract.View {
+class DiaryListFragment : DaggerFragment(), DiaryListContract.View, BackPressPrecessor {
+    override fun onBackPress(): Boolean {
+        searchView?.apply {
+            if (this.isIconified) {
+                return false
+            }
+            this.isIconified = true
+            this.isIconified = true
+            return true
+        }
+        return false
+    }
 
     @Inject
     internal lateinit var mPresenter: DiaryListContract.Presenter
