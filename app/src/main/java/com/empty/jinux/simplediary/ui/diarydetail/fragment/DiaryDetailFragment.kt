@@ -157,9 +157,6 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             override fun afterTextChanged(s: Editable?) {
                 mPresenter.onContentChange(s.toString())
                 diaryContent.adjustParagraphSpace()
-                ThreadPools.postOnUI {
-                    adjustScrollPosition()
-                }
             }
         }
         diaryContent.addTextChangedListener(mWatcher)
@@ -172,6 +169,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             }
             false
         }
+        diaryContent.mScrollParent = scrollContainer
     }
 
     override fun onResume() {
@@ -200,7 +198,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         showToolArea()
 
         ThreadPools.postOnUI {
-            adjustScrollPosition()
+            diaryContent.adjustScrollPosition(scrollContainer, editTabContainer.top - context!!.dimen(R.dimen.detail_diary_editor_bottom))
         }
     }
 
@@ -208,28 +206,6 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         if (height != toolArea.layoutHeight) {
             bottomSpace.layoutHeight = height + toolArea.dimen(R.dimen.diary_detail_edit_tool_height)
             toolArea.layoutHeight = height
-        }
-    }
-
-    private fun adjustScrollPosition() {
-        if (diaryContent?.layout == null) {
-            return
-        }
-
-        val editor = diaryContent
-        val scrollView = scrollContainer
-
-        val cursorLine = editor.getLineForCursor()
-        val cursorLineBottom = editor.layout.getLineBottom(cursorLine)
-
-        val cursorYOffset = cursorLineBottom - scrollView.scrollY
-        val editorVisibleAreaHeight = editTabContainer.top - context!!.dimen(R.dimen.detail_diary_editor_bottom)
-
-        if (cursorYOffset > editorVisibleAreaHeight) {
-            val scroll = cursorYOffset - editorVisibleAreaHeight
-            scrollView.post {
-                scrollView.smoothScrollBy(0, scroll)
-            }
         }
     }
 
