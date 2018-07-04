@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
+import com.empty.jinux.baselibaray.thread.ThreadPools
 import com.empty.jinux.baselibaray.utils.inflate
 import com.empty.jinux.baselibaray.utils.layoutHeight
 import com.empty.jinux.baselibaray.utils.layoutWidth
@@ -68,6 +69,9 @@ class BarChart : FrameLayout {
             data.maxBy { it.second }?.apply { Bar.maxYValue = second }
             recyclerView.withItems {
                 addAll(data.map { Bar(it) })
+            }
+            ThreadPools.postOnUI {
+                recyclerView.smoothScrollToPosition(data.size)
             }
         }
 

@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.empty.jinux.baselibaray.thread.ThreadPools
 import com.empty.jinux.baselibaray.view.recycleview.Item
 import com.empty.jinux.baselibaray.view.recycleview.ItemController
 import com.empty.jinux.baselibaray.view.recycleview.withItems
@@ -25,6 +26,10 @@ class PunchCard @JvmOverloads constructor(
 
     fun setWordCountOfEveryday(counts: List<PunchCheckItem>) {
         punchRecycleView.withItems(counts.map { PunchCheck(it.data as Calendar, it.state) })
+        ThreadPools.postOnUI {
+            punchRecycleView.smoothScrollToPosition(counts.size)
+        }
+
 
         val (current, longest) = computeLongestPunch(counts)
         currentPunch.text = context.getString(R.string.current_punch_fmt, current)
