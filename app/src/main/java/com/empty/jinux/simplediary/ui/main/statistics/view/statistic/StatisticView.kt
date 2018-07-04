@@ -1,23 +1,17 @@
 package com.empty.jinux.simplediary.ui.main.statistics.view.statistic
 
 import android.content.Context
-import android.graphics.Color
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.CardView
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import com.empty.jinux.baselibaray.thread.ThreadPools
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.util.toCalendar
 import com.empty.jinux.simplediary.util.wordsCount
-import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
 import kotlinx.android.synthetic.main.layout_statistic_chart.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -29,7 +23,7 @@ constructor(context: Context,
             attrs: AttributeSet? = null,
             defAttr: Int = 0) : CardView(context, attrs, defAttr) {
 
-    val CALENDAR_FEILDS = listOf(Calendar.DAY_OF_YEAR,
+    val CALENDAR_FEILDS = listOf(Calendar.DAY_OF_MONTH,
             Calendar.WEEK_OF_YEAR,
             Calendar.MONTH,
             Calendar.YEAR)
@@ -74,49 +68,35 @@ constructor(context: Context,
             }
         }
 
-        initBarChart()
     }
 
     private lateinit var mDiaries: List<Diary>
 
     fun setDiaries(diaries: List<Diary>) {
         mDiaries = diaries
-        doAsync {
-            val entries = diaries.groupBy { it.diaryContent.displayTime.toCalendar().get(currentXAxis) }.map {
-                BarEntry((it.key).toFloat(), getYAxisData(it.value))
-            }
+        ThreadPools.postOnQuene {
+            val entries = diaries.groupBy { it.diaryContent.displayTime.getBaseStart(currentXAxis) }.map {
+                it.key to getYAxisData(it.value).toLong()
+            }.toList()
 
-            val dataSet = BarDataSet(entries, "").apply {
-                color = ContextCompat.getColor(context, R.color.colorAccent)
-                form = Legend.LegendForm.NONE
-                barBorderWidth = 1f
-                barBorderColor = ContextCompat.getColor(context, android.R.color.white)
-                isHighlightEnabled = false
-            }
-
-            val data = BarData(dataSet).apply {
-                setDrawValues(true)
-                setValueTextColor(ContextCompat.getColor(context, android.R.color.white))
-                setValueTextSize(15f)
-                setValueFormatter { value, _, _, _ ->
-                    value.toLong().toString()
-                }
-            }
-            uiThread {
-                statisticChat.xAxis.setValueFormatter { value, _ ->
-                    value.toInt().toString()
-                }
-                statisticChat.viewPortHandler.let {
-                    val xScale = entries.size / 7f
-                    it.setMinMaxScaleX(xScale, xScale)
-                    it.setMinMaxScaleY(1f, 1f)
-                }
-                statisticChat.data = data
-                statisticChat.invalidate()
+            ThreadPools.postOnUI {
+                statisticChat.setXAxisValueFormater(mFormatter)
+                statisticChat.setData(entries)
             }
         }
+    }
 
-
+    private val mFormatter = object : BarChart.Formater {
+        override fun format(v: Long): String {
+            val cal = v.toCalendar()
+            return when (currentXAxis) {
+                Calendar.YEAR -> "${cal.get(Calendar.YEAR)}年"
+                Calendar.MONTH -> "${cal.get(Calendar.MONTH)}月"
+                Calendar.WEEK_OF_YEAR -> "${cal.get(Calendar.WEEK_OF_YEAR)}周"
+                Calendar.DAY_OF_MONTH -> "${cal.get(Calendar.DAY_OF_MONTH)}日"
+                else -> ""
+            }
+        }
     }
 
     private fun getYAxisData(value: List<Diary>): Float {
@@ -126,44 +106,20 @@ constructor(context: Context,
             return value.size.toFloat()
         }
     }
+}
 
-    private fun initBarChart() {
-        statisticChat.setDrawGridBackground(false)
-        statisticChat.setDrawBorders(false)
-
-        val axisColor = Color.WHITE
-        val axisWidth = 1f
-
-        statisticChat.xAxis.apply {
-            isEnabled = true
-            position = XAxis.XAxisPosition.BOTTOM
-            textColor = ContextCompat.getColor(context, android.R.color.white)
-            textSize = 12f
-            setDrawGridLines(false)
-            setDrawLabels(true)
-            axisLineColor = axisColor
-            axisLineWidth = axisWidth
-            granularity = 1f
-            labelCount = 7
-        }
-
-        statisticChat.axisRight.isEnabled = false
-
-        statisticChat.axisLeft.apply {
-            setDrawGridLines(false)
-            setDrawLabels(false)
-            axisLineColor = axisColor
-            axisLineWidth = axisWidth
-        }
-
-        statisticChat.setFitBars(false)
-
-        statisticChat.description.isEnabled = false
-        statisticChat.extraBottomOffset = 20f
-
-
-
+private fun Long.getBaseStart(currentXAxis: Int): Long {
+    val cal = toCalendar()
+    cal.set(Calendar.MILLISECOND, 0)
+    cal.set(Calendar.SECOND, 0)
+    cal.set(Calendar.MINUTE, 0)
+    cal.set(Calendar.HOUR_OF_DAY, 0)
+    when (currentXAxis) {
+        Calendar.WEEK_OF_YEAR -> cal.set(Calendar.DAY_OF_WEEK, 0)
+        Calendar.MONTH -> cal.set(Calendar.DAY_OF_MONTH, 0)
+        Calendar.YEAR -> cal.set(Calendar.DAY_OF_YEAR, 0)
     }
+    return cal.timeInMillis
 }
 
 

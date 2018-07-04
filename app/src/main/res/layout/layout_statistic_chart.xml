@@ -51,8 +51,7 @@
         android:textSize="@dimen/card_view_button_text_size"
         tools:text="Day" />
 
-
-    <com.github.mikephil.charting.charts.BarChart
+    <com.empty.jinux.simplediary.ui.main.statistics.view.statistic.BarChart
         android:id="@+id/statisticChat"
         android:layout_width="match_parent"
         android:layout_height="200dp"
