@@ -1,7 +1,6 @@
 package com.empty.jinux.simplediary.ui.main.statistics.view.statistic
 
 import android.content.Context
-import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
@@ -15,6 +14,7 @@ import com.empty.jinux.baselibaray.utils.inflate
 import com.empty.jinux.baselibaray.utils.layoutHeight
 import com.empty.jinux.baselibaray.utils.layoutWidth
 import com.empty.jinux.baselibaray.view.recycleview.Item
+import com.empty.jinux.baselibaray.view.recycleview.ItemAdapter
 import com.empty.jinux.baselibaray.view.recycleview.ItemController
 import com.empty.jinux.baselibaray.view.recycleview.withItems
 import com.empty.jinux.simplediary.R
@@ -25,9 +25,14 @@ class BarChart : FrameLayout {
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-    init {
+    val recyclerView = RecyclerView(context).also {
+        it.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
     }
 
+    val emptyView = ImageView(context).also {
+    }
+
+    val items = mutableListOf<Item>()
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -35,15 +40,9 @@ class BarChart : FrameLayout {
         Bar.maxBarHeight = (measuredHeight - paddingTop - 2 * dimen(R.dimen.bar_item_value_textview_height))
     }
 
-    val recyclerView = RecyclerView(context).also {
-        it.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-    }
-
-    val emptyView = ImageView(context).also {
-        it.setImageDrawable(VectorDrawableCompat.create(resources, R.drawable.ic_01d, null))
-    }
 
     init {
+        recyclerView.withItems(items)
         recyclerView.visibility = View.INVISIBLE
         addView(recyclerView, FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT).also { it.gravity = Gravity.CENTER })
         addView(emptyView, FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT).also { it.gravity = Gravity.CENTER })
@@ -67,17 +66,18 @@ class BarChart : FrameLayout {
             emptyView.visibility = View.INVISIBLE
 
             data.maxBy { it.second }?.apply { Bar.maxYValue = second }
-            recyclerView.withItems {
-                addAll(data.map { Bar(it) })
-            }
-            ThreadPools.postOnUI {
+
+            val itemAdapter = recyclerView.adapter as ItemAdapter
+            itemAdapter.clear()
+            itemAdapter.addAll(data.map { Bar(it) })
+            itemAdapter.notifyDataSetChanged()
+
+            ThreadPools.postOnUIDelayed(500) {
                 recyclerView.smoothScrollToPosition(data.size)
             }
         }
 
     }
-
-    data class Data(val map: HashMap<Long, Long>)
 }
 
 class Bar(val data: Pair<Long, Long>) : Item {

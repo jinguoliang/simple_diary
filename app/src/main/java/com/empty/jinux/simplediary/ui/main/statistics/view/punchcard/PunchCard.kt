@@ -15,6 +15,7 @@ import com.empty.jinux.baselibaray.view.recycleview.ItemController
 import com.empty.jinux.baselibaray.view.recycleview.withItems
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.baselibaray.utils.formatToWeekday
+import com.empty.jinux.baselibaray.view.recycleview.ItemAdapter
 import kotlinx.android.synthetic.main.layout_punchcard.view.*
 import java.util.*
 
@@ -24,9 +25,14 @@ class PunchCard @JvmOverloads constructor(
         defStyleAttr: Int = 0
 ) : CardView(context, attrs, defStyleAttr) {
 
+    val items = mutableListOf<Item>()
+
     fun setWordCountOfEveryday(counts: List<PunchCheckItem>) {
-        punchRecycleView.withItems(counts.map { PunchCheck(it.data as Calendar, it.state) })
-        ThreadPools.postOnUI {
+        val itemAdapter = punchRecycleView.adapter as ItemAdapter
+        itemAdapter.clear()
+        itemAdapter.addAll(counts.map { PunchCheck(it.data as Calendar, it.state) })
+        itemAdapter.notifyDataSetChanged()
+        ThreadPools.postOnUIDelayed(300) {
             punchRecycleView.smoothScrollToPosition(counts.size)
         }
 
@@ -54,6 +60,7 @@ class PunchCard @JvmOverloads constructor(
     init {
         LayoutInflater.from(context).inflate(R.layout.layout_punchcard, this)
         punchRecycleView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        punchRecycleView.withItems(items)
     }
 
     fun setTitle(title: String) {
