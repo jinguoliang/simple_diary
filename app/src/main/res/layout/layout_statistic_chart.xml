@@ -55,6 +55,7 @@
         android:id="@+id/statisticChat"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:paddingBottom="10dp"
         android:layout_below="@id/title" />
 </RelativeLayout>
 

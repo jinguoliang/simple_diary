@@ -37,7 +37,7 @@ class BarChart : FrameLayout {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         Bar.barWidth = (measuredWidth - paddingStart - paddingEnd) / 7
-        Bar.maxBarHeight = (measuredHeight - paddingTop - 2 * dimen(R.dimen.bar_item_value_textview_height))
+        Bar.maxBarHeight = (measuredHeight - paddingTop - paddingBottom - 2 * dimen(R.dimen.bar_item_value_textview_height))
     }
 
 
