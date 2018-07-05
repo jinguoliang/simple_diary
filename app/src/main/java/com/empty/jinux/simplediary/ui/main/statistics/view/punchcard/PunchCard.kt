@@ -59,7 +59,6 @@ class PunchCard @JvmOverloads constructor(
 
     init {
         LayoutInflater.from(context).inflate(R.layout.layout_punchcard, this)
-        punchRecycleView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         punchRecycleView.withItems(items)
     }
 
