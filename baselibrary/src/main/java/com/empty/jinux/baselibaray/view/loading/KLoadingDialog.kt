@@ -8,9 +8,9 @@ import com.empty.jinux.baselibaray.R
 import com.empty.jinux.baselibaray.thread.ThreadPools
 
 
-fun Context.doTaskWithLoadingDialog(msg: String, task: () -> Unit) {
+fun Context.doTaskWithLoadingDialog(msg: String, delay: Long = 1000, task: () -> Unit) {
     val d = ProgressDialog.show(this, "", msg)
-    ThreadPools.postOnUIDelayed(1000) {
+    ThreadPools.postOnUIDelayed(delay) {
         task.invoke()
         ThreadPools.postOnUI {
             d.dismiss()
