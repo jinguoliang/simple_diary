@@ -1,5 +1,7 @@
 package com.empty.jinux.simplediary.util
 
+import com.empty.jinux.baselibaray.utils.dayTime
+import com.empty.jinux.baselibaray.utils.weekStartTime
 import org.junit.Test
 
 import org.junit.Assert.*

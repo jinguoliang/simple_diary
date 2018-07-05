@@ -33,9 +33,7 @@ import android.view.*
 import android.widget.ImageView
 import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.baselibaray.thread.ThreadPools
-import com.empty.jinux.baselibaray.utils.hideInputMethod
-import com.empty.jinux.baselibaray.utils.layoutHeight
-import com.empty.jinux.baselibaray.utils.showInputMethod
+import com.empty.jinux.baselibaray.utils.*
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.config.ConfigManager
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
@@ -48,7 +46,6 @@ import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.KeyboardFra
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.StatusFragment
 import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
 import com.empty.jinux.simplediary.util.PermissionUtil
-import com.empty.jinux.simplediary.util.adjustParagraphSpace
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.activity_diary_detail.*
 import kotlinx.android.synthetic.main.fragment_taskdetail.*
@@ -155,18 +152,10 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     private fun setupEditView() {
-        mWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-
+        mWatcher = object : TextWatcherAdapter() {
             override fun afterTextChanged(s: Editable?) {
-                ThreadPools.postOnUI {
-                    mPresenter.onContentChange(s.toString())
-                    diaryContent.adjustParagraphSpace()
-                }
+                mPresenter.onContentChange(s.toString())
+                formatEditContent()
             }
         }
         diaryContent.addTextChangedListener(mWatcher)
@@ -370,8 +359,13 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         diaryContent.addTextChangedListener(mWatcher)
 //        diaryContent.setSelection(content.length)
         diaryContent.isCursorVisible = false
+
+        formatEditContent()
+    }
+
+    private fun formatEditContent() {
         ThreadPools.postOnUI {
-            diaryContent.adjustParagraphSpace()
+            diaryContent.adjustParagraphSpace(R.dimen.editor_paragraph_end)
         }
     }
 

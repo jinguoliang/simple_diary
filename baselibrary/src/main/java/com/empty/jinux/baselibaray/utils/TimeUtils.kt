@@ -1,7 +1,5 @@
-package com.empty.jinux.simplediary.util
+package com.empty.jinux.baselibaray.utils
 
-import com.empty.jinux.simplediary.data.Diary
-import com.empty.jinux.simplediary.data.DiaryContent
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -20,23 +18,6 @@ fun formatDateWithWeekday(t: Long): String {
     val formater = SimpleDateFormat("y/M/d EEEE", Locale.getDefault())
     return formater.format(t)
 }
-
-fun Diary.formatCreatedTime(): String {
-    val createdTime = meta.createdTime
-    if (createdTime == 0L) {
-        return ""
-    }
-    return formatTime(createdTime)
-}
-
-fun DiaryContent.formatDisplayTime(): String {
-    val displayTime = displayTime
-    if (displayTime == 0L) {
-        return ""
-    }
-    return formatDateWithWeekday(displayTime)
-}
-
 
 fun Long.weekStartTime(): Long {
     val calendar = Calendar.getInstance()

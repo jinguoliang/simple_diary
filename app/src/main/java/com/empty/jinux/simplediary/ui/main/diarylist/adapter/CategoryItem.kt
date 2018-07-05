@@ -16,10 +16,10 @@ import com.empty.jinux.baselibaray.view.recycleview.Item
 import com.empty.jinux.baselibaray.view.recycleview.ItemController
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
-import com.empty.jinux.simplediary.util.formatToDay
-import com.empty.jinux.simplediary.util.formatToTime
-import com.empty.jinux.simplediary.util.formatToWeekday
-import com.empty.jinux.simplediary.util.toCalendar
+import com.empty.jinux.baselibaray.utils.formatToDay
+import com.empty.jinux.baselibaray.utils.formatToTime
+import com.empty.jinux.baselibaray.utils.formatToWeekday
+import com.empty.jinux.baselibaray.utils.toCalendar
 import kotlinx.android.synthetic.main.layout_swipe_item_settings.view.*
 import kotlinx.android.synthetic.main.recycle_item_diary.view.*
 import kotlinx.android.synthetic.main.recycler_view_item_category.view.*

@@ -27,9 +27,8 @@ import com.empty.jinux.simplediary.location.LocationManager
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.MyEmotionIcons
-import com.empty.jinux.simplediary.util.formatDateWithWeekday
-import com.empty.jinux.simplediary.util.formatDisplayTime
-import com.empty.jinux.simplediary.util.wordsCount
+import com.empty.jinux.baselibaray.utils.formatDateWithWeekday
+import com.empty.jinux.baselibaray.utils.wordsCount
 import com.empty.jinux.simplediary.weather.WeatherManager
 import javax.inject.Inject
 

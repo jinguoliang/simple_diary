@@ -14,7 +14,7 @@ import com.empty.jinux.baselibaray.view.recycleview.Item
 import com.empty.jinux.baselibaray.view.recycleview.ItemController
 import com.empty.jinux.baselibaray.view.recycleview.withItems
 import com.empty.jinux.simplediary.R
-import com.empty.jinux.simplediary.util.formatToWeekday
+import com.empty.jinux.baselibaray.utils.formatToWeekday
 import kotlinx.android.synthetic.main.layout_punchcard.view.*
 import java.util.*
 

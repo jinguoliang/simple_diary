@@ -10,11 +10,9 @@ import android.widget.ArrayAdapter
 import com.empty.jinux.baselibaray.thread.ThreadPools
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
-import com.empty.jinux.simplediary.util.toCalendar
-import com.empty.jinux.simplediary.util.wordsCount
+import com.empty.jinux.baselibaray.utils.toCalendar
+import com.empty.jinux.baselibaray.utils.wordsCount
 import kotlinx.android.synthetic.main.layout_statistic_chart.view.*
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 import java.util.*
 
 class StatisticView

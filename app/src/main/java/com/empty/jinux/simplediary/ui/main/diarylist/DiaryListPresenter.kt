@@ -21,9 +21,9 @@ import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
 import com.empty.jinux.simplediary.di.Repository
 import com.empty.jinux.simplediary.ui.main.MainActivity
-import com.empty.jinux.simplediary.util.dayTime
-import com.empty.jinux.simplediary.util.today
-import com.empty.jinux.simplediary.util.wordsCount
+import com.empty.jinux.baselibaray.utils.dayTime
+import com.empty.jinux.baselibaray.utils.today
+import com.empty.jinux.baselibaray.utils.wordsCount
 import javax.inject.Inject
 
 

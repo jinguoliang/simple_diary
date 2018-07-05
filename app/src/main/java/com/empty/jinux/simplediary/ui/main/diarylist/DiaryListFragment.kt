@@ -40,8 +40,8 @@ import com.empty.jinux.simplediary.ui.main.MainActivity
 import com.empty.jinux.simplediary.ui.main.diarylist.adapter.CategoryEndItem
 import com.empty.jinux.simplediary.ui.main.diarylist.adapter.CategoryItem
 import com.empty.jinux.simplediary.ui.main.diarylist.adapter.DiaryItem
-import com.empty.jinux.simplediary.util.dayTime
-import com.empty.jinux.simplediary.util.weekStartTime
+import com.empty.jinux.baselibaray.utils.dayTime
+import com.empty.jinux.baselibaray.utils.weekStartTime
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_diary_list.*
 import org.jetbrains.anko.collections.forEachWithIndex
