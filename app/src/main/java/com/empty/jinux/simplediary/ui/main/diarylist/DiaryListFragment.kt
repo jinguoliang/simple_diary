@@ -27,9 +27,12 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.*
 import android.widget.SearchView
+import com.empty.jinux.baselibaray.utils.dayTime
 import com.empty.jinux.baselibaray.utils.hideInputMethod
+import com.empty.jinux.baselibaray.utils.weekStartTime
 import com.empty.jinux.baselibaray.view.recycleview.Item
 import com.empty.jinux.baselibaray.view.recycleview.ItemAdapter
+import com.empty.jinux.baselibaray.view.recycleview.SpaceItem
 import com.empty.jinux.baselibaray.view.recycleview.withItems
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
@@ -40,11 +43,10 @@ import com.empty.jinux.simplediary.ui.main.MainActivity
 import com.empty.jinux.simplediary.ui.main.diarylist.adapter.CategoryEndItem
 import com.empty.jinux.simplediary.ui.main.diarylist.adapter.CategoryItem
 import com.empty.jinux.simplediary.ui.main.diarylist.adapter.DiaryItem
-import com.empty.jinux.baselibaray.utils.dayTime
-import com.empty.jinux.baselibaray.utils.weekStartTime
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_diary_list.*
 import org.jetbrains.anko.collections.forEachWithIndex
+import org.jetbrains.anko.dimen
 import org.jetbrains.anko.intentFor
 import javax.inject.Inject
 
@@ -274,6 +276,10 @@ private fun RecyclerView.refreshFromDiariesList(diaries: List<Diary>, itemListen
             items.add(CategoryEndItem())
         }
     }
+
+    val spaceHeight = dimen(R.dimen.diary_list_ending_space_size)
+    items.add(0, SpaceItem(spaceHeight / 2))
+    items.add(SpaceItem(spaceHeight))
 
     val itemAdapter = adapter as ItemAdapter
     itemAdapter.clear()
