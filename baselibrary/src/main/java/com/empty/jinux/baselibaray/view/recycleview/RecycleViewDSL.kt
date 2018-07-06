@@ -33,6 +33,12 @@ class ItemAdapter(val itemManager: ItemManagerAbstract) : RecyclerView.Adapter<R
             itemManager[position].controller.onBindViewHolder(holder, itemManager[position])
 
     override fun getItemViewType(position: Int) = ItemManager.getViewType(itemManager[position].controller)
+
+    fun replace(items: List<Item>): Unit {
+        clear()
+        addAll(items)
+        notifyDataSetChanged()
+    }
 }
 
 fun RecyclerView.withItems(items: List<Item>) {
@@ -40,6 +46,11 @@ fun RecyclerView.withItems(items: List<Item>) {
 }
 
 fun RecyclerView.withItems(init: MutableList<Item>.() -> Unit) = withItems(mutableListOf<Item>().apply(init))
+
+fun RecyclerView.replaceData(items: List<Item>) {
+    val adapter = adapter as ItemAdapter
+    adapter.replace(items)
+}
 
 interface ItemManagerAbstract : MutableList<Item> {
     var observer: RecyclerView.Adapter<RecyclerView.ViewHolder>?
