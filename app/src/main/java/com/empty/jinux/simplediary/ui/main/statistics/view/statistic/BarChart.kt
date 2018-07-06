@@ -13,10 +13,7 @@ import com.empty.jinux.baselibaray.thread.ThreadPools
 import com.empty.jinux.baselibaray.utils.inflate
 import com.empty.jinux.baselibaray.utils.layoutHeight
 import com.empty.jinux.baselibaray.utils.layoutWidth
-import com.empty.jinux.baselibaray.view.recycleview.Item
-import com.empty.jinux.baselibaray.view.recycleview.ItemAdapter
-import com.empty.jinux.baselibaray.view.recycleview.ItemController
-import com.empty.jinux.baselibaray.view.recycleview.withItems
+import com.empty.jinux.baselibaray.view.recycleview.*
 import com.empty.jinux.simplediary.R
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.recycler_view_bar_item.*
@@ -68,10 +65,7 @@ class BarChart : FrameLayout {
 
             data.maxBy { it.second }?.apply { Bar.maxYValue = second }
 
-            val itemAdapter = recyclerView.adapter as ItemAdapter
-            itemAdapter.clear()
-            itemAdapter.addAll(data.map { Bar(it) })
-            itemAdapter.notifyDataSetChanged()
+            recyclerView.replaceData(data.map { Bar(it) })
 
             ThreadPools.postOnUIDelayed(500) {
                 recyclerView.smoothScrollToPosition(data.size)
