@@ -55,6 +55,10 @@ android {
             signingConfig signingConfigs.config
         }
     }
+
+    androidExtensions {
+        experimental = true
+    }
 }
 
 dependencies {

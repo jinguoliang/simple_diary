@@ -8,10 +8,10 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.empty.jinux.baselibaray.thread.ThreadPools
-import com.empty.jinux.simplediary.R
-import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.baselibaray.utils.toCalendar
 import com.empty.jinux.baselibaray.utils.wordsCount
+import com.empty.jinux.simplediary.R
+import com.empty.jinux.simplediary.data.Diary
 import kotlinx.android.synthetic.main.layout_statistic_chart.view.*
 import java.util.*
 
@@ -21,13 +21,15 @@ constructor(context: Context,
             attrs: AttributeSet? = null,
             defAttr: Int = 0) : CardView(context, attrs, defAttr) {
 
-    val CALENDAR_FEILDS = listOf(Calendar.DAY_OF_MONTH,
-            Calendar.WEEK_OF_YEAR,
-            Calendar.MONTH,
-            Calendar.YEAR)
+    companion object {
+        val CALENDAR_FEILDS = listOf(Calendar.DAY_OF_MONTH,
+                Calendar.WEEK_OF_YEAR,
+                Calendar.MONTH,
+                Calendar.YEAR)
+    }
+
 
     private var currentXAxis: Int = 0
-
     private var currentYAxis: Int = 0
 
     init {
@@ -78,13 +80,13 @@ constructor(context: Context,
             }.toList()
 
             ThreadPools.postOnUI {
-                statisticChat.setXAxisValueFormater(mFormatter)
+                statisticChat.setXAxisValueFormator(mFormatter)
                 statisticChat.setData(entries)
             }
         }
     }
 
-    private val mFormatter = object : BarChart.Formater {
+    private val mFormatter = object : BarChart.Formator {
         override fun format(v: Long): String {
             val cal = v.toCalendar()
             return when (currentXAxis) {
@@ -98,10 +100,10 @@ constructor(context: Context,
     }
 
     private fun getYAxisData(value: List<Diary>): Float {
-        if (currentYAxis == 0) {
-            return value.fold(0, { s, c -> s + c.diaryContent.content.wordsCount() }).toFloat()
+        return if (currentYAxis == 0) {
+            value.fold(0) { s, c -> s + c.diaryContent.content.wordsCount() }.toFloat()
         } else {
-            return value.size.toFloat()
+            value.size.toFloat()
         }
     }
 }

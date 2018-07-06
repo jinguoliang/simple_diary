@@ -2,20 +2,20 @@ package com.empty.jinux.simplediary.ui.main.statistics.view.punchcard
 
 import android.content.Context
 import android.support.v7.widget.CardView
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.empty.jinux.baselibaray.thread.ThreadPools
+import com.empty.jinux.baselibaray.utils.formatToWeekday
 import com.empty.jinux.baselibaray.view.recycleview.Item
+import com.empty.jinux.baselibaray.view.recycleview.ItemAdapter
 import com.empty.jinux.baselibaray.view.recycleview.ItemController
 import com.empty.jinux.baselibaray.view.recycleview.withItems
 import com.empty.jinux.simplediary.R
-import com.empty.jinux.baselibaray.utils.formatToWeekday
-import com.empty.jinux.baselibaray.view.recycleview.ItemAdapter
+import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.layout_punchard_check_item.*
 import kotlinx.android.synthetic.main.layout_punchcard.view.*
 import java.util.*
 
@@ -25,7 +25,7 @@ class PunchCard @JvmOverloads constructor(
         defStyleAttr: Int = 0
 ) : CardView(context, attrs, defStyleAttr) {
 
-    val items = mutableListOf<Item>()
+    private val items = mutableListOf<Item>()
 
     fun setWordCountOfEveryday(counts: List<PunchCheckItem>) {
         val itemAdapter = punchRecycleView.adapter as ItemAdapter
@@ -74,34 +74,30 @@ private class PunchCheck(val data: Calendar,
         get() = Controller
 
     private companion object Controller : ItemController {
-            override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
-                return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.layout_punchard_check_item, parent, false))
-            }
-
-            override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: Item) {
-                holder as ViewHolder
-                item as PunchCheck
-                when (item.state) {
-                    PunchCheckState.STATE_CHECKED -> {
-                        holder.checked.visibility = View.VISIBLE
-                        holder.missed.visibility = View.INVISIBLE
-                    }
-                    PunchCheckState.STATE_MISSED -> {
-                        holder.checked.visibility = View.INVISIBLE
-                        holder.missed.visibility = View.VISIBLE
-                    }
-                    PunchCheckState.STATE_NEED_CHECKED -> {
-                        holder.checked.visibility = View.INVISIBLE
-                        holder.missed.visibility = View.INVISIBLE
-                    }
-                }
-                holder.weekName.text = item.data.timeInMillis.formatToWeekday()
-            }
+        override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+            return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.layout_punchard_check_item, parent, false))
         }
 
-    private class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val checked = view.findViewById<View>(R.id.stateChecked)!!
-        val missed = view.findViewById<View>(R.id.stateMissed)!!
-        val weekName = view.findViewById<TextView>(R.id.weekName)!!
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: Item) {
+            holder as ViewHolder
+            item as PunchCheck
+            when (item.state) {
+                PunchCheckState.STATE_CHECKED -> {
+                    holder.stateChecked.visibility = View.VISIBLE
+                    holder.stateMissed.visibility = View.INVISIBLE
+                }
+                PunchCheckState.STATE_MISSED -> {
+                    holder.stateChecked.visibility = View.INVISIBLE
+                    holder.stateMissed.visibility = View.VISIBLE
+                }
+                PunchCheckState.STATE_NEED_CHECKED -> {
+                    holder.stateChecked.visibility = View.INVISIBLE
+                    holder.stateMissed.visibility = View.INVISIBLE
+                }
+            }
+            holder.weekName.text = item.data.timeInMillis.formatToWeekday()
+        }
     }
+
+    private class ViewHolder(override val containerView: View?) : RecyclerView.ViewHolder(containerView), LayoutContainer
 }

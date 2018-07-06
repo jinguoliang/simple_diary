@@ -83,7 +83,6 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View, BackPressP
     }
 
     private fun showPunchCard(diaries: List<Diary>) {
-        // todo: may be we can do it better
         doAsync {
             val days = diaries
                     .filter { diary ->
