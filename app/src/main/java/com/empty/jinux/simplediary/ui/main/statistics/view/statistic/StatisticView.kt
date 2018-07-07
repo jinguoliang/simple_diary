@@ -90,10 +90,10 @@ constructor(context: Context,
         override fun format(v: Long): String {
             val cal = v.toCalendar()
             return when (currentXAxis) {
-                Calendar.YEAR -> "${cal.get(Calendar.YEAR)}年"
-                Calendar.MONTH -> "${cal.get(Calendar.MONTH)}月"
-                Calendar.WEEK_OF_YEAR -> "${cal.get(Calendar.WEEK_OF_YEAR)}周"
-                Calendar.DAY_OF_MONTH -> "${cal.get(Calendar.DAY_OF_MONTH)}日"
+                Calendar.YEAR -> context.getString(R.string.fmt_statistics_year, cal.get(Calendar.YEAR))
+                Calendar.MONTH -> context.getString(R.string.fmt_statistics_month, cal.get(Calendar.MONTH))
+                Calendar.WEEK_OF_YEAR -> context.getString(R.string.fmt_statistics_week, cal.get(Calendar.WEEK_OF_YEAR))
+                Calendar.DAY_OF_MONTH -> context.getString(R.string.fmt_statistics_day, cal.get(Calendar.DAY_OF_MONTH))
                 else -> ""
             }
         }

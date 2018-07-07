@@ -57,4 +57,8 @@
     <string name="pref_category_privacy">Privacy</string>
     <string name="app_slogan">Write the current and remamber the last</string>
     <string name="successfully_backup">Backup Successfully</string>
+    <string name="fmt_statistics_year">%1$d</string>
+    <string name="fmt_statistics_month">%1$d</string>
+    <string name="fmt_statistics_week">%1$d</string>
+    <string name="fmt_statistics_day">%1$d</string>
 </resources>

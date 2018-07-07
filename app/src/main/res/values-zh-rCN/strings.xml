@@ -58,4 +58,8 @@
     <string name="pref_category_privacy">隐私</string>
     <string name="app_slogan">记录当下，勿忘当年</string>
     <string name="successfully_backup">备份成功</string>
+    <string name="fmt_statistics_year">%1$d年</string>
+    <string name="fmt_statistics_month">%1$d月</string>
+    <string name="fmt_statistics_week">%1$d周</string>
+    <string name="fmt_statistics_day">%1$d日</string>
 </resources>
