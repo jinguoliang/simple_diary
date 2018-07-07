@@ -86,6 +86,8 @@ constructor(
         mDiaryDetailView.setLoadingIndicator(true)
         mDiariesRepository.getDiary(mDiaryId, object : DiariesDataSource.GetDiaryCallback {
             override fun onDiaryLoaded(diary: Diary) {
+                mLoadFinished = true
+
                 // The view may not be able to handle UI updates anymore
                 if (!mDiaryDetailView.isActive) {
                     return
@@ -96,7 +98,6 @@ constructor(
                 currentDiaryContent.weatherInfo = diary.diaryContent.weatherInfo
                 currentDairyMeta = diary.meta
                 showDiary()
-                mLoadFinished = true
             }
 
             override fun onDataNotAvailable() {
