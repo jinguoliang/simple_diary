@@ -29,7 +29,7 @@ class BackupManager
             if (local.tryLogin()) {
                 val outFileName = "${if (BuildConfig.DEBUG) "debug_" else ""}${System.currentTimeMillis().formatBackupDate()}"
                 local.performBackup(outFileName)
-                fragment.activity!!.toast("Backup Successfully")
+                fragment.activity!!.toast(R.string.successfully_backup)
             }
         }
     }
