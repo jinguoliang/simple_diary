@@ -18,7 +18,6 @@ package com.empty.jinux.simplediary.data.source.local
 
 import android.arch.persistence.room.Room
 import android.content.Context
-import android.database.sqlite.SQLiteDiskIOException
 import android.util.Log
 import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.simplediary.data.*
@@ -92,9 +91,7 @@ constructor(val context: Context) : DiariesDataSource {
     override fun save(diary: Diary, callback: DiariesDataSource.OnCallback<Long>) {
         doAsync {
             val id = diaryDao.insertOne(mapDiaryFromDataSourceToRoom(diary))
-            uiThread {
-                callback.onResult(id)
-            }
+            callback.onResult(id)
         }
     }
 

@@ -30,6 +30,7 @@ import com.empty.jinux.simplediary.ui.diarydetail.fragment.MyEmotionIcons
 import com.empty.jinux.baselibaray.utils.formatDateWithWeekday
 import com.empty.jinux.baselibaray.utils.wordsCount
 import com.empty.jinux.simplediary.weather.WeatherManager
+import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
 
 /**
@@ -91,6 +92,8 @@ constructor(
         mDiaryDetailView.setLoadingIndicator(true)
         mDiariesRepository.getDiary(mDiaryId, object : DiariesDataSource.GetDiaryCallback {
             override fun onDiaryLoaded(diary: Diary) {
+                mLoadFinished = true
+
                 // The view may not be able to handle UI updates anymore
                 if (!mDiaryDetailView.isActive) {
                     return
@@ -101,7 +104,6 @@ constructor(
                 currentDiaryContent.weatherInfo = diary.diaryContent.weatherInfo
                 currentDairyMeta = diary.meta
                 showDiary()
-                mLoadFinished = true
             }
 
             override fun onDataNotAvailable() {
@@ -135,11 +137,15 @@ constructor(
                 currentDiaryContent,
                 currentDairyMeta
         )
+
+        val countDownLatch = CountDownLatch(1)
         mDiariesRepository.save(newDiary, object : DiariesDataSource.OnCallback<Long> {
             override fun onResult(result: Long) {
                 mDiaryId = result
+                countDownLatch.countDown()
             }
         })
+        countDownLatch.await()
         mDiaryDetailView.showDiarySaved()
     }
 

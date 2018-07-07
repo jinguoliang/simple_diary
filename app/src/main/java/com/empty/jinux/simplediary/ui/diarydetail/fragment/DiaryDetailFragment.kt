@@ -366,6 +366,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     private fun formatEditContent() {
         ThreadPools.postOnUI {
             diaryContent.adjustParagraphSpace(R.dimen.editor_paragraph_end)
+	    diaryContent.adjustCursorHeightNoException()
         }
     }
 
