@@ -24,6 +24,7 @@ import android.view.ViewGroup
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.STREAK_MIN_WORDS_COUNTS
 import com.empty.jinux.simplediary.data.Diary
+import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.main.BackPressPrecessor
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_statistics.*
@@ -37,7 +38,7 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View, BackPressP
 
     @Inject
     internal
-    lateinit var mPresenter: StatisticsPresenter
+    lateinit var mPresenter: StatisticsContract.Presenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_statistics, container, false)
