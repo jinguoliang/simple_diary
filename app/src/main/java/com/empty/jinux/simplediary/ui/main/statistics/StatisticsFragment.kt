@@ -40,6 +40,9 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View, BackPressP
     internal
     lateinit var mPresenter: StatisticsContract.Presenter
 
+    @Inject
+    lateinit var mReporter: Reporter
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_statistics, container, false)
     }
@@ -49,6 +52,7 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View, BackPressP
         super.onActivityCreated(savedInstanceState)
 
         activity?.findViewById<FloatingActionButton>(R.id.fab_add_diary)?.visibility = View.INVISIBLE
+        statistics.mReporter = mReporter
     }
 
     override fun onResume() {

@@ -88,7 +88,7 @@ class SettingsFragment : DaggerPreferenceFragment(),
         }
 
         onPreferenceClick(R.string.pref_restore_from_local) {
-            onRestorFromLocalClick()
+            onRestoreFromLocalClick()
         }
 
 //        onPreferenceClick(R.string.pref_back_to_google_driver) {
@@ -119,10 +119,12 @@ class SettingsFragment : DaggerPreferenceFragment(),
     private fun needConfirmWithInputPassword() = !mIsConfirmEnableLock
 
     private fun onBackupToLocalClick() {
+        mReporter.reportClick("backup_to_local")
         mBackupManager.performLocalBackup()
     }
 
-    private fun onRestorFromLocalClick() {
+    private fun onRestoreFromLocalClick() {
+        mReporter.reportClick("restore_from_local")
         mBackupManager.performLocalRestore()
     }
 

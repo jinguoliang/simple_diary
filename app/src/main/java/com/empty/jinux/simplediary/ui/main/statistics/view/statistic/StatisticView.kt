@@ -12,6 +12,7 @@ import com.empty.jinux.baselibaray.utils.toCalendar
 import com.empty.jinux.baselibaray.utils.wordsCount
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
+import com.empty.jinux.simplediary.report.Reporter
 import kotlinx.android.synthetic.main.layout_statistic_chart.view.*
 import java.util.*
 
@@ -22,10 +23,15 @@ constructor(context: Context,
             defAttr: Int = 0) : CardView(context, attrs, defAttr) {
 
     companion object {
-        val CALENDAR_FEILDS = listOf(Calendar.DAY_OF_MONTH,
+        val CALENDAR_FIELDS = listOf(Calendar.DAY_OF_MONTH,
                 Calendar.WEEK_OF_YEAR,
                 Calendar.MONTH,
                 Calendar.YEAR)
+        val CALENDAR_FIELD_NAMES = listOf("day_of_month",
+                "week_of_year",
+                "month",
+                "year")
+        val YAXIAS_NAMES = listOf("words", "articles")
     }
 
 
@@ -46,6 +52,7 @@ constructor(context: Context,
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 currentYAxis = position
+                mReporter.reportClick("Statistics_YAxis", YAXIAS_NAMES[position])
                 setDiaries(mDiaries)
             }
 
@@ -63,12 +70,14 @@ constructor(context: Context,
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                currentXAxis = CALENDAR_FEILDS[position]
+                currentXAxis = CALENDAR_FIELDS[position]
+                mReporter.reportClick("Statistics_XAxis", CALENDAR_FIELD_NAMES[position])
                 setDiaries(mDiaries)
             }
         }
 
     }
+
 
     private lateinit var mDiaries: List<Diary>
 
@@ -106,6 +115,8 @@ constructor(context: Context,
             value.size.toFloat()
         }
     }
+
+    lateinit var mReporter: Reporter
 }
 
 private fun Long.getBaseStart(currentXAxis: Int): Long {
