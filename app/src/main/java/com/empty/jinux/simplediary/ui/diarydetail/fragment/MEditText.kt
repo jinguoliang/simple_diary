@@ -29,11 +29,7 @@ class MEditText : EditText {
 
         // first time
         if (layout == null) return
-        try {
-            adjustCursorHeight(selStart)
-        } catch (e: Exception) {
-            loge("adjustCursorHeight failed: ${Log.getStackTraceString(e)}")
-        }
+        adjustCursorHeightNoException()
 
         ThreadPools.postOnUI {
             adjustScrollPosition(mScrollParent, -1)
@@ -61,6 +57,14 @@ class MEditText : EditText {
             scrollView.post {
                 scrollView.smoothScrollBy(0, scroll)
             }
+        }
+    }
+
+    fun adjustCursorHeightNoException() {
+        try {
+            adjustCursorHeight(selectionEnd)
+        } catch (e: Exception) {
+            loge("adjustCursorHeight failed: ${Log.getStackTraceString(e)}")
         }
     }
 

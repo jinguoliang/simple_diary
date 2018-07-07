@@ -18,6 +18,7 @@ package com.empty.jinux.simplediary.ui.diarydetail.presenter
 
 import android.text.TextUtils
 import com.empty.jinux.baselibaray.log.logi
+import com.empty.jinux.baselibaray.thread.ThreadPools
 import com.empty.jinux.simplediary.data.*
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
 import com.empty.jinux.simplediary.di.Repository
@@ -25,11 +26,11 @@ import com.empty.jinux.simplediary.location.LocationManager
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.MyEmotionIcons
-import com.empty.jinux.baselibaray.thread.ThreadPools
 import com.empty.jinux.simplediary.util.formatDateWithWeekday
 import com.empty.jinux.simplediary.util.formatDisplayTime
 import com.empty.jinux.simplediary.util.wordsCount
 import com.empty.jinux.simplediary.weather.WeatherManager
+import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
 
 /**
@@ -86,6 +87,8 @@ constructor(
         mDiaryDetailView.setLoadingIndicator(true)
         mDiariesRepository.getDiary(mDiaryId, object : DiariesDataSource.GetDiaryCallback {
             override fun onDiaryLoaded(diary: Diary) {
+                mLoadFinished = true
+
                 // The view may not be able to handle UI updates anymore
                 if (!mDiaryDetailView.isActive) {
                     return
@@ -96,7 +99,6 @@ constructor(
                 currentDiaryContent.weatherInfo = diary.diaryContent.weatherInfo
                 currentDairyMeta = diary.meta
                 showDiary()
-                mLoadFinished = true
             }
 
             override fun onDataNotAvailable() {
@@ -130,11 +132,15 @@ constructor(
                 currentDiaryContent,
                 currentDairyMeta
         )
+
+        val countDownLatch = CountDownLatch(1)
         mDiariesRepository.save(newDiary, object : DiariesDataSource.OnCallback<Long> {
             override fun onResult(id: Long) {
                 mDiaryId = id
+                countDownLatch.countDown()
             }
         })
+        countDownLatch.await()
         mDiaryDetailView.showDiarySaved()
     }
 
@@ -203,7 +209,7 @@ constructor(
                     logi("current weatherInfo = $weather")
                     if (!mDiaryDetailView.isActive) return@getCurrentWeather
                     currentDiaryContent.weatherInfo = WeatherInfo(weather.description, weather.icon)
-                    ThreadPools.postOnUI{
+                    ThreadPools.postOnUI {
                         mDiaryDetailView.showWeather(weather.description, weather.icon)
                     }
                 }

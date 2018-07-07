@@ -158,6 +158,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
                 ThreadPools.postOnUI {
                     mPresenter.onContentChange(s.toString())
                     diaryContent.adjustParagraphSpace()
+                    diaryContent.adjustCursorHeightNoException()
                 }
             }
         }
