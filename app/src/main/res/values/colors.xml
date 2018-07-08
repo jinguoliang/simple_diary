@@ -12,7 +12,7 @@
     <color name="edit_tools_panel_bg">#f50048cd</color>
     <color name="transparent">#fa0048cd</color>
     <color name="black">#353535</color>
-    <color name="colorEditHighlight">#66000000</color>
+    <color name="colorEditHighlight">#b4c7c7c7</color>
     <drawable name="touchFeedback">#d7d3a0</drawable>
     <drawable name="item_normal">@color/paper_yellow</drawable>
 </resources>
