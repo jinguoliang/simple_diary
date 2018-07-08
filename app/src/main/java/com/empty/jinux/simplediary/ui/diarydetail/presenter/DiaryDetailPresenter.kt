@@ -79,6 +79,8 @@ constructor(
         }
         mDiaryDetailView.showEmotion(MyEmotionIcons.getEmotion(0).toLong())
         mDiaryDetailView.showDate(formatDateWithWeekday(System.currentTimeMillis()))
+
+        mLoadFinished = true
     }
 
     private var mLoadFinished = false
@@ -245,7 +247,7 @@ constructor(
 
     override fun stop() {
         mDiaryDetailView.hideInputMethod()
-        if (isNewDiary || mLoadFinished) {
+        if (mLoadFinished) {
             saveDiary()
         }
     }
