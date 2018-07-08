@@ -25,6 +25,7 @@ class LockHelper @Inject constructor() {
 
     fun onStop() {
         if (lockEnable) {
+        if (lockEnable && !mAppLock.isLock()) {
             mAppLock.notifyLock()
         }
     }
