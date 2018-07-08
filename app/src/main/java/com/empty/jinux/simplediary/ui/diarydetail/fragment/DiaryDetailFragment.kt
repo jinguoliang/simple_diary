@@ -82,9 +82,14 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     override val isActive: Boolean
         get() = isAdded
 
+    override fun onStart() {
+        super.onStart()
+        diaryContent.addTextChangedListener(mWatcher)
+    }
     override fun onPause() {
         super.onPause()
         keyboardHeightListener.close()
+        diaryContent.removeTextChangedListener(mWatcher)
         mPresenter.stop()
     }
 
