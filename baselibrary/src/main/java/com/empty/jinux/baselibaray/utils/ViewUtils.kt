@@ -53,3 +53,7 @@ fun View.hideInputMethod() {
 fun ViewGroup.inflate(@LayoutRes res: Int, attach: Boolean): View {
     return LayoutInflater.from(context).inflate(res, this, attach)
 }
+
+fun View.dpToPx(dp: Float) = context.dpToPx(dp)
+
+fun View.pxToDp(px: Int) = context.pxToDp(px)
