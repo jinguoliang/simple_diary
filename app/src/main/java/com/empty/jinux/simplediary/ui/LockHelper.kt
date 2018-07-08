@@ -1,6 +1,8 @@
 package com.empty.jinux.simplediary.ui
 
 import android.content.Context
+import com.empty.jinux.baselibaray.log.logd
+import com.empty.jinux.baselibaray.log.logi
 import com.empty.jinux.simplediary.applock.AppLockManager
 import com.empty.jinux.simplediary.config.ConfigManager
 import com.empty.jinux.simplediary.ui.lock.LockActivity
@@ -13,6 +15,8 @@ class LockHelper @Inject constructor() {
     private var lockEnable: Boolean = false
 
     fun onStart(context: Context) {
+        logi("check lock: ${mAppLock.isLock()}", "locker")
+
         lockEnable = config.get("pref_app_lock_enable", false)
         if (lockEnable && mAppLock.isLock()) {
             context.startActivity<LockActivity>()
@@ -24,7 +28,8 @@ class LockHelper @Inject constructor() {
     }
 
     fun onStop() {
-        if (lockEnable) {
+        logi("start to lock", "locker")
+
         if (lockEnable && !mAppLock.isLock()) {
             mAppLock.notifyLock()
         }
