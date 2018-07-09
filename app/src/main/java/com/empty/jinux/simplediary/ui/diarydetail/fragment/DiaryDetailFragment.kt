@@ -32,6 +32,7 @@ import android.text.TextWatcher
 import android.view.*
 import android.widget.ImageView
 import com.empty.jinux.baselibaray.log.loge
+import com.empty.jinux.baselibaray.log.logi
 import com.empty.jinux.baselibaray.thread.ThreadPools
 import com.empty.jinux.baselibaray.utils.*
 import com.empty.jinux.simplediary.R
@@ -86,6 +87,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         get() = isAdded
 
     override fun onResume() {
+        logi("detail fragment onResume", "detail")
         super.onResume()
 
         diaryContent.addTextChangedListener(mWatcher)
@@ -94,7 +96,9 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             keyboardHeightListener.start()
         }
     }
+
     override fun onPause() {
+        logi("detail fragment onPause", "detail")
         super.onPause()
         keyboardHeightListener.close()
         diaryContent.removeTextChangedListener(mWatcher)
@@ -375,8 +379,9 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     private fun formatEditContent() {
         ThreadPools.postOnUI {
+            logi("formatEditContent adjust paragraph", "detail")
             diaryContent.adjustParagraphSpace(R.dimen.editor_paragraph_end)
-	    diaryContent.adjustCursorHeightNoException()
+            diaryContent.adjustCursorHeightNoException()
         }
     }
 
@@ -471,7 +476,6 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             return false
         }
     }
-
 }
 
 abstract class MFragment : Fragment() {

@@ -17,8 +17,8 @@
 package com.empty.jinux.simplediary.ui.diarydetail
 
 import android.os.Bundle
+import com.empty.jinux.baselibaray.log.logi
 import com.empty.jinux.simplediary.R
-import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
 import com.empty.jinux.simplediary.ui.LockHelper
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.DiaryDetailFragment
 import com.empty.jinux.simplediary.util.ActivityUtils
@@ -64,12 +64,15 @@ class DiaryDetailActivity : DaggerAppCompatActivity() {
     }
 
     override fun onStart() {
+        logi("activity onStart", "detail")
         super.onStart()
         mLockHelper.onStart(this)
 
     }
 
     override fun onStop() {
+        logi("activity onStop", "detail")
+
         super.onStop()
         mLockHelper.onStop()
     }
