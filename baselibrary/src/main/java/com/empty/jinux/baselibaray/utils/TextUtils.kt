@@ -26,9 +26,9 @@ fun CharSequence.findNewLines(): List<Int> {
     return positions
 }
 
-class ParagraphEndLineSpan(val context: Context, @DimenRes private val paragraphEndSpace: Int) : MetricAffectingSpan() {
+class ParagraphEndLineSpan(val context: Context, private val paragraphEndSpace: Int) : MetricAffectingSpan() {
     override fun updateMeasureState(tp: TextPaint) {
-        tp.baselineShift = context.dimen(paragraphEndSpace)
+        tp.baselineShift = paragraphEndSpace
     }
 
     override fun updateDrawState(tp: TextPaint) {

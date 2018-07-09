@@ -29,6 +29,7 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.content.res.ResourcesCompat
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import com.empty.jinux.baselibaray.log.loge
@@ -41,6 +42,7 @@ import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
 import com.empty.jinux.simplediary.data.LocationInfo
 import com.empty.jinux.simplediary.intent.shareContentIntent
 import com.empty.jinux.simplediary.report.Reporter
+import com.empty.jinux.simplediary.sEditFontSize
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivity
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.KeyboardFragment
@@ -126,8 +128,6 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     lateinit var keyboardHeightListener: KeyboardHeightProvider
 
-    private var mShowedGoodView = false
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -192,6 +192,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         }
 
         diaryContent.mScrollParent = scrollContainer
+        diaryContent.textSize = sEditFontSize
     }
 
     private fun onInputMedhodHided() {
@@ -226,7 +227,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         showToolArea()
 
         ThreadPools.postOnUI {
-            diaryContent.adjustScrollPosition(scrollContainer, editTabContainer.top - context!!.dimen(R.dimen.detail_diary_editor_bottom))
+            diaryContent.adjustScrollPosition(scrollContainer, editTabContainer.top - context!!.dpToPx(sEditFontSize / 2) - diaryContent.paddingTop)
         }
     }
 
@@ -378,9 +379,10 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     private fun formatEditContent() {
+        loge(Log.getStackTraceString(RuntimeException()))
         ThreadPools.postOnUI {
             logi("formatEditContent adjust paragraph", "detail")
-            diaryContent.adjustParagraphSpace(R.dimen.editor_paragraph_end)
+            diaryContent.adjustParagraphSpace(diaryContent.dpToPx(sEditFontSize / 2))
             diaryContent.adjustCursorHeightNoException()
         }
     }

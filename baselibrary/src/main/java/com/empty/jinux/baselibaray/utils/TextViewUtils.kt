@@ -11,7 +11,7 @@ fun TextView.getLineForCursor(): Int {
     return layout.getLineForOffset(selectionEnd)
 }
 
-fun EditText.adjustParagraphSpace(@DimenRes paragraphEndSpace: Int) {
+fun EditText.adjustParagraphSpace(paragraphEndSpace: Int) {
     val s = text
     text.getSpans(0, text.length, ParagraphEndLineSpan::class.java).forEach {
         text.removeSpan(it)
@@ -23,7 +23,7 @@ fun EditText.adjustParagraphSpace(@DimenRes paragraphEndSpace: Int) {
     }
 }
 
-private fun EditText.addParagraphEndSpan(pos: Int, @DimenRes paragraphEndSpace: Int) {
+private fun EditText.addParagraphEndSpan(pos: Int, paragraphEndSpace: Int) {
     if (layout == null) return
 
     val lineStart = layout.getLineStart(layout.getLineForOffset(pos))

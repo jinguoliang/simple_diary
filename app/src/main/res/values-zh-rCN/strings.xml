@@ -62,4 +62,7 @@
     <string name="fmt_statistics_month">%1$d月</string>
     <string name="fmt_statistics_week">%1$d周</string>
     <string name="fmt_statistics_day">%1$d日</string>
+    <string name="pref_category_appearance">外观</string>
+    <string name="pref_default_font_size_title">字体大小</string>
+    <string name="pref_default_font_size_summ">设置默认日记字体大小</string>
 </resources>

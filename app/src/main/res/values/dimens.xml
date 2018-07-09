@@ -30,7 +30,6 @@
     <dimen name="card_view_title_text_size">25sp</dimen>
     <dimen name="card_view_button_text_size">15sp</dimen>
     <dimen name="edit_status_icon_size">50dp</dimen>
-    <dimen name="editor_paragraph_end">16dp</dimen>
     <dimen name="diaries_list_recycle_view_margin_horizontal">10dp</dimen>
     <dimen name="radio_group_selected_circle_size">35dp</dimen>
     <dimen name="statusbar_height">26dp</dimen>
