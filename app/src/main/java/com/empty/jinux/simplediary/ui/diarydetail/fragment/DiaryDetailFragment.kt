@@ -85,9 +85,14 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     override val isActive: Boolean
         get() = isAdded
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
+
         diaryContent.addTextChangedListener(mWatcher)
+
+        ThreadPools.postOnUI {
+            keyboardHeightListener.start()
+        }
     }
     override fun onPause() {
         super.onPause()
@@ -184,14 +189,6 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         }
 
         diaryContent.mScrollParent = scrollContainer
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        ThreadPools.postOnUI {
-            keyboardHeightListener.start()
-        }
     }
 
     private fun onInputMedhodHided() {
