@@ -177,7 +177,6 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
                 formatEditContent()
             }
         }
-        diaryContent.addTextChangedListener(mWatcher)
         diaryContent.setOnTouchListener { _, event ->
             when (event.actionMasked) {
                 MotionEvent.ACTION_UP -> {
