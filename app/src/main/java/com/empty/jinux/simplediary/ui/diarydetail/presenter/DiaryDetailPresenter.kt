@@ -16,6 +16,7 @@
 
 package com.empty.jinux.simplediary.ui.diarydetail.presenter
 
+import android.os.Bundle
 import android.text.TextUtils
 import com.empty.jinux.baselibaray.log.logi
 import com.empty.jinux.baselibaray.thread.ThreadPools
@@ -29,6 +30,7 @@ import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.MyEmotionIcons
 import com.empty.jinux.baselibaray.utils.formatDateWithWeekday
 import com.empty.jinux.baselibaray.utils.wordsCount
+import com.empty.jinux.simplediary.ui.diarydetail.fragment.DiaryDetailFragment
 import com.empty.jinux.simplediary.weather.WeatherManager
 import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
@@ -284,6 +286,10 @@ constructor(
 
     fun shareContent() {
         mDiaryDetailView.shareContent(currentDiaryContent.content)
+    }
+
+    fun onSaveInstanceState(outState: Bundle) {
+        outState.putLong(DiaryDetailFragment.KEY_DIARY_ID, mDiaryId)
     }
 
 

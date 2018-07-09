@@ -96,6 +96,11 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         mPresenter.stop()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        mPresenter.onSaveInstanceState(outState)
+        super.onSaveInstanceState(outState)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         if (mKeyboardHeightCached > 0) {
@@ -123,6 +128,10 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         setupContainer()
         initEditToolbar()
         setupKeyboardHeightListener()
+
+        savedInstanceState?.getLong(KEY_DIARY_ID)?.apply {
+            mPresenter.setDiaryId(this)
+        }
 
         mPresenter.start()
     }
@@ -406,6 +415,8 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         private const val TAB_KEYBOARD_POS = 0
 
         private const val CONFIG_KEY_KEYBOARD_HEIGHT = "key_keyboard_height"
+
+        const val KEY_DIARY_ID = "diaryId"
 
 
         fun newInstance(arguments: Bundle): DiaryDetailFragment {
