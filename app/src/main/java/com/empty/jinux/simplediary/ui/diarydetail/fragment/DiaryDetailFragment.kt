@@ -32,23 +32,23 @@ import android.text.TextWatcher
 import android.view.*
 import android.widget.ImageView
 import com.empty.jinux.baselibaray.log.loge
+import com.empty.jinux.baselibaray.log.logi
 import com.empty.jinux.baselibaray.thread.ThreadPools
-import com.empty.jinux.baselibaray.utils.hideInputMethod
-import com.empty.jinux.baselibaray.utils.layoutHeight
-import com.empty.jinux.baselibaray.utils.showInputMethod
+import com.empty.jinux.baselibaray.utils.*
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.config.ConfigManager
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
 import com.empty.jinux.simplediary.data.LocationInfo
 import com.empty.jinux.simplediary.intent.shareContentIntent
 import com.empty.jinux.simplediary.report.Reporter
+import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivity
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.KeyboardFragment
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.StatusFragment
 import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
 import com.empty.jinux.simplediary.util.PermissionUtil
-import com.empty.jinux.simplediary.util.adjustParagraphSpace
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.activity_diary_detail.*
 import kotlinx.android.synthetic.main.fragment_taskdetail.*
 import kotlinx.android.synthetic.main.layout_diary_detail_edit_tool.*
 import org.jetbrains.anko.dimen
@@ -75,22 +75,39 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
 
-        val taskId = arguments?.getLong(ARGUMENT_TASK_ID, INVALID_DIARY_ID) ?: INVALID_DIARY_ID
+        val wordCountToday = arguments?.getInt(DiaryDetailActivity.EXTRA_TODAY_WORD_COUNT, 0)
+                ?: 0
+        val taskId = arguments?.getLong(DiaryDetailActivity.EXTRA_DIARY_ID, INVALID_DIARY_ID)
+                ?: INVALID_DIARY_ID
         mPresenter.setDiaryId(taskId)
+        mPresenter.setWordCountToday(wordCountToday)
     }
 
     override val isActive: Boolean
         get() = isAdded
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        logi("detail fragment onResume", "detail")
+        super.onResume()
+
         diaryContent.addTextChangedListener(mWatcher)
+
+        ThreadPools.postOnUI {
+            keyboardHeightListener.start()
+        }
     }
+
     override fun onPause() {
+        logi("detail fragment onPause", "detail")
         super.onPause()
         keyboardHeightListener.close()
         diaryContent.removeTextChangedListener(mWatcher)
         mPresenter.stop()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        mPresenter.onSaveInstanceState(outState)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onDestroy() {
@@ -109,6 +126,8 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     lateinit var keyboardHeightListener: KeyboardHeightProvider
 
+    private var mShowedGoodView = false
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -118,6 +137,10 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         setupContainer()
         initEditToolbar()
         setupKeyboardHeightListener()
+
+        savedInstanceState?.getLong(KEY_DIARY_ID)?.apply {
+            mPresenter.setDiaryId(this)
+        }
 
         mPresenter.start()
     }
@@ -132,7 +155,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
                 val inputMethodShowed = height != 0
                 if (inputMethodShowed) {
-                    onInputMedhodShowed(height)
+                    onInputMethodShowed(height)
                 } else {
                     onInputMedhodHided()
                 }
@@ -152,22 +175,12 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     private fun setupEditView() {
-        mWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-
+        mWatcher = object : TextWatcherAdapter() {
             override fun afterTextChanged(s: Editable?) {
-                ThreadPools.postOnUI {
-                    mPresenter.onContentChange(s.toString())
-                    diaryContent.adjustParagraphSpace()
-                    diaryContent.adjustCursorHeightNoException()
-                }
+                mPresenter.onContentChange(s.toString())
+                formatEditContent()
             }
         }
-        diaryContent.addTextChangedListener(mWatcher)
         diaryContent.setOnTouchListener { _, event ->
             when (event.actionMasked) {
                 MotionEvent.ACTION_UP -> {
@@ -177,15 +190,8 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             }
             false
         }
+
         diaryContent.mScrollParent = scrollContainer
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        ThreadPools.postOnUI {
-            keyboardHeightListener.start()
-        }
     }
 
     private fun onInputMedhodHided() {
@@ -194,13 +200,27 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         }
     }
 
+    override fun showGoodView(): Boolean {
+        goodView.visibility = View.VISIBLE
+        return true
+    }
+
+    override fun setTodayGood(show: Boolean) {
+        val actionbarCheck = (context as Activity).action_check
+        actionbarCheck.visibility = if (show) View.VISIBLE else View.INVISIBLE
+        if (!show) {
+            goodView.visibility = View.GONE
+        }
+    }
+
     var mKeyboardHeightCached = 0
 
-    private fun onInputMedhodShowed(height: Int) {
+    private fun onInputMethodShowed(height: Int) {
         mKeyboardHeightCached = height
 
         diaryContent.isCursorVisible = true
 
+        setGoodViewHeight(height)
         setToolAreaHeight(height)
         toolArea.setCurrentItem(0, false)
         showToolArea()
@@ -208,6 +228,10 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         ThreadPools.postOnUI {
             diaryContent.adjustScrollPosition(scrollContainer, editTabContainer.top - context!!.dimen(R.dimen.detail_diary_editor_bottom))
         }
+    }
+
+    private fun setGoodViewHeight(keyboardHeight: Int) {
+        goodView.layoutHeight = fragmentContainer.height - keyboardHeight
     }
 
     private fun setToolAreaHeight(height: Int) {
@@ -349,8 +373,15 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         diaryContent.addTextChangedListener(mWatcher)
 //        diaryContent.setSelection(content.length)
         diaryContent.isCursorVisible = false
+
+        formatEditContent()
+    }
+
+    private fun formatEditContent() {
         ThreadPools.postOnUI {
-            diaryContent.adjustParagraphSpace()
+            logi("formatEditContent adjust paragraph", "detail")
+            diaryContent.adjustParagraphSpace(R.dimen.editor_paragraph_end)
+            diaryContent.adjustCursorHeightNoException()
         }
     }
 
@@ -380,18 +411,16 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
         private const val REQUEST_CODE_LOCATION_PERMISSION = 0x64
 
-        private const val ARGUMENT_TASK_ID = "TASK_ID"
-
         private const val REQUEST_EDIT_TASK = 1
 
         private const val TAB_KEYBOARD_POS = 0
 
         private const val CONFIG_KEY_KEYBOARD_HEIGHT = "key_keyboard_height"
 
+        const val KEY_DIARY_ID = "diaryId"
 
-        fun newInstance(taskId: Long): DiaryDetailFragment {
-            val arguments = Bundle()
-            arguments.putLong(ARGUMENT_TASK_ID, taskId)
+
+        fun newInstance(arguments: Bundle): DiaryDetailFragment {
             val fragment = DiaryDetailFragment()
             fragment.arguments = arguments
             return fragment
@@ -447,7 +476,6 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             return false
         }
     }
-
 }
 
 abstract class MFragment : Fragment() {

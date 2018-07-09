@@ -16,8 +16,10 @@
 
 package com.empty.jinux.simplediary.data
 
+import com.empty.jinux.baselibaray.utils.formatDateWithWeekday
+import com.empty.jinux.baselibaray.utils.formatTime
 import com.empty.jinux.simplediary.location.Location
-import com.empty.jinux.simplediary.util.getFirstLine
+import com.empty.jinux.baselibaray.utils.getFirstLine
 
 const val INVALID_DIARY_ID = -1L
 
@@ -51,3 +53,20 @@ data class DiaryContent(var title: String,
 data class Meta(val createdTime: Long,
                 var lastChangeTime: Long,
                 var deleted: Boolean = false)
+
+
+fun Diary.formatCreatedTime(): String {
+    val createdTime = meta.createdTime
+    if (createdTime == 0L) {
+        return ""
+    }
+    return formatTime(createdTime)
+}
+
+fun DiaryContent.formatDisplayTime(): String {
+    val displayTime = displayTime
+    if (displayTime == 0L) {
+        return ""
+    }
+    return formatDateWithWeekday(displayTime)
+}

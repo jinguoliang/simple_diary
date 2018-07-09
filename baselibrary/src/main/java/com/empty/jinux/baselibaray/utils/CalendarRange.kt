@@ -1,4 +1,4 @@
-package com.empty.jinux.simplediary.util
+package com.empty.jinux.baselibaray.utils
 
 import java.util.*
 

@@ -28,7 +28,7 @@
                 android:id="@+id/stateChecked"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:srcCompat="@drawable/ic_check_black_24dp"
+                app:srcCompat="@drawable/ic_check_red_24dp"
                 />
             <ImageView
                 android:id="@+id/stateMissed"

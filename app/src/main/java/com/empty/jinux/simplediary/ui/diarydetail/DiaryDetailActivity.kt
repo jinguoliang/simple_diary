@@ -17,8 +17,8 @@
 package com.empty.jinux.simplediary.ui.diarydetail
 
 import android.os.Bundle
+import com.empty.jinux.baselibaray.log.logi
 import com.empty.jinux.simplediary.R
-import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
 import com.empty.jinux.simplediary.ui.LockHelper
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.DiaryDetailFragment
 import com.empty.jinux.simplediary.util.ActivityUtils
@@ -40,34 +40,39 @@ class DiaryDetailActivity : DaggerAppCompatActivity() {
 
         setContentView(R.layout.activity_diary_detail)
 
-        // Set up the toolbar.
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
+        setupActionBar()
+        setupDetailFragment()
+    }
 
-        // Get the requested task id
-        val taskId = intent.getLongExtra(EXTRA_DIARY_ID, INVALID_DIARY_ID)
-
+    private fun setupDetailFragment() {
         val diaryDetailFragment = supportFragmentManager
                 .findFragmentById(R.id.contentFrame) as? DiaryDetailFragment
-
         if (diaryDetailFragment == null) {
             ActivityUtils.addFragmentToActivity(supportFragmentManager,
-                    DiaryDetailFragment.newInstance(taskId), R.id.contentFrame)
+                    DiaryDetailFragment.newInstance(intent.extras), R.id.contentFrame)
         } else {
+            diaryDetailFragment.arguments = intent.extras
             ActivityUtils.replaceFragment(supportFragmentManager,
                     diaryDetailFragment, R.id.contentFrame)
         }
+    }
 
+    private fun setupActionBar() {
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
     override fun onStart() {
+        logi("activity onStart", "detail")
         super.onStart()
         mLockHelper.onStart(this)
 
     }
 
     override fun onStop() {
+        logi("activity onStop", "detail")
+
         super.onStop()
         mLockHelper.onStop()
     }
@@ -87,6 +92,7 @@ class DiaryDetailActivity : DaggerAppCompatActivity() {
 
     companion object {
 
-        val EXTRA_DIARY_ID = "TASK_ID"
+        const val EXTRA_DIARY_ID = "TASK_ID"
+        const val EXTRA_TODAY_WORD_COUNT = "TODAY_WORD_COUNT"
     }
 }

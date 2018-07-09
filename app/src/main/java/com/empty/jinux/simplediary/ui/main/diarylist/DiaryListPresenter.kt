@@ -21,6 +21,9 @@ import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
 import com.empty.jinux.simplediary.di.Repository
 import com.empty.jinux.simplediary.ui.main.MainActivity
+import com.empty.jinux.baselibaray.utils.dayTime
+import com.empty.jinux.baselibaray.utils.today
+import com.empty.jinux.baselibaray.utils.wordsCount
 import javax.inject.Inject
 
 
@@ -130,15 +133,22 @@ constructor(@param:Repository private val mDiariesRepository: DiariesDataSource,
     }
 
     override fun addNewDiary() {
-        mDiariesView.showAddDiary()
+        mDiariesView.showAddDiary(wordCountToday())
     }
 
     override fun openDiaryDetails(diary: Diary) {
-        mDiariesView.showDiaryDetailsUI(diary.id)
+        mDiariesView.showDiaryDetailsUI(diary.id, wordCountToday())
+    }
+
+    private fun wordCountToday(): Int {
+        return mDiariesCached?.run {
+            filter { it.diaryContent.displayTime.dayTime() == today().timeInMillis }
+                    .fold(0) { s, d -> s + d.diaryContent.content.wordsCount() }
+        } ?: 0
     }
 
     override fun deleteDiary(diary: Diary) {
-        mDiariesRepository.deleteDiaryAsync(diary.id,  object: DiariesDataSource.OnCallback<Boolean> {
+        mDiariesRepository.deleteDiaryAsync(diary.id, object : DiariesDataSource.OnCallback<Boolean> {
             override fun onResult(result: Boolean) {
                 loadDiaries(true, true)
             }

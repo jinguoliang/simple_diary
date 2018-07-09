@@ -90,6 +90,7 @@ constructor(val context: Context) : DiariesDataSource {
 
     override fun save(diary: Diary, callback: DiariesDataSource.OnCallback<Long>) {
         doAsync {
+            loge("save diary", "notice")
             val id = diaryDao.insertOne(mapDiaryFromDataSourceToRoom(diary))
             callback.onResult(id)
         }

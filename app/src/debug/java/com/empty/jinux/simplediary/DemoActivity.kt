@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.text.*
 import android.text.style.*
 import com.empty.jinux.baselibaray.thread.ThreadPools
-import com.empty.jinux.simplediary.util.adjustParagraphSpace
+import com.empty.jinux.baselibaray.utils.adjustParagraphSpace
 import kotlinx.android.synthetic.main.activity_demo.*
 import org.jetbrains.anko.append
 
@@ -43,7 +43,7 @@ class DemoActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                mEditor.adjustParagraphSpace()
+                mEditor.adjustParagraphSpace(R.dimen.editor_paragraph_end)
             }
 
         })

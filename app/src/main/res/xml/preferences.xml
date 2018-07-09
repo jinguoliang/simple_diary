@@ -15,11 +15,13 @@
         <Preference
             android:key="@string/pref_back_to_local"
             android:singleLineTitle="true"
+            android:icon="@drawable/ic_local_save"
             android:title="@string/pref_backup_to_local_title"
             android:summary="@string/pref_back_to_local_summary"/>
         <Preference
             android:key="@string/pref_restore_from_local"
             android:singleLineTitle="true"
+            android:icon="@drawable/ic_local_restore"
             android:title="@string/pref_restore_from_local_title"
             android:summary="@string/pref_restore_from_local_summary"/>
     </PreferenceCategory>

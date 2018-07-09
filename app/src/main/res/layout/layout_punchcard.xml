@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <TextView
@@ -17,9 +18,13 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/punchRecycleView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="55dp"
         android:layout_marginTop="15dp"
-        android:paddingEnd="10dp"/>
+        android:orientation="horizontal"
+        android:layout_gravity="center_vertical"
+        android:paddingEnd="10dp"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+        app:reverseLayout="false" />
 
     <View
         android:layout_width="match_parent"
@@ -39,9 +44,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
-            tools:text="18"
             android:textColor="@android:color/white"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            tools:text="18" />
 
         <TextView
             android:id="@+id/longestPunch"
@@ -49,9 +54,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
             android:layout_marginStart="15dp"
-            tools:text="18"
             android:textColor="@android:color/white"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            tools:text="18" />
 
     </LinearLayout>
 

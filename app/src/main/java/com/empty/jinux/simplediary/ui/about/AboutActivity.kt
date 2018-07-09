@@ -13,6 +13,7 @@ import com.empty.jinux.baselibaray.view.recycleview.ItemController
 import com.empty.jinux.simplediary.BuildConfig
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.intent.buildViewIntent
+import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.LockHelper
 import org.jetbrains.anko.dimen
 import javax.inject.Inject
@@ -21,6 +22,9 @@ class AboutActivity : DaggerAppCompatAboutActivity() {
 
     @Inject
     lateinit var lockHelper: LockHelper
+
+    @Inject
+    lateinit var mReporter: Reporter
 
     override fun onStart() {
         super.onStart()

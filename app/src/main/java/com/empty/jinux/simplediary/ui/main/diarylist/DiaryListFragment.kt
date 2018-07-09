@@ -24,20 +24,30 @@ import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.RecyclerView
 import android.view.*
 import android.widget.SearchView
+import com.empty.jinux.baselibaray.utils.dayTime
 import com.empty.jinux.baselibaray.utils.hideInputMethod
+import com.empty.jinux.baselibaray.utils.weekStartTime
+import com.empty.jinux.baselibaray.view.recycleview.Item
+import com.empty.jinux.baselibaray.view.recycleview.ItemAdapter
+import com.empty.jinux.baselibaray.view.recycleview.SpaceItem
+import com.empty.jinux.baselibaray.view.recycleview.withItems
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivity
 import com.empty.jinux.simplediary.ui.main.BackPressPrecessor
 import com.empty.jinux.simplediary.ui.main.MainActivity
-import com.empty.jinux.simplediary.ui.main.diarylist.adapter.DiariesRecyclerViewWithCategoriesAdapter
+import com.empty.jinux.simplediary.ui.main.diarylist.adapter.CategoryEndItem
+import com.empty.jinux.simplediary.ui.main.diarylist.adapter.CategoryItem
+import com.empty.jinux.simplediary.ui.main.diarylist.adapter.DiaryItem
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_diary_list.*
+import org.jetbrains.anko.collections.forEachWithIndex
+import org.jetbrains.anko.dimen
 import org.jetbrains.anko.intentFor
-import java.util.*
 import javax.inject.Inject
 
 /**
@@ -62,23 +72,6 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View, BackPressPre
     @Inject
     internal lateinit var mReporter: Reporter
 
-    private lateinit var mDiariesAdapter: DiariesRecyclerViewWithCategoriesAdapter
-
-    /**
-     * Listener for clicks on diaries in the ListView.
-     */
-    private var mItemListener: DiariesRecyclerViewWithCategoriesAdapter.DiaryItemListener = object : DiariesRecyclerViewWithCategoriesAdapter.DiaryItemListener {
-        override fun onClick(diary: Diary) {
-            mPresenter.openDiaryDetails(diary)
-            mReporter.reportClick("open diary")
-        }
-
-        override fun onDeleteClick(diary: Diary) {
-            mPresenter.deleteDiary(diary)
-            mReporter.reportClick("delete diary")
-        }
-    }
-
     override val isActive: Boolean
         get() = isAdded
 
@@ -98,9 +91,10 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View, BackPressPre
         setupRefreshView()
     }
 
+    private val mDiariesItems = mutableListOf<Item>()
+
     private fun setupDiariesView() {
-        mDiariesAdapter = DiariesRecyclerViewWithCategoriesAdapter(ArrayList(0), mItemListener)
-        diaryRecyclerView.adapter = mDiariesAdapter
+        diaryRecyclerView.withItems(mDiariesItems)
     }
 
     private fun setupNoDiaryView() {
@@ -190,7 +184,17 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View, BackPressPre
     }
 
     override fun showDiaries(diaries: List<Diary>) {
-        mDiariesAdapter.replaceData(diaries)
+        diaryRecyclerView.refreshFromDiariesList(diaries, object : DiaryItem.OnItemListener {
+            override fun onItemClick(diary: Diary) {
+                mPresenter.openDiaryDetails(diary)
+                mReporter.reportClick("open diary")
+            }
+
+            override fun onDeleteClick(diary: Diary) {
+                mPresenter.deleteDiary(diary)
+                mReporter.reportClick("delete diary")
+            }
+        })
 
         diaryRecyclerView.visibility = View.VISIBLE
         noDiaries.visibility = View.GONE
@@ -217,14 +221,15 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View, BackPressPre
         noDiariesIcon.setImageDrawable(VectorDrawableCompat.create(resources, iconRes, null))
     }
 
-    override fun showAddDiary() {
-        startActivityForResult(context?.intentFor<DiaryDetailActivity>(),
+    override fun showAddDiary(todayWords: Int) {
+        startActivityForResult(context?.intentFor<DiaryDetailActivity>(DiaryDetailActivity.EXTRA_TODAY_WORD_COUNT to todayWords),
                 MainActivity.REQUEST_ADD_DIARY)
     }
 
-    override fun showDiaryDetailsUI(diaryId: Long) {
+    override fun showDiaryDetailsUI(diaryId: Long, todayWords: Int) {
         startActivity(context?.intentFor<DiaryDetailActivity>(
-                DiaryDetailActivity.EXTRA_DIARY_ID to diaryId))
+                DiaryDetailActivity.EXTRA_DIARY_ID to diaryId,
+                DiaryDetailActivity.EXTRA_TODAY_WORD_COUNT to todayWords))
     }
 
     override fun showLoadingDiariesError() {
@@ -246,4 +251,38 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View, BackPressPre
         }
     }
 
+}
+
+private fun RecyclerView.refreshFromDiariesList(diaries: List<Diary>, itemListener: DiaryItem.OnItemListener) {
+    val items = mutableListOf<Item>()
+
+    var preWeekStart = 0L
+    var preDay = 0L
+    diaries.forEachWithIndex { i, it ->
+        val createdTime = it.meta.createdTime
+        if (createdTime.weekStartTime() != preWeekStart) {
+            preWeekStart = createdTime.weekStartTime()
+            items.add(CategoryItem(preWeekStart))
+
+        }
+        val differentDay = createdTime.dayTime() != preDay
+        if (differentDay) {
+            preDay = createdTime.dayTime()
+        }
+        items.add(DiaryItem(it, differentDay, itemListener))
+
+        val nextDiaryWeekStart = if (i < diaries.size - 1) diaries[i + 1].meta.createdTime.weekStartTime() else -1
+        if (createdTime.weekStartTime() != nextDiaryWeekStart) {
+            items.add(CategoryEndItem())
+        }
+    }
+
+    val spaceHeight = dimen(R.dimen.diary_list_ending_space_size)
+    items.add(0, SpaceItem(spaceHeight / 2))
+    items.add(SpaceItem(spaceHeight))
+
+    val itemAdapter = adapter as ItemAdapter
+    itemAdapter.clear()
+    itemAdapter.addAll(items)
+    itemAdapter.notifyDataSetChanged()
 }

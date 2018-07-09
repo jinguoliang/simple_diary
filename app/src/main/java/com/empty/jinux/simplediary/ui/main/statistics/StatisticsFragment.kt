@@ -24,15 +24,10 @@ import android.view.ViewGroup
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.STREAK_MIN_WORDS_COUNTS
 import com.empty.jinux.simplediary.data.Diary
+import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.main.BackPressPrecessor
-import com.empty.jinux.simplediary.ui.main.statistics.view.punchcard.PunchCheckItem
-import com.empty.jinux.simplediary.ui.main.statistics.view.punchcard.PunchCheckState
-import com.empty.jinux.simplediary.util.*
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_statistics.*
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
-import java.util.*
 import javax.inject.Inject
 
 
@@ -43,7 +38,10 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View, BackPressP
 
     @Inject
     internal
-    lateinit var mPresenter: StatisticsPresenter
+    lateinit var mPresenter: StatisticsContract.Presenter
+
+    @Inject
+    lateinit var mReporter: Reporter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_statistics, container, false)
@@ -54,6 +52,7 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View, BackPressP
         super.onActivityCreated(savedInstanceState)
 
         activity?.findViewById<FloatingActionButton>(R.id.fab_add_diary)?.visibility = View.INVISIBLE
+        statistics.mReporter = mReporter
     }
 
     override fun onResume() {
@@ -83,18 +82,8 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View, BackPressP
     }
 
     private fun showPunchCard(diaries: List<Diary>) {
-        // todo: may be we can do it better
-        doAsync {
-            val days = diaries
-                    .filter { diary ->
-                        diary.day() in (today().apply { add(Calendar.DAY_OF_YEAR, -100) })..today()
-                    }.groupBy { it.day() }
-            val item = days.mapWithState()
-            uiThread {
-                punchCard.setWordCountOfEveryday(item)
-                punchCard.setTitle(resources.getString(R.string.streak_card_title_fmt, STREAK_MIN_WORDS_COUNTS))
-            }
-        }
+        punchCard.setTitle(resources.getString(R.string.streak_card_title_fmt, STREAK_MIN_WORDS_COUNTS))
+        punchCard.setWordCountOfEveryday(diaries)
     }
 
 
@@ -111,31 +100,4 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View, BackPressP
             return StatisticsFragment()
         }
     }
-}
-
-private fun Diary.day() =
-        diaryContent.displayTime.dayTime().toCalendar()
-
-private fun Map<Calendar, List<Diary>>.mapWithState(): List<PunchCheckItem> {
-    if (isEmpty()) {
-        return emptyList()
-    }
-
-    val first = keys.first()
-    return (first..today()).map { day ->
-        PunchCheckItem(day, if (checkSatisfyForPunch(day)) {
-            PunchCheckState.STATE_CHECKED
-        } else {
-            if (day == today()) {
-                PunchCheckState.STATE_NEED_CHECKED
-            } else {
-                PunchCheckState.STATE_MISSED
-            }
-        })
-    }
-}
-
-private fun Map<Calendar, List<Diary>>.checkSatisfyForPunch(day: Calendar): Boolean {
-    val wordsCount = get(day)?.fold(0) { s, c -> s + c.diaryContent.content.wordsCount() } ?: 0
-    return wordsCount > STREAK_MIN_WORDS_COUNTS
 }

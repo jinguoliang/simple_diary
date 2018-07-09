@@ -2,18 +2,21 @@ package com.empty.jinux.simplediary.applock
 
 import android.content.Context
 import android.os.CountDownTimer
-import android.text.TextUtils
+import com.empty.jinux.baselibaray.log.logi
 import com.empty.jinux.simplediary.config.ConfigManager
 
 class AppLockImplement(val context: Context, var config: ConfigManager) : AppLockManager {
     var locked: Boolean = true
 
-    val countDownTimer: CountDownTimer = object : CountDownTimer(5 * 1000, 5 * 1000 + 1) {
+    private val countDownTimer: CountDownTimer = object : CountDownTimer(5 * 1000, 1000) {
         override fun onFinish() {
+            logi("finish", "locker")
+
             locked = true
         }
 
         override fun onTick(millisUntilFinished: Long) {
+            logi("lock tick: $millisUntilFinished", "locker")
         }
 
     }

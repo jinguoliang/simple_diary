@@ -1,4 +1,40 @@
-package com.empty.jinux.simplediary.util
+package com.empty.jinux.baselibaray.utils
+
+import android.content.Context
+import android.graphics.Color
+import android.support.annotation.DimenRes
+import android.text.TextPaint
+import android.text.style.BackgroundColorSpan
+import android.text.style.MetricAffectingSpan
+import org.jetbrains.anko.dimen
+import java.util.regex.Pattern
+
+
+fun String.getFirstLine(limitWidth: Int = 20): String {
+    val firstLine = split("\n")[0]
+    return firstLine.substring(0 until Math.min(firstLine.length, limitWidth))
+}
+
+private val span = BackgroundColorSpan(Color.CYAN)
+
+fun CharSequence.findNewLines(): List<Int> {
+    val positions = mutableListOf<Int>()
+    val matcher = Pattern.compile("\n").matcher(this)
+    while (matcher.find()) {
+        positions.add(matcher.start())
+    }
+    return positions
+}
+
+class ParagraphEndLineSpan(val context: Context, @DimenRes private val paragraphEndSpace: Int) : MetricAffectingSpan() {
+    override fun updateMeasureState(tp: TextPaint) {
+        tp.baselineShift = context.dimen(paragraphEndSpace)
+    }
+
+    override fun updateDrawState(tp: TextPaint) {
+    }
+
+}
 
 fun String.wordsCount(): Int {
     var inWord = false

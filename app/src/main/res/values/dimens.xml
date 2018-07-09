@@ -37,4 +37,7 @@
     <dimen name="editor_tool_area_init_height">300dp</dimen>
     <dimen name="detail_diary_editor_bottom">15dp</dimen>
     <dimen name="about_page_slogin_padding_top">10dp</dimen>
+    <dimen name="good_view_check_size">40dp</dimen>
+    <dimen name="bar_item_value_textview_height">20dp</dimen>
+    <dimen name="diary_list_ending_space_size">15dp</dimen>
 </resources>

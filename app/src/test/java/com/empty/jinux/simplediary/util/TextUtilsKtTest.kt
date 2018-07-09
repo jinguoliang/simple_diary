@@ -1,5 +1,6 @@
 package com.empty.jinux.simplediary.util
 
+import com.empty.jinux.baselibaray.utils.getFirstLine
 import org.junit.Test
 
 import org.junit.Assert.*

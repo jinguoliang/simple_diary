@@ -16,6 +16,12 @@ var View.layoutHeight: Int
         layoutParams = layoutParams.apply { height = h }
     }
 
+var View.layoutWidth: Int
+    get() = layoutParams.width
+    set(h: Int) {
+        layoutParams = layoutParams.apply { width = h }
+    }
+
 var View.layoutBottom: Int
     get() = (layoutParams as FrameLayout.LayoutParams).bottomMargin
     set(h) {
@@ -47,3 +53,7 @@ fun View.hideInputMethod() {
 fun ViewGroup.inflate(@LayoutRes res: Int, attach: Boolean): View {
     return LayoutInflater.from(context).inflate(res, this, attach)
 }
+
+fun View.dpToPx(dp: Float) = context.dpToPx(dp)
+
+fun View.pxToDp(px: Int) = context.pxToDp(px)

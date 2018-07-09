@@ -59,6 +59,10 @@ interface DiaryDetailContract {
 
         fun shareContent(content: String)
 
+        fun showGoodView(): Boolean
+
+        fun setTodayGood(show: Boolean)
+
     }
 
     interface Presenter : BasePresenter {

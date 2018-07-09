@@ -33,9 +33,9 @@ interface DiaryListContract {
 
         fun showDiaries(diaries: List<Diary>)
 
-        fun showAddDiary()
+        fun showAddDiary(todayWords: Int)
 
-        fun showDiaryDetailsUI(diaryId: Long)
+        fun showDiaryDetailsUI(diaryId: Long, todayWords: Int)
 
         fun showLoadingDiariesError()
 

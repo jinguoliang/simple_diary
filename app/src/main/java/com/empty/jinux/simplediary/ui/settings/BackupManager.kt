@@ -1,6 +1,5 @@
 package com.empty.jinux.simplediary.ui.settings
 
-import android.os.Build
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import com.empty.jinux.baselibaray.view.loading.doTaskWithLoadingDialog
@@ -10,7 +9,7 @@ import com.empty.jinux.simplediary.data.backup.Backup
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
 import com.empty.jinux.simplediary.di.Local
 import com.empty.jinux.simplediary.di.Remote
-import com.empty.jinux.simplediary.util.formatBackupDate
+import com.empty.jinux.baselibaray.utils.formatBackupDate
 import org.jetbrains.anko.toast
 import java.io.File
 import javax.inject.Inject
