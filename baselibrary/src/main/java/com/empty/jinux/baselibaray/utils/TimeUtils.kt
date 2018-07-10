@@ -1,5 +1,6 @@
 package com.empty.jinux.baselibaray.utils
 
+import android.os.CountDownTimer
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -83,6 +84,30 @@ fun Long.toCalendar(): Calendar {
 operator fun Calendar.rangeTo(end: Calendar): CalendarRange {
     return CalendarRange(this, end)
 }
+
+abstract class CountDownTimer(millisInFuture: Long, countDownInterval: Long)
+    : CountDownTimer(millisInFuture, countDownInterval) {
+    companion object {
+        fun countDownToDo(
+                delay: Long,
+                interval: Long = delay,
+                onTick: ((Long) -> Unit)? = null,
+                onEnd: () -> Unit
+        ): CountDownTimer {
+            return object : CountDownTimer(delay, interval) {
+                override fun onFinish() {
+                    onEnd()
+                }
+
+                override fun onTick(millisUntilFinished: Long) {
+                    onTick?.invoke(millisUntilFinished)
+                }
+            }.also { it.start() }
+        }
+    }
+}
+
+
 
 
 
