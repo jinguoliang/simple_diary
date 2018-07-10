@@ -21,7 +21,7 @@ import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
 import com.empty.jinux.simplediary.di.Repository
 import com.empty.jinux.simplediary.ui.main.MainActivity
-import com.empty.jinux.baselibaray.utils.dayTime
+import com.empty.jinux.baselibaray.utils.dayStartTime
 import com.empty.jinux.baselibaray.utils.today
 import com.empty.jinux.baselibaray.utils.wordsCount
 import javax.inject.Inject
@@ -142,7 +142,7 @@ constructor(@param:Repository private val mDiariesRepository: DiariesDataSource,
 
     private fun wordCountToday(): Int {
         return mDiariesCached?.run {
-            filter { it.diaryContent.displayTime.dayTime() == today().timeInMillis }
+            filter { it.diaryContent.displayTime.dayStartTime() == today().timeInMillis }
                     .fold(0) { s, d -> s + d.diaryContent.content.wordsCount() }
         } ?: 0
     }

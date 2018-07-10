@@ -114,7 +114,7 @@ private class PunchCheck(val data: Calendar,
 }
 
 private fun Diary.day() =
-        diaryContent.displayTime.dayTime().toCalendar()
+        diaryContent.displayTime.dayStartTime().toCalendar()
 
 private fun Map<Calendar, List<Diary>>.mapWithState(): List<PunchCheck> {
     if (isEmpty()) {

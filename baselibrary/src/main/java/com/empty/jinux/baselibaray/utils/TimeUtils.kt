@@ -1,5 +1,6 @@
 package com.empty.jinux.baselibaray.utils
 
+import android.os.CountDownTimer
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -20,17 +21,15 @@ fun formatDateWithWeekday(t: Long): String {
 }
 
 fun Long.weekStartTime(): Long {
-    val calendar = Calendar.getInstance()
-    calendar.timeInMillis = this
+    val calendar = toCalendar()
     calendar.set(Calendar.DAY_OF_WEEK, calendar.firstDayOfWeek)
     calendar.setToDayStart()
 
     return calendar.timeInMillis
 }
 
-fun Long.dayTime(): Long {
-    val calendar = Calendar.getInstance()
-    calendar.timeInMillis = this
+fun Long.dayStartTime(): Long {
+    val calendar = toCalendar()
     calendar.setToDayStart()
 
     return calendar.timeInMillis
@@ -64,7 +63,7 @@ fun today(): Calendar {
     return Calendar.getInstance().setToDayStart()
 }
 
-private fun Calendar.setToDayStart(): Calendar {
+fun Calendar.setToDayStart(): Calendar {
     set(Calendar.HOUR_OF_DAY, 0)
     set(Calendar.MINUTE, 0)
     set(Calendar.SECOND, 0)
@@ -83,6 +82,30 @@ fun Long.toCalendar(): Calendar {
 operator fun Calendar.rangeTo(end: Calendar): CalendarRange {
     return CalendarRange(this, end)
 }
+
+abstract class CountDownTimer(millisInFuture: Long, countDownInterval: Long)
+    : CountDownTimer(millisInFuture, countDownInterval) {
+    companion object {
+        fun countDownToDo(
+                delay: Long,
+                interval: Long = delay,
+                onTick: ((Long) -> Unit)? = null,
+                onEnd: () -> Unit
+        ): CountDownTimer {
+            return object : CountDownTimer(delay, interval) {
+                override fun onFinish() {
+                    onEnd()
+                }
+
+                override fun onTick(millisUntilFinished: Long) {
+                    onTick?.invoke(millisUntilFinished)
+                }
+            }.also { it.start() }
+        }
+    }
+}
+
+
 
 
 
