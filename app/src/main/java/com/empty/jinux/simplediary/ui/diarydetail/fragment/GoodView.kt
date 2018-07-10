@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.core.animation.addListener
 import com.empty.jinux.baselibaray.log.loge
+import com.empty.jinux.baselibaray.utils.CountDownTimer
 import com.empty.jinux.simplediary.R
 import kotlinx.android.synthetic.main.activity_diary_detail.*
 import org.jetbrains.anko.dimen
@@ -79,6 +80,9 @@ class GoodView : FrameLayout {
         anim.addListener(onEnd = {
             loge("anim end")
             setOnClickListener {
+                check()
+            }
+            CountDownTimer.countDownToDo(2000) {
                 check()
             }
         })
