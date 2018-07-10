@@ -27,7 +27,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.*
 import android.widget.SearchView
-import com.empty.jinux.baselibaray.utils.dayTime
+import com.empty.jinux.baselibaray.utils.dayStartTime
 import com.empty.jinux.baselibaray.utils.hideInputMethod
 import com.empty.jinux.baselibaray.utils.weekStartTime
 import com.empty.jinux.baselibaray.view.recycleview.Item
@@ -269,9 +269,9 @@ private fun RecyclerView.refreshFromDiariesList(diaries: List<Diary>, itemListen
             items.add(CategoryItem(preWeekStart))
 
         }
-        val differentDay = createdTime.dayTime() != preDay
+        val differentDay = createdTime.dayStartTime() != preDay
         if (differentDay) {
-            preDay = createdTime.dayTime()
+            preDay = createdTime.dayStartTime()
         }
         items.add(DiaryItem(it, differentDay, itemListener))
 

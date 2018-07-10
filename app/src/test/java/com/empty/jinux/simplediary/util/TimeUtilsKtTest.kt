@@ -1,6 +1,6 @@
 package com.empty.jinux.simplediary.util
 
-import com.empty.jinux.baselibaray.utils.dayTime
+import com.empty.jinux.baselibaray.utils.dayStartTime
 import com.empty.jinux.baselibaray.utils.weekStartTime
 import org.junit.Test
 
@@ -34,7 +34,7 @@ TimeUtilsKtTest {
         val day = formater.parse("2018/04/07 00:00").time
         val expected = "2018/04/07 00:00"
 
-        assertEquals(expected, formater.format(day.dayTime()))
+        assertEquals(expected, formater.format(day.dayStartTime()))
     }
 
     @Test
@@ -43,6 +43,6 @@ TimeUtilsKtTest {
         val day = formater.parse("2018/04/07 23:59").time
         val expected = "2018/04/07 00:00"
 
-        assertEquals(expected, formater.format(day.dayTime()))
+        assertEquals(expected, formater.format(day.dayStartTime()))
     }
 }

@@ -20,8 +20,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import com.empty.jinux.baselibaray.log.logi
 import com.empty.jinux.baselibaray.thread.ThreadPools
-import com.empty.jinux.baselibaray.utils.formatDateWithWeekday
-import com.empty.jinux.baselibaray.utils.wordsCount
+import com.empty.jinux.baselibaray.utils.*
 import com.empty.jinux.simplediary.data.*
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
 import com.empty.jinux.simplediary.di.Repository
