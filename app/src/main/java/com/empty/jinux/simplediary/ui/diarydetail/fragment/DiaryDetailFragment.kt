@@ -405,6 +405,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     override fun showMissingDiary() {
         loge("no this task")
+        onBackPressed()
     }
 
     companion object {
