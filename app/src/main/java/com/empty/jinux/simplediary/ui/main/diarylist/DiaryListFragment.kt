@@ -126,6 +126,10 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View, BackPressPre
                 mPresenter.addNewDiary()
                 mReporter.reportClick("add diary")
             }
+            setOnLongClickListener {
+                diaryRecyclerView.smoothScrollToPosition(diaryRecyclerView.adapter.itemCount)
+                true
+            }
         }
     }
 
