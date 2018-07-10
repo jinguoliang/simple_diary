@@ -20,17 +20,16 @@ import android.os.Bundle
 import android.text.TextUtils
 import com.empty.jinux.baselibaray.log.logi
 import com.empty.jinux.baselibaray.thread.ThreadPools
-import com.empty.jinux.simplediary.STREAK_MIN_WORDS_COUNTS
+import com.empty.jinux.baselibaray.utils.formatDateWithWeekday
+import com.empty.jinux.baselibaray.utils.wordsCount
 import com.empty.jinux.simplediary.data.*
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
 import com.empty.jinux.simplediary.di.Repository
 import com.empty.jinux.simplediary.location.LocationManager
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
-import com.empty.jinux.simplediary.ui.diarydetail.fragment.MyEmotionIcons
-import com.empty.jinux.baselibaray.utils.formatDateWithWeekday
-import com.empty.jinux.baselibaray.utils.wordsCount
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.DiaryDetailFragment
+import com.empty.jinux.simplediary.ui.diarydetail.fragment.MyEmotionIcons
 import com.empty.jinux.simplediary.weather.WeatherManager
 import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
@@ -51,13 +50,10 @@ constructor(
     private var currentDiaryContent = DiaryContent("", "", -1, null, null)
     private var currentDairyMeta = Meta(-1, -1, false)
 
-    private var mWordCountToday: Int = 0
-    private var mWordCountOfOtherArticleToday: Int = 0
-
     @Inject
     lateinit var mReporter: Reporter
 
-    val isNewDiary: Boolean
+    private val isNewDiary: Boolean
         get() = mDiaryId == INVALID_DIARY_ID
 
     override fun start() {
@@ -73,6 +69,9 @@ constructor(
     }
 
     private fun initForNewDiary() {
+        mDiaryDetailView.showEmotion(MyEmotionIcons.getEmotion(0).toLong())
+        mDiaryDetailView.showDate(formatDateWithWeekday(System.currentTimeMillis()))
+
         if (mDiaryDetailView.hasLocationPermission()) {
             refreshLocation()
             refreshWeather()
@@ -82,11 +81,9 @@ constructor(
                 mDiaryDetailView.showInputMethod()
             }
         }
-        mDiaryDetailView.showEmotion(MyEmotionIcons.getEmotion(0).toLong())
-        mDiaryDetailView.showDate(formatDateWithWeekday(System.currentTimeMillis()))
 
-        computeWordCount(null)
         mLoadFinished = true
+        mShowGoodViewHelper.init(currentDiaryContent.content.wordsCount())
     }
 
     private var mLoadFinished = false
@@ -105,6 +102,7 @@ constructor(
                 mDiaryDetailView.setLoadingIndicator(false)
                 currentDiaryContent = diary.diaryContent
                 currentDiaryContent.weatherInfo = diary.diaryContent.weatherInfo
+                currentDiaryContent.locationInfo = diary.diaryContent.locationInfo
                 currentDairyMeta = diary.meta
                 showDiary()
             }
@@ -180,8 +178,7 @@ constructor(
         currentDiaryContent.apply {
             mDiaryDetailView.showDate(formatDisplayTime())
             mDiaryDetailView.showContent(content)
-
-            computeWordCount(content)
+            mShowGoodViewHelper.init(currentDiaryContent.content.wordsCount())
 
             weatherInfo?.apply {
                 mDiaryDetailView.showWeather(description, icon)
@@ -195,12 +192,6 @@ constructor(
                 mDiaryDetailView.showEmotion(id)
             }
         }
-    }
-
-    private fun computeWordCount(content: String?) {
-        mWordCountOfOtherArticleToday = mWordCountToday - (content?.length ?: 0)
-        mDiaryDetailView.setTodayGood(show = mWordCountToday > STREAK_MIN_WORDS_COUNTS)
-        preWordCountToday = mWordCountToday
     }
 
     override fun refreshLocation() {
@@ -237,17 +228,34 @@ constructor(
         mDiaryId = diaryId
     }
 
+    private lateinit var mShowGoodViewHelper: ShowGoodViewHelper
+
+    /**
+     * must called after init the presenter
+     */
     fun setWordCountToday(wordCountToday: Int) {
-        mWordCountToday = wordCountToday
+        mShowGoodViewHelper = ShowGoodViewHelper(wordCountToday, object : ShowGoodViewHelper.Listener {
+            override fun onShowGoodViewAnim() {
+                mDiaryDetailView.showGoodView()
+            }
+
+            override fun onShowGood() {
+                mDiaryDetailView.setTodayGood(true)
+            }
+
+            override fun onHideGood() {
+                mDiaryDetailView.setTodayGood(false)
+            }
+        })
     }
 
     override fun setEmotion(id: Long) {
         currentDiaryContent.emotionInfo = EmotionInfo(id)
     }
 
-    override fun setWeather(iconCode: String) {
+    override fun setWeather(icon: String) {
         currentDiaryContent.apply {
-            weatherInfo = WeatherInfo(weatherInfo?.description ?: "", iconCode)
+            weatherInfo = WeatherInfo(weatherInfo?.description ?: "", icon)
         }
     }
 
@@ -262,19 +270,7 @@ constructor(
     fun onContentChange(newContent: String) {
         currentDiaryContent.content = newContent
 
-        showOrHideGoodView(newContent.length)
-    }
-
-    private var preWordCountToday = 25
-
-    private fun showOrHideGoodView(length: Int) {
-        val currentWordCountToday = mWordCountOfOtherArticleToday + length
-        if (currentWordCountToday >= STREAK_MIN_WORDS_COUNTS && preWordCountToday < STREAK_MIN_WORDS_COUNTS) {
-            mDiaryDetailView.showGoodView()
-        } else if (currentWordCountToday < STREAK_MIN_WORDS_COUNTS && preWordCountToday >= STREAK_MIN_WORDS_COUNTS) {
-            mDiaryDetailView.setTodayGood(show = false)
-        }
-        preWordCountToday = currentWordCountToday
+        mShowGoodViewHelper.updateCurrentArticleWordCount(newContent.wordsCount())
     }
 
     override fun stop() {
