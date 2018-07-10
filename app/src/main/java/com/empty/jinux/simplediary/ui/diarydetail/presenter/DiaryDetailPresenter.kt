@@ -82,6 +82,7 @@ constructor(
         }
 
         mLoadFinished = true
+        mShowGoodViewHelper.isToday = true
         mShowGoodViewHelper.init(currentDiaryContent.content.wordsCount())
     }
 
@@ -177,6 +178,7 @@ constructor(
         currentDiaryContent.apply {
             mDiaryDetailView.showDate(formatDisplayTime())
             mDiaryDetailView.showContent(content)
+            mShowGoodViewHelper.isToday = displayTime.toCalendar().setToDayStart() == today()
             mShowGoodViewHelper.init(currentDiaryContent.content.wordsCount())
 
             weatherInfo?.apply {
