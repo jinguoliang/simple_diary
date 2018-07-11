@@ -20,7 +20,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
@@ -45,6 +44,7 @@ import com.empty.jinux.simplediary.intent.shareContentIntent
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivity
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
+import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.EditorStyle
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.KeyboardFragment
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.StatusFragment
 import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
@@ -130,6 +130,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     lateinit var keyboardHeightListener: KeyboardHeightProvider
 
     var editFontSize = 25f
+    lateinit var editStyle: EditorStyle
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -138,6 +139,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         setHasOptionsMenu(true)
 
         editFontSize = context!!.defaultSharedPreferences.getString(getString(R.string.pref_default_font_size), "25").toFloat()
+        editStyle = EditorStyle(context!!, context!!.defaultSharedPreferences.getString(getString(R.string.pref_default_editor_style), "heiyaoshi"))
 
 
         setupEditView()
@@ -200,7 +202,8 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
         diaryContent.mScrollParent = scrollContainer
         diaryContent.textSize = editFontSize
-        fragmentContainer.background = ColorDrawable()
+        fragmentContainer.background = editStyle.background
+        diaryContent.setTextColor(editStyle.fontColor)
     }
 
     private fun onInputMedhodHided() {

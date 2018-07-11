@@ -4,9 +4,17 @@
     <PreferenceCategory android:title="@string/pref_category_appearance">
 
         <EditTextPreference
-            android:defaultValue="false"
+            android:defaultValue="25f"
             android:icon="@drawable/ic_font_resize"
             android:key="@string/pref_default_font_size"
+            android:singleLineTitle="true"
+            android:summary="@string/pref_default_font_size_summ"
+            android:title="@string/pref_default_font_size_title" />
+
+        <com.empty.jinux.simplediary.ui.settings.StyleSelectPreference
+            android:defaultValue="heiyaoshi"
+            android:icon="@drawable/ic_font_resize"
+            android:key="@string/pref_default_editor_style"
             android:singleLineTitle="true"
             android:summary="@string/pref_default_font_size_summ"
             android:title="@string/pref_default_font_size_title" />
