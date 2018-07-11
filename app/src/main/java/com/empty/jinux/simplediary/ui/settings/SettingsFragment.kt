@@ -7,7 +7,6 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.v7.preference.CheckBoxPreference
-import android.support.v7.preference.EditTextPreference
 import android.support.v7.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextWatcher
@@ -21,7 +20,6 @@ import com.empty.jinux.simplediary.data.backup.GoogleDriverBackup.Companion.REQU
 import com.empty.jinux.simplediary.data.backup.GoogleDriverBackup.Companion.REQUEST_CODE_OPENING
 import com.empty.jinux.simplediary.data.backup.GoogleDriverBackup.Companion.REQUEST_CODE_SIGN_IN
 import com.empty.jinux.simplediary.report.Reporter
-import com.empty.jinux.simplediary.sEditFontSize
 import com.google.android.gms.drive.DriveId
 import com.google.android.gms.drive.OpenFileActivityOptions
 import kotlinx.android.synthetic.main.dialog_app_lock_set_password.*
@@ -31,15 +29,6 @@ class SettingsFragment : DaggerPreferenceFragment(),
         SharedPreferences.OnSharedPreferenceChangeListener {
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
-        val keyFontSize = getString(R.string.pref_default_font_size)
-
-        when (key) {
-            keyFontSize -> {
-                sEditFontSize = sharedPreferences.getString(keyFontSize, "").toFloatOrNull() ?: 0f
-            }
-            else -> {
-            }
-        }
     }
 
     @Inject
@@ -113,8 +102,6 @@ class SettingsFragment : DaggerPreferenceFragment(),
     }
 
     private fun initFontSize() {
-        val fontSizePreference = findPreference(getString(R.string.pref_default_font_size)) as EditTextPreference
-        fontSizePreference.text = sEditFontSize.toString()
     }
 
     private fun onLockChecked() {

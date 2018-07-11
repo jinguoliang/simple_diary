@@ -20,6 +20,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
@@ -42,7 +43,6 @@ import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
 import com.empty.jinux.simplediary.data.LocationInfo
 import com.empty.jinux.simplediary.intent.shareContentIntent
 import com.empty.jinux.simplediary.report.Reporter
-import com.empty.jinux.simplediary.sEditFontSize
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivity
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.KeyboardFragment
@@ -53,6 +53,7 @@ import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.activity_diary_detail.*
 import kotlinx.android.synthetic.main.fragment_taskdetail.*
 import kotlinx.android.synthetic.main.layout_diary_detail_edit_tool.*
+import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.dimen
 import javax.inject.Inject
 
@@ -128,10 +129,16 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     lateinit var keyboardHeightListener: KeyboardHeightProvider
 
+    var editFontSize = 25f
+
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         setHasOptionsMenu(true)
+
+        editFontSize = context!!.defaultSharedPreferences.getString(getString(R.string.pref_default_font_size), "25").toFloat()
+
 
         setupEditView()
         setupContainer()
@@ -192,7 +199,8 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         }
 
         diaryContent.mScrollParent = scrollContainer
-        diaryContent.textSize = sEditFontSize
+        diaryContent.textSize = editFontSize
+        fragmentContainer.background = ColorDrawable()
     }
 
     private fun onInputMedhodHided() {
@@ -227,7 +235,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         showToolArea()
 
         ThreadPools.postOnUI {
-            diaryContent.adjustScrollPosition(scrollContainer, editTabContainer.top - context!!.dpToPx(sEditFontSize / 2) - diaryContent.paddingTop)
+            diaryContent.adjustScrollPosition(scrollContainer, editTabContainer.top - context!!.dpToPx(editFontSize / 2) - diaryContent.paddingTop)
         }
     }
 
@@ -382,7 +390,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         loge(Log.getStackTraceString(RuntimeException()))
         ThreadPools.postOnUI {
             logi("formatEditContent adjust paragraph", "detail")
-            diaryContent.adjustParagraphSpace(diaryContent.dpToPx(sEditFontSize / 2))
+            diaryContent.adjustParagraphSpace(diaryContent.dpToPx(editFontSize / 2))
             diaryContent.adjustCursorHeightNoException()
         }
     }

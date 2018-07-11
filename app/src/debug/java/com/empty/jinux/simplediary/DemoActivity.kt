@@ -49,7 +49,6 @@ class DemoActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                mEditor.adjustParagraphSpace(mEditor.dpToPx(sEditFontSize / 2))
             }
 
         })
