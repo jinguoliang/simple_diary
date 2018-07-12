@@ -12,5 +12,7 @@
     <string name="pref_restore_from_local" translatable="false" >pref_restore_from_local</string>
     <string name="pref_back_to_google_driver" translatable="false" >pref_back_to_google_driver</string>
     <string name="pref_restore_from_google_driver" translatable="false" >pref_restore_from_google_driver</string>
+    <string name="pref_default_font_size">pref_default_font_size</string>
+    <string name="pref_default_editor_style">pref_default_editor_style</string>
 
 </resources>

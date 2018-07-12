@@ -9,11 +9,11 @@ import android.support.annotation.StringRes
 import android.support.v7.preference.CheckBoxPreference
 import android.support.v7.preference.PreferenceManager
 import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.edit
 import com.empty.jinux.baselibaray.log.loge
+import com.empty.jinux.baselibaray.utils.TextWatcherAdapter
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.backup.GoogleDriverBackup
 import com.empty.jinux.simplediary.data.backup.GoogleDriverBackup.Companion.REQUEST_CODE_CREATION
@@ -28,8 +28,7 @@ import javax.inject.Inject
 class SettingsFragment : DaggerPreferenceFragment(),
         SharedPreferences.OnSharedPreferenceChangeListener {
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
     }
 
     @Inject
@@ -43,20 +42,13 @@ class SettingsFragment : DaggerPreferenceFragment(),
     private fun showLockPasswordSetDialog(checkBoxPreference: CheckBoxPreference) {
         val dialog = Dialog(context!!)
         dialog.setContentView(R.layout.dialog_app_lock_set_password)
-        val passwordChecker: TextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-
+        val passwordChecker = object : TextWatcherAdapter() {
             override fun afterTextChanged(s: Editable?) {
                 s?.apply {
                     dialog.positiveButton.isEnabled = this.toString().length == 6
                             && dialog.passwordConfirm.text.toString() == dialog.newPassword.text.toString()
                 }
             }
-
         }
         dialog.newPassword.addTextChangedListener(passwordChecker)
         dialog.passwordConfirm.addTextChangedListener(passwordChecker)
@@ -81,6 +73,8 @@ class SettingsFragment : DaggerPreferenceFragment(),
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preferences)
+
+        initFontSize()
         onLockChecked()
 
         onPreferenceClick(R.string.pref_back_to_local) {
@@ -98,6 +92,9 @@ class SettingsFragment : DaggerPreferenceFragment(),
 //        onPreferenceClick(R.string.pref_restore_from_google_driver) {
 //            onRestorFromRemoteClick()
 //        }
+    }
+
+    private fun initFontSize() {
     }
 
     private fun onLockChecked() {

@@ -29,6 +29,7 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.content.res.ResourcesCompat
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import com.empty.jinux.baselibaray.log.loge
@@ -43,6 +44,7 @@ import com.empty.jinux.simplediary.intent.shareContentIntent
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivity
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
+import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.EditorStyle
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.KeyboardFragment
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.StatusFragment
 import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
@@ -51,6 +53,7 @@ import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.activity_diary_detail.*
 import kotlinx.android.synthetic.main.fragment_taskdetail.*
 import kotlinx.android.synthetic.main.layout_diary_detail_edit_tool.*
+import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.dimen
 import javax.inject.Inject
 
@@ -126,12 +129,18 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     lateinit var keyboardHeightListener: KeyboardHeightProvider
 
-    private var mShowedGoodView = false
+    var editFontSize = 25f
+    lateinit var editStyle: EditorStyle
+
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         setHasOptionsMenu(true)
+
+        editFontSize = context!!.defaultSharedPreferences.getString(getString(R.string.pref_default_font_size), "25").toFloat()
+        editStyle = EditorStyle(context!!, context!!.defaultSharedPreferences.getString(getString(R.string.pref_default_editor_style), "heiyaoshi"))
+
 
         setupEditView()
         setupContainer()
@@ -192,6 +201,9 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         }
 
         diaryContent.mScrollParent = scrollContainer
+        diaryContent.textSize = editFontSize
+        fragmentContainer.background = editStyle.background
+        diaryContent.setTextColor(editStyle.fontColor)
     }
 
     private fun onInputMedhodHided() {
@@ -226,7 +238,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         showToolArea()
 
         ThreadPools.postOnUI {
-            diaryContent.adjustScrollPosition(scrollContainer, editTabContainer.top - context!!.dimen(R.dimen.detail_diary_editor_bottom))
+            diaryContent.adjustScrollPosition(scrollContainer, editTabContainer.top - context!!.dpToPx(editFontSize / 2) - diaryContent.paddingTop)
         }
     }
 
@@ -378,9 +390,10 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     private fun formatEditContent() {
+        loge(Log.getStackTraceString(RuntimeException()))
         ThreadPools.postOnUI {
             logi("formatEditContent adjust paragraph", "detail")
-            diaryContent.adjustParagraphSpace(R.dimen.editor_paragraph_end)
+            diaryContent.adjustParagraphSpace(diaryContent.dpToPx(editFontSize / 2))
             diaryContent.adjustCursorHeightNoException()
         }
     }
