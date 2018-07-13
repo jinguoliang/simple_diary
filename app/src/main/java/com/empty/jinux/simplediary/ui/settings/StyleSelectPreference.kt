@@ -53,7 +53,7 @@ class StyleSelectItem(val style: EditorStyle, val selected: Boolean, val onSelec
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: Item) {
             holder as Holder
             item as StyleSelectItem
-            holder.itemView.background = item.style.background
+            holder.bg.background = item.style.background
             holder.frameView.visibility = if (item.selected) View.VISIBLE else View.INVISIBLE
             holder.itemView.setOnClickListener { item.onSelect(item.style.name) }
         }
