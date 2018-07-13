@@ -3,8 +3,8 @@
 
     <PreferenceCategory android:title="@string/pref_category_appearance">
 
-        <EditTextPreference
-            android:defaultValue="25f"
+        <com.empty.jinux.simplediary.ui.settings.FontSelectPreference
+            android:defaultValue="normal"
             android:icon="@drawable/ic_font_resize"
             android:key="@string/pref_default_font_size"
             android:singleLineTitle="true"

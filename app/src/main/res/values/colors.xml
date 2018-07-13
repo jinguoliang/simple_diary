@@ -13,6 +13,7 @@
     <color name="transparent">#fa0048cd</color>
     <color name="black">#353535</color>
     <color name="colorEditHighlight">#b4c7c7c7</color>
+    <color name="font_selector_item_color">#e4e4e4</color>
     <drawable name="touchFeedback">#d7d3a0</drawable>
     <drawable name="item_normal">@color/paper_yellow</drawable>
 </resources>

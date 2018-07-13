@@ -138,7 +138,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
         setHasOptionsMenu(true)
 
-        editFontSize = context!!.defaultSharedPreferences.getString(getString(R.string.pref_default_font_size), "25").toFloat()
+        editFontSize = EditorFontSize(context!!.defaultSharedPreferences.getString(getString(R.string.pref_default_font_size), EditorFontSize.DEFAULT)).size
         editStyle = EditorStyle(context!!, context!!.defaultSharedPreferences.getString(getString(R.string.pref_default_editor_style), "heiyaoshi"))
 
 
