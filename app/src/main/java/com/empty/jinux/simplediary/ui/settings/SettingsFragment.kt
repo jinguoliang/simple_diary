@@ -14,12 +14,14 @@ import android.widget.Toast
 import androidx.core.content.edit
 import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.baselibaray.utils.TextWatcherAdapter
+import com.empty.jinux.baselibaray.view.recycleview.withItems
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.backup.GoogleDriverBackup
 import com.empty.jinux.simplediary.data.backup.GoogleDriverBackup.Companion.REQUEST_CODE_CREATION
 import com.empty.jinux.simplediary.data.backup.GoogleDriverBackup.Companion.REQUEST_CODE_OPENING
 import com.empty.jinux.simplediary.data.backup.GoogleDriverBackup.Companion.REQUEST_CODE_SIGN_IN
 import com.empty.jinux.simplediary.report.Reporter
+import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.EditorStyle
 import com.google.android.gms.drive.DriveId
 import com.google.android.gms.drive.OpenFileActivityOptions
 import kotlinx.android.synthetic.main.dialog_app_lock_set_password.*
@@ -74,7 +76,6 @@ class SettingsFragment : DaggerPreferenceFragment(),
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.preferences)
 
-        initFontSize()
         onLockChecked()
 
         onPreferenceClick(R.string.pref_back_to_local) {
@@ -92,9 +93,6 @@ class SettingsFragment : DaggerPreferenceFragment(),
 //        onPreferenceClick(R.string.pref_restore_from_google_driver) {
 //            onRestorFromRemoteClick()
 //        }
-    }
-
-    private fun initFontSize() {
     }
 
     private fun onLockChecked() {
