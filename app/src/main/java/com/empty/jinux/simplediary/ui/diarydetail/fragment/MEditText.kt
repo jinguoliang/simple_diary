@@ -1,6 +1,7 @@
 package com.empty.jinux.simplediary.ui.diarydetail.fragment
 
 import android.content.Context
+import android.graphics.PorterDuff
 import android.graphics.drawable.ClipDrawable
 import android.graphics.drawable.Drawable
 import android.support.v4.content.res.ResourcesCompat
@@ -11,9 +12,9 @@ import android.widget.ScrollView
 import android.widget.TextView
 import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.baselibaray.thread.ThreadPools
-import com.empty.jinux.simplediary.R
 import com.empty.jinux.baselibaray.utils.ParagraphEndLineSpan
 import com.empty.jinux.baselibaray.utils.getLineForCursor
+import com.empty.jinux.simplediary.R
 
 class MEditText : EditText {
     var mScrollParent: ScrollView? = null
@@ -68,9 +69,14 @@ class MEditText : EditText {
         }
     }
 
+    private lateinit var mCursorDrables: Array<Drawable?>
+
+    var cursorColor = 0
+
     private fun adjustCursorHeight(pos: Int) {
         val editor: Any = reflectFeild(TextView::class.java, "mEditor")
         val cursorDrawables: Array<Drawable?> = editor.reflectFeild(editor.javaClass, "mCursorDrawable")
+        mCursorDrables = cursorDrawables
 
         val cursorDrawable = getCursorDrawable(cursorDrawables)
 
@@ -91,10 +97,9 @@ class MEditText : EditText {
         if (cursorArray[0] !is ClipDrawable) {
             cursorArray[0] = ResourcesCompat.getDrawable(resources, R.drawable.edit_text_cursor, null)
         }
+        cursorArray[0]!!.setColorFilter(cursorColor, PorterDuff.Mode.SRC_ATOP)
         return cursorArray[0]!!
     }
-
-
 }
 
 public inline fun <reified T, reified D> D.reflectFeild(clazz: Class<D>, fieldName: String): T {

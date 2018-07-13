@@ -204,6 +204,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         diaryContent.textSize = editFontSize
         fragmentContainer.background = editStyle.background
         diaryContent.setTextColor(editStyle.fontColor)
+        diaryContent.cursorColor = editStyle.cursorColor
     }
 
     private fun onInputMedhodHided() {

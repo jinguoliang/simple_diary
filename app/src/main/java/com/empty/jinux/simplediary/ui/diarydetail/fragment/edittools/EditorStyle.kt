@@ -47,4 +47,9 @@ class EditorStyle(val context: Context, val name: String) {
         get() {
             return FONT_COLORS[name]!!.toInt()
         }
+
+    val cursorColor: Int
+        get() {
+            return fontColor
+        }
 }
