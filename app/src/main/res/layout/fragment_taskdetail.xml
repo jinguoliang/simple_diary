@@ -19,8 +19,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragmentContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/paper_yellow">
+    android:layout_height="match_parent">
 
     <ScrollView
         android:id="@+id/scrollContainer"
@@ -41,6 +40,7 @@
                 android:gravity="top|start"
                 android:imeOptions="flagNoExtractUi"
                 android:lineSpacingExtra="@dimen/edit_text_space_extra"
+                android:paddingTop="5dp"
                 android:paddingBottom="8dp"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"

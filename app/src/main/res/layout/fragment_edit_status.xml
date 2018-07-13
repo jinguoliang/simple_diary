@@ -35,7 +35,7 @@
                 android:maxLines="2"
                 android:scrollHorizontally="true"
                 android:text="@string/edit_tools_status_location_default"
-                android:textColor="@color/paper_yellow"
+                android:textColor="@android:color/white"
                 android:textSize="15sp"
                 tools:text="test location very loooooooooooooooooooooooooooooooooooooooog" />
 

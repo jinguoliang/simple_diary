@@ -5,12 +5,12 @@
     <color name="colorPrimaryLighter">#4463d5</color>
     <color name="colorPrimaryLine2">#e7e9f9</color>
     <color name="colorAccent">#D50000</color>
-    <color name="icon_color_primary">#bbffffff</color>
+    <color name="icon_color_primary">#ffffff</color>
 
     <color name="paper_yellow">#f1ecb4</color>
     <color name="green">#00ff00</color>
-    <color name="edit_tools_panel_bg">#f50048cd</color>
-    <color name="transparent">#fa0048cd</color>
+    <color name="edit_tools_panel_bg">#88000000</color>
+    <color name="transparent">#88000000</color>
     <color name="black">#353535</color>
     <color name="colorEditHighlight">#b4c7c7c7</color>
     <color name="font_selector_item_color">#e4e4e4</color>

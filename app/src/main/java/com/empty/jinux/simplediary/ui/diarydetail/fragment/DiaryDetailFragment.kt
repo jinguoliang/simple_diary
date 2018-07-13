@@ -48,11 +48,13 @@ import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.EditorStyle
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.KeyboardFragment
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.StatusFragment
 import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
+import com.empty.jinux.simplediary.ui.settings.EditorFontSize
 import com.empty.jinux.simplediary.util.PermissionUtil
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.activity_diary_detail.*
 import kotlinx.android.synthetic.main.fragment_taskdetail.*
 import kotlinx.android.synthetic.main.layout_diary_detail_edit_tool.*
+import org.jetbrains.anko.contentView
 import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.dimen
 import javax.inject.Inject
@@ -202,7 +204,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
         diaryContent.mScrollParent = scrollContainer
         diaryContent.textSize = editFontSize
-        fragmentContainer.background = editStyle.background
+        activity?.contentView?.background = editStyle.background
         diaryContent.setTextColor(editStyle.fontColor)
         diaryContent.cursorColor = editStyle.cursorColor
     }
