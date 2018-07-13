@@ -65,4 +65,6 @@
     <string name="pref_category_appearance">外观</string>
     <string name="pref_default_font_size_title">字体大小</string>
     <string name="pref_default_font_size_summ">设置默认日记字体大小</string>
+    <string name="pref_default_editor_style_title">背景风格</string>
+    <string name="pref_default_editor_style_summ">设置日记默认背景风格</string>
 </resources>

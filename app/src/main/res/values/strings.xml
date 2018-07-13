@@ -64,4 +64,6 @@
     <string name="pref_category_appearance">Appearance</string>
     <string name="pref_default_font_size_title">Font Size</string>
     <string name="pref_default_font_size_summ">Set the default font size of diary</string>
+    <string name="pref_default_editor_style_title">Background Style</string>
+    <string name="pref_default_editor_style_summ">Set the default background of diary</string>
 </resources>

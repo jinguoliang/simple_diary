@@ -13,11 +13,11 @@
 
         <com.empty.jinux.simplediary.ui.settings.StyleSelectPreference
             android:defaultValue="heiyaoshi"
-            android:icon="@drawable/ic_font_resize"
+            android:icon="@drawable/ic_format_paint_black_24dp"
             android:key="@string/pref_default_editor_style"
             android:singleLineTitle="true"
-            android:summary="@string/pref_default_font_size_summ"
-            android:title="@string/pref_default_font_size_title" />
+            android:summary="@string/pref_default_editor_style_summ"
+            android:title="@string/pref_default_editor_style_title" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_category_privacy">
