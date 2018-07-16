@@ -39,4 +39,5 @@
     <dimen name="good_view_check_size">40dp</dimen>
     <dimen name="bar_item_value_textview_height">20dp</dimen>
     <dimen name="diary_list_ending_space_size">15dp</dimen>
+    <dimen name="good_view_circle_size">55dp</dimen>
 </resources>

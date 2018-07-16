@@ -20,7 +20,6 @@ import org.jetbrains.anko.dimen
 class GoodView : FrameLayout {
     companion object {
 
-        const val MIN_SIZE = 150f
         const val DURATION = 500L
         var maxSize: Float? = null
         var hafWidth: Float? = null
@@ -35,7 +34,7 @@ class GoodView : FrameLayout {
     var currentCenterX: Float? = null
     var currentCenterY: Float? = null
     val checkDrawableSize = dimen(R.dimen.good_view_check_size)
-    val checkDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_check_white_24dp, null)
+    val checkDrawable = VectorDrawableCompat.create(resources, R.drawable.ic_thumb_up_black_24dp, null)
 
     override fun dispatchDraw(canvas: Canvas) {
 
@@ -71,7 +70,8 @@ class GoodView : FrameLayout {
     }
 
     private fun startCheckAnim() {
-        val anim = ValueAnimator.ofFloat(maxSize!!, MIN_SIZE)
+        val minSize = context.resources.getDimension(R.dimen.good_view_circle_size)
+        val anim = ValueAnimator.ofFloat(maxSize!!, minSize)
         anim.duration = DURATION
         anim.addUpdateListener {
             currentRadius = it.animatedValue as Float
