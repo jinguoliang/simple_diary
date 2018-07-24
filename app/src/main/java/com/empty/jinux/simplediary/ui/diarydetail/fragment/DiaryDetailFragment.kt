@@ -19,7 +19,13 @@ package com.empty.jinux.simplediary.ui.diarydetail.fragment
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
@@ -28,14 +34,34 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.content.res.ResourcesCompat
 import android.text.Editable
+import android.text.Selection
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.TextPaint
 import android.text.TextWatcher
-import android.util.Log
-import android.view.*
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.text.style.ImageSpan
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.baselibaray.log.logi
 import com.empty.jinux.baselibaray.thread.ThreadPools
-import com.empty.jinux.baselibaray.utils.*
+import com.empty.jinux.baselibaray.utils.TextWatcherAdapter
+import com.empty.jinux.baselibaray.utils.adjustParagraphSpace
+import com.empty.jinux.baselibaray.utils.dpToPx
+import com.empty.jinux.baselibaray.utils.getScaleImage
+import com.empty.jinux.baselibaray.utils.hideInputMethod
+import com.empty.jinux.baselibaray.utils.layoutHeight
+import com.empty.jinux.baselibaray.utils.showInputMethod
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.config.ConfigManager
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
@@ -46,6 +72,7 @@ import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivity
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.EditorStyle
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.KeyboardFragment
+import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.PictureSelectFragment
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.StatusFragment
 import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
 import com.empty.jinux.simplediary.ui.settings.EditorFontSize
@@ -57,6 +84,10 @@ import kotlinx.android.synthetic.main.layout_diary_detail_edit_tool.*
 import org.jetbrains.anko.contentView
 import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.dimen
+import org.jetbrains.anko.dip
+import org.jetbrains.anko.toast
+import java.io.File
+import java.io.FileOutputStream
 import javax.inject.Inject
 
 
@@ -202,6 +233,44 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             false
         }
 
+        diaryContent.movementMethod = object : LinkMovementMethod() {
+            override fun onTouchEvent(widget: TextView, buffer: Spannable, event: MotionEvent): Boolean {
+                val action = event.action
+
+                if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_DOWN) {
+                    var x = event.getX().toInt()
+                    var y = event.getY().toInt()
+
+                    x -= widget.getTotalPaddingLeft()
+                    y -= widget.getTotalPaddingTop()
+
+                    x += widget.getScrollX()
+                    y += widget.getScrollY()
+
+                    val layout = widget.getLayout()
+                    val line = layout.getLineForVertical(y)
+                    val off = layout.getOffsetForHorizontal(line, x.toFloat())
+
+                    val links = buffer.getSpans(off, off, ClickableSpan::class.java)
+
+                    if (links.isNotEmpty()) {
+                        if (action == MotionEvent.ACTION_UP) {
+                            links[0].onClick(widget)
+                        } else if (action == MotionEvent.ACTION_DOWN) {
+//                                Selection.setSelection(buffer,
+//                                        buffer.getSpanStart(links[0]),
+//                                        buffer.getSpanEnd(links[0]))
+                        }
+                        return true
+                    } else {
+                        Selection.removeSelection(buffer)
+                    }
+                }
+
+                return super.onTouchEvent(widget, buffer, event)
+            }
+        }
+
         diaryContent.mScrollParent = scrollContainer
         diaryContent.textSize = editFontSize
         activity?.contentView?.background = editStyle.background
@@ -260,16 +329,23 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     private lateinit var statusFragment: StatusFragment
 
+    private lateinit var selectPictureFragment: PictureSelectFragment
+
     private fun initEditToolbar() {
         keyboardFragment = ((fragmentManager?.findFragmentByTag(makeFragmentName(toolArea.id, 0)) as? KeyboardFragment)
                 ?: KeyboardFragment())
+
         statusFragment = ((fragmentManager?.findFragmentByTag(makeFragmentName(toolArea.id, 1)) as? StatusFragment)
                 ?: StatusFragment())
 
-        val fragments = listOf(keyboardFragment, statusFragment)
+        selectPictureFragment = ((fragmentManager?.findFragmentByTag(makeFragmentName(toolArea.id, 2)) as? PictureSelectFragment)
+                ?: PictureSelectFragment())
+
+        val fragments = listOf(keyboardFragment, statusFragment, selectPictureFragment)
         fragments.forEach {
             it.mPresenter = mPresenter
             it.mReporter = mReporter
+            it.mParentFragment = this@DiaryDetailFragment
         }
 
         toolArea.adapter = object : FragmentPagerAdapter(fragmentManager) {
@@ -286,7 +362,8 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         editToolsTab.setupWithViewPager(toolArea)
 
         val iconRes = listOf(R.drawable.ic_keyboard,
-                R.drawable.ic_emotion_location_weather)
+                R.drawable.ic_emotion_location_weather,
+                R.drawable.ic_add_a_photo_white_24dp)
         (0 until iconRes.size).map { editToolsTab.getTabAt(it) }.forEachIndexed { i, it ->
             it?.customView = ImageView(context).apply { setImageDrawable(VectorDrawableCompat.create(resources, iconRes[i], null)) }
         }
@@ -393,10 +470,10 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     private fun formatEditContent() {
-        loge(Log.getStackTraceString(RuntimeException()))
         ThreadPools.postOnUI {
             logi("formatEditContent adjust paragraph", "detail")
             diaryContent.adjustParagraphSpace(diaryContent.dpToPx(editFontSize / 2))
+            diaryContent.addPictureSpans()
             diaryContent.adjustCursorHeightNoException()
         }
     }
@@ -411,12 +488,114 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_EDIT_TASK) {
-            // If the task was edited successfully, go back to the list.
+        loge(data ?: "no", "select picture")
+
+        if (requestCode == REQUEST_SELECT_PICTURE) {
             if (resultCode == Activity.RESULT_OK) {
-                activity?.finish()
+                data?.data?.apply {
+                    insertPictureMark(this) {
+                        mPresenter.onContentChange(diaryContent.text.toString())
+                        formatEditContent()
+                    }
+                } ?: context?.toast("insert picture error")
             }
         }
+    }
+
+    private fun insertPictureMark(uri: Uri, onEnd: (() -> Unit)) {
+        ThreadPools.postOnQuene {
+            generateImage(uri)?.apply {
+                val key = generateKey(uri)
+                val name = "${getImageDir()}/$key"
+                mConfig.put(key, name)
+                val out = FileOutputStream(name)
+                compress(Bitmap.CompressFormat.PNG, 100, out)
+                ThreadPools.postOnUI {
+                    val append = SpannableStringBuilder("\n[]($key)\n")
+                    diaryContent.text.also {
+                        val selectStart = Selection.getSelectionStart(it)
+                        val selectEnd = Selection.getSelectionEnd(it)
+                        if (selectStart == -1) {
+                            it.append(append)
+                        } else if (selectEnd == selectStart) {
+                            it.insert(selectStart, append)
+                        } else {
+                            it.replace(selectStart, selectEnd, append)
+                        }
+                    }
+                    onEnd()
+                }
+            }
+        }
+
+
+    }
+
+    private fun generateKey(uri: Uri): String {
+        return uri.hashCode().toString()
+    }
+
+    private fun getImageDir(): String {
+        val imagesDir = "${context!!.filesDir}/images".run { File(this) }
+        if (!imagesDir.isDirectory) {
+            imagesDir.mkdir()
+        }
+        return imagesDir.toString()
+    }
+
+    private fun EditText.addPictureSpan(start: Int, end: Int, key: String) {
+        val file = mConfig.get(key, "")
+        loadImage(file)?.run {
+            BitmapDrawable(context.resources, this).also { drawable ->
+                val width = diaryContent.width - diaryContent.paddingLeft - diaryContent.paddingRight
+                val height = drawable.intrinsicHeight / drawable.intrinsicWidth.toFloat() * width
+                drawable.setBounds(0, 0, width, height.toInt()).also {
+                    loge("bound = ${drawable.bounds} w = ${drawable.bounds.width()} h = ${drawable.bounds.height()}")
+                }
+            }
+        }?.apply {
+            val imageSpan = ImageSpan(this)
+            val clickableSpan = object : ClickableSpan() {
+                override fun onClick(widget: View?) {
+                    context?.toast("hello world")
+                }
+
+                override fun updateDrawState(ds: TextPaint?) {
+                    ds?.bgColor = Color.CYAN
+                }
+            }
+            loge("span text = ${text.subSequence(start, end + 1)}")
+            if (text.getSpans(start, end + 1, ImageSpan::class.java).isEmpty()) {
+                text.setSpan(imageSpan, start, end + 1, SpannableStringBuilder.SPAN_INCLUSIVE_EXCLUSIVE)
+                text.setSpan(clickableSpan, start, end + 1, SpannableStringBuilder.SPAN_INCLUSIVE_EXCLUSIVE)
+            }
+        }
+    }
+
+    private fun loadImage(file: String): Bitmap? {
+        return BitmapFactory.decodeFile(file)
+    }
+
+    private fun generateImage(data: Uri): Bitmap? {
+        val context = context as Context
+        val edgeWidth = context.dip(10)
+        val space = context.dip(10)
+
+        val targetWidth = (diaryContent.width - diaryContent.paddingLeft - diaryContent.paddingRight - 2 * space - 2 * edgeWidth) / 2
+        val bitmap = context.getScaleImage(data, targetWidth)?.let { ori ->
+            val w = ori.width
+            val edgeWidth = (edgeWidth.toFloat() * w / targetWidth).toInt()
+            val space = (space.toFloat() * w / targetWidth).toInt()
+            val h = ori.height
+            Bitmap.createBitmap(w + 2 * edgeWidth + 2 * space, h + 2 * edgeWidth + 2 * space, Bitmap.Config.ARGB_4444).also {
+                Canvas(it).run {
+                    drawColor(Color.TRANSPARENT)
+                    drawRect(space.toFloat(), space.toFloat(), (space + 2 * edgeWidth + w).toFloat(), (space + 2 * edgeWidth + h).toFloat(), Paint().also { it.color = Color.WHITE })
+                    drawBitmap(ori, space + edgeWidth.toFloat(), space + edgeWidth.toFloat(), null)
+                }
+            }
+        }
+        return bitmap
     }
 
     override fun showMissingDiary() {
@@ -428,7 +607,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
         private const val REQUEST_CODE_LOCATION_PERMISSION = 0x64
 
-        private const val REQUEST_EDIT_TASK = 1
+        const val REQUEST_SELECT_PICTURE = 1
 
         private const val TAB_KEYBOARD_POS = 0
 
@@ -493,11 +672,20 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             return false
         }
     }
+
+    fun EditText.addPictureSpans() {
+        val reg = "\\[(.*)]\\((.*)\\)".toRegex()
+        reg.findAll(text).forEach {
+            //            addPictureSpan(0, 43, Uri.parse(it.groupValues[2]))
+            addPictureSpan(it.range.start, it.range.endInclusive, it.groupValues[2])
+        }
+    }
 }
 
 abstract class MFragment : Fragment() {
     lateinit var mPresenter: DiaryDetailPresenter
     lateinit var mReporter: Reporter
+    lateinit var mParentFragment: DiaryDetailFragment
 }
 
 private fun makeFragmentName(viewId: Int, id: Long): String {
