@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import com.empty.jinux.baselibaray.log.loge
+import java.io.FileOutputStream
 
 fun Context.getImage(uri: Uri, sampleSize: Int): Bitmap? {
     val inputStream = contentResolver.openInputStream(uri)
@@ -39,6 +40,10 @@ fun Context.getImageSize(uri: Uri): Size {
     val inputStream = contentResolver.openInputStream(uri)
     BitmapFactory.decodeStream(inputStream, null, opt)
     return Size(opt.outWidth, opt.outHeight)
+}
+
+fun Bitmap.compress(path: String): Boolean {
+    return compress(Bitmap.CompressFormat.PNG, 100, FileOutputStream(path))
 }
 
 data class Size(val width: Int, val height: Int)

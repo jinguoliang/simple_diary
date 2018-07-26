@@ -1,14 +1,15 @@
 package com.empty.jinux.simplediary.ui.diarydetail.fragment
 
 import android.content.Context
-import android.graphics.Canvas
 import android.graphics.PorterDuff
 import android.graphics.drawable.ClipDrawable
 import android.graphics.drawable.Drawable
 import android.support.v4.content.res.ResourcesCompat
+import android.text.Selection
 import android.text.style.ImageSpan
 import android.util.AttributeSet
 import android.util.Log
+import android.view.MotionEvent
 import android.widget.EditText
 import android.widget.ScrollView
 import android.widget.TextView
@@ -16,6 +17,7 @@ import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.baselibaray.thread.ThreadPools
 import com.empty.jinux.baselibaray.utils.ParagraphEndLineSpan
 import com.empty.jinux.baselibaray.utils.getLineForCursor
+import com.empty.jinux.baselibaray.utils.hideInputMethod
 import com.empty.jinux.simplediary.R
 
 class MEditText : EditText {
@@ -28,8 +30,6 @@ class MEditText : EditText {
     override fun onSelectionChanged(selStart: Int, selEnd: Int) {
         super.onSelectionChanged(selStart, selEnd)
 
-        loge("current end $selEnd", "jin")
-
         // first time
         if (layout == null) return
         adjustCursorHeightNoException()
@@ -37,6 +37,15 @@ class MEditText : EditText {
         ThreadPools.postOnUI {
             adjustScrollPosition(mScrollParent, -1)
         }
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        val offset = getOffsetForPosition(event.x, event.y)
+        if (text.getSpans(offset, offset, ImageSpan::class.java).isNotEmpty() && (event.actionMasked == MotionEvent.ACTION_DOWN || event.actionMasked == MotionEvent.ACTION_UP)) {
+            hideInputMethod()
+            return true
+        }
+        return super.onTouchEvent(event)
     }
 
 
