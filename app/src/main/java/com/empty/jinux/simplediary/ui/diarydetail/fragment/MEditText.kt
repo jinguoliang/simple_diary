@@ -9,6 +9,7 @@ import android.text.Selection
 import android.text.style.ImageSpan
 import android.util.AttributeSet
 import android.util.Log
+import android.view.KeyEvent
 import android.view.MotionEvent
 import android.widget.EditText
 import android.widget.ScrollView
@@ -41,11 +42,20 @@ class MEditText : EditText {
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val offset = getOffsetForPosition(event.x, event.y)
-        if (text.getSpans(offset, offset, ImageSpan::class.java).isNotEmpty() && (event.actionMasked == MotionEvent.ACTION_DOWN || event.actionMasked == MotionEvent.ACTION_UP)) {
+        if (text.getSpans(offset, offset, ImageSpan::class.java).isNotEmpty()
+                && (event.actionMasked == MotionEvent.ACTION_DOWN || event.actionMasked == MotionEvent.ACTION_UP)) {
             hideInputMethod()
             return true
         }
         return super.onTouchEvent(event)
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        return super.onKeyUp(keyCode, event)
     }
 
 

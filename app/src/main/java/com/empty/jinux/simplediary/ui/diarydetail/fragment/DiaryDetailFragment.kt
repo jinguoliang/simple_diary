@@ -28,8 +28,6 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.content.res.ResourcesCompat
 import android.text.Editable
-import android.text.InputFilter
-import android.text.Spanned
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.Menu
@@ -39,7 +37,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.core.view.isVisible
 import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.baselibaray.log.logi
 import com.empty.jinux.baselibaray.thread.ThreadPools
@@ -218,7 +215,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             false
         }
 
-        diaryContent.movementMethod = MLinkSpan()
+        diaryContent.movementMethod = MArrowKeyMethod()
 
         diaryContent.mScrollParent = scrollContainer
         diaryContent.textSize = editFontSize
