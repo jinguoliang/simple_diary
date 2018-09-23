@@ -18,7 +18,6 @@ class BackupManager
 @Inject internal constructor(
         val fragment: Fragment,
         @param:Local val local: Backup,
-        @param:Remote val remote: Backup,
         @param:Local val localDatabase: DiariesDataSource
 ) {
     val activity = fragment.activity!!
