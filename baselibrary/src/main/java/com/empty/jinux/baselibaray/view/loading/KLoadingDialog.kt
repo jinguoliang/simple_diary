@@ -10,9 +10,9 @@ import com.empty.jinux.baselibaray.thread.ThreadPools
 
 fun Context.doTaskWithLoadingDialog(msg: String, delay: Long = 1000, task: () -> Unit) {
     val d = ProgressDialog.show(this, "", msg)
-    ThreadPools.postOnUIDelayed(delay) {
+    ThreadPools.postOnQuene {
         task.invoke()
-        ThreadPools.postOnUI {
+        ThreadPools.postOnUIDelayed(delay) {
             d.dismiss()
         }
     }
