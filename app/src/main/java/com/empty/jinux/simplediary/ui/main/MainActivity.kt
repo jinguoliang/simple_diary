@@ -36,6 +36,8 @@ import com.empty.jinux.simplediary.ui.main.statistics.StatisticsFragment
 import com.empty.jinux.simplediary.ui.settings.SettingsActivity
 import com.empty.jinux.simplediary.util.ActivityUtils
 import dagger.android.support.DaggerAppCompatActivity
+import io.multimoon.colorful.BaseTheme
+import io.multimoon.colorful.Colorful
 import kotlinx.android.synthetic.main.activity_diary_list.*
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.startActivity
@@ -56,10 +58,14 @@ class MainActivity : DaggerAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Colorful().apply(this, override = true, baseTheme = BaseTheme.THEME_APPCOMPAT)
+
         setContentView(R.layout.activity_diary_list)
+
         setupToolbar()
         setupNavigationDrawer()
         showDiaryListFragment()
+
     }
 
     override fun onStart() {
@@ -80,7 +86,7 @@ class MainActivity : DaggerAppCompatActivity() {
     override fun onBackPressed() {
         if (mCurrentFragment.onBackPress()) {
             return
-        }  else {
+        } else {
             super.onBackPressed()
         }
     }
