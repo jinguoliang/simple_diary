@@ -1,12 +1,12 @@
 package com.empty.jinux.simplediary.ui.about
 
-import android.support.annotation.DrawableRes
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.DrawableRes
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.updatePadding
+import androidx.recyclerview.widget.RecyclerView
 import com.empty.jinux.baselibaray.utils.inflate
 import com.empty.jinux.baselibaray.view.recycleview.Item
 import com.empty.jinux.baselibaray.view.recycleview.ItemController

@@ -1,8 +1,7 @@
 package com.empty.jinux.simplediary.data.backup
 
-import android.content.Context
 import android.content.IntentSender
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.util.Log
 import android.widget.Toast
 import com.empty.jinux.baselibaray.log.logd

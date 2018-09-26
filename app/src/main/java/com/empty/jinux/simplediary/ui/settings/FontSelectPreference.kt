@@ -1,18 +1,17 @@
 package com.empty.jinux.simplediary.ui.settings
 
 import android.content.Context
-import android.support.v7.preference.Preference
-import android.support.v7.preference.PreferenceViewHolder
-import android.support.v7.widget.RecyclerView
+import androidx.preference.Preference
+import androidx.preference.PreferenceViewHolder
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.empty.jinux.baselibaray.utils.inflate
 import com.empty.jinux.baselibaray.view.recycleview.Item
 import com.empty.jinux.baselibaray.view.recycleview.ItemController
 import com.empty.jinux.baselibaray.view.recycleview.withItems
 import com.empty.jinux.simplediary.R
-import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.EditorStyle
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_font_selector.*
 
@@ -58,7 +57,7 @@ class FontSelectItem(val style: EditorFontSize, val selected: Boolean, val onSel
             holder.itemView.setOnClickListener { item.onSelect(item.style.name) }
         }
 
-        class Holder(override val containerView: View?) : RecyclerView.ViewHolder(containerView), LayoutContainer
+        class Holder(override val containerView: View?) : RecyclerView.ViewHolder(containerView!!), LayoutContainer
     }
 
     override val controller = Controller

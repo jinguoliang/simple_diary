@@ -15,7 +15,7 @@
         android:textColor="@android:color/white"
         android:textSize="@dimen/card_view_title_text_size" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/punchRecycleView"
         android:layout_width="match_parent"
         android:layout_height="55dp"
@@ -23,7 +23,7 @@
         android:orientation="horizontal"
         android:layout_gravity="center_vertical"
         android:paddingEnd="10dp"
-        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:reverseLayout="false" />
 
     <View

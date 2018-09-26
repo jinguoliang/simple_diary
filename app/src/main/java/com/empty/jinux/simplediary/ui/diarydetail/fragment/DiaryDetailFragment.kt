@@ -21,12 +21,8 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.design.widget.TabLayout
-import android.support.graphics.drawable.VectorDrawableCompat
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.content.res.ResourcesCompat
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
+import androidx.core.content.res.ResourcesCompat
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -60,6 +56,8 @@ import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.StatusFragm
 import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
 import com.empty.jinux.simplediary.ui.settings.EditorFontSize
 import com.empty.jinux.simplediary.util.PermissionUtil
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayout
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.activity_diary_detail.*
 import kotlinx.android.synthetic.main.fragment_taskdetail.*
@@ -294,8 +292,8 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             it.mParentFragment = this@DiaryDetailFragment
         }
 
-        toolArea.adapter = object : FragmentPagerAdapter(fragmentManager) {
-            override fun getItem(position: Int): Fragment {
+        toolArea.adapter = object : androidx.fragment.app.FragmentPagerAdapter(fragmentManager) {
+            override fun getItem(position: Int): androidx.fragment.app.Fragment {
                 return fragments[position]
             }
 
@@ -515,7 +513,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 }
 
-abstract class MFragment : Fragment() {
+abstract class MFragment : androidx.fragment.app.Fragment() {
     lateinit var mPresenter: DiaryDetailPresenter
     lateinit var mReporter: Reporter
     lateinit var mParentFragment: DiaryDetailFragment

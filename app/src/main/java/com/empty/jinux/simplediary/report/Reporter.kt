@@ -1,7 +1,7 @@
 package com.empty.jinux.simplediary.report
 
 import android.os.Bundle
-import android.support.annotation.Size
+import androidx.annotation.Size
 import com.empty.jinux.simplediary.report.app.*
 
 interface Reporter {

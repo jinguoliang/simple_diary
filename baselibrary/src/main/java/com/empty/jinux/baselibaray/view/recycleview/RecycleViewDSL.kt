@@ -1,7 +1,7 @@
 package com.empty.jinux.baselibaray.view.recycleview
 
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.ViewGroup
 
@@ -14,11 +14,11 @@ interface Item {
 }
 
 interface ItemController {
-    fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder
-    fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: Item)
+    fun onCreateViewHolder(parent: ViewGroup): androidx.recyclerview.widget.RecyclerView.ViewHolder
+    fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, item: Item)
 }
 
-class ItemAdapter(val itemManager: ItemManagerAbstract) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), MutableList<Item> by itemManager {
+class ItemAdapter(val itemManager: ItemManagerAbstract) : androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>(), MutableList<Item> by itemManager {
 
     init {
         itemManager.observer = this
@@ -29,7 +29,7 @@ class ItemAdapter(val itemManager: ItemManagerAbstract) : RecyclerView.Adapter<R
 
     override fun getItemCount() = itemManager.size
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) =
+    override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) =
             itemManager[position].controller.onBindViewHolder(holder, itemManager[position])
 
     override fun getItemViewType(position: Int) = ItemManager.getViewType(itemManager[position].controller)
@@ -41,23 +41,23 @@ class ItemAdapter(val itemManager: ItemManagerAbstract) : RecyclerView.Adapter<R
     }
 }
 
-fun RecyclerView.withItems(items: List<Item>) {
+fun androidx.recyclerview.widget.RecyclerView.withItems(items: List<Item>) {
     adapter = ItemAdapter(ItemManager(items.toMutableList()))
 }
 
-fun RecyclerView.withItems(init: MutableList<Item>.() -> Unit) = withItems(mutableListOf<Item>().apply(init))
+fun androidx.recyclerview.widget.RecyclerView.withItems(init: MutableList<Item>.() -> Unit) = withItems(mutableListOf<Item>().apply(init))
 
-fun RecyclerView.replaceData(items: List<Item>) {
+fun androidx.recyclerview.widget.RecyclerView.replaceData(items: List<Item>) {
     val adapter = adapter as ItemAdapter
     adapter.replace(items)
 }
 
 interface ItemManagerAbstract : MutableList<Item> {
-    var observer: RecyclerView.Adapter<RecyclerView.ViewHolder>?
+    var observer: androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>?
 }
 
 class ItemManager(private val delegated: MutableList<Item> = mutableListOf()) : ItemManagerAbstract {
-    override var observer: RecyclerView.Adapter<RecyclerView.ViewHolder>? = null
+    override var observer: androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>? = null
     val itemListSnapshot: List<Item> get() = delegated
 
     init {
@@ -206,7 +206,7 @@ class ItemManager(private val delegated: MutableList<Item> = mutableListOf()) : 
         delegated.clear()
         delegated.addAll(elements)
         ensureControllers(elements)
-        result.dispatchUpdatesTo(observer)
+        result.dispatchUpdatesTo(observer!!)
     }
 
     fun refreshAll(init: MutableList<Item>.() -> Unit) = refreshAll(mutableListOf<Item>().apply(init))

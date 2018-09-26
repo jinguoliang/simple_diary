@@ -1,8 +1,7 @@
 package com.empty.jinux.simplediary.ui.settings
 
-import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
-import com.empty.jinux.baselibaray.view.loading.doTaskWithLoadingDialog
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AlertDialog
 import com.empty.jinux.simplediary.BuildConfig
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.backup.Backup
@@ -10,13 +9,14 @@ import com.empty.jinux.simplediary.data.source.DiariesDataSource
 import com.empty.jinux.simplediary.di.Local
 import com.empty.jinux.simplediary.di.Remote
 import com.empty.jinux.baselibaray.utils.formatBackupDate
+import com.empty.jinux.baselibaray.view.loading.doTaskWithLoadingDialog
 import org.jetbrains.anko.toast
 import java.io.File
 import javax.inject.Inject
 
 class BackupManager
 @Inject internal constructor(
-        val fragment: Fragment,
+        val fragment: androidx.fragment.app.Fragment,
         @param:Local val local: Backup,
         @param:Remote val remote: Backup,
         @param:Local val localDatabase: DiariesDataSource
@@ -49,7 +49,7 @@ class BackupManager
     private fun showSingleSelectDialog(files: Array<out File>) {
         val builder = AlertDialog.Builder(activity)
         builder.setTitle(R.string.restore_from_local_dialog_title)
-        builder.setNegativeButton(R.string.dialog_cancel) { dialog, which ->
+        builder.setNegativeButton(R.string.dialog_cancel) { dialog, _ ->
             dialog.dismiss()
         }
         builder.setItems(files.map { it.name }.toTypedArray()) { _, which ->

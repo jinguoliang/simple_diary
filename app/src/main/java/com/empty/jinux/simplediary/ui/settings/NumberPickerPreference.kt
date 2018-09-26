@@ -8,7 +8,7 @@ import com.empty.jinux.simplediary.R
 /*
  * Add this to your XML resource.
  */
-class NumberPickerPreference : android.support.v7.preference.DialogPreference {
+class NumberPickerPreference : androidx.preference.DialogPreference {
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
         dialogLayoutResource = R.layout.dialog_settings_number_picer

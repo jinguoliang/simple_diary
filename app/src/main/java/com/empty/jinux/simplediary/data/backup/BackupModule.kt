@@ -1,6 +1,6 @@
 package com.empty.jinux.simplediary.data.backup
 
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import com.empty.jinux.simplediary.di.Local
 import com.empty.jinux.simplediary.di.Remote
 import dagger.Module

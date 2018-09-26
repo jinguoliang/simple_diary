@@ -16,7 +16,7 @@
 
 package com.empty.jinux.simplediary.data.source.local
 
-import android.arch.persistence.room.Room
+import androidx.room.Room
 import android.content.Context
 import android.util.Log
 import com.empty.jinux.baselibaray.log.loge

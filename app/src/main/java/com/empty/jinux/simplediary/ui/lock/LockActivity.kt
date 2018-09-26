@@ -3,9 +3,9 @@ package com.empty.jinux.simplediary.ui.lock
 import android.hardware.fingerprint.FingerprintManager
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.ColorRes
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v4.widget.ImageViewCompat
+import androidx.annotation.ColorRes
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.widget.ImageViewCompat
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher

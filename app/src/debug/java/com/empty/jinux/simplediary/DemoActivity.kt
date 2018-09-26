@@ -3,8 +3,8 @@ package com.empty.jinux.simplediary
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.text.TextPaint
@@ -13,8 +13,6 @@ import android.text.style.BackgroundColorSpan
 import android.text.style.ImageSpan
 import android.text.style.MetricAffectingSpan
 import com.empty.jinux.baselibaray.thread.ThreadPools
-import com.empty.jinux.baselibaray.utils.adjustParagraphSpace
-import com.empty.jinux.baselibaray.utils.dpToPx
 import kotlinx.android.synthetic.main.activity_demo.*
 import org.jetbrains.anko.append
 
