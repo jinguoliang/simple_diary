@@ -21,25 +21,19 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
-import androidx.core.content.res.ResourcesCompat
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.updateLayoutParams
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.baselibaray.log.logi
 import com.empty.jinux.baselibaray.thread.ThreadPools
 import com.empty.jinux.baselibaray.utils.TextWatcherAdapter
 import com.empty.jinux.baselibaray.utils.dpToPx
 import com.empty.jinux.baselibaray.utils.hideInputMethod
-import com.empty.jinux.baselibaray.utils.layoutHeight
 import com.empty.jinux.baselibaray.utils.showInputMethod
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.config.ConfigManager
@@ -259,13 +253,19 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     private fun setGoodViewHeight(keyboardHeight: Int) {
-        goodView.layoutHeight = fragmentContainer.height - keyboardHeight
+        goodView.updateLayoutParams {
+            height = fragmentContainer.height - keyboardHeight
+        }
     }
 
-    private fun setToolAreaHeight(height: Int) {
-        if (height != toolArea.layoutHeight) {
-            bottomSpace.layoutHeight = height + toolArea.dimen(R.dimen.diary_detail_edit_tool_height)
-            toolArea.layoutHeight = height
+    private fun setToolAreaHeight(h: Int) {
+        if (h != toolArea.height) {
+            bottomSpace.updateLayoutParams {
+                height = h + toolArea.dimen(R.dimen.diary_detail_edit_tool_height)
+            }
+            toolArea.updateLayoutParams {
+                height = h
+            }
         }
     }
 

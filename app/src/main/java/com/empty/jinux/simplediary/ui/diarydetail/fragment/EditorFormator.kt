@@ -42,7 +42,7 @@ class EditorFormator(val editor: MEditText, val mConfig: ConfigManager) {
         ThreadPools.postOnUI {
 
             logi("formatEditContent adjust paragraph", "detail")
-            editor.adjustParagraphSpace(editor.dpToPx(editFontSize / 2))
+            editor.adjustParagraphSpace(editor.context.dpToPx(editFontSize / 2))
             editor.addPictureSpans()
             editor.adjustCursorHeightNoException()
         }

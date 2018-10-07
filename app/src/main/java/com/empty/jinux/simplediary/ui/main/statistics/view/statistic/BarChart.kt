@@ -7,13 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.empty.jinux.baselibaray.thread.ThreadPools
 import com.empty.jinux.baselibaray.utils.inflate
-import com.empty.jinux.baselibaray.utils.layoutHeight
-import com.empty.jinux.baselibaray.utils.layoutWidth
-import com.empty.jinux.baselibaray.view.recycleview.*
+import com.empty.jinux.baselibaray.view.recycleview.Item
+import com.empty.jinux.baselibaray.view.recycleview.ItemController
+import com.empty.jinux.baselibaray.view.recycleview.replaceData
+import com.empty.jinux.baselibaray.view.recycleview.withItems
 import com.empty.jinux.simplediary.R
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.recycler_view_bar_item.*
@@ -85,7 +87,9 @@ class Bar(val data: Pair<Long, Long>) : Item {
 
         override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
             return Holder(parent.inflate(R.layout.recycler_view_bar_item, false).also {
-                it.layoutWidth = barWidth
+                it.updateLayoutParams {
+                    width = barWidth
+                }
             })
         }
 
@@ -94,7 +98,10 @@ class Bar(val data: Pair<Long, Long>) : Item {
             item as Bar
             holder.xValueTv.text = xAxisFormatter?.format(item.data.first) ?: "no formatter"
             holder.yValueTv.text = item.data.second.toString()
-            holder.bar.layoutHeight = ((item.data.second.toFloat() / maxYValue) * maxBarHeight).toInt()
+
+            holder.bar.updateLayoutParams {
+                height = ((item.data.second.toFloat() / maxYValue) * maxBarHeight).toInt()
+            }
         }
 
         class Holder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer
