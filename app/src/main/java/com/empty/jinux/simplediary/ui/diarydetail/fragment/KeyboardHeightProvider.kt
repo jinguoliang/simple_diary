@@ -99,7 +99,6 @@ class KeyboardHeightProvider(private val activity: Activity) {
             notifyKeyboardHeightChanged(0, orientation)
         } else {
             val statusbarHeight = 0
-//            val statusbarHeight = activity.window.getStatusBarHeight()
             if (orientation == Configuration.ORIENTATION_PORTRAIT) {
                 this.keyboardPortraitHeight = keyboardHeight - statusbarHeight
                 notifyKeyboardHeightChanged(keyboardPortraitHeight, orientation)
