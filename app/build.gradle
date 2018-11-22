@@ -23,11 +23,11 @@ android {
             storePassword '123123'
         }
     }
-    compileSdkVersion 28
+    compileSdkVersion rootProject.androidCompileSdkVersion
     defaultConfig {
         applicationId "com.empty.jinux.simplediary"
         minSdkVersion 17
-        targetSdkVersion 27
+        targetSdkVersion rootProject.androidTargetSdkVersion
         versionCode Grgit.open().log().size()
         versionName Grgit.open().describe()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
