@@ -183,7 +183,6 @@ class ItemManager(private val delegated: MutableList<Item> = mutableListOf()) : 
             }
 
     fun refreshAll(elements: List<Item>) {
-        val tag = "refresh diff"
         val diffCallback = object : DiffUtil.Callback() {
             override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
                 val oldItem = delegated[oldItemPosition]
