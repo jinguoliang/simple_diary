@@ -1,11 +1,12 @@
 package com.empty.jinux.simplediary.data.backup
 
+import android.app.Activity
 import android.content.IntentSender
-import androidx.fragment.app.Fragment
 import android.util.Log
 import android.widget.Toast
 import com.empty.jinux.baselibaray.log.logd
 import com.empty.jinux.simplediary.data.source.local.room.DATABASE_NAME
+import com.empty.jinux.simplediary.path.PathManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -34,8 +35,7 @@ import java.io.IOException
  * @return Returns a reference to the same Editor object, so you can
  * chain put calls together.
  */
-class GoogleDriverBackup(val fragment: Fragment) : Backup() {
-    val activity = fragment.activity!!
+class GoogleDriverBackup(val activity: Activity, override val pathManager: PathManager) : Backup(pathManager) {
 
     override val needLogin: Boolean = true
 
@@ -102,7 +102,7 @@ class GoogleDriverBackup(val fragment: Fragment) : Backup() {
     private fun signIn() {
         logd("Start sign in", TAG)
         val googleSignInClient = buildGoogleSignInClient()
-        fragment.startActivityForResult(googleSignInClient.signInIntent, REQUEST_CODE_SIGN_IN)
+        activity.startActivityForResult(googleSignInClient.signInIntent, REQUEST_CODE_SIGN_IN)
     }
 
     private fun buildGoogleSignInClient(): GoogleSignInClient {
@@ -118,9 +118,9 @@ class GoogleDriverBackup(val fragment: Fragment) : Backup() {
                 .createContents()
                 .continueWithTask { task -> createFileIntentSender(task.result) }
                 .addOnSuccessListener {
-                    fragment.activity?.toast("hello successfully")
+                    activity.toast("hello successfully")
                 }.addOnFailureListener {
-                    fragment.activity?.toast("hello failed ${Log.getStackTraceString(it)}")
+                    activity.toast("hello failed ${Log.getStackTraceString(it)}")
                 }
     }
 
@@ -150,7 +150,7 @@ class GoogleDriverBackup(val fragment: Fragment) : Backup() {
         return mDriveClient!!
                 .newCreateFileActivityIntentSender(createFileActivityOptions)
                 .continueWith {
-                    fragment.startIntentSenderForResult(
+                    activity.startIntentSenderForResult(
                             it.result, REQUEST_CODE_CREATION, null, 0, 0, 0, null)
                     it.result
                 }
@@ -208,7 +208,7 @@ class GoogleDriverBackup(val fragment: Fragment) : Backup() {
         mDriveClient!!
                 .newOpenFileActivityIntentSender(openOptions)
                 .continueWith { task ->
-                    fragment.startIntentSenderForResult(
+                    activity.startIntentSenderForResult(
                             task.result, REQUEST_CODE_OPENING, null, 0, 0, 0, null)
                 }
 

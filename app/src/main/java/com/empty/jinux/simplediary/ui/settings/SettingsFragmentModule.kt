@@ -1,5 +1,6 @@
 package com.empty.jinux.simplediary.ui.settings
 
+import android.app.Activity
 import androidx.fragment.app.Fragment
 import dagger.Binds
 import dagger.android.AndroidInjector
@@ -15,5 +16,8 @@ internal abstract class SettingsFragmentModule {
     internal abstract fun bind(builder: SettingsFragmentComponent.Builder): AndroidInjector.Factory<out androidx.fragment.app.Fragment>
 
     @Binds
-    internal abstract fun bindView(v: SettingsFragment): androidx.fragment.app.Fragment
+    internal abstract fun bindView(v: SettingsFragment): Fragment
+
+    @Binds
+    internal abstract fun bindActivity(v: SettingsActivity): Activity
 }

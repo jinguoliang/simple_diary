@@ -4,6 +4,7 @@ import com.empty.jinux.simplediary.MApplication
 import com.empty.jinux.simplediary.applock.AppLockModule
 import com.empty.jinux.simplediary.config.ConfigModule
 import com.empty.jinux.simplediary.data.source.DiariesRepositoryModule
+import com.empty.jinux.simplediary.path.PathManagerModule
 import com.empty.jinux.simplediary.report.ReportModule
 import com.empty.jinux.simplediary.ui.about.AboutActivityModule
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivityModule
@@ -26,7 +27,8 @@ import javax.inject.Singleton
                 SettingsActivityModule::class,
                 ConfigModule::class,
                 AppLockModule::class,
-                ReportModule::class)
+                ReportModule::class,
+                PathManagerModule::class)
 )
 interface MAppComponent : AndroidInjector<MApplication> {
 

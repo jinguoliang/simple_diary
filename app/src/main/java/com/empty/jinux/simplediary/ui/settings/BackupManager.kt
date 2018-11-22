@@ -1,65 +1,74 @@
 package com.empty.jinux.simplediary.ui.settings
 
-import androidx.fragment.app.Fragment
+import android.app.Activity
+import android.content.Context
 import androidx.appcompat.app.AlertDialog
+import com.empty.jinux.baselibaray.log.logThrowable
+import com.empty.jinux.baselibaray.log.loge
+import com.empty.jinux.baselibaray.utils.formatBackupDate
+import com.empty.jinux.baselibaray.view.loading.doTaskWithLoadingDialog
 import com.empty.jinux.simplediary.BuildConfig
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.backup.Backup
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
 import com.empty.jinux.simplediary.di.Local
 import com.empty.jinux.simplediary.di.Remote
-import com.empty.jinux.baselibaray.utils.formatBackupDate
-import com.empty.jinux.baselibaray.view.loading.doTaskWithLoadingDialog
 import org.jetbrains.anko.toast
 import java.io.File
 import javax.inject.Inject
 
 class BackupManager
 @Inject internal constructor(
-        val fragment: androidx.fragment.app.Fragment,
+        val context: Activity,
         @param:Local val local: Backup,
         @param:Remote val remote: Backup,
         @param:Local val localDatabase: DiariesDataSource
 ) {
-    val activity = fragment.activity!!
 
     fun performLocalBackup() {
-        activity.doTaskWithLoadingDialog(activity.getString(R.string.saving)) {
-            if (local.tryLogin()) {
-                val outFileName = "${if (BuildConfig.DEBUG) "debug_" else ""}${System.currentTimeMillis().formatBackupDate()}"
-                local.performBackup(outFileName)
-                fragment.activity!!.toast(R.string.successfully_backup)
-            }
+        context.doTaskWithLoadingDialog(context.getString(R.string.saving)) {
+            tryBackup()
         }
     }
 
+    private fun tryBackup() {
+        if (local.tryLogin()) {
+            val outFileName = generateBackupFileName()
+            local.performBackup(outFileName)
+            context.toast(R.string.successfully_backup)
+        } else {
+            throw LoginFailedException()
+        }
+    }
+
+    private fun generateBackupFileName() =
+            "${if (BuildConfig.DEBUG) "debug_" else ""}${System.currentTimeMillis().formatBackupDate()}"
+
     fun performLocalRestore() {
         if (local.tryLogin()) {
-            val folder = local.getBackupFolder()
-            if (folder.exists()) {
-                folder.listFiles()?.apply {
-                    sortBy { it.lastModified() }
-                    reverse()
-                    showSingleSelectDialog(this)
+            local.getBackupFiles().let { backups ->
+                showSingleSelectDialog(backups.toTypedArray()) {
+                    try {
+                        local.importDb(it)
+                        localDatabase.refreshDiaries()
+                    } catch (e: Exception) {
+                        context.toast("Failed to restore")
+                        logThrowable(e)
+                    }
                 }
             }
         }
     }
 
-    private fun showSingleSelectDialog(files: Array<out File>) {
-        val builder = AlertDialog.Builder(activity)
+    private fun showSingleSelectDialog(files: Array<out File>, onSelected: (path: String) -> Unit) {
+        val builder = AlertDialog.Builder(context)
         builder.setTitle(R.string.restore_from_local_dialog_title)
         builder.setNegativeButton(R.string.dialog_cancel) { dialog, _ ->
             dialog.dismiss()
         }
         builder.setItems(files.map { it.name }.toTypedArray()) { _, which ->
-            try {
-                activity.doTaskWithLoadingDialog(fragment.getString(R.string.restore)) {
-                    local.importDb(files[which].path)
-                    localDatabase.refreshDiaries()
-                }
-            } catch (e: Exception) {
-                activity.toast("Failed to restore")
+            context.doTaskWithLoadingDialog(context.getString(R.string.restore)) {
+                onSelected(files[which].path)
             }
         }
         builder.show()

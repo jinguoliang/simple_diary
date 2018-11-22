@@ -1,5 +1,6 @@
 package com.empty.jinux.simplediary.ui.diarydetail.fragment
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -25,7 +26,7 @@ import java.io.File
 class EditorFormator(val editor: MEditText, val mConfig: ConfigManager) {
     private var mPictureManager = DiaryPictureManager(editor.context!!)
 
-    fun insertPictureMark(key: String) {
+    private fun insertPictureMark(key: String) {
         val append = SpannableStringBuilder("\n[]($key)\n")
         editor.text.also {
             val selectStart = Selection.getSelectionStart(it)
@@ -110,7 +111,7 @@ class EditorFormator(val editor: MEditText, val mConfig: ConfigManager) {
     }
 
     private fun getImageDir(): String {
-        val imagesDir = "${editor.context!!.filesDir}/images".run { File(this) }
+        val imagesDir = editor.context!!.getDir("images", Context.MODE_PRIVATE)
         if (!imagesDir.isDirectory) {
             imagesDir.mkdir()
         }
