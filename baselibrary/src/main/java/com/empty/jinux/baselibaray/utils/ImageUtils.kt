@@ -14,7 +14,7 @@ fun Context.getImage(uri: Uri, sampleSize: Int): Bitmap? {
         it.inSampleSize = sampleSize
     }
     return try {
-        BitmapFactory.decodeStream(inputStream, null, opt).also {
+        BitmapFactory.decodeStream(inputStream, null, opt)?.also {
             loge("out = ${opt.outWidth}, ${opt.outHeight}")
             loge("w = ${it.width} h = ${it.height}")
         }
