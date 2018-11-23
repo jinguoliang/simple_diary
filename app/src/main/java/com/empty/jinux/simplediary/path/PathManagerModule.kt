@@ -8,6 +8,6 @@ import dagger.Provides
 class PathManagerModule {
     @Provides
     fun provider(context: Context): PathManager {
-        return PathManager(context)
+        return AndroidPathManager(context)
     }
 }
