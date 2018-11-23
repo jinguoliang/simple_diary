@@ -9,6 +9,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.File
+import java.lang.NullPointerException
 
 @RunWith(AndroidJUnit4::class)
 class AndroidPathManagerTest {
@@ -23,16 +24,32 @@ class AndroidPathManagerTest {
 
     @Test
     fun testAndroidDirectories(): Unit {
+
+    }
+
+    @Test
+    fun testEnvironmentFile(): Unit {
         assertEquals("/storage/emulated/0", Environment.getExternalStorageDirectory().absolutePath)
-
-        assertNotNull(context)
-        assertEquals("/data/user/0/com.empty.jinux.simplediary.debug/app_haha", context.getDir("haha", Context.MODE_PRIVATE)?.absolutePath)
-
-        assertEquals("/storage/emulated/0/Android/data/com.empty.jinux.simplediary.debug/files/Music", context.getExternalFilesDir(Environment.DIRECTORY_MUSIC)?.absolutePath)
+        assertEquals("/storage/emulated/0/Download", Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath)
+        try {
+            assertEquals(null, Environment.getExternalStoragePublicDirectory(null))
+            fail("null should cause exception")
+        } catch (e: NullPointerException) {
+        }
+        assertEquals(Environment.MEDIA_MOUNTED, Environment.getExternalStorageState(File("/sdcard/")))
+        assertEquals("/cache", Environment.getDownloadCacheDirectory().absolutePath)
     }
 
     @Test
     fun testExternalFileDirs(): Unit {
+
+        assertEquals("/storage/emulated/0/Android/media/com.empty.jinux.simplediary.debug", context.externalMediaDirs[0].absolutePath)
+        assertEquals("/storage/emulated/0/Android/data/com.empty.jinux.simplediary.debug/files", context.getExternalFilesDir(null).absolutePath)
+        assertEquals("/storage/emulated/0/Android/data/com.empty.jinux.simplediary.debug/files/Music", context.getExternalFilesDir(Environment.DIRECTORY_MUSIC)?.absolutePath)
+        assertEquals("/storage/emulated/0/Android/data/com.empty.jinux.simplediary.debug/cache", context.externalCacheDir.absolutePath)
+        assertEquals("/storage/emulated/0/Android/data/com.empty.jinux.simplediary.debug/cache", context.externalCacheDirs[0].absolutePath)
+
+
         val externalFilesDirs = context.getExternalFilesDirs(Environment.DIRECTORY_DCIM)
         assertEquals(1, externalFilesDirs.size)
         assertEquals("/storage/emulated/0/Android/data/com.empty.jinux.simplediary.debug/files/DCIM",
@@ -71,5 +88,9 @@ class AndroidPathManagerTest {
 
         assertEquals("/data/user/0/com.empty.jinux.simplediary.debug/no_backup", context.noBackupFilesDir.absolutePath)
 
+        assertEquals("/data/user/0/com.empty.jinux.simplediary.debug/app_haha", context.getDir("haha", Context.MODE_PRIVATE)?.absolutePath)
+
+        assertEquals("/data/user/0/com.empty.jinux.simplediary.debug/cache", context.cacheDir.absolutePath)
+        assertEquals("/data/user/0/com.empty.jinux.simplediary.debug/code_cache", context.codeCacheDir.absolutePath)
     }
 }
