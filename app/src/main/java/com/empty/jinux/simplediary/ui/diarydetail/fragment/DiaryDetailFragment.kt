@@ -484,7 +484,11 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     override fun showInputMethod() {
-        diaryContent.showInputMethod()
+        ThreadPools.postOnUIDelayed(200) {
+            if (isActive) {
+                diaryContent.showInputMethod()
+            }
+        }
     }
 
     override fun hideInputMethod() {

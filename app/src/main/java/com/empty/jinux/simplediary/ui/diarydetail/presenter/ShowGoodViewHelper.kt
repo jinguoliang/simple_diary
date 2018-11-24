@@ -24,21 +24,18 @@ class ShowGoodViewHelper(var mWordCountOfToday: Int, private val mListener: List
     var isToday: Boolean = false
 
     private fun showOrHideGoodView(currentArticleWordCount: Int, animShow: Boolean) {
-        logi("showOrHideGoodView $mWordCountOfToday -- $currentArticleWordCount", TAG)
         if (!isToday) {
             return
         }
 
         val currentWordCountToday = mWordCountOfOtherArticleToday + currentArticleWordCount
         if (STREAK_MIN_WORDS_COUNTS in (preWordCountToday + 1)..currentWordCountToday) {
-            logi("show good", TAG)
             if (animShow) {
                 mListener.onShowGoodViewAnim()
             } else {
                 mListener.onShowGood()
             }
         } else if (STREAK_MIN_WORDS_COUNTS in (currentWordCountToday + 1)..preWordCountToday) {
-            logi("hide good", TAG)
             mListener.onHideGood()
         }
         preWordCountToday = currentWordCountToday

@@ -1,8 +1,9 @@
 package com.empty.jinux.simplediary.data.backup
 
 import android.content.Context
+import com.empty.jinux.simplediary.path.PathManager
 import org.junit.After
-import org.junit.Assert
+import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -17,7 +18,7 @@ class LocalBackupTest {
     @Before
     fun setup(): Unit {
         mockitoContext = mock(Context::class.java)
-        backup = LocalBackup(mockitoContext)
+        backup = LocalBackup(mockitoContext, mock(PathManager::class.java))
     }
 
     @After
@@ -31,10 +32,14 @@ class LocalBackupTest {
     }
 
     @Test
-    fun backupDb() {
-        Mockito.`when`(mockitoContext.getDatabasePath(Mockito.anyString())).thenReturn(File("hello"))
-        backup.backupDb("hello")
+    fun `test collect backup files`() {
+        val pkgName = "pppppp"
+        val expected = arrayListOf(File("hello/haha"), File("shared_prefs/$pkgName/_preferences")).toTypedArray()
+        Mockito.`when`(mockitoContext.getDatabasePath(Mockito.anyString())).thenReturn(expected[0])
+        Mockito.`when`(mockitoContext.packageName).thenReturn(pkgName)
 
+        val collected = backup.collectBackupData()
+        assertArrayEquals(expected, collected.toTypedArray())
     }
 
     @Test

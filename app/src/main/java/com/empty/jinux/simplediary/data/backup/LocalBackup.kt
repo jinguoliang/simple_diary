@@ -1,14 +1,10 @@
 package com.empty.jinux.simplediary.data.backup
 
 import android.content.Context
-import android.content.SharedPreferences
-import android.preference.PreferenceManager
-import com.empty.jinux.baselibaray.log.loge
+import androidx.annotation.VisibleForTesting
 import com.empty.jinux.simplediary.data.source.local.room.DATABASE_NAME
 import com.empty.jinux.simplediary.path.PathManager
-import com.google.android.gms.common.util.SharedPreferencesUtils
 import com.google.common.io.Files
-import org.jetbrains.anko.defaultSharedPreferences
 import java.io.*
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
@@ -20,11 +16,16 @@ class LocalBackup(val context: Context, override val pathManager: PathManager) :
     override val needLogin: Boolean = false
 
     override fun backupDb(out: String) {
+        compressToZip(out, collectBackupData())
+    }
 
+    @VisibleForTesting
+    fun collectBackupData(): List<File> {
         val list = arrayListOf<File>()
 
         val databaseFilePath = context.getDatabasePath(DATABASE_NAME)
         list.add(databaseFilePath)
+
         list.add(File(pathManager.getAppInternalDir("shared_prefs/${context.packageName}"), "_preferences"))
 
         val imagesDir = pathManager.getAppInternalDir("images")
@@ -33,22 +34,20 @@ class LocalBackup(val context: Context, override val pathManager: PathManager) :
                 list.add(x)
             }
         }
-
-        compressToZip(out, list)
+        return list
     }
 
-    private fun compressToZip(out: String, map: List<File>) {
+    private fun compressToZip(out: String, list: List<File>) {
         val zipOut = ZipOutputStream(FileOutputStream(out))
-
-        for (e in map) {
-            zipOut.putNextEntry(ZipEntry(getZipEntryKey(e.absolutePath).apply { loge("the path = $this") }))
+        for (e in list) {
+            zipOut.putNextEntry(e.toZipEntry())
             Files.copy(e, zipOut)
             zipOut.closeEntry()
         }
-
-        zipOut.flush()
         zipOut.close()
     }
+
+    private fun File.toZipEntry() = ZipEntry(this.name)
 
     override fun importDb(path: String) {
         pathManager.ensureFoldExist(pathManager.getAppInternalDir("images"))
@@ -70,8 +69,6 @@ class LocalBackup(val context: Context, override val pathManager: PathManager) :
         File(databaseShm).delete()
         File(databaseWal).delete()
     }
-
-    private fun getZipEntryKey(databaseFilePath: String) = databaseFilePath.substring(pathManager.getAppInternalDir("a").parentFile.absolutePath.length)
 
     private fun copy(zipIn: InputStream, outputStream: OutputStream) {
         val buffer = ByteArray(64)

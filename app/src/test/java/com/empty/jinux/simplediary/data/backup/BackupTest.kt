@@ -1,13 +1,14 @@
 package com.empty.jinux.simplediary.data.backup
 
+import com.empty.jinux.simplediary.path.PathManager
 import org.junit.Assert.assertEquals
 import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Matchers
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.verify
+import org.mockito.Mockito.*
 import org.mockito.runners.MockitoJUnitRunner
 import java.io.File
 import java.io.FileNotFoundException
@@ -15,21 +16,25 @@ import java.io.FileNotFoundException
 @RunWith(MockitoJUnitRunner::class)
 class BackupTest {
 
-    @Mock
     lateinit var mockBackup: Backup
+
+    lateinit var mockPathManager: PathManager
 
     @Before
     fun setUp() {
+        mockBackup = mock(Backup::class.java)
+        mockPathManager = mock(PathManager::class.java)
+        `when`(mockBackup.pathManager).thenReturn(mockPathManager)
     }
 
     @Test
-    fun `when backup fold is exist, call performBackup`() {
+    fun `when backup folder is exist, call performBackup`() {
         val parentPath = File("parent")
         val outFileName = "hello"
         val expectation = "$parentPath/hello.db"
 
         `when`(mockBackup.getBackupFolder()).thenReturn(parentPath)
-        `when`(mockBackup.ensureFoldExist(parentPath)).thenReturn(true)
+        `when`(mockPathManager.ensureFoldExist(parentPath)).thenReturn(true)
 
         mockBackup.performBackup(outFileName)
 
@@ -42,7 +47,7 @@ class BackupTest {
         val outFileName = "hello"
 
         `when`(mockBackup.getBackupFolder()).thenReturn(parentPath)
-        `when`(mockBackup.ensureFoldExist(parentPath)).thenReturn(false)
+//        `when`(mockBackup.ensureFoldExist(parentPath)).thenReturn(false)
 
         try {
             mockBackup.performBackup(outFileName)

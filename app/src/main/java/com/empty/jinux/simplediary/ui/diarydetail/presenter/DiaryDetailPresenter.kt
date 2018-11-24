@@ -18,6 +18,7 @@ package com.empty.jinux.simplediary.ui.diarydetail.presenter
 
 import android.os.Bundle
 import android.text.TextUtils
+import androidx.annotation.VisibleForTesting
 import com.empty.jinux.baselibaray.log.logi
 import com.empty.jinux.baselibaray.thread.ThreadPools
 import com.empty.jinux.baselibaray.utils.*
@@ -52,7 +53,8 @@ constructor(
     @Inject
     lateinit var mReporter: Reporter
 
-    private val isNewDiary: Boolean
+    @VisibleForTesting
+    val isNewDiary: Boolean
         get() = mDiaryId == INVALID_DIARY_ID
 
     override fun start() {
@@ -67,23 +69,31 @@ constructor(
         openDiary()
     }
 
-    private fun initForNewDiary() {
-        mDiaryDetailView.showEmotion(MyEmotionIcons.getEmotion(0).toLong())
-        mDiaryDetailView.showDate(formatDateWithWeekday(System.currentTimeMillis()))
+    @VisibleForTesting
+    fun initForNewDiary() {
+        showDefaultEmotion()
+        showTodayDate()
+        showLocationAndWeather()
+        mDiaryDetailView.showInputMethod()
 
+        mLoadFinished = true
+        mShowGoodViewHelper.isToday = true
+        mShowGoodViewHelper.init(0)
+    }
+
+    private fun showTodayDate() {
+        mDiaryDetailView.showDate(formatDateWithWeekday(System.currentTimeMillis()))
+    }
+
+    private fun showDefaultEmotion() {
+        mDiaryDetailView.showEmotion(MyEmotionIcons.getEmotion(0).toLong())
+    }
+
+    private fun showLocationAndWeather() {
         if (mDiaryDetailView.hasLocationPermission()) {
             refreshLocation()
             refreshWeather()
         }
-        ThreadPools.postOnUIDelayed(200) {
-            if (mDiaryDetailView.isActive) {
-                mDiaryDetailView.showInputMethod()
-            }
-        }
-
-        mLoadFinished = true
-        mShowGoodViewHelper.isToday = true
-        mShowGoodViewHelper.init(currentDiaryContent.content.wordsCount())
     }
 
     private var mLoadFinished = false
