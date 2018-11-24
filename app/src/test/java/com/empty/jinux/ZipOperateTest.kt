@@ -4,12 +4,10 @@ import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertTrue
 import org.junit.Test
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.nio.ByteBuffer
-import java.util.zip.CRC32
-import java.util.zip.ZipEntry
-import java.util.zip.ZipFile
-import java.util.zip.ZipOutputStream
+import java.util.zip.*
 
 class ZipOperateTest {
     val zipFileName = "/tmp/test.zip"
@@ -64,6 +62,14 @@ class ZipOperateTest {
         val inputStream = zipFile.getInputStream(one)
         val readText = inputStream.buffered().reader().readText()
         assertEquals("hello world", readText)
+    }
+
+    @Test
+    fun `read data from zip stream`(): Unit {
+        val zipStream = ZipInputStream(FileInputStream(zipFileName))
+        val entry = zipStream.nextEntry
+        assertEquals("one", entry.name)
+        assertEquals("hello world", zipStream.bufferedReader().readText())
     }
 
     private fun createContent(): String {
