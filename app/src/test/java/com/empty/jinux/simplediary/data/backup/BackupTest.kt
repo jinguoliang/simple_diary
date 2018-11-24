@@ -6,10 +6,8 @@ import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Matchers
-import org.mockito.Mock
 import org.mockito.Mockito.*
-import org.mockito.runners.MockitoJUnitRunner
+import org.mockito.junit.MockitoJUnitRunner
 import java.io.File
 import java.io.FileNotFoundException
 
@@ -38,7 +36,7 @@ class BackupTest {
 
         mockBackup.performBackup(outFileName)
 
-        verify(mockBackup).backupDb(expectation)
+        verify(mockBackup).backupDb(File(expectation))
     }
 
     @Test
@@ -60,8 +58,8 @@ class BackupTest {
 
     @Test
     fun performImport() {
-        mockBackup.performImport("hello")
-        verify(mockBackup).importDb("hello")
+        mockBackup.performImport(File("hello"))
+        verify(mockBackup).importDb(File("hello"))
     }
 
     @Test
@@ -84,14 +82,6 @@ class BackupTest {
         `when`(mockBackup.login()).thenReturn(expected)
         result = mockBackup.tryLogin()
         assertEquals(expected, result)
-    }
-
-    @Test
-    fun `getBackupList`(): Unit {
-        val expected = arrayListOf("a.bak", "b.bak")
-        `when`(mockBackup.getBackupFiles()).thenReturn(expected.map { File(it) })
-        val backups = mockBackup.getBackupList()
-        assertEquals(expected, backups)
     }
 }
 

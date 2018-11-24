@@ -16,8 +16,7 @@ class WeatherManagerRetrofitImplTest {
 
     @Test
     fun getCurrentWeather() {
-        mWeatherManager.getCurrentWeather(2.2,2.2) {
-        }
+
     }
 
     @Test

@@ -16,15 +16,15 @@ abstract class Backup(open val pathManager: PathManager) {
         val success = pathManager.ensureFoldExist(folder)
         if (success) {
             val out = "$folder/$outFileName.db"
-            backupDb(out)
+            backupDb(File(out))
         } else {
             throw FileNotFoundException("the backup folder does not exist: $folder")
         }
     }
 
-    //ask to the user what local to restore
-    fun performImport(inFileName: String) {
-        importDb(inFileName)
+    //ask the user what local to restore
+    fun performImport(file: File) {
+        importDb(file)
     }
 
     fun tryLogin(): Boolean {
@@ -34,9 +34,9 @@ abstract class Backup(open val pathManager: PathManager) {
         return true
     }
 
-    abstract fun importDb(path: String)
+    abstract fun importDb(zip: File)
 
-    abstract fun backupDb(out: String)
+    abstract fun backupDb(to: File)
 
     // open for mock in test
     open fun getBackupFolder(): File {
@@ -44,9 +44,7 @@ abstract class Backup(open val pathManager: PathManager) {
     }
 
     fun getBackupList(): List<String> {
-        return getBackupFiles()
-
-                .map { it.name }
+        return getBackupFiles().map { it.name }
     }
 
     // open for test

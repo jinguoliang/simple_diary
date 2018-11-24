@@ -23,6 +23,7 @@ import com.empty.jinux.simplediary.report.Reporter
 import com.google.android.gms.drive.DriveId
 import com.google.android.gms.drive.OpenFileActivityOptions
 import kotlinx.android.synthetic.main.dialog_app_lock_set_password.*
+import java.io.File
 import javax.inject.Inject
 
 class SettingsFragment : DaggerPreferenceFragment(),
@@ -126,7 +127,7 @@ class SettingsFragment : DaggerPreferenceFragment(),
     }
 
     private fun onRestorFromRemoteClick() {
-        mBackupManager.remote.performImport("test")
+        mBackupManager.remote.performImport(File("test"))
     }
 
     private fun onPreferenceClick(@StringRes key: Int, onClickListener: () -> Unit) {

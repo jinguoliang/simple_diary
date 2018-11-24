@@ -32,9 +32,12 @@ class LocalBackupTest {
     }
 
     @Test
-    fun `test collect backup files`() {
+    fun `collect backup files contain database files and SharedPreferences and images`() {
         val pkgName = "pppppp"
-        val expected = arrayListOf(File("hello/haha"), File("shared_prefs/$pkgName/_preferences")).toTypedArray()
+        val expected = arrayListOf(
+                File("hello/haha"),
+                File("shared_prefs/$pkgName/_preferences")
+        ).toTypedArray()
         Mockito.`when`(mockitoContext.getDatabasePath(Mockito.anyString())).thenReturn(expected[0])
         Mockito.`when`(mockitoContext.packageName).thenReturn(pkgName)
 

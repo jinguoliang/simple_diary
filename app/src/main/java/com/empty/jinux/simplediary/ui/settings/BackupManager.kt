@@ -1,10 +1,8 @@
 package com.empty.jinux.simplediary.ui.settings
 
 import android.app.Activity
-import android.content.Context
 import androidx.appcompat.app.AlertDialog
 import com.empty.jinux.baselibaray.log.logThrowable
-import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.baselibaray.utils.formatBackupDate
 import com.empty.jinux.baselibaray.view.loading.doTaskWithLoadingDialog
 import com.empty.jinux.simplediary.BuildConfig
@@ -49,7 +47,7 @@ class BackupManager
             local.getBackupFiles().let { backups ->
                 showSingleSelectDialog(backups.toTypedArray()) {
                     try {
-                        local.importDb(it)
+                        local.importDb(File(it))
                         localDatabase.refreshDiaries()
                     } catch (e: Exception) {
                         context.toast("Failed to restore")

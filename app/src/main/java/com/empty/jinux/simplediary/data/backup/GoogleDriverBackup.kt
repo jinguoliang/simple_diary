@@ -53,11 +53,11 @@ class GoogleDriverBackup(val activity: Activity, override val pathManager: PathM
         }
     }
 
-    override fun importDb(path: String) {
+    override fun importDb(zip: File) {
 
     }
 
-    override fun backupDb(out: String) {
+    override fun backupDb(to: File) {
         mDriveResourceClient?.apply {
             val children = listChildren(rootFolder.result).result
             val backupFolder = children.filter { it.title == BACKUP_FOLDER }.get(0)
@@ -68,7 +68,7 @@ class GoogleDriverBackup(val activity: Activity, override val pathManager: PathM
                     it.result.outputStream.bufferedWriter().apply { write("hello");close() };
 
                     createFile(backupFolder.driveId.asDriveFolder(), MetadataChangeSet.Builder().apply {
-                        setTitle(out)
+                        setTitle(to.absolutePath)
                         setMimeType("application/db")
                     }.build(), it.result)
                 }
