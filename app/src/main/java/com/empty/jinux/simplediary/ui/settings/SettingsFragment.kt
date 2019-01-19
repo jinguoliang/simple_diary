@@ -1,30 +1,21 @@
 package com.empty.jinux.simplediary.ui.settings
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.text.Editable
 import androidx.annotation.StringRes
+import androidx.core.content.edit
 import androidx.preference.CheckBoxPreference
 import androidx.preference.PreferenceManager
-import android.text.Editable
-import android.util.Log
-import android.widget.Toast
-import androidx.core.content.edit
 import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.baselibaray.utils.TextWatcherAdapter
-import com.empty.jinux.simplediary.R
-import com.empty.jinux.simplediary.data.backup.GoogleDriverBackup
-import com.empty.jinux.simplediary.data.backup.GoogleDriverBackup.Companion.REQUEST_CODE_CREATION
-import com.empty.jinux.simplediary.data.backup.GoogleDriverBackup.Companion.REQUEST_CODE_OPENING
-import com.empty.jinux.simplediary.data.backup.GoogleDriverBackup.Companion.REQUEST_CODE_SIGN_IN
 import com.empty.jinux.simplediary.report.Reporter
-import com.google.android.gms.drive.DriveId
-import com.google.android.gms.drive.OpenFileActivityOptions
 import kotlinx.android.synthetic.main.dialog_app_lock_set_password.*
-import java.io.File
 import javax.inject.Inject
+import com.empty.jinux.simplediary.R
+
 
 class SettingsFragment : DaggerPreferenceFragment(),
         SharedPreferences.OnSharedPreferenceChangeListener {
@@ -123,11 +114,9 @@ class SettingsFragment : DaggerPreferenceFragment(),
     }
 
     private fun onBackupToRemoteClick() {
-        mBackupManager.remote.performBackup("test")
     }
 
     private fun onRestorFromRemoteClick() {
-        mBackupManager.remote.performImport(File("test"))
     }
 
     private fun onPreferenceClick(@StringRes key: Int, onClickListener: () -> Unit) {
@@ -148,32 +137,7 @@ class SettingsFragment : DaggerPreferenceFragment(),
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         loge("request = $requestCode result = $resultCode", "JIN")
-        when (requestCode) {
 
-            REQUEST_CODE_SIGN_IN -> {
-                Log.i(TAG, "Sign in request code")
-                // Called after user is signed in.
-//                if (resultCode == Activity.RESULT_OK) {
-//                    mBackupManager.performLocalBackup()
-//                }
-            }
-
-            REQUEST_CODE_CREATION ->
-                // Called after a file is saved to Drive.
-                if (resultCode == Activity.RESULT_OK) {
-                    Log.i(TAG, "Backup successfully saved.")
-                    Toast.makeText(activity, "Backup successufly loaded!", Toast.LENGTH_SHORT).show()
-                }
-
-            REQUEST_CODE_OPENING -> if (resultCode == Activity.RESULT_OK && data != null) {
-                val driveId = data.getParcelableExtra<DriveId>(
-                        OpenFileActivityOptions.EXTRA_RESPONSE_DRIVE_ID)
-                loge("driveId = $driveId")
-                (mBackupManager.remote as GoogleDriverBackup).mOpenItemTaskSource.setResult(driveId)
-            } else {
-                (mBackupManager.remote as GoogleDriverBackup).mOpenItemTaskSource.setException(RuntimeException("Unable to open file"))
-            }
-        }
     }
 }
 

@@ -22,11 +22,5 @@ abstract class BackupModule {
             return LocalBackup(context, pathManager)
         }
 
-        @JvmStatic
-        @Provides
-        @Remote
-        fun provideRemoteBackup(context: Activity, pathManager: PathManager): Backup {
-            return GoogleDriverBackup(context, pathManager)
-        }
     }
 }

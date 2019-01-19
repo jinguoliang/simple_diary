@@ -19,7 +19,6 @@ class BackupManager
 @Inject internal constructor(
         val context: Activity,
         @param:Local val local: Backup,
-        @param:Remote val remote: Backup,
         @param:Local val localDatabase: DiariesDataSource
 ) {
 
