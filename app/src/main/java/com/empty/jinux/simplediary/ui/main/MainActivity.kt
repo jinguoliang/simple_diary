@@ -21,6 +21,7 @@ import android.os.Bundle
 import androidx.core.view.GravityCompat
 import android.view.MenuItem
 import android.view.View
+import androidx.fragment.app.Fragment
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.intent.helpTranslate
 import com.empty.jinux.simplediary.intent.rateApp
@@ -30,6 +31,7 @@ import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.LockHelper
 import com.empty.jinux.simplediary.ui.about.AboutActivity
 import com.empty.jinux.simplediary.ui.main.diarylist.DiaryListFragment
+import com.empty.jinux.simplediary.ui.main.metercouner.MeterCounterFragment
 import com.empty.jinux.simplediary.ui.main.statistics.StatisticsFragment
 import com.empty.jinux.simplediary.ui.settings.SettingsActivity
 import com.empty.jinux.simplediary.util.ActivityUtils
@@ -52,7 +54,7 @@ class MainActivity : DaggerAppCompatActivity() {
     @Inject
     lateinit var mLockHelper: LockHelper
 
-    private lateinit var mCurrentFragment: BackPressPrecessor
+    private lateinit var mCurrentFragment: Fragment
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,7 +85,7 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (mCurrentFragment.onBackPress()) {
+        if ((mCurrentFragment as BackPressProcessor).onBackPress()) {
             return
         } else {
             super.onBackPressed()
@@ -114,19 +116,24 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     private fun showDiaryStatistics() {
-        val fragment = supportFragmentManager.findFragmentById(R.id.contentFrame) as? StatisticsFragment
-                ?: StatisticsFragment.newInstance()
-        ActivityUtils.replaceFragment(
-                supportFragmentManager, fragment, R.id.contentFrame)
-        mCurrentFragment = fragment
+        showFragment<StatisticsFragment>()
     }
 
     private fun showDiaryListFragment() {
-        val fragment = supportFragmentManager.findFragmentById(R.id.contentFrame) as? DiaryListFragment
-                ?: DiaryListFragment.newInstance()
-        ActivityUtils.replaceFragment(
-                supportFragmentManager, fragment, R.id.contentFrame)
-        mCurrentFragment = fragment
+        showFragment<DiaryListFragment>()
+    }
+
+    private fun showMeterCounterFragment() {
+        showFragment<MeterCounterFragment>()
+    }
+
+    private inline fun  <reified T:Fragment> showFragment() {
+        mCurrentFragment = supportFragmentManager
+                .findFragmentById(R.id.contentFrame) as? T
+                ?: T::class.java.newInstance().apply {
+            ActivityUtils.replaceFragment(
+                    supportFragmentManager, this as Fragment, R.id.contentFrame)
+        }
     }
 
     private fun androidx.drawerlayout.widget.DrawerLayout.setMDrawerListener() {
@@ -148,19 +155,25 @@ class MainActivity : DaggerAppCompatActivity() {
         })
     }
 
-    private var mCurrentItemRes: Int = R.id.list_navigation_menu_item
+    private var mCurrentItemRes: Int = R.id.navigation_menu_item_diary
 
     private fun NavigationView.setMItemClickListener() {
         setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.list_navigation_menu_item -> {
-                    mCurrentItemRes = R.id.list_navigation_menu_item
+                R.id.navigation_menu_item_diary -> {
+                    mCurrentItemRes = R.id.navigation_menu_item_diary
 
                     showDiaryListFragment()
                     mReporter.reportClick("main_menu_list")
                 }
-                R.id.statistics_navigation_menu_item -> {
-                    mCurrentItemRes = R.id.statistics_navigation_menu_item
+                R.id.navigation_menu_item_timer -> {
+                    mCurrentItemRes = R.id.navigation_menu_item_timer
+
+                    showMeterCounterFragment()
+                    mReporter.reportClick("main_menu_timer")
+                }
+                R.id.navigation_menu_item_statistics -> {
+                    mCurrentItemRes = R.id.navigation_menu_item_statistics
 
                     showDiaryStatistics()
                     mReporter.reportClick("main_menu_statistics")
@@ -211,7 +224,7 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 }
 
-interface BackPressPrecessor {
+interface BackPressProcessor {
     fun onBackPress(): Boolean {
         return false
     }
