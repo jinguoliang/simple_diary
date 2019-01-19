@@ -1,4 +1,4 @@
-package com.empty.jinux.simplediary.utils
+package com.empty.jinux.simplediary.test_utils
 
 import org.mockito.Mockito
 

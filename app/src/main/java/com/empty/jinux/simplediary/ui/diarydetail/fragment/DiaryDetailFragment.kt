@@ -20,22 +20,23 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.design.widget.TabLayout
-import android.support.graphics.drawable.VectorDrawableCompat
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.content.res.ResourcesCompat
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.*
 import android.widget.ImageView
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.children
+import androidx.core.view.updateLayoutParams
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.baselibaray.log.logi
 import com.empty.jinux.baselibaray.thread.ThreadPools
-import com.empty.jinux.baselibaray.utils.*
+import com.empty.jinux.baselibaray.utils.TextWatcherAdapter
+import com.empty.jinux.baselibaray.utils.dpToPx
+import com.empty.jinux.baselibaray.utils.hideInputMethod
+import com.empty.jinux.baselibaray.utils.showInputMethod
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.config.ConfigManager
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
@@ -46,10 +47,13 @@ import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivity
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.EditorStyle
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.KeyboardFragment
+import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.PictureSelectFragment
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.StatusFragment
 import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
 import com.empty.jinux.simplediary.ui.settings.EditorFontSize
 import com.empty.jinux.simplediary.util.PermissionUtil
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayout
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.activity_diary_detail.*
 import kotlinx.android.synthetic.main.fragment_taskdetail.*
@@ -57,6 +61,7 @@ import kotlinx.android.synthetic.main.layout_diary_detail_edit_tool.*
 import org.jetbrains.anko.contentView
 import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.dimen
+import org.jetbrains.anko.toast
 import javax.inject.Inject
 
 
@@ -134,11 +139,14 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     var editFontSize = 25f
     lateinit var editStyle: EditorStyle
 
+    private lateinit var mEditorFormator: EditorFormator
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         setHasOptionsMenu(true)
+
+        mEditorFormator = EditorFormator(diaryContent, mConfig)
 
         editFontSize = EditorFontSize(context!!.defaultSharedPreferences.getString(getString(R.string.pref_default_font_size), EditorFontSize.DEFAULT)).size
         editStyle = EditorStyle(context!!, context!!.defaultSharedPreferences.getString(getString(R.string.pref_default_editor_style), "heiyaoshi"))
@@ -152,7 +160,6 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         savedInstanceState?.getLong(KEY_DIARY_ID)?.apply {
             mPresenter.setDiaryId(this)
         }
-
         mPresenter.start()
     }
 
@@ -189,7 +196,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         mWatcher = object : TextWatcherAdapter() {
             override fun afterTextChanged(s: Editable?) {
                 mPresenter.onContentChange(s.toString())
-                formatEditContent()
+                mEditorFormator.formatEditContent(editFontSize)
             }
         }
         diaryContent.setOnTouchListener { _, event ->
@@ -201,6 +208,8 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             }
             false
         }
+
+        diaryContent.movementMethod = MArrowKeyMethod()
 
         diaryContent.mScrollParent = scrollContainer
         diaryContent.textSize = editFontSize
@@ -246,13 +255,19 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     private fun setGoodViewHeight(keyboardHeight: Int) {
-        goodView.layoutHeight = fragmentContainer.height - keyboardHeight
+        goodView.updateLayoutParams {
+            height = fragmentContainer.height - keyboardHeight
+        }
     }
 
-    private fun setToolAreaHeight(height: Int) {
-        if (height != toolArea.layoutHeight) {
-            bottomSpace.layoutHeight = height + toolArea.dimen(R.dimen.diary_detail_edit_tool_height)
-            toolArea.layoutHeight = height
+    private fun setToolAreaHeight(h: Int) {
+        if (h != toolArea.height) {
+            bottomSpace.updateLayoutParams {
+                height = h + toolArea.dimen(R.dimen.diary_detail_edit_tool_height)
+            }
+            toolArea.updateLayoutParams {
+                height = h
+            }
         }
     }
 
@@ -260,33 +275,38 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     private lateinit var statusFragment: StatusFragment
 
+    private lateinit var selectPictureFragment: PictureSelectFragment
+
     private fun initEditToolbar() {
         keyboardFragment = ((fragmentManager?.findFragmentByTag(makeFragmentName(toolArea.id, 0)) as? KeyboardFragment)
                 ?: KeyboardFragment())
+
         statusFragment = ((fragmentManager?.findFragmentByTag(makeFragmentName(toolArea.id, 1)) as? StatusFragment)
                 ?: StatusFragment())
 
-        val fragments = listOf(keyboardFragment, statusFragment)
+        selectPictureFragment = ((fragmentManager?.findFragmentByTag(makeFragmentName(toolArea.id, 2)) as? PictureSelectFragment)
+                ?: PictureSelectFragment())
+
+        val fragments = listOf(keyboardFragment, statusFragment, selectPictureFragment)
         fragments.forEach {
             it.mPresenter = mPresenter
             it.mReporter = mReporter
+            it.mParentFragment = this@DiaryDetailFragment
         }
 
-        toolArea.adapter = object : FragmentPagerAdapter(fragmentManager) {
-            override fun getItem(position: Int): Fragment {
+        toolArea.adapter = object : androidx.fragment.app.FragmentPagerAdapter(fragmentManager) {
+            override fun getItem(position: Int): androidx.fragment.app.Fragment {
                 return fragments[position]
             }
 
             override fun getCount() = fragments.size
 
         }
-        toolArea.setPageTransformer(false) { page, position ->
-            page.translationX = page.width * -position
-        }
         editToolsTab.setupWithViewPager(toolArea)
 
         val iconRes = listOf(R.drawable.ic_keyboard,
-                R.drawable.ic_emotion_location_weather)
+                R.drawable.ic_emotion_location_weather,
+                R.drawable.ic_add_a_photo_white_24dp)
         (0 until iconRes.size).map { editToolsTab.getTabAt(it) }.forEachIndexed { i, it ->
             it?.customView = ImageView(context).apply { setImageDrawable(VectorDrawableCompat.create(resources, iconRes[i], null)) }
         }
@@ -389,16 +409,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 //        diaryContent.setSelection(content.length)
         diaryContent.isCursorVisible = false
 
-        formatEditContent()
-    }
-
-    private fun formatEditContent() {
-        loge(Log.getStackTraceString(RuntimeException()))
-        ThreadPools.postOnUI {
-            logi("formatEditContent adjust paragraph", "detail")
-            diaryContent.adjustParagraphSpace(diaryContent.dpToPx(editFontSize / 2))
-            diaryContent.adjustCursorHeightNoException()
-        }
+        mEditorFormator.formatEditContent(editFontSize)
     }
 
     override fun showDate(dateStr: String) {
@@ -411,11 +422,21 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_EDIT_TASK) {
-            // If the task was edited successfully, go back to the list.
+        loge(data ?: "no", "select picture")
+
+        if (requestCode == REQUEST_SELECT_PICTURE) {
             if (resultCode == Activity.RESULT_OK) {
-                activity?.finish()
+                data?.data?.apply {
+                    insertPicture(this)
+                } ?: context?.toast("insert picture error")
             }
+        }
+    }
+
+    fun insertPicture(uri: Uri) {
+        mEditorFormator.insertPictureMark(uri) {
+            mPresenter.onContentChange(diaryContent.text.toString())
+            mEditorFormator.formatEditContent(editFontSize)
         }
     }
 
@@ -428,7 +449,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
         private const val REQUEST_CODE_LOCATION_PERMISSION = 0x64
 
-        private const val REQUEST_EDIT_TASK = 1
+        const val REQUEST_SELECT_PICTURE = 1
 
         private const val TAB_KEYBOARD_POS = 0
 
@@ -466,7 +487,11 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     override fun showInputMethod() {
-        diaryContent.showInputMethod()
+        ThreadPools.postOnUIDelayed(200) {
+            if (isActive) {
+                diaryContent.showInputMethod()
+            }
+        }
     }
 
     override fun hideInputMethod() {
@@ -495,17 +520,12 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 }
 
-abstract class MFragment : Fragment() {
+abstract class MFragment : androidx.fragment.app.Fragment() {
     lateinit var mPresenter: DiaryDetailPresenter
     lateinit var mReporter: Reporter
+    lateinit var mParentFragment: DiaryDetailFragment
 }
 
 private fun makeFragmentName(viewId: Int, id: Long): String {
     return "android:switcher:$viewId:$id"
 }
-
-
-
-
-
-

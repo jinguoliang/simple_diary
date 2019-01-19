@@ -1,25 +1,21 @@
 package com.empty.jinux.simplediary.ui.settings
 
 import android.app.Dialog
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.support.annotation.StringRes
-import android.support.v7.preference.CheckBoxPreference
-import android.support.v7.preference.PreferenceManager
 import android.text.Editable
-import android.util.Log
-import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.core.content.edit
+import androidx.preference.CheckBoxPreference
+import androidx.preference.PreferenceManager
 import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.baselibaray.utils.TextWatcherAdapter
-import com.empty.jinux.baselibaray.view.recycleview.withItems
-import android.text.TextWatcher
-import androidx.core.content.edit
-import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.report.Reporter
-import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.EditorStyle
 import kotlinx.android.synthetic.main.dialog_app_lock_set_password.*
 import javax.inject.Inject
+import com.empty.jinux.simplediary.R
+
 
 class SettingsFragment : DaggerPreferenceFragment(),
         SharedPreferences.OnSharedPreferenceChangeListener {
@@ -139,5 +135,9 @@ class SettingsFragment : DaggerPreferenceFragment(),
 
     private val TAG: String = "settings"
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        loge("request = $requestCode result = $resultCode", "JIN")
+
+    }
 }
 

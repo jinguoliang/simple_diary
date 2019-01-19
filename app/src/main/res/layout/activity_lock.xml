@@ -28,7 +28,7 @@
                 android:textSize="20sp"
                 android:labelFor="@id/password"/>
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:elevation="4dp"
@@ -43,7 +43,7 @@
                     android:inputType="numberPassword"
                     android:padding="15dp" />
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
             <ImageView
                 android:id="@+id/fingerPrintIcon"

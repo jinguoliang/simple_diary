@@ -4,9 +4,12 @@ import android.content.Context
 import android.graphics.PorterDuff
 import android.graphics.drawable.ClipDrawable
 import android.graphics.drawable.Drawable
-import android.support.v4.content.res.ResourcesCompat
+import androidx.core.content.res.ResourcesCompat
+import android.text.style.ImageSpan
 import android.util.AttributeSet
 import android.util.Log
+import android.view.KeyEvent
+import android.view.MotionEvent
 import android.widget.EditText
 import android.widget.ScrollView
 import android.widget.TextView
@@ -14,6 +17,7 @@ import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.baselibaray.thread.ThreadPools
 import com.empty.jinux.baselibaray.utils.ParagraphEndLineSpan
 import com.empty.jinux.baselibaray.utils.getLineForCursor
+import com.empty.jinux.baselibaray.utils.hideInputMethod
 import com.empty.jinux.simplediary.R
 
 class MEditText : EditText {
@@ -26,8 +30,6 @@ class MEditText : EditText {
     override fun onSelectionChanged(selStart: Int, selEnd: Int) {
         super.onSelectionChanged(selStart, selEnd)
 
-        loge("current end $selEnd", "jin")
-
         // first time
         if (layout == null) return
         adjustCursorHeightNoException()
@@ -35,6 +37,24 @@ class MEditText : EditText {
         ThreadPools.postOnUI {
             adjustScrollPosition(mScrollParent, -1)
         }
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        val offset = getOffsetForPosition(event.x, event.y)
+        if (text.getSpans(offset, offset, ImageSpan::class.java).isNotEmpty()
+                && (event.actionMasked == MotionEvent.ACTION_DOWN || event.actionMasked == MotionEvent.ACTION_UP)) {
+            hideInputMethod()
+            return true
+        }
+        return super.onTouchEvent(event)
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        return super.onKeyUp(keyCode, event)
     }
 
 
@@ -86,10 +106,15 @@ class MEditText : EditText {
         val isParagraphEnd = text.getSpans(start, end, ParagraphEndLineSpan::class.java).isNotEmpty()
         // 本来只要判断是段尾行就行，但是当最后一行为空时，也被认为是段尾，所以需排除
         // 这是　getSpans　的原因
-        if (isParagraphEnd && !((pos == text.length) && text[pos - 1] == '\n')) {
-            cursorDrawable.level = 5800
+        val imageLine = text.getSpans(start, end, ImageSpan::class.java).isNotEmpty()
+        if (imageLine) {
+            cursorDrawable.level = 10000
         } else {
-            cursorDrawable.level = 9000
+            if (isParagraphEnd && !((pos == text.length) && text[pos - 1] == '\n')) {
+                cursorDrawable.level = 5800
+            } else {
+                cursorDrawable.level = 9000
+            }
         }
     }
 
@@ -100,6 +125,11 @@ class MEditText : EditText {
         cursorArray[0]!!.setColorFilter(cursorColor, PorterDuff.Mode.SRC_ATOP)
         return cursorArray[0]!!
     }
+
+    override fun invalidate() {
+        super.invalidate()
+    }
+
 }
 
 public inline fun <reified T, reified D> D.reflectFeild(clazz: Class<D>, fieldName: String): T {

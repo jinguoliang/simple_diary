@@ -1,8 +1,8 @@
 package com.empty.jinux.simplediary.ui.main.diarylist.adapter
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.empty.jinux.simplediary.R
 
 class CategoryViewHolder

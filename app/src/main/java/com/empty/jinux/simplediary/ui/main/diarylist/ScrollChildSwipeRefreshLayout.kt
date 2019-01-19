@@ -17,7 +17,7 @@
 package com.empty.jinux.simplediary.ui.main.diarylist
 
 import android.content.Context
-import android.support.v4.widget.SwipeRefreshLayout
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import android.util.AttributeSet
 import android.view.View
 
@@ -29,7 +29,7 @@ import android.view.View
  * the refresh only when the view is on top. This class adds a way (@link #setScrollUpChild} to
  * define which view controls this behavior.
  */
-class ScrollChildSwipeRefreshLayout : SwipeRefreshLayout {
+class ScrollChildSwipeRefreshLayout : androidx.swiperefreshlayout.widget.SwipeRefreshLayout {
 
     private var mScrollUpChild: View? = null
 

@@ -20,13 +20,11 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.Snackbar
-import android.support.graphics.drawable.VectorDrawableCompat
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
+import androidx.core.content.ContextCompat
 import android.view.*
 import android.widget.SearchView
+import androidx.recyclerview.widget.RecyclerView
 import com.empty.jinux.baselibaray.utils.dayStartTime
 import com.empty.jinux.baselibaray.utils.hideInputMethod
 import com.empty.jinux.baselibaray.utils.weekStartTime
@@ -43,6 +41,8 @@ import com.empty.jinux.simplediary.ui.main.MainActivity
 import com.empty.jinux.simplediary.ui.main.diarylist.adapter.CategoryEndItem
 import com.empty.jinux.simplediary.ui.main.diarylist.adapter.CategoryItem
 import com.empty.jinux.simplediary.ui.main.diarylist.adapter.DiaryItem
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_diary_list.*
 import org.jetbrains.anko.collections.forEachWithIndex
@@ -127,7 +127,7 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View, BackPressPre
                 mReporter.reportClick("add diary")
             }
             setOnLongClickListener {
-                diaryRecyclerView.smoothScrollToPosition(diaryRecyclerView.adapter.itemCount)
+                diaryRecyclerView.smoothScrollToPosition(diaryRecyclerView.adapter!!.itemCount)
                 true
             }
         }

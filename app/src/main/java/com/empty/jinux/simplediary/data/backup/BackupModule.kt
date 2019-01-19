@@ -1,8 +1,11 @@
 package com.empty.jinux.simplediary.data.backup
 
-import android.support.v4.app.Fragment
+import android.app.Activity
+import android.content.Context
+import androidx.fragment.app.Fragment
 import com.empty.jinux.simplediary.di.Local
 import com.empty.jinux.simplediary.di.Remote
+import com.empty.jinux.simplediary.path.PathManager
 import dagger.Module
 import dagger.Provides
 
@@ -15,8 +18,9 @@ abstract class BackupModule {
         @JvmStatic
         @Provides
         @Local
-        fun provideLocalBackup(context: Fragment): Backup {
-            return LocalBackup(context)
+        fun provideLocalBackup(context: Context, pathManager: PathManager): Backup {
+            return LocalBackup(context, pathManager)
         }
+
     }
 }

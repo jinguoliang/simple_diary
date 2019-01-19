@@ -7,8 +7,8 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.os.Build
 import android.os.Bundle
-import android.support.graphics.drawable.VectorDrawableCompat
-import android.support.v4.content.res.ResourcesCompat
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
+import androidx.core.content.res.ResourcesCompat
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -26,7 +26,6 @@ import com.empty.jinux.simplediary.location.Location
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.MFragment
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.MyEmotionIcons
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.MyWeatherIcons
-import com.empty.jinux.simplediary.ui.diarydetail.fragment.reflectFeild
 import com.google.android.gms.location.places.ui.PlacePicker
 import kotlinx.android.synthetic.main.fragment_edit_status.*
 import org.jetbrains.anko.toast

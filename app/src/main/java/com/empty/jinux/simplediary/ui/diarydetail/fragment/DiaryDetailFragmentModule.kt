@@ -1,6 +1,6 @@
 package com.empty.jinux.simplediary.ui.diarydetail.fragment
 
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import dagger.Binds
 import dagger.Module
@@ -14,7 +14,7 @@ internal abstract class DiaryDetailFragmentModule {
     @Binds
     @IntoMap
     @FragmentKey(DiaryDetailFragment::class)
-    internal abstract fun bind(builder: DiaryDetailFragmentComponent.Builder): AndroidInjector.Factory<out Fragment>
+    internal abstract fun bind(builder: DiaryDetailFragmentComponent.Builder): AndroidInjector.Factory<out androidx.fragment.app.Fragment>
 
     @Binds
     internal abstract fun bindView(v: DiaryDetailFragment): DiaryDetailContract.View

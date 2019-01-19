@@ -23,7 +23,7 @@
     tools:context="com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivity">
 
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
                 app:srcCompat="@drawable/ic_check_white_24dp" />
         </LinearLayout>
 
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <FrameLayout
         android:id="@+id/contentFrame"

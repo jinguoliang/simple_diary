@@ -32,7 +32,7 @@ open class LocationManagerImpl constructor(val context: Activity) : LocationMana
     @SuppressLint("MissingPermission")
     fun getLastLocation(tryAgain: Boolean, callback: (Location) -> Unit) {
         mFusedLocationClient.lastLocation
-                .addOnSuccessListener(context, { location: android.location.Location? ->
+                .addOnSuccessListener(context) { location: android.location.Location? ->
                     // Got last known location. In some rare situations this can be null.
                     if (location != null) {
                         // Logic to handle location object
@@ -42,7 +42,7 @@ open class LocationManagerImpl constructor(val context: Activity) : LocationMana
                             getLastLocation(false, callback)
                         }
                     }
-                })
+                }
     }
 
 
@@ -64,30 +64,42 @@ open class LocationManagerImpl constructor(val context: Activity) : LocationMana
     }
 
     private fun createLocationRequest(): LocationRequest {
-        val locationRequest = LocationRequest()
-        locationRequest.interval = 0
-        locationRequest.fastestInterval = 0
-        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        return locationRequest
+        return LocationRequest().apply {
+            interval = 0
+            fastestInterval = 0
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
     }
 
     override fun getCurrentAddress(callback: (address: String) -> Unit): Unit {
         getLastLocation { location ->
-            val geocoder = Geocoder(context, Locale.getDefault())
-            val addresses = try {
-                geocoder.getFromLocation(location.latitude, location.longitude, 1)
-            } catch (e: IOException) {
-                Lists.newArrayList<Address>()
-            }
+            val geoCoder = Geocoder(context, Locale.getDefault())
+            val addresses = getAddresses(geoCoder, location)
 
             if (addresses.isNotEmpty()) {
                 logd(addresses)
                 val address = addresses[0]
-                val addressStr =
-                        if (Locale.getDefault() == Locale.CHINESE) (0..2).mapNotNull { address.getAddressLine(it) }.joinToString(" ")
-                        else (2 downTo 0).mapNotNull { address.getAddressLine(it) }.joinToString(", ")
+                val addressStr = concatToAddressString(address)
                 callback(addressStr)
             }
+        }
+    }
+
+    private fun concatToAddressString(address: Address) =
+            if (Locale.getDefault() == Locale.CHINESE) concatChinaAddressString(address)
+            else concatEnglishAddressString(address)
+
+    private fun concatEnglishAddressString(address: Address) =
+            (2 downTo 0).mapNotNull { address.getAddressLine(it) }.joinToString(", ")
+
+    private fun concatChinaAddressString(address: Address) =
+            (0..2).mapNotNull { address.getAddressLine(it) }.joinToString(" ")
+
+    private fun getAddresses(geoCoder: Geocoder, location: Location): List<Address> {
+        return try {
+            geoCoder.getFromLocation(location.latitude, location.longitude, 1)
+        } catch (e: IOException) {
+            Lists.newArrayList<Address>()
         }
     }
 }

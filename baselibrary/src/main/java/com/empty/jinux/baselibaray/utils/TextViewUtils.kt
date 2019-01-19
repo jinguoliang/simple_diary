@@ -1,6 +1,6 @@
 package com.empty.jinux.baselibaray.utils
 
-import android.support.annotation.DimenRes
+import androidx.annotation.DimenRes
 import android.text.Editable
 import android.text.Spannable
 import android.text.TextWatcher

@@ -1,12 +1,12 @@
 package com.empty.jinux.simplediary.ui.main.statistics.view.punchcard
 
 import android.content.Context
-import android.support.v7.widget.CardView
-import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.RecyclerView
 import com.empty.jinux.baselibaray.thread.ThreadPools
 import com.empty.jinux.baselibaray.utils.*
 import com.empty.jinux.baselibaray.view.recycleview.Item
@@ -110,7 +110,7 @@ private class PunchCheck(val data: Calendar,
         }
     }
 
-    private class ViewHolder(override val containerView: View?) : RecyclerView.ViewHolder(containerView), LayoutContainer
+    private class ViewHolder(override val containerView: View?) : RecyclerView.ViewHolder(containerView!!), LayoutContainer
 }
 
 private fun Diary.day() =

@@ -1,11 +1,10 @@
 package com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools
 
 import android.os.Bundle
-import android.support.v4.content.res.ResourcesCompat
+import androidx.core.content.res.ResourcesCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.MFragment
 
 class KeyboardFragment : MFragment() {

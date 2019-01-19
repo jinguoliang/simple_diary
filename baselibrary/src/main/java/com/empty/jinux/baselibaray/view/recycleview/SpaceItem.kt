@@ -1,29 +1,31 @@
 package com.empty.jinux.baselibaray.view.recycleview
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import com.empty.jinux.baselibaray.utils.layoutHeight
+import androidx.core.view.updateLayoutParams
+import androidx.recyclerview.widget.RecyclerView
 
 class SpaceItem(val size: Int) : Item {
     override val controller: ItemController
         get() = Controller
 
     private companion object Controller : ItemController {
-        override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup): androidx.recyclerview.widget.RecyclerView.ViewHolder {
             return ViewHolder(View(parent.context).also {
-                it.layoutParams = RecyclerView.LayoutParams(
+                it.layoutParams = androidx.recyclerview.widget.RecyclerView.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT
                 )
             })
         }
 
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: Item) {
+        override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, item: Item) {
             item as SpaceItem
-            holder.itemView.layoutHeight = item.size
+            holder.itemView.updateLayoutParams {
+                height = item.size
+            }
         }
     }
 
-    private class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
+    private class ViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view)
 }

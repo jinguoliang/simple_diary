@@ -2,7 +2,7 @@ package com.empty.jinux.simplediary
 
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
 import com.empty.jinux.simplediary.data.source.DiariesRepository
-import com.empty.jinux.simplediary.utils.any
+import com.empty.jinux.simplediary.test_utils.any
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock

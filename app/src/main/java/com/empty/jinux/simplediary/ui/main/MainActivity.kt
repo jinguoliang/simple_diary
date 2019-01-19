@@ -18,9 +18,7 @@ package com.empty.jinux.simplediary.ui.main
 
 import android.content.ActivityNotFoundException
 import android.os.Bundle
-import android.support.design.widget.NavigationView
-import android.support.v4.view.GravityCompat
-import android.support.v4.widget.DrawerLayout
+import androidx.core.view.GravityCompat
 import android.view.MenuItem
 import android.view.View
 import com.empty.jinux.simplediary.R
@@ -35,7 +33,10 @@ import com.empty.jinux.simplediary.ui.main.diarylist.DiaryListFragment
 import com.empty.jinux.simplediary.ui.main.statistics.StatisticsFragment
 import com.empty.jinux.simplediary.ui.settings.SettingsActivity
 import com.empty.jinux.simplediary.util.ActivityUtils
+import com.google.android.material.navigation.NavigationView
 import dagger.android.support.DaggerAppCompatActivity
+import io.multimoon.colorful.BaseTheme
+import io.multimoon.colorful.Colorful
 import kotlinx.android.synthetic.main.activity_diary_list.*
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.startActivity
@@ -56,10 +57,14 @@ class MainActivity : DaggerAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Colorful().apply(this, override = true, baseTheme = BaseTheme.THEME_APPCOMPAT)
+
         setContentView(R.layout.activity_diary_list)
+
         setupToolbar()
         setupNavigationDrawer()
         showDiaryListFragment()
+
     }
 
     override fun onStart() {
@@ -80,7 +85,7 @@ class MainActivity : DaggerAppCompatActivity() {
     override fun onBackPressed() {
         if (mCurrentFragment.onBackPress()) {
             return
-        }  else {
+        } else {
             super.onBackPressed()
         }
     }
@@ -124,8 +129,8 @@ class MainActivity : DaggerAppCompatActivity() {
         mCurrentFragment = fragment
     }
 
-    private fun DrawerLayout.setMDrawerListener() {
-        addDrawerListener(object : DrawerLayout.DrawerListener {
+    private fun androidx.drawerlayout.widget.DrawerLayout.setMDrawerListener() {
+        addDrawerListener(object : androidx.drawerlayout.widget.DrawerLayout.DrawerListener {
             override fun onDrawerStateChanged(newState: Int) {
             }
 

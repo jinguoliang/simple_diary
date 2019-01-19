@@ -1,12 +1,12 @@
 package com.empty.jinux.simplediary.ui.settings
 
 import android.content.Context
-import android.support.v7.preference.Preference
-import android.support.v7.preference.PreferenceViewHolder
-import android.support.v7.widget.RecyclerView
+import androidx.preference.Preference
+import androidx.preference.PreferenceViewHolder
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.empty.jinux.baselibaray.utils.inflate
 import com.empty.jinux.baselibaray.view.recycleview.Item
 import com.empty.jinux.baselibaray.view.recycleview.ItemController
@@ -58,7 +58,7 @@ class StyleSelectItem(val style: EditorStyle, val selected: Boolean, val onSelec
             holder.itemView.setOnClickListener { item.onSelect(item.style.name) }
         }
 
-        class Holder(override val containerView: View?) : RecyclerView.ViewHolder(containerView), LayoutContainer
+        class Holder(override val containerView: View?) : RecyclerView.ViewHolder(containerView!!), LayoutContainer
     }
 
     override val controller = Controller
