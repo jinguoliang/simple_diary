@@ -20,12 +20,14 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import android.widget.ImageView
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.children
 import androidx.core.view.updateLayoutParams
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.empty.jinux.baselibaray.log.loge
@@ -300,9 +302,6 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             override fun getCount() = fragments.size
 
         }
-        toolArea.setPageTransformer(false) { page, position ->
-            page.translationX = page.width * -position
-        }
         editToolsTab.setupWithViewPager(toolArea)
 
         val iconRes = listOf(R.drawable.ic_keyboard,
@@ -428,12 +427,16 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         if (requestCode == REQUEST_SELECT_PICTURE) {
             if (resultCode == Activity.RESULT_OK) {
                 data?.data?.apply {
-                    mEditorFormator.insertPictureMark(this) {
-                        mPresenter.onContentChange(diaryContent.text.toString())
-                        mEditorFormator.formatEditContent(editFontSize)
-                    }
+                    insertPicture(this)
                 } ?: context?.toast("insert picture error")
             }
+        }
+    }
+
+    fun insertPicture(uri: Uri) {
+        mEditorFormator.insertPictureMark(uri) {
+            mPresenter.onContentChange(diaryContent.text.toString())
+            mEditorFormator.formatEditContent(editFontSize)
         }
     }
 
