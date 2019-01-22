@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.empty.jinux.baselibaray.utils.inflate
 import com.empty.jinux.baselibaray.view.recycleview.Item
 import com.empty.jinux.baselibaray.view.recycleview.ItemController
@@ -28,7 +29,7 @@ class PictureSelectFragment : MFragment() {
         super.onActivityCreated(savedInstanceState)
         recyclerView.withItems {
             ImageUtil.getLatestPhoto(activity!!)?.apply {
-                add(PictureItem(Uri.fromFile(File(second)), object: PictureItem.OnClickListener {
+                add(PictureItem(Uri.fromFile(File(second)), object : PictureItem.OnClickListener {
                     override fun onClick(uri: Uri) {
                         mParentFragment.insertPicture(uri)
                     }
@@ -54,7 +55,10 @@ class PictureItem(val uri: Uri, val onClickListener: OnClickListener) : Item {
             holder as Holder
             item as PictureItem
 
-            holder.pic.setImageURI(item.uri)
+            Glide.with(holder.itemView.context)
+                    .asDrawable()
+                    .load(item.uri)
+                    .into(holder.pic)
             holder.itemView.setOnClickListener { onClickListener.onClick(item.uri) }
         }
     }
