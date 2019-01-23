@@ -13,6 +13,7 @@ import com.empty.jinux.baselibaray.view.recycleview.Item
 import com.empty.jinux.baselibaray.view.recycleview.ItemController
 import com.empty.jinux.baselibaray.view.recycleview.withItems
 import com.empty.jinux.simplediary.R
+import com.empty.jinux.simplediary.data.metercounter.MeterCounter
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.main.BackPressProcessor
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -38,9 +39,11 @@ class MeterCounterFragment : DaggerFragment(), MeterCounterContract.View, BackPr
         mPresenter.start()
     }
 
-    override fun showRecords() {
+    override fun showRecords(data: List<MeterCounter>) {
         recyclerView.withItems {
-            add(Card("hello"))
+            data.forEach {
+                add(Card(it.name))
+            }
         }
     }
 
@@ -67,8 +70,8 @@ class MeterCounterFragment : DaggerFragment(), MeterCounterContract.View, BackPr
     private fun createRecordChangeDialog(): AlertDialog {
         recordChangeDialog = AlertDialog.Builder(context!!).apply {
             setTitle(R.string.add_new_record)
-            setView(R.layout.dialog_meter_counter_change_record)
-            val view = view!!
+            val view = LayoutInflater.from(context).inflate(R.layout.dialog_meter_counter_change_record, null)
+            setView(view)
             setPositiveButton(R.string.ok) { dialog, _ ->
                 val name = view.findViewById<EditText>(R.id.name).text.toString()
                 val meterCounterValue = view.findViewById<EditText>(R.id.meterCounterValue).text.toString().toInt()

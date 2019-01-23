@@ -1,10 +1,9 @@
 package com.empty.jinux.simplediary.data.source
 
 
-import android.app.Activity
 import android.content.Context
-import com.empty.jinux.simplediary.data.backup.Backup
-import com.empty.jinux.simplediary.data.backup.LocalBackup
+import com.empty.jinux.simplediary.data.metercounter.MeterCounterLocalSource
+import com.empty.jinux.simplediary.data.metercounter.MeterCounterDataSource
 import com.empty.jinux.simplediary.data.source.local.DiariesLocalDataSource
 import com.empty.jinux.simplediary.data.source.remote.DiariesRemoteDataSource
 import com.empty.jinux.simplediary.di.EmptyData
@@ -42,6 +41,12 @@ abstract class DiariesRepositoryModule {
         @EmptyData
         internal fun provideDiariesEmptyDataSource(): DiariesDataSource {
             return EmptyDataSource()
+        }
+
+        @JvmStatic
+        @Provides
+        internal fun provideMeterCounterLocalDataSource(context: Context): MeterCounterDataSource {
+            return MeterCounterLocalSource(context)
         }
     }
 

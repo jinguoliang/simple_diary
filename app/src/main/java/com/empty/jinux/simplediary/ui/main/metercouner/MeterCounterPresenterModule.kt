@@ -1,5 +1,6 @@
 package com.empty.jinux.simplediary.ui.main.metercouner
 
+import com.empty.jinux.simplediary.data.metercounter.MeterCounterDataSource
 import dagger.Module
 import dagger.Provides
 
@@ -7,9 +8,9 @@ import dagger.Provides
 class MeterCounterPresenterModule {
 
     @Provides
-    fun providePresenter(v: MeterCounterContract.View
+    fun providePresenter(source: MeterCounterDataSource, v: MeterCounterContract.View
     ): MeterCounterContract.Presenter {
-        return MeterCounterPresenter(v)
+        return MeterCounterPresenter(source, v)
     }
 
 }
