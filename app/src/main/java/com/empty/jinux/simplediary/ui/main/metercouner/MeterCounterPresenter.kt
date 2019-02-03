@@ -12,9 +12,9 @@ constructor(private  var meterCounterSource: MeterCounterDataSource,
             val view: MeterCounterContract.View) : MeterCounterContract.Presenter {
 
 
-    override fun addNewRecord(title: String, counter: Int, meterCounterUnit: String) {
+    override fun addNewRecord(meterCounter: MeterCounter) {
         doAsync {
-            meterCounterSource.addOne(MeterCounter(title, meterCounterUnit, listOf(counter)))
+            meterCounterSource.addOne(meterCounter)
             val data = meterCounterSource.getAll()
             uiThread {
                 view.showRecords(data)
@@ -28,6 +28,13 @@ constructor(private  var meterCounterSource: MeterCounterDataSource,
             uiThread {
                 view.showRecords(data)
             }
+        }
+    }
+
+    override fun updateRecord(meterCounter: MeterCounter) {
+        doAsync {
+            meterCounterSource.updateOne(meterCounter)
+            loadData()
         }
     }
 

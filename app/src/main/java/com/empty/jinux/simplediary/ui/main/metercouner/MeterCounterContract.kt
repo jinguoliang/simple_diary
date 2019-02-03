@@ -12,6 +12,7 @@ interface MeterCounterContract {
 
     interface Presenter : BasePresenter {
         fun loadData()
-        fun addNewRecord(title: String, counter: Int, meterCounterUnit: String)
+        fun addNewRecord(meterCounter: MeterCounter)
+        fun updateRecord(meterCounter: MeterCounter)
     }
 }

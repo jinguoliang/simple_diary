@@ -15,15 +15,15 @@ interface MeterCounterDao {
     @Query("SELECT * FROM $TABLE_METER_COUNTER")
     fun getAll(): List<MeterCounter>
 
-    @Query("SELECT * FROM $TABLE_METER_COUNTER WHERE \"name\" is :id LIMIT 1")
-    fun getOneById(id: String): MeterCounter?
+    @Query("SELECT * FROM $TABLE_METER_COUNTER WHERE \"id\" is :id LIMIT 1")
+    fun getOneById(id: Long): MeterCounter?
 
     @Delete
-    fun delete(diary: MeterCounter)
+    fun delete(meterCounter: MeterCounter)
 
-    @Query("DELETE FROM $TABLE_METER_COUNTER WHERE \"name\" is :id")
-    fun deleteById(id: String)
+    @Query("DELETE FROM $TABLE_METER_COUNTER WHERE \"id\" is :id")
+    fun deleteById(id: Long)
 
     @Update()
-    fun updateState(diary: Diary)
+    fun updateState(meterCounter: MeterCounter): Int
 }

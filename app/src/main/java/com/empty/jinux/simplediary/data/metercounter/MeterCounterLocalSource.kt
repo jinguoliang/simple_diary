@@ -23,20 +23,22 @@ constructor(val context: Context) : MeterCounterDataSource {
     override fun getAll(): List<MeterCounter> {
         return table.getAll().map {
             it.run {
-                MeterCounter(name, unit, records.split(",").map { it.toIntOrNull() ?: 0 })
+                MeterCounter(id!!, name, unit, records.split(",").map { it.toIntOrNull() ?: 0 })
             }
         }
     }
 
     override fun addOne(meterCounter: MeterCounter) {
         meterCounter.apply {
-           val result =  table.insertOne(RoomMC(name, unit, records.joinToString(separator = ",")))
+           val result =  table.insertOne(RoomMC(null, name, unit, records.joinToString(separator = ",")))
             loge(result)
         }
     }
 
     override fun updateOne(meterCounter: MeterCounter) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        meterCounter.apply {
+            table.updateState(RoomMC(id, name, unit, records.joinToString(separator = ",")))
+        }
     }
 
     override fun deleteOne(meterCounter: MeterCounter) {
