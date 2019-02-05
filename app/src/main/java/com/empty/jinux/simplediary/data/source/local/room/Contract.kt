@@ -7,6 +7,7 @@ package com.empty.jinux.simplediary.data.source.local.room
 const val DATABASE_NAME = "diary_database"
 
 const val TABLE_DIARY = "diary_table"
+const val TABLE_METER_COUNTER = "metercounter_table"
 const val COLUMN_ID = "id"
 const val COLUMN_TITLE = "title"
 const val COLUMN_CONTENT_TEXT = "content_text"

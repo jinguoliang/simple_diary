@@ -36,7 +36,7 @@ import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivity
-import com.empty.jinux.simplediary.ui.main.BackPressPrecessor
+import com.empty.jinux.simplediary.ui.main.BackPressProcessor
 import com.empty.jinux.simplediary.ui.main.MainActivity
 import com.empty.jinux.simplediary.ui.main.diarylist.adapter.CategoryEndItem
 import com.empty.jinux.simplediary.ui.main.diarylist.adapter.CategoryItem
@@ -53,7 +53,7 @@ import javax.inject.Inject
 /**
  * Display a grid of [Diary]s. User can choose to view all, active or completed diaries.
  */
-class DiaryListFragment : DaggerFragment(), DiaryListContract.View, BackPressPrecessor {
+class DiaryListFragment : DaggerFragment(), DiaryListContract.View, BackPressProcessor {
     override fun onBackPress(): Boolean {
         searchView?.apply {
             if (this.isIconified) {
@@ -120,7 +120,7 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View, BackPressPre
 
     private fun setupFloatButton() {
         activity?.findViewById<FloatingActionButton>(R.id.fab_add_diary)?.apply {
-            visibility = View.VISIBLE
+            show()
             setImageResource(R.drawable.ic_add)
             setOnClickListener {
                 mPresenter.addNewDiary()
@@ -128,6 +128,7 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View, BackPressPre
             }
             setOnLongClickListener {
                 diaryRecyclerView.smoothScrollToPosition(diaryRecyclerView.adapter!!.itemCount)
+                mReporter.reportClick("long click add diary")
                 true
             }
         }

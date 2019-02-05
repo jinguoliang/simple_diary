@@ -66,4 +66,9 @@
     <string name="pref_default_font_size_summ">Set the default font size of diary</string>
     <string name="pref_default_editor_style_title">Background Style</string>
     <string name="pref_default_editor_style_summ">Set the default background of diary</string>
+    <string name="meter_counter">Meter Counter</string>
+    <string name="add_new_record">Add New Record</string>
+    <string name="common_name">name:</string>
+    <string name="meter_counter_value">Value:</string>
+    <string name="meter_counter_unit" >Unit:</string>
 </resources>

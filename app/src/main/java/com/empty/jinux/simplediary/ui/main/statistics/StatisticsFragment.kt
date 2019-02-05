@@ -24,7 +24,7 @@ import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.STREAK_MIN_WORDS_COUNTS
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.report.Reporter
-import com.empty.jinux.simplediary.ui.main.BackPressPrecessor
+import com.empty.jinux.simplediary.ui.main.BackPressProcessor
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_statistics.*
@@ -34,7 +34,7 @@ import javax.inject.Inject
 /**
  * Main UI for the statistics screen.
  */
-class StatisticsFragment : DaggerFragment(), StatisticsContract.View, BackPressPrecessor {
+class StatisticsFragment : DaggerFragment(), StatisticsContract.View, BackPressProcessor {
 
     @Inject
     internal
@@ -51,7 +51,7 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View, BackPressP
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        activity?.findViewById<FloatingActionButton>(R.id.fab_add_diary)?.visibility = View.INVISIBLE
+        activity?.findViewById<FloatingActionButton>(R.id.fab_add_diary)?.hide()
         statistics.mReporter = mReporter
     }
 

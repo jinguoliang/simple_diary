@@ -67,4 +67,9 @@
     <string name="pref_default_font_size_summ">设置默认日记字体大小</string>
     <string name="pref_default_editor_style_title">背景风格</string>
     <string name="pref_default_editor_style_summ">设置日记默认背景风格</string>
+    <string name="meter_counter">计次器</string>
+    <string name="add_new_record">添加新计数器</string>
+    <string name="meter_counter_unit">技术单位:</string>
+    <string name="meter_counter_value">计数值:</string>
+    <string name="common_name">名称:</string>
 </resources>
