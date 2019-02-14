@@ -1,6 +1,6 @@
 package com.empty.jinux.simplediary.ui.diarydetail.presenter
 
-import com.empty.jinux.simplediary.data.source.DiariesDataSource
+import com.empty.jinux.simplediary.data.source.diary.DiariesDataSource
 import com.empty.jinux.simplediary.location.LocationManager
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.weather.WeatherManager

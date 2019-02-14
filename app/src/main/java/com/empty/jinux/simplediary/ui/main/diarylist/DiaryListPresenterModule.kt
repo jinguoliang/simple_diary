@@ -1,6 +1,6 @@
 package com.empty.jinux.simplediary.ui.main.diarylist
 
-import com.empty.jinux.simplediary.data.source.DiariesDataSource
+import com.empty.jinux.simplediary.data.source.diary.DiariesDataSource
 import com.empty.jinux.simplediary.di.Repository
 import dagger.Module
 import dagger.Provides

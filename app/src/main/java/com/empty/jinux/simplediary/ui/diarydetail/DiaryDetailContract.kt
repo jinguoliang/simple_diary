@@ -18,7 +18,7 @@ package com.empty.jinux.simplediary.ui.diarydetail
 
 import com.empty.jinux.simplediary.BasePresenter
 import com.empty.jinux.simplediary.BaseView
-import com.empty.jinux.simplediary.data.LocationInfo
+import com.empty.jinux.simplediary.data.source.diary.LocationInfo
 
 
 /**

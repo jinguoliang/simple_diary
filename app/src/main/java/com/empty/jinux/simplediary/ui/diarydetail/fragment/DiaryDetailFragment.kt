@@ -27,7 +27,6 @@ import android.text.TextWatcher
 import android.view.*
 import android.widget.ImageView
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.children
 import androidx.core.view.updateLayoutParams
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.empty.jinux.baselibaray.log.loge
@@ -39,8 +38,8 @@ import com.empty.jinux.baselibaray.utils.hideInputMethod
 import com.empty.jinux.baselibaray.utils.showInputMethod
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.config.ConfigManager
-import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
-import com.empty.jinux.simplediary.data.LocationInfo
+import com.empty.jinux.simplediary.data.source.diary.INVALID_DIARY_ID
+import com.empty.jinux.simplediary.data.source.diary.LocationInfo
 import com.empty.jinux.simplediary.intent.shareContentIntent
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivity

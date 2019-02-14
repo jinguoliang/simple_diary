@@ -19,7 +19,7 @@ package com.empty.jinux.simplediary.ui.main.statistics;
 
 import com.empty.jinux.simplediary.BasePresenter;
 import com.empty.jinux.simplediary.BaseView;
-import com.empty.jinux.simplediary.data.Diary;
+import com.empty.jinux.simplediary.data.source.diary.Diary;
 
 import java.util.List;
 

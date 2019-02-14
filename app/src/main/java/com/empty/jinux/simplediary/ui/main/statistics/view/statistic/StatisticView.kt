@@ -11,7 +11,7 @@ import com.empty.jinux.baselibaray.thread.ThreadPools
 import com.empty.jinux.baselibaray.utils.toCalendar
 import com.empty.jinux.baselibaray.utils.wordsCount
 import com.empty.jinux.simplediary.R
-import com.empty.jinux.simplediary.data.Diary
+import com.empty.jinux.simplediary.data.source.diary.Diary
 import com.empty.jinux.simplediary.report.Reporter
 import kotlinx.android.synthetic.main.layout_statistic_chart.view.*
 import java.util.*

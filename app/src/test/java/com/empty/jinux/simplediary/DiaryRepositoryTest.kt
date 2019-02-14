@@ -1,7 +1,7 @@
 package com.empty.jinux.simplediary
 
-import com.empty.jinux.simplediary.data.source.DiariesDataSource
-import com.empty.jinux.simplediary.data.source.DiariesRepository
+import com.empty.jinux.simplediary.data.source.diary.DiariesDataSource
+import com.empty.jinux.simplediary.data.source.diary.DiariesRepository
 import com.empty.jinux.simplediary.test_utils.any
 import org.junit.Before
 import org.junit.Test

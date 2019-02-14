@@ -17,11 +17,8 @@
 package com.empty.jinux.simplediary.ui.main.statistics
 
 
-import com.empty.jinux.simplediary.data.Diary
-import com.empty.jinux.simplediary.data.source.DiariesDataSource
-import com.empty.jinux.simplediary.di.Repository
-import com.empty.jinux.simplediary.report.Reporter
-import javax.inject.Inject
+import com.empty.jinux.simplediary.data.source.diary.Diary
+import com.empty.jinux.simplediary.data.source.diary.DiariesDataSource
 
 /**
  * Listens to user actions from the UI ([StatisticsFragment]), retrieves the data and updates

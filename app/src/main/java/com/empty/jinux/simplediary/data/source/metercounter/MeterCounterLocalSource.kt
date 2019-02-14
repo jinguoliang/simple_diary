@@ -1,11 +1,11 @@
-package com.empty.jinux.simplediary.data.metercounter
+package com.empty.jinux.simplediary.data.source.metercounter
 
 import android.content.Context
 import androidx.room.Room
 import com.empty.jinux.baselibaray.log.loge
-import com.empty.jinux.simplediary.data.source.local.room.DATABASE_NAME
-import com.empty.jinux.simplediary.data.source.local.room.DiaryDatabase
-import com.empty.jinux.simplediary.data.metercounter.room.entity.MeterCounter as RoomMC
+import com.empty.jinux.simplediary.data.source.diary.local.room.DATABASE_NAME
+import com.empty.jinux.simplediary.data.source.diary.local.room.DiaryDatabase
+import com.empty.jinux.simplediary.data.source.metercounter.room.entity.MeterCounter as RoomMC
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -23,7 +23,9 @@ constructor(val context: Context) : MeterCounterDataSource {
     override fun getAll(): List<MeterCounter> {
         return table.getAll().map {
             it.run {
-                MeterCounter(id!!, name, unit, records.split(",").map { it.toIntOrNull() ?: 0 })
+                MeterCounter(id!!, name, unit, records.split(",").map {
+                    it.toIntOrNull() ?: 0
+                })
             }
         }
     }

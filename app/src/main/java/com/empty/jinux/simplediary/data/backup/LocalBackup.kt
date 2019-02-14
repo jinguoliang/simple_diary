@@ -2,7 +2,7 @@ package com.empty.jinux.simplediary.data.backup
 
 import android.content.Context
 import androidx.annotation.VisibleForTesting
-import com.empty.jinux.simplediary.data.source.local.room.DATABASE_NAME
+import com.empty.jinux.simplediary.data.source.diary.local.room.DATABASE_NAME
 import com.empty.jinux.simplediary.path.PathManager
 import com.google.common.io.Files
 import java.io.File

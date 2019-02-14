@@ -1,10 +1,10 @@
-package com.empty.jinux.simplediary.data.source.local.room.dao
+package com.empty.jinux.simplediary.data.source.diary.local.room.dao
 
 import androidx.room.*
 import androidx.room.OnConflictStrategy.REPLACE
-import com.empty.jinux.simplediary.data.source.local.room.COLUMN_ID
-import com.empty.jinux.simplediary.data.source.local.room.TABLE_DIARY
-import com.empty.jinux.simplediary.data.source.local.room.entity.Diary
+import com.empty.jinux.simplediary.data.source.diary.local.room.COLUMN_ID
+import com.empty.jinux.simplediary.data.source.diary.local.room.TABLE_DIARY
+import com.empty.jinux.simplediary.data.source.diary.local.room.entity.Diary
 
 /**
  * Created by jingu on 2018/3/2.

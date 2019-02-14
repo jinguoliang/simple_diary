@@ -1,10 +1,10 @@
-package com.empty.jinux.simplediary.data.source.local.room.entity
+package com.empty.jinux.simplediary.data.source.diary.local.room.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.empty.jinux.simplediary.data.source.local.room.TABLE_DIARY
+import com.empty.jinux.simplediary.data.source.diary.local.room.TABLE_DIARY
 
 /**
  * Created by jingu on 2018/3/2.

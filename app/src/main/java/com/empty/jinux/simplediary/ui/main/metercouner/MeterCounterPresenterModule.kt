@@ -1,6 +1,6 @@
 package com.empty.jinux.simplediary.ui.main.metercouner
 
-import com.empty.jinux.simplediary.data.metercounter.MeterCounterDataSource
+import com.empty.jinux.simplediary.data.source.metercounter.MeterCounterDataSource
 import dagger.Module
 import dagger.Provides
 

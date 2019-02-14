@@ -15,7 +15,7 @@ import com.empty.jinux.baselibaray.utils.inflate
 import com.empty.jinux.baselibaray.view.recycleview.Item
 import com.empty.jinux.baselibaray.view.recycleview.ItemController
 import com.empty.jinux.simplediary.R
-import com.empty.jinux.simplediary.data.Diary
+import com.empty.jinux.simplediary.data.source.diary.Diary
 import com.empty.jinux.baselibaray.utils.formatToDay
 import com.empty.jinux.baselibaray.utils.formatToTime
 import com.empty.jinux.baselibaray.utils.formatToWeekday

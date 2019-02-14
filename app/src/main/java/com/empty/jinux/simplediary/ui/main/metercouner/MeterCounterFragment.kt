@@ -13,7 +13,7 @@ import com.empty.jinux.baselibaray.view.recycleview.Item
 import com.empty.jinux.baselibaray.view.recycleview.ItemController
 import com.empty.jinux.baselibaray.view.recycleview.withItems
 import com.empty.jinux.simplediary.R
-import com.empty.jinux.simplediary.data.metercounter.MeterCounter
+import com.empty.jinux.simplediary.data.source.metercounter.MeterCounter
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.main.BackPressProcessor
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -151,7 +151,8 @@ class MeterCounterEditDialog(
             setTitle(R.string.add_new_record)
             setView(view)
             setPositiveButton(R.string.ok) { dialog, _ ->
-                end(MeterCounter(meterCounter?.id ?: -1,
+                end(MeterCounter(meterCounter?.id
+                        ?: -1,
                         name.text.toString(),
                         meterCounterUnit.text.toString(),
                         listOf(meterCounterValue.text.toString().toInt())

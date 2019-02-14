@@ -1,7 +1,7 @@
 package com.empty.jinux.simplediary.ui.settings
 
 import com.empty.jinux.simplediary.data.backup.BackupModule
-import com.empty.jinux.simplediary.data.source.DiariesRepositoryModule
+import com.empty.jinux.simplediary.data.source.diary.DiariesRepositoryModule
 import dagger.Subcomponent
 import dagger.android.AndroidInjector
 

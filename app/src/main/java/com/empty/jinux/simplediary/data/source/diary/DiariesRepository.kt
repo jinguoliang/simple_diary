@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.data.source
+package com.empty.jinux.simplediary.data.source.diary
 
-import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.di.EmptyData
 import com.empty.jinux.simplediary.di.Local
 import org.jetbrains.anko.doAsync

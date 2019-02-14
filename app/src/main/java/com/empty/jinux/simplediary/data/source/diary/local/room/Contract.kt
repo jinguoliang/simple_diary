@@ -1,4 +1,4 @@
-package com.empty.jinux.simplediary.data.source.local.room
+package com.empty.jinux.simplediary.data.source.diary.local.room
 
 /**
  * Created by jingu on 2018/3/2.

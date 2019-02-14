@@ -1,6 +1,4 @@
-package com.empty.jinux.simplediary.data.source
-
-import com.empty.jinux.simplediary.data.Diary
+package com.empty.jinux.simplediary.data.source.diary
 
 /**
  * Created by jingu on 2018/3/15.

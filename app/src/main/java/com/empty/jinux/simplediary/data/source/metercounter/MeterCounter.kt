@@ -1,4 +1,4 @@
-package com.empty.jinux.simplediary.data.metercounter
+package com.empty.jinux.simplediary.data.source.metercounter
 
 data class MeterCounter(
         val id: Long = 0,

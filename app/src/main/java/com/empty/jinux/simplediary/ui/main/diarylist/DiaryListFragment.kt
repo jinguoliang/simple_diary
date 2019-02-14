@@ -33,7 +33,7 @@ import com.empty.jinux.baselibaray.view.recycleview.ItemAdapter
 import com.empty.jinux.baselibaray.view.recycleview.SpaceItem
 import com.empty.jinux.baselibaray.view.recycleview.withItems
 import com.empty.jinux.simplediary.R
-import com.empty.jinux.simplediary.data.Diary
+import com.empty.jinux.simplediary.data.source.diary.Diary
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivity
 import com.empty.jinux.simplediary.ui.main.BackPressProcessor

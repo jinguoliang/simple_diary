@@ -8,9 +8,8 @@ import com.empty.jinux.baselibaray.view.loading.doTaskWithLoadingDialog
 import com.empty.jinux.simplediary.BuildConfig
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.backup.Backup
-import com.empty.jinux.simplediary.data.source.DiariesDataSource
+import com.empty.jinux.simplediary.data.source.diary.DiariesDataSource
 import com.empty.jinux.simplediary.di.Local
-import com.empty.jinux.simplediary.di.Remote
 import org.jetbrains.anko.toast
 import java.io.File
 import javax.inject.Inject

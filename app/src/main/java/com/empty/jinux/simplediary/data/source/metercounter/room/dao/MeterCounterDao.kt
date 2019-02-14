@@ -1,10 +1,8 @@
-package com.empty.jinux.simplediary.data.metercounter.room.dao
+package com.empty.jinux.simplediary.data.source.metercounter.room.dao
 
 import androidx.room.*
-import com.empty.jinux.simplediary.data.metercounter.room.entity.MeterCounter
-import com.empty.jinux.simplediary.data.source.local.room.COLUMN_ID
-import com.empty.jinux.simplediary.data.source.local.room.TABLE_METER_COUNTER
-import com.empty.jinux.simplediary.data.source.local.room.entity.Diary
+import com.empty.jinux.simplediary.data.source.metercounter.room.entity.MeterCounter
+import com.empty.jinux.simplediary.data.source.diary.local.room.TABLE_METER_COUNTER
 
 @Dao
 interface MeterCounterDao {

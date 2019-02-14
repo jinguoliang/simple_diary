@@ -1,8 +1,7 @@
 package com.empty.jinux.simplediary.ui.main.statistics
 
-import com.empty.jinux.simplediary.data.source.DiariesDataSource
+import com.empty.jinux.simplediary.data.source.diary.DiariesDataSource
 import com.empty.jinux.simplediary.di.Repository
-import com.empty.jinux.simplediary.report.Reporter
 import dagger.Module
 import dagger.Provides
 

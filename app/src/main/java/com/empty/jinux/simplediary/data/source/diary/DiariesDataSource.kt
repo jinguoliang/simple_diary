@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.data.source
-
-import com.empty.jinux.simplediary.data.Diary
+package com.empty.jinux.simplediary.data.source.diary
 
 /**
  * Main entry point for accessing diaries data.

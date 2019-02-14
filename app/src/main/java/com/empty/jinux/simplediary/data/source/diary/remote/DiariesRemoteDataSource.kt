@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.data.source.remote
+package com.empty.jinux.simplediary.data.source.diary.remote
 
-import com.empty.jinux.simplediary.data.Diary
-import com.empty.jinux.simplediary.data.source.DiariesDataSource
+import com.empty.jinux.simplediary.data.source.diary.Diary
+import com.empty.jinux.simplediary.data.source.diary.DiariesDataSource
 //import com.google.firebase.database.DataSnapshot
 //import com.google.firebase.database.DatabaseError
 //import com.google.firebase.database.FirebaseDatabase

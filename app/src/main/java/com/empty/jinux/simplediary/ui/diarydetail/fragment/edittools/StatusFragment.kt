@@ -21,7 +21,7 @@ import android.widget.RadioGroup
 import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.baselibaray.log.logw
 import com.empty.jinux.simplediary.R
-import com.empty.jinux.simplediary.data.LocationInfo
+import com.empty.jinux.simplediary.data.source.diary.LocationInfo
 import com.empty.jinux.simplediary.location.Location
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.MFragment
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.MyEmotionIcons

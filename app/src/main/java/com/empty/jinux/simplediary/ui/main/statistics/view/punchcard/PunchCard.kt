@@ -15,7 +15,7 @@ import com.empty.jinux.baselibaray.view.recycleview.replaceData
 import com.empty.jinux.baselibaray.view.recycleview.withItems
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.STREAK_MIN_WORDS_COUNTS
-import com.empty.jinux.simplediary.data.Diary
+import com.empty.jinux.simplediary.data.source.diary.Diary
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.layout_punchard_check_item.*
 import kotlinx.android.synthetic.main.layout_punchcard.view.*

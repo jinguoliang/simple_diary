@@ -18,7 +18,7 @@ package com.empty.jinux.simplediary.ui.main.diarylist
 
 import com.empty.jinux.simplediary.BasePresenter
 import com.empty.jinux.simplediary.BaseView
-import com.empty.jinux.simplediary.data.Diary
+import com.empty.jinux.simplediary.data.source.diary.Diary
 
 /**
  * This specifies the contract between the view and the presenter.

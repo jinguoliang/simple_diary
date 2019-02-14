@@ -1,11 +1,11 @@
-package com.empty.jinux.simplediary.data.metercounter.room.entity
+package com.empty.jinux.simplediary.data.source.metercounter.room.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.empty.jinux.simplediary.data.source.local.room.COLUMN_ID
-import com.empty.jinux.simplediary.data.source.local.room.TABLE_METER_COUNTER
+import com.empty.jinux.simplediary.data.source.diary.local.room.COLUMN_ID
+import com.empty.jinux.simplediary.data.source.diary.local.room.TABLE_METER_COUNTER
 
 @Entity(tableName = TABLE_METER_COUNTER)
 data class MeterCounter(

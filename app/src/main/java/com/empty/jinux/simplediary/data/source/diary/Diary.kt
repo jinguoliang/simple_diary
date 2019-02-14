@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.data
+package com.empty.jinux.simplediary.data.source.diary
 
 import com.empty.jinux.baselibaray.utils.formatDateWithWeekday
 import com.empty.jinux.baselibaray.utils.formatTime

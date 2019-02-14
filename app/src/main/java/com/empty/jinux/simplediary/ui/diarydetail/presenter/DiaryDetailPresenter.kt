@@ -22,8 +22,7 @@ import androidx.annotation.VisibleForTesting
 import com.empty.jinux.baselibaray.log.logi
 import com.empty.jinux.baselibaray.thread.ThreadPools
 import com.empty.jinux.baselibaray.utils.*
-import com.empty.jinux.simplediary.data.*
-import com.empty.jinux.simplediary.data.source.DiariesDataSource
+import com.empty.jinux.simplediary.data.source.diary.*
 import com.empty.jinux.simplediary.di.Repository
 import com.empty.jinux.simplediary.location.LocationManager
 import com.empty.jinux.simplediary.report.Reporter
@@ -266,7 +265,8 @@ constructor(
 
     override fun setWeather(icon: String) {
         currentDiaryContent.apply {
-            weatherInfo = WeatherInfo(weatherInfo?.description ?: "", icon)
+            weatherInfo = WeatherInfo(weatherInfo?.description
+                    ?: "", icon)
         }
     }
 

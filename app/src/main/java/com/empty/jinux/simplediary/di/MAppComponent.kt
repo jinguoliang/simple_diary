@@ -3,7 +3,7 @@ package com.empty.jinux.simplediary.di
 import com.empty.jinux.simplediary.MApplication
 import com.empty.jinux.simplediary.applock.AppLockModule
 import com.empty.jinux.simplediary.config.ConfigModule
-import com.empty.jinux.simplediary.data.source.DiariesRepositoryModule
+import com.empty.jinux.simplediary.data.source.diary.DiariesRepositoryModule
 import com.empty.jinux.simplediary.path.PathManagerModule
 import com.empty.jinux.simplediary.report.ReportModule
 import com.empty.jinux.simplediary.ui.about.AboutActivityModule

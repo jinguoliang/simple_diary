@@ -1,7 +1,7 @@
 package com.empty.jinux.simplediary.ui.main.metercouner
 
-import com.empty.jinux.simplediary.data.metercounter.MeterCounter
-import com.empty.jinux.simplediary.data.metercounter.MeterCounterDataSource
+import com.empty.jinux.simplediary.data.source.metercounter.MeterCounter
+import com.empty.jinux.simplediary.data.source.metercounter.MeterCounterDataSource
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import javax.inject.Inject

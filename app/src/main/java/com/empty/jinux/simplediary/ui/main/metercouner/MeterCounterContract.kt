@@ -2,7 +2,7 @@ package com.empty.jinux.simplediary.ui.main.metercouner
 
 import com.empty.jinux.simplediary.BasePresenter
 import com.empty.jinux.simplediary.BaseView
-import com.empty.jinux.simplediary.data.metercounter.MeterCounter
+import com.empty.jinux.simplediary.data.source.metercounter.MeterCounter
 
 interface MeterCounterContract {
     interface View : BaseView<Presenter> {

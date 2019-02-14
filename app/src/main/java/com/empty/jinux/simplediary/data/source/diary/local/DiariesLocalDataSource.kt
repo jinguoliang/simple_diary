@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package com.empty.jinux.simplediary.data.source.local
+package com.empty.jinux.simplediary.data.source.diary.local
 
 import androidx.room.Room
 import android.content.Context
 import android.util.Log
 import com.empty.jinux.baselibaray.log.loge
-import com.empty.jinux.simplediary.data.*
-import com.empty.jinux.simplediary.data.source.DiariesDataSource
-import com.empty.jinux.simplediary.data.source.local.room.DATABASE_NAME
-import com.empty.jinux.simplediary.data.source.local.room.DiaryDatabase
-import com.empty.jinux.simplediary.data.source.local.room.entity.Emotion
-import com.empty.jinux.simplediary.data.source.local.room.entity.Location
-import com.empty.jinux.simplediary.data.source.local.room.entity.Weather
+import com.empty.jinux.simplediary.data.source.diary.*
+import com.empty.jinux.simplediary.data.source.diary.local.room.DATABASE_NAME
+import com.empty.jinux.simplediary.data.source.diary.local.room.DiaryDatabase
+import com.empty.jinux.simplediary.data.source.diary.local.room.entity.Emotion
+import com.empty.jinux.simplediary.data.source.diary.local.room.entity.Location
+import com.empty.jinux.simplediary.data.source.diary.local.room.entity.Weather
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import javax.inject.Inject
@@ -123,7 +122,7 @@ constructor(val context: Context) : DiariesDataSource {
         }
     }
 
-    private fun mapDiaryFromRoomToDataSource(diary: com.empty.jinux.simplediary.data.source.local.room.entity.Diary) =
+    private fun mapDiaryFromRoomToDataSource(diary: com.empty.jinux.simplediary.data.source.diary.local.room.entity.Diary) =
             Diary(diary.id!!, DiaryContent(
                     diary.title,
                     diary.contentText,
@@ -134,7 +133,7 @@ constructor(val context: Context) : DiariesDataSource {
             ), meta = Meta(diary.createTime, diary.lastChangeTime, diary.deleted))
 
     private fun mapDiaryFromDataSourceToRoom(diary: Diary) =
-            com.empty.jinux.simplediary.data.source.local.room.entity.Diary(diary.id.takeIf { it != INVALID_DIARY_ID },
+            com.empty.jinux.simplediary.data.source.diary.local.room.entity.Diary(diary.id.takeIf { it != INVALID_DIARY_ID },
                     contentText = diary.diaryContent.content, displayTime = diary.diaryContent.displayTime,
                     weather = diary.diaryContent.weatherInfo?.run {
                         Weather(null, desc = description,
