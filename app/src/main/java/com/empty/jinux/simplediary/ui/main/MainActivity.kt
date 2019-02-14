@@ -21,6 +21,7 @@ import android.os.Bundle
 import androidx.core.view.GravityCompat
 import android.view.MenuItem
 import android.view.View
+import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.intent.helpTranslate
@@ -40,6 +41,7 @@ import dagger.android.support.DaggerAppCompatActivity
 import io.multimoon.colorful.BaseTheme
 import io.multimoon.colorful.Colorful
 import kotlinx.android.synthetic.main.activity_diary_list.*
+import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
@@ -57,6 +59,10 @@ class MainActivity : DaggerAppCompatActivity() {
     private lateinit var mCurrentFragment: Fragment
 
 
+    private val KEY_HOME_PAGE = "home_page"
+    private val PAGE_DIARY = 0
+    private val PAGE_METER_COUNTER = 1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Colorful().apply(this, override = true, baseTheme = BaseTheme.THEME_APPCOMPAT)
@@ -65,8 +71,13 @@ class MainActivity : DaggerAppCompatActivity() {
 
         setupToolbar()
         setupNavigationDrawer()
-        showDiaryListFragment()
 
+        defaultSharedPreferences.getInt(KEY_HOME_PAGE, 0).apply {
+            when (this) {
+                PAGE_DIARY -> showDiaryListFragment()
+                PAGE_METER_COUNTER -> showMeterCounterFragment()
+            }
+        }
     }
 
     override fun onStart() {
@@ -121,10 +132,16 @@ class MainActivity : DaggerAppCompatActivity() {
 
     private fun showDiaryListFragment() {
         showFragment<DiaryListFragment>()
+        defaultSharedPreferences.edit {
+            putInt(KEY_HOME_PAGE, PAGE_DIARY)
+        }
     }
 
     private fun showMeterCounterFragment() {
         showFragment<MeterCounterFragment>()
+        defaultSharedPreferences.edit {
+            putInt(KEY_HOME_PAGE, PAGE_METER_COUNTER)
+        }
     }
 
     private inline fun  <reified T:Fragment> showFragment() {
