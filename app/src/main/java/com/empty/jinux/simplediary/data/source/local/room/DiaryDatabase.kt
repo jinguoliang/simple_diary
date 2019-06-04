@@ -1,7 +1,7 @@
 package com.empty.jinux.simplediary.data.source.local.room
 
-import android.arch.persistence.room.Database
-import android.arch.persistence.room.RoomDatabase
+import androidx.room.Database
+import androidx.room.RoomDatabase
 import com.empty.jinux.simplediary.data.source.local.room.dao.DiaryDao
 import com.empty.jinux.simplediary.data.source.local.room.entity.Diary
 

@@ -2,7 +2,7 @@ package com.empty.jinux.simplediary.ui.main
 
 import android.app.Activity
 import android.content.Context
-import android.support.v7.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatImageView
 import android.util.AttributeSet
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.util.getStatusBarHeight

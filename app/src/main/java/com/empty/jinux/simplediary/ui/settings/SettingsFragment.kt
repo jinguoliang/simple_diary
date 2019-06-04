@@ -3,9 +3,9 @@ package com.empty.jinux.simplediary.ui.settings
 import android.app.Dialog
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.support.annotation.StringRes
-import android.support.v7.preference.CheckBoxPreference
-import android.support.v7.preference.PreferenceManager
+import androidx.annotation.StringRes
+import androidx.preference.CheckBoxPreference
+import androidx.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.core.content.edit

@@ -17,7 +17,7 @@
 package com.empty.jinux.simplediary.ui.main.statistics
 
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,7 +51,7 @@ class StatisticsFragment : DaggerFragment(), StatisticsContract.View, BackPressP
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        activity?.findViewById<FloatingActionButton>(R.id.fab_add_diary)?.visibility = View.INVISIBLE
+        activity?.findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.fab_add_diary)?.visibility = View.INVISIBLE
         statistics.mReporter = mReporter
     }
 

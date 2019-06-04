@@ -22,7 +22,7 @@ import android.app.Fragment;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ContentProvider;
-import android.support.multidex.MultiDexApplication;
+import androidx.multidex.MultiDexApplication;
 
 import dagger.android.AndroidInjection;
 import dagger.android.AndroidInjector;

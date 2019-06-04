@@ -18,9 +18,9 @@ package com.empty.jinux.simplediary.ui.main
 
 import android.content.ActivityNotFoundException
 import android.os.Bundle
-import android.support.design.widget.NavigationView
-import android.support.v4.view.GravityCompat
-import android.support.v4.widget.DrawerLayout
+import com.google.android.material.navigation.NavigationView
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import android.view.MenuItem
 import android.view.View
 import com.empty.jinux.simplediary.R
@@ -124,8 +124,8 @@ class MainActivity : DaggerAppCompatActivity() {
         mCurrentFragment = fragment
     }
 
-    private fun DrawerLayout.setMDrawerListener() {
-        addDrawerListener(object : DrawerLayout.DrawerListener {
+    private fun androidx.drawerlayout.widget.DrawerLayout.setMDrawerListener() {
+        addDrawerListener(object : androidx.drawerlayout.widget.DrawerLayout.DrawerListener {
             override fun onDrawerStateChanged(newState: Int) {
             }
 
@@ -145,7 +145,7 @@ class MainActivity : DaggerAppCompatActivity() {
 
     private var mCurrentItemRes: Int = R.id.list_navigation_menu_item
 
-    private fun NavigationView.setMItemClickListener() {
+    private fun com.google.android.material.navigation.NavigationView.setMItemClickListener() {
         setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.list_navigation_menu_item -> {

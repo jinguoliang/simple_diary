@@ -1,7 +1,7 @@
 package com.empty.jinux.simplediary.ui.main.diarylist.adapter
 
 import android.annotation.SuppressLint
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -33,11 +33,11 @@ class DiaryItem(val data: Diary, val differentDay: Boolean, val onItemListener: 
     }
 
     companion object Controller : ItemController {
-        override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup): androidx.recyclerview.widget.RecyclerView.ViewHolder {
             return ViewHolder(parent.inflate(R.layout.recycle_item_diary, false))
         }
 
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: Item) {
+        override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, item: Item) {
             item as DiaryItem
             holder as ViewHolder
 
@@ -53,7 +53,7 @@ class DiaryItem(val data: Diary, val differentDay: Boolean, val onItemListener: 
             holder.itemView.swipe_settings_delete.setOnClickListener { item.onItemListener.onDeleteClick(item.data) }
         }
 
-        class ViewHolder(val originView: View) : RecyclerView.ViewHolder(SwipeView(originView)) {
+        class ViewHolder(val originView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(SwipeView(originView)) {
             val title = itemView.title
             val weekName: TextView = itemView.weekName
             val day: TextView = itemView.day
@@ -167,11 +167,11 @@ class DiaryItem(val data: Diary, val differentDay: Boolean, val onItemListener: 
 
 class CategoryItem(val time: Long) : Item {
     companion object Controller : ItemController {
-        override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup): androidx.recyclerview.widget.RecyclerView.ViewHolder {
             return ViewHolder(parent.inflate(R.layout.recycler_view_item_category, false))
         }
 
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: Item) {
+        override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, item: Item) {
             item as CategoryItem
             holder as ViewHolder
             val calendar = item.time.toCalendar()
@@ -183,7 +183,7 @@ class CategoryItem(val time: Long) : Item {
 
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         private var weekth: TextView = itemView.weekth
         private var year: TextView = itemView.year
 
@@ -198,16 +198,16 @@ class CategoryItem(val time: Long) : Item {
 
 class CategoryEndItem() : Item {
     companion object Controller : ItemController {
-        override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup): androidx.recyclerview.widget.RecyclerView.ViewHolder {
             return ViewHolder(parent.inflate(R.layout.recycler_view_item_category_end, false))
         }
 
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: Item) {
+        override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, item: Item) {
         }
 
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
     }
 
     override val controller: ItemController = Controller

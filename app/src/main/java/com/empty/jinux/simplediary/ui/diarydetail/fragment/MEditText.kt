@@ -3,7 +3,7 @@ package com.empty.jinux.simplediary.ui.diarydetail.fragment
 import android.content.Context
 import android.graphics.drawable.ClipDrawable
 import android.graphics.drawable.Drawable
-import android.support.v4.content.res.ResourcesCompat
+import androidx.core.content.res.ResourcesCompat
 import android.util.AttributeSet
 import android.util.Log
 import android.widget.EditText

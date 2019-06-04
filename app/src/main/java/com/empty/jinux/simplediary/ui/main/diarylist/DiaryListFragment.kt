@@ -20,13 +20,14 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.Snackbar
-import android.support.graphics.drawable.VectorDrawableCompat
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import android.view.*
 import android.widget.SearchView
+import androidx.core.view.isVisible
 import com.empty.jinux.baselibaray.utils.dayStartTime
 import com.empty.jinux.baselibaray.utils.hideInputMethod
 import com.empty.jinux.baselibaray.utils.weekStartTime
@@ -120,14 +121,14 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View, BackPressPre
 
     private fun setupFloatButton() {
         activity?.findViewById<FloatingActionButton>(R.id.fab_add_diary)?.apply {
-            visibility = View.VISIBLE
+            isVisible = true
             setImageResource(R.drawable.ic_add)
             setOnClickListener {
                 mPresenter.addNewDiary()
                 mReporter.reportClick("add diary")
             }
             setOnLongClickListener {
-                diaryRecyclerView.smoothScrollToPosition(diaryRecyclerView.adapter.itemCount)
+                diaryRecyclerView.smoothScrollToPosition(diaryRecyclerView.adapter!!.itemCount)
                 true
             }
         }
@@ -241,7 +242,7 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View, BackPressPre
     }
 
     private fun showMessage(message: String) {
-        Snackbar.make(view!!, message, Snackbar.LENGTH_LONG).show()
+        com.google.android.material.snackbar.Snackbar.make(view!!, message, com.google.android.material.snackbar.Snackbar.LENGTH_LONG).show()
     }
 
     fun handleSearch(query: String) {
@@ -257,7 +258,7 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View, BackPressPre
 
 }
 
-private fun RecyclerView.refreshFromDiariesList(diaries: List<Diary>, itemListener: DiaryItem.OnItemListener) {
+private fun androidx.recyclerview.widget.RecyclerView.refreshFromDiariesList(diaries: List<Diary>, itemListener: DiaryItem.OnItemListener) {
     val items = mutableListOf<Item>()
 
     var preWeekStart = 0L

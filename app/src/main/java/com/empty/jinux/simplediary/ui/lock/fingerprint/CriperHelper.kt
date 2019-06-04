@@ -3,7 +3,7 @@ package com.empty.jinux.simplediary.ui.lock.fingerprint
 import android.os.Build
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import java.io.IOException
 import java.security.*
 import java.security.cert.CertificateException

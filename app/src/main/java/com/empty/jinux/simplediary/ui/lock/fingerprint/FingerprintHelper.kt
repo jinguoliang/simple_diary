@@ -19,7 +19,7 @@ package com.empty.jinux.simplediary.ui.lock.fingerprint
 import android.hardware.fingerprint.FingerprintManager
 import android.os.Build
 import android.os.CancellationSignal
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import com.empty.jinux.baselibaray.log.logd
 import com.empty.jinux.baselibaray.thread.ThreadPools
 import javax.crypto.Cipher

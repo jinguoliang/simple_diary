@@ -7,8 +7,8 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.os.Build
 import android.os.Bundle
-import android.support.graphics.drawable.VectorDrawableCompat
-import android.support.v4.content.res.ResourcesCompat
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
+import androidx.core.content.res.ResourcesCompat
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater

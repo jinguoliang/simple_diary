@@ -21,12 +21,12 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.design.widget.TabLayout
-import android.support.graphics.drawable.VectorDrawableCompat
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.content.res.ResourcesCompat
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayout
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.core.content.res.ResourcesCompat
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
@@ -258,7 +258,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         }
 
         toolArea.adapter = object : FragmentPagerAdapter(fragmentManager) {
-            override fun getItem(position: Int): Fragment {
+            override fun getItem(position: Int): androidx.fragment.app.Fragment {
                 return fragments[position]
             }
 
@@ -275,8 +275,8 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         (0 until iconRes.size).map { editToolsTab.getTabAt(it) }.forEachIndexed { i, it ->
             it?.customView = ImageView(context).apply { setImageDrawable(VectorDrawableCompat.create(resources, iconRes[i], null)) }
         }
-        editToolsTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabReselected(tab: TabLayout.Tab) {
+        editToolsTab.addOnTabSelectedListener(object : com.google.android.material.tabs.TabLayout.OnTabSelectedListener {
+            override fun onTabReselected(tab: com.google.android.material.tabs.TabLayout.Tab) {
                 when (tab.position) {
                     TAB_KEYBOARD_POS -> {
                         if (toolArea.isShown) {
@@ -297,10 +297,10 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
             }
 
-            override fun onTabUnselected(tab: TabLayout.Tab) {
+            override fun onTabUnselected(tab: com.google.android.material.tabs.TabLayout.Tab) {
             }
 
-            override fun onTabSelected(tab: TabLayout.Tab) {
+            override fun onTabSelected(tab: com.google.android.material.tabs.TabLayout.Tab) {
                 when (tab.position) {
                     TAB_KEYBOARD_POS -> {
                         showInputMethod()
@@ -442,7 +442,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     override fun showDiarySaved() {
-        Snackbar.make(view!!, getString(R.string.successfully_saved_diary_message), Snackbar.LENGTH_LONG).show()
+        com.google.android.material.snackbar.Snackbar.make(view!!, getString(R.string.successfully_saved_diary_message), com.google.android.material.snackbar.Snackbar.LENGTH_LONG).show()
     }
 
     override fun showEmptyDiaryError() {

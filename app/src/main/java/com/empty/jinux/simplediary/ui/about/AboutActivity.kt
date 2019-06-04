@@ -1,7 +1,7 @@
 package com.empty.jinux.simplediary.ui.about
 
-import android.support.annotation.DrawableRes
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.DrawableRes
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -64,11 +64,11 @@ class AboutActivity : DaggerAppCompatAboutActivity() {
 
 class Category(val title: String) : Item {
     companion object Controller : ItemController {
-        override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup): androidx.recyclerview.widget.RecyclerView.ViewHolder {
             return ViewHolder(parent.inflate(R.layout.layout_about_category, false))
         }
 
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: Item) {
+        override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, item: Item) {
             item as Category
             holder as ViewHolder
             holder.titleView.text = item.title
@@ -76,7 +76,7 @@ class Category(val title: String) : Item {
 
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         val titleView = itemView.findViewById<TextView>(R.id.title)
     }
 
@@ -85,11 +85,11 @@ class Category(val title: String) : Item {
 
 class Card(val title: String) : Item {
     companion object Controller : ItemController {
-        override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup): androidx.recyclerview.widget.RecyclerView.ViewHolder {
             return ViewHolder(parent.inflate(R.layout.layout_about_card, false))
         }
 
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: Item) {
+        override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, item: Item) {
             item as Card
             holder as ViewHolder
             holder.content.text = item.title
@@ -97,7 +97,7 @@ class Card(val title: String) : Item {
 
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         val content = itemView.findViewById<TextView>(R.id.content)
     }
 
@@ -109,11 +109,11 @@ class Contributor(@param:DrawableRes val head: Int,
                   val title: String,
                   val hostUrl: String) : Item {
     companion object Controller : ItemController {
-        override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup): androidx.recyclerview.widget.RecyclerView.ViewHolder {
             return ViewHolder(parent.inflate(R.layout.layout_about_contributor, false))
         }
 
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: Item) {
+        override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, item: Item) {
             item as Contributor
             holder as ViewHolder
             holder.head.setImageResource(item.head)
@@ -125,7 +125,7 @@ class Contributor(@param:DrawableRes val head: Int,
         }
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         val head = itemView.findViewById<ImageView>(R.id.head)
         val name = itemView.findViewById<TextView>(R.id.name)
         val title = itemView.findViewById<TextView>(R.id.title)
@@ -141,11 +141,11 @@ class License(val title: String,
     companion object Controller : ItemController {
         const val APACHE_2 = ""
 
-        override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup): androidx.recyclerview.widget.RecyclerView.ViewHolder {
             return ViewHolder(parent.inflate(R.layout.layout_about_license, false))
         }
 
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: Item) {
+        override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, item: Item) {
             item as License
             holder as ViewHolder
             holder.title.text = item.title
@@ -158,7 +158,7 @@ class License(val title: String,
         }
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         val author = itemView.findViewById<TextView>(R.id.author)
         val host = itemView.findViewById<TextView>(R.id.host)
         val license = itemView.findViewById<TextView>(R.id.license)

@@ -17,9 +17,10 @@
 package com.empty.jinux.simplediary.ui.about;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.empty.jinux.baselibaray.view.about.AbsAboutActivity;
 
@@ -38,24 +39,26 @@ import dagger.internal.Beta;
  */
 @Beta
 public abstract class DaggerAppCompatAboutActivity extends AbsAboutActivity
-    implements HasFragmentInjector, HasSupportFragmentInjector {
+        implements HasFragmentInjector, HasSupportFragmentInjector {
 
-  @Inject DispatchingAndroidInjector<Fragment> supportFragmentInjector;
-  @Inject DispatchingAndroidInjector<android.app.Fragment> frameworkFragmentInjector;
+    @Inject
+    DispatchingAndroidInjector<Fragment> supportFragmentInjector;
+    @Inject
+    DispatchingAndroidInjector<android.app.Fragment> frameworkFragmentInjector;
 
-  @Override
-  protected void onCreate(@Nullable Bundle savedInstanceState) {
-    AndroidInjection.inject(this);
-    super.onCreate(savedInstanceState);
-  }
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        AndroidInjection.inject(this);
+        super.onCreate(savedInstanceState);
+    }
 
-  @Override
-  public AndroidInjector<Fragment> supportFragmentInjector() {
-    return supportFragmentInjector;
-  }
+    @Override
+    public AndroidInjector<Fragment> supportFragmentInjector() {
+        return supportFragmentInjector;
+    }
 
-  @Override
-  public AndroidInjector<android.app.Fragment> fragmentInjector() {
-    return frameworkFragmentInjector;
-  }
+    @Override
+    public AndroidInjector<android.app.Fragment> fragmentInjector() {
+        return frameworkFragmentInjector;
+    }
 }

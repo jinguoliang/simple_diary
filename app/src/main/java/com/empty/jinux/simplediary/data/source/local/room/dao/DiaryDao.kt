@@ -1,7 +1,7 @@
 package com.empty.jinux.simplediary.data.source.local.room.dao
 
-import android.arch.persistence.room.*
-import android.arch.persistence.room.OnConflictStrategy.REPLACE
+import androidx.room.*
+import androidx.room.OnConflictStrategy.REPLACE
 import com.empty.jinux.simplediary.data.source.local.room.COLUMN_ID
 import com.empty.jinux.simplediary.data.source.local.room.TABLE_DIARY
 import com.empty.jinux.simplediary.data.source.local.room.entity.Diary

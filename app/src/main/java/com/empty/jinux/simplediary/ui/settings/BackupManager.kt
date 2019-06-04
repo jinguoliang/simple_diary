@@ -1,7 +1,7 @@
 package com.empty.jinux.simplediary.ui.settings
 
-import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AlertDialog
 import com.empty.jinux.baselibaray.view.loading.doTaskWithLoadingDialog
 import com.empty.jinux.simplediary.BuildConfig
 import com.empty.jinux.simplediary.R
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 class BackupManager
 @Inject internal constructor(
-        val fragment: Fragment,
+        val fragment: androidx.fragment.app.Fragment,
         @param:Local val local: Backup,
         @param:Local val localDatabase: DiariesDataSource
 ) {

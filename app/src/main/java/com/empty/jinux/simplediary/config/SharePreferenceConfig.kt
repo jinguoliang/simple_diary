@@ -1,7 +1,7 @@
 package com.empty.jinux.simplediary.config
 
 import android.content.Context
-import android.support.v7.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 
 class SharePreferenceConfig(context: Context) : ConfigManager {
     override fun <T> get(key: String, defaultValue: T): T {

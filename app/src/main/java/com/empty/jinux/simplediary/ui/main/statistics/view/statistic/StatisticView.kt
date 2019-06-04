@@ -1,7 +1,7 @@
 package com.empty.jinux.simplediary.ui.main.statistics.view.statistic
 
 import android.content.Context
-import android.support.v7.widget.CardView
+import androidx.cardview.widget.CardView
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -20,7 +20,7 @@ class StatisticView
 @JvmOverloads
 constructor(context: Context,
             attrs: AttributeSet? = null,
-            defAttr: Int = 0) : CardView(context, attrs, defAttr) {
+            defAttr: Int = 0) : androidx.cardview.widget.CardView(context, attrs, defAttr) {
 
     companion object {
         val CALENDAR_FIELDS = listOf(Calendar.DAY_OF_MONTH,

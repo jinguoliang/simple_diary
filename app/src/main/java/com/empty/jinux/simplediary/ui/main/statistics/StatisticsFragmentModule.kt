@@ -1,6 +1,6 @@
 package com.empty.jinux.simplediary.ui.diarydetail.fragment
 
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import com.empty.jinux.simplediary.ui.main.statistics.StatisticsContract
 import com.empty.jinux.simplediary.ui.main.statistics.StatisticsFragment
 import com.empty.jinux.simplediary.ui.main.statistics.StatisticsFragmentComponent
@@ -14,7 +14,7 @@ internal abstract class StatisticsFragmentModule {
     @Binds
     @IntoMap
     @dagger.android.support.FragmentKey(StatisticsFragment::class)
-    internal abstract fun bind(builder: StatisticsFragmentComponent.Builder): AndroidInjector.Factory<out Fragment>
+    internal abstract fun bind(builder: StatisticsFragmentComponent.Builder): AndroidInjector.Factory<out androidx.fragment.app.Fragment>
 
     @Binds
     internal abstract fun bindView(v: StatisticsFragment): StatisticsContract.View

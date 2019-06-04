@@ -1,8 +1,8 @@
 package com.empty.jinux.simplediary.ui.main.statistics.view.statistic
 
 import android.content.Context
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
@@ -23,8 +23,8 @@ class BarChart : FrameLayout {
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-    val recyclerView = RecyclerView(context).also {
-        it.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+    val recyclerView = androidx.recyclerview.widget.RecyclerView(context).also {
+        it.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
     }
 
     private val emptyView = ImageView(context).also {
@@ -83,13 +83,13 @@ class Bar(val data: Pair<Long, Long>) : Item {
 
         var xAxisFormatter: BarChart.Formator? = null
 
-        override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup): androidx.recyclerview.widget.RecyclerView.ViewHolder {
             return Holder(parent.inflate(R.layout.recycler_view_bar_item, false).also {
                 it.layoutWidth = barWidth
             })
         }
 
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: Item) {
+        override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, item: Item) {
             holder as Holder
             item as Bar
             holder.xValueTv.text = xAxisFormatter?.format(item.data.first) ?: "no formatter"
@@ -97,7 +97,7 @@ class Bar(val data: Pair<Long, Long>) : Item {
             holder.bar.layoutHeight = ((item.data.second.toFloat() / maxYValue) * maxBarHeight).toInt()
         }
 
-        class Holder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer
+        class Holder(override val containerView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(containerView), LayoutContainer
     }
 
     override val controller = Controller

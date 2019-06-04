@@ -1,8 +1,8 @@
 package com.empty.jinux.simplediary.ui.main.statistics.view.punchcard
 
 import android.content.Context
-import android.support.v7.widget.CardView
-import android.support.v7.widget.RecyclerView
+import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -25,7 +25,7 @@ class PunchCard @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,
         defStyleAttr: Int = 0
-) : CardView(context, attrs, defStyleAttr) {
+) : androidx.cardview.widget.CardView(context, attrs, defStyleAttr) {
 
     private val items = mutableListOf<Item>()
 
@@ -85,11 +85,11 @@ private class PunchCheck(val data: Calendar,
         get() = Controller
 
     private companion object Controller : ItemController {
-        override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup): androidx.recyclerview.widget.RecyclerView.ViewHolder {
             return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.layout_punchard_check_item, parent, false))
         }
 
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: Item) {
+        override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, item: Item) {
             holder as ViewHolder
             item as PunchCheck
             when (item.state) {
@@ -110,7 +110,7 @@ private class PunchCheck(val data: Calendar,
         }
     }
 
-    private class ViewHolder(override val containerView: View?) : RecyclerView.ViewHolder(containerView), LayoutContainer
+    private class ViewHolder(override val containerView: View?) : androidx.recyclerview.widget.RecyclerView.ViewHolder(containerView!!), LayoutContainer
 }
 
 private fun Diary.day() =
