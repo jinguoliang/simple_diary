@@ -159,6 +159,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         savedInstanceState?.getLong(KEY_DIARY_ID)?.apply {
             mPresenter.setDiaryId(this)
         }
+
         mPresenter.start()
     }
 

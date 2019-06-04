@@ -13,6 +13,7 @@ import android.text.style.BackgroundColorSpan
 import android.text.style.ImageSpan
 import android.text.style.MetricAffectingSpan
 import com.empty.jinux.baselibaray.thread.ThreadPools
+import com.empty.jinux.baselibaray.utils.adjustParagraphSpace
 import kotlinx.android.synthetic.main.activity_demo.*
 import org.jetbrains.anko.append
 
@@ -47,6 +48,7 @@ class DemoActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                mEditor.adjustParagraphSpace(R.dimen.editor_paragraph_end)
             }
 
         })

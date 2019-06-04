@@ -40,4 +40,5 @@
     <dimen name="bar_item_value_textview_height">20dp</dimen>
     <dimen name="diary_list_ending_space_size">15dp</dimen>
     <dimen name="good_view_circle_size">55dp</dimen>
+    <dimen name="editor_paragraph_end">20dp</dimen>
 </resources>
