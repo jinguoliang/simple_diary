@@ -84,7 +84,7 @@ dependencies {
     androidTestImplementation "org.mockito:mockito-android:2.23.4"
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
-    implementation project(':baselibrary')
+    implementation project(':AndroidBaseKt')
     // dagger
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
     implementation "com.google.dagger:dagger:$dagger_version"

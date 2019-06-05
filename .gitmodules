@@ -1,0 +1,3 @@
+[submodule "AndroidBaseKt"]
+	path = AndroidBaseKt
+	url = git@github.com:jinguoliang/AndroidBaseKt.git
