@@ -40,6 +40,6 @@ public interface StatisticsContract {
     }
 
     interface Presenter extends BasePresenter {
-
+        void onDestory();
     }
 }

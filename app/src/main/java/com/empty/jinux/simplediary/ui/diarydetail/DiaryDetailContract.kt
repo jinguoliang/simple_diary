@@ -85,5 +85,6 @@ interface DiaryDetailContract {
 
         fun setLocation(locationInfo: LocationInfo)
 
+        fun onDestory()
     }
 }

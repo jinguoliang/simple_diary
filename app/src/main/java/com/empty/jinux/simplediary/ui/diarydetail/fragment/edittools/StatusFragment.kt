@@ -20,6 +20,7 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.baselibaray.log.logw
+import com.empty.jinux.baselibaray.utils.toast
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.LocationInfo
 import com.empty.jinux.simplediary.location.Location
@@ -29,7 +30,6 @@ import com.empty.jinux.simplediary.ui.diarydetail.fragment.MyWeatherIcons
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.reflectFeild
 import com.google.android.gms.location.places.ui.PlacePicker
 import kotlinx.android.synthetic.main.fragment_edit_status.*
-import org.jetbrains.anko.toast
 
 class StatusFragment : MFragment() {
 
@@ -93,7 +93,7 @@ class StatusFragment : MFragment() {
             intent?.also {
                 startActivityForResult(it, PLACE_PICKER_REQUEST_ID)
             } ?: context?.apply {
-                toast(R.string.google_service_error).show()
+                requireActivity().toast(R.string.google_service_error)
             }
         }
     }

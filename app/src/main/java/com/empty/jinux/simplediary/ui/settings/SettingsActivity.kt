@@ -1,15 +1,16 @@
 package com.empty.jinux.simplediary.ui.settings
 
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.ui.LockHelper
 import com.empty.jinux.simplediary.util.ActivityUtils
-import dagger.android.support.DaggerAppCompatActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_settings.*
 import javax.inject.Inject
 
-
-class SettingsActivity : DaggerAppCompatActivity() {
+@AndroidEntryPoint
+class SettingsActivity : AppCompatActivity() {
 
     @Inject
     lateinit var lockHelper: LockHelper

@@ -3,19 +3,23 @@ package com.empty.jinux.simplediary.ui.settings
 import android.app.Dialog
 import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.annotation.StringRes
-import androidx.preference.CheckBoxPreference
-import androidx.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextWatcher
+import androidx.annotation.StringRes
 import androidx.core.content.edit
+import androidx.preference.CheckBoxPreference
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.report.Reporter
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.dialog_app_lock_set_password.*
 import javax.inject.Inject
 
-class SettingsFragment : DaggerPreferenceFragment(),
-        SharedPreferences.OnSharedPreferenceChangeListener {
+@AndroidEntryPoint
+class SettingsFragment : PreferenceFragmentCompat(),
+    SharedPreferences.OnSharedPreferenceChangeListener {
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
 
@@ -61,7 +65,10 @@ class SettingsFragment : DaggerPreferenceFragment(),
             dialog.dismiss()
             checkBoxPreference.isChecked = true
             PreferenceManager.getDefaultSharedPreferences(activity).edit {
-                putString(getString(R.string.pref_lock_password), dialog.newPassword.text.toString())
+                putString(
+                    getString(R.string.pref_lock_password),
+                    dialog.newPassword.text.toString()
+                )
             }
             mReporter.reportClick("password_set_dialog_ok")
         }
@@ -90,8 +97,9 @@ class SettingsFragment : DaggerPreferenceFragment(),
     }
 
     private fun onLockChecked() {
-        val checkBoxPreference = findPreference(getString(R.string.pref_lock_enable)) as CheckBoxPreference
-        checkBoxPreference.setOnPreferenceChangeListener { preference, newValue ->
+        val checkBoxPreference =
+            findPreference<CheckBoxPreference>(getString(R.string.pref_lock_enable))
+        checkBoxPreference?.setOnPreferenceChangeListener { preference, newValue ->
             val checked = newValue as Boolean
             mReporter.reportClick(preference.key, "" + checked)
             if (checked && needConfirmWithInputPassword()) {
@@ -124,7 +132,7 @@ class SettingsFragment : DaggerPreferenceFragment(),
     }
 
     private fun onPreferenceClick(@StringRes key: Int, onClickListener: () -> Unit) {
-        findPreference(getString(key)).setOnPreferenceClickListener { onClickListener();true }
+        findPreference<Preference>(getString(key))?.setOnPreferenceClickListener { onClickListener();true }
     }
 
     override fun onResume() {

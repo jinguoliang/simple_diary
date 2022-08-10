@@ -10,7 +10,6 @@ import android.text.style.*
 import com.empty.jinux.baselibaray.thread.ThreadPools
 import com.empty.jinux.baselibaray.utils.adjustParagraphSpace
 import kotlinx.android.synthetic.main.activity_demo.*
-import org.jetbrains.anko.append
 
 class DemoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,18 +18,18 @@ class DemoActivity : AppCompatActivity() {
         mEditor.text = SpannableStringBuilder().apply {
             val drawable = ContextCompat.getDrawable(this@DemoActivity, R.drawable.ic_drawer_top_bg)!!
             drawable.bounds = Rect(0, 0, 500, 500)
-            append("a123123", ImageSpan(drawable))
-            append("helloo", BackgroundColorSpan(Color.CYAN))
-            append("dangdang", object : MetricAffectingSpan() {
-                override fun updateMeasureState(p: TextPaint) {
-                    p.baselineShift -= 130
-                }
-
-                override fun updateDrawState(p: TextPaint) {
-                    p.baselineShift -= 130
-                }
-
-            })
+//            append("a123123", ImageSpan(drawable))
+//            append("helloo", BackgroundColorSpan(Color.CYAN))
+//            append("dangdang", object : MetricAffectingSpan() {
+//                override fun updateMeasureState(p: TextPaint) {
+//                    p.baselineShift -= 130
+//                }
+//
+//                override fun updateDrawState(p: TextPaint) {
+//                    p.baselineShift -= 130
+//                }
+//
+//            })
 
         }
 

@@ -17,13 +17,14 @@
 package com.empty.jinux.simplediary.ui.main.diarylist
 
 import android.app.Activity
+import com.empty.jinux.baselibaray.utils.dayStartTime
+import com.empty.jinux.baselibaray.utils.today
+import com.empty.jinux.baselibaray.utils.wordsCount
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
 import com.empty.jinux.simplediary.di.Repository
 import com.empty.jinux.simplediary.ui.main.MainActivity
-import com.empty.jinux.baselibaray.utils.dayStartTime
-import com.empty.jinux.baselibaray.utils.today
-import com.empty.jinux.baselibaray.utils.wordsCount
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 
@@ -47,9 +48,17 @@ internal class DiaryListPresenter
  * with `@Nullable` values.
  */
 @Inject
-constructor(@param:Repository private val mDiariesRepository: DiariesDataSource,
-            private val mDiariesView: DiaryListContract.View) : DiaryListContract.Presenter {
+constructor(
+    @param:Repository private val mDiariesRepository: DiariesDataSource,
+    private val mDiariesView: DiaryListContract.View
+) : DiaryListContract.Presenter {
 
+    private val job = Job()
+    private val presentorScope = CoroutineScope(Dispatchers.Main + job)
+
+    override fun onDestory() {
+        job.cancel()
+    }
     private var mFirstLoad = true
 
     override fun start() {
@@ -58,6 +67,8 @@ constructor(@param:Repository private val mDiariesRepository: DiariesDataSource,
 
     override fun stop() {
     }
+
+
 
     override fun result(requestCode: Int, resultCode: Int) {
         if (MainActivity.REQUEST_ADD_DIARY == requestCode && Activity.RESULT_OK == resultCode) {
@@ -81,37 +92,40 @@ constructor(@param:Repository private val mDiariesRepository: DiariesDataSource,
         if (showLoadingUI) {
             mDiariesView.setLoadingIndicator(true)
         }
-        if (forceUpdate) {
-            mDiariesRepository.refreshDiaries()
-        }
 
-        mDiariesRepository.getDiaries(object : DiariesDataSource.LoadDiariesCallback {
-            override fun onDiariesLoaded(diaries: List<Diary>) {
+        presentorScope.launch {
+            if (forceUpdate) {
+                mDiariesRepository.refreshDiaries()
+            }
+
+            val diaries = withContext(Dispatchers.IO) {
+                try {
+                    mDiariesRepository.getDiaries()
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        if (job.isCancelled) return@withContext
+
+                        if (showLoadingUI) {
+                            mDiariesView.setLoadingIndicator(false)
+                        }
+                        mDiariesView.showLoadingDiariesError()
+                    }
+                    listOf()
+                }
+            }
+            withContext(Dispatchers.Main) {
                 mDiariesCached = diaries
 
-                // The view may not be able to handle UI updates anymore
-                if (!mDiariesView.isActive) {
-                    return
-                }
+                if (job.isCancelled) return@withContext
+
                 if (showLoadingUI) {
                     mDiariesView.setLoadingIndicator(false)
                 }
 
                 processDiaries(diaries)
             }
+        }
 
-            override fun onDataNotAvailable() {
-                // The view may not be able to handle UI updates anymore
-                if (!mDiariesView.isActive) {
-                    return
-                }
-
-                if (showLoadingUI) {
-                    mDiariesView.setLoadingIndicator(false)
-                }
-                mDiariesView.showLoadingDiariesError()
-            }
-        })
     }
 
     private fun processDiaries(diaries: List<Diary>) {
@@ -122,7 +136,11 @@ constructor(@param:Repository private val mDiariesRepository: DiariesDataSource,
             if (mCurrentQuery.isEmpty()) {
                 mDiariesView.showDiaries(diaries)
             } else {
-                mDiariesView.showDiaries(diaries.filter { it.diaryContent.content.contains(mCurrentQuery) })
+                mDiariesView.showDiaries(diaries.filter {
+                    it.diaryContent.content.contains(
+                        mCurrentQuery
+                    )
+                })
             }
         }
 
@@ -143,16 +161,17 @@ constructor(@param:Repository private val mDiariesRepository: DiariesDataSource,
     private fun wordCountToday(): Int {
         return mDiariesCached?.run {
             filter { it.diaryContent.displayTime.dayStartTime() == today().timeInMillis }
-                    .fold(0) { s, d -> s + d.diaryContent.content.wordsCount() }
+                .fold(0) { s, d -> s + d.diaryContent.content.wordsCount() }
         } ?: 0
     }
 
     override fun deleteDiary(diary: Diary) {
-        mDiariesRepository.deleteDiaryAsync(diary.id, object : DiariesDataSource.OnCallback<Boolean> {
-            override fun onResult(result: Boolean) {
+        presentorScope.launch(Dispatchers.IO) {
+            mDiariesRepository.deleteDiary(diary.id)
+            withContext(Dispatchers.Main) {
                 loadDiaries(true, true)
             }
-        })
+        }
     }
 
     private var mCurrentQuery = ""

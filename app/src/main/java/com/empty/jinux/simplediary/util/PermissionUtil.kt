@@ -11,7 +11,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import android.widget.Toast
 import com.empty.jinux.simplediary.R
-import com.google.common.collect.Lists
 
 object PermissionUtil {
 
@@ -94,7 +93,7 @@ object PermissionUtil {
 
     private fun getDeniedPermissions(context: Activity, vararg permissions: String): List<String> {
         if (!needCheckPermission()) {
-            return Lists.newArrayList()
+            return arrayListOf()
         }
         return permissions.filter { ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_DENIED }
     }

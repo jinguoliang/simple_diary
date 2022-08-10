@@ -6,27 +6,25 @@ import com.empty.jinux.simplediary.data.Diary
  * Created by jingu on 2018/3/15.
  */
 class EmptyDataSource : DiariesDataSource {
-    override fun deleteDiaryAsync(diaryId: Long, callback: DiariesDataSource.OnCallback<Boolean>) {
-        callback.onResult(true)
+    override suspend fun getDiaries(): List<Diary> {
+        return arrayListOf()
     }
 
-    override fun getDiaries(callback: DiariesDataSource.LoadDiariesCallback) {
-        callback.onDiariesLoaded(arrayListOf())
+    override suspend fun getDiary(diaryId: Long): Diary? {
+        return null
     }
 
-    override fun getDiary(diaryId: Long, callback: DiariesDataSource.GetDiaryCallback) {
-        callback.onDataNotAvailable()
+    override suspend fun save(diary: Diary): Long {
+        return -1
     }
 
-    override fun save(diary: Diary, callback: DiariesDataSource.OnCallback<Long>) {
+    override suspend fun refreshDiaries() {
     }
 
-    override fun refreshDiaries() {
+    override suspend fun deleteAllDiaries() {
     }
 
-    override fun deleteAllDiaries() {
-    }
-
-    override fun deleteDiary(diaryId: Long) {
+    override suspend fun deleteDiary(diaryId: Long): Boolean {
+        return false
     }
 }

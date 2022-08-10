@@ -13,9 +13,9 @@ import android.widget.FrameLayout
 import androidx.core.animation.addListener
 import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.baselibaray.utils.CountDownTimer
+import com.empty.jinux.baselibaray.utils.dimen
 import com.empty.jinux.simplediary.R
 import kotlinx.android.synthetic.main.activity_diary_detail.*
-import org.jetbrains.anko.dimen
 
 class GoodView : FrameLayout {
     companion object {
@@ -63,7 +63,7 @@ class GoodView : FrameLayout {
         super.dispatchDraw(canvas)
     }
 
-    override fun onVisibilityChanged(changedView: View?, visibility: Int) {
+    override fun onVisibilityChanged(changedView: View, visibility: Int) {
         super.onVisibilityChanged(changedView, visibility)
         if (visibility == View.GONE) {
             currentRadius = null

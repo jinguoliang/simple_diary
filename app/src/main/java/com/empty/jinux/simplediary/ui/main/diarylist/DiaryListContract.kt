@@ -60,5 +60,7 @@ interface DiaryListContract {
         fun deleteDiary(diary: Diary)
 
         fun searchDiary(query: String)
+
+        fun onDestory()
     }
 }

@@ -17,19 +17,21 @@
 package com.empty.jinux.simplediary.ui.diarydetail
 
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.empty.jinux.baselibaray.log.logi
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.ui.LockHelper
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.DiaryDetailFragment
 import com.empty.jinux.simplediary.util.ActivityUtils
-import dagger.android.support.DaggerAppCompatActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_diary_detail.*
 import javax.inject.Inject
 
 /**
  * Displays task details screen.
  */
-class DiaryDetailActivity : DaggerAppCompatActivity() {
+@AndroidEntryPoint
+class DiaryDetailActivity : AppCompatActivity() {
 
 
     @Inject
@@ -49,7 +51,7 @@ class DiaryDetailActivity : DaggerAppCompatActivity() {
                 .findFragmentById(R.id.contentFrame) as? DiaryDetailFragment
         if (diaryDetailFragment == null) {
             ActivityUtils.addFragmentToActivity(supportFragmentManager,
-                    DiaryDetailFragment.newInstance(intent.extras), R.id.contentFrame)
+                    DiaryDetailFragment.newInstance(intent.extras!!), R.id.contentFrame)
         } else {
             diaryDetailFragment.arguments = intent.extras
             ActivityUtils.replaceFragment(supportFragmentManager,

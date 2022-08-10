@@ -1,10 +1,7 @@
 package com.empty.jinux.simplediary.data.source
 
 
-import android.app.Activity
 import android.content.Context
-import com.empty.jinux.simplediary.data.backup.Backup
-import com.empty.jinux.simplediary.data.backup.LocalBackup
 import com.empty.jinux.simplediary.data.source.local.DiariesLocalDataSource
 import com.empty.jinux.simplediary.data.source.remote.DiariesRemoteDataSource
 import com.empty.jinux.simplediary.di.EmptyData
@@ -14,40 +11,42 @@ import com.empty.jinux.simplediary.di.Repository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 
 /**
  * This is used by Dagger to inject the required arguments into the [DiariesRepository].
  */
 @Module
+@InstallIn(ActivityComponent::class)
 abstract class DiariesRepositoryModule {
-
-    @Module
-    companion object {
-        @JvmStatic
-        @Provides
-        @Local
-        internal fun provideDiariesLocalDataSource(context: Context): DiariesDataSource {
-            return DiariesLocalDataSource(context)
-        }
-
-        @JvmStatic
-        @Provides
-        @Remote
-        internal fun provideDiariesRemoteDataSource(): DiariesDataSource {
-            return DiariesRemoteDataSource()
-        }
-
-        @JvmStatic
-        @Provides
-        @EmptyData
-        internal fun provideDiariesEmptyDataSource(): DiariesDataSource {
-            return EmptyDataSource()
-        }
-    }
-
 
     @Repository
     @Binds
     abstract fun bindsDiariesRepositoryDataSource(repository: DiariesRepository): DiariesDataSource
 
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+object DiariesRepositoryModule1 {
+    @Provides
+    @Local
+    internal fun provideDiariesLocalDataSource(@ApplicationContext context: Context): DiariesDataSource {
+        return DiariesLocalDataSource(context)
+    }
+
+    @Provides
+    @Remote
+    fun provideDiariesRemoteDataSource(): DiariesDataSource {
+        return DiariesRemoteDataSource()
+    }
+
+    @Provides
+    @EmptyData
+    fun provideDiariesEmptyDataSource(): DiariesDataSource {
+        return EmptyDataSource()
+    }
 }

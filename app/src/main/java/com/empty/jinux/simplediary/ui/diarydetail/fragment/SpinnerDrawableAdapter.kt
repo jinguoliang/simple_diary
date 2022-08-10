@@ -11,14 +11,15 @@ import com.empty.jinux.simplediary.R
 /**
  * Created by jinux on 18-4-13.
  */
-open class SpinnerDrawableAdapter(context: Context?,
+open class SpinnerDrawableAdapter(context: Context,
                                   val spinnerRes: Int,
                                   val dropdownItemRes: Int,
                                   itemArray: List<Int>)
     : ArrayAdapter<Int>(context, 0, itemArray) {
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         return createView(convertView, spinnerRes, parent, position)
     }
+
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup?): View {
         return createView(convertView, dropdownItemRes, parent, position)
@@ -28,7 +29,7 @@ open class SpinnerDrawableAdapter(context: Context?,
         val view = convertView ?: LayoutInflater.from(context).inflate(itemRes, parent, false)
         val image = view.findViewById<ImageView>(R.id.list_item)
         val item = getItem(position)
-        image.setImageResource(item)
+        image.setImageResource(item!!)
         return view
     }
 }

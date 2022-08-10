@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.updatePadding
 import com.empty.jinux.baselibaray.utils.inflate
+import com.empty.jinux.baselibaray.view.about.AbsAboutActivity
 import com.empty.jinux.baselibaray.view.recycleview.Item
 import com.empty.jinux.baselibaray.view.recycleview.ItemController
 import com.empty.jinux.simplediary.BuildConfig
@@ -15,10 +16,12 @@ import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.intent.buildViewIntent
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.LockHelper
-import org.jetbrains.anko.dimen
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
-class AboutActivity : DaggerAppCompatAboutActivity() {
+@AndroidEntryPoint
+class AboutActivity : AbsAboutActivity() {
 
     @Inject
     lateinit var lockHelper: LockHelper
@@ -39,7 +42,7 @@ class AboutActivity : DaggerAppCompatAboutActivity() {
     override fun onCreateHeader(icon: ImageView, slogan: TextView, version: TextView) {
         icon.setImageResource(R.drawable.ic_app_launcher)
         slogan.text = getString(R.string.app_slogan)
-        slogan.updatePadding(top = dimen(R.dimen.about_page_slogin_padding_top))
+        slogan.updatePadding(top = resources.getDimension(R.dimen.about_page_slogin_padding_top).roundToInt())
         version.text = getString(R.string.app_version_fmt, BuildConfig.VERSION_NAME)
     }
 

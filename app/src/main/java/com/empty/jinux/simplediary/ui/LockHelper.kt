@@ -1,13 +1,15 @@
 package com.empty.jinux.simplediary.ui
 
+import android.app.Activity
 import android.content.Context
+import androidx.core.content.ContextCompat.startActivity
 import com.empty.jinux.baselibaray.log.logd
 import com.empty.jinux.baselibaray.log.logi
 import com.empty.jinux.simplediary.applock.AppLockManager
 import com.empty.jinux.simplediary.config.ConfigManager
 import com.empty.jinux.simplediary.ui.lock.LockActivity
 import com.empty.jinux.baselibaray.thread.ThreadPools
-import org.jetbrains.anko.startActivity
+import com.empty.jinux.baselibaray.utils.startActivity
 import javax.inject.Inject
 
 
@@ -19,7 +21,7 @@ class LockHelper @Inject constructor() {
 
         lockEnable = config.get("pref_app_lock_enable", false)
         if (lockEnable && mAppLock.isLock()) {
-            context.startActivity<LockActivity>()
+            (context as Activity).startActivity<LockActivity>()
         }
 
         ThreadPools.postOnUIDelayed(500) {

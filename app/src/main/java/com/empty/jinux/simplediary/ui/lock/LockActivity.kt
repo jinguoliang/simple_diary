@@ -11,16 +11,18 @@ import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.View
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.applock.AppLockManager
 import com.empty.jinux.simplediary.config.ConfigManager
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.lock.fingerprint.FingerprintHelper
-import dagger.android.support.DaggerAppCompatActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_lock.*
 import javax.inject.Inject
 
-class LockActivity : DaggerAppCompatActivity() {
+@AndroidEntryPoint
+class LockActivity : AppCompatActivity() {
 
     @Inject
     lateinit var appLockManager: AppLockManager

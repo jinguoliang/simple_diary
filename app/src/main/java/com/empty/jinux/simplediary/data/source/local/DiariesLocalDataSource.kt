@@ -16,9 +16,9 @@
 
 package com.empty.jinux.simplediary.data.source.local
 
-import androidx.room.Room
 import android.content.Context
 import android.util.Log
+import androidx.room.Room
 import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.simplediary.data.*
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
@@ -27,8 +27,6 @@ import com.empty.jinux.simplediary.data.source.local.room.DiaryDatabase
 import com.empty.jinux.simplediary.data.source.local.room.entity.Emotion
 import com.empty.jinux.simplediary.data.source.local.room.entity.Location
 import com.empty.jinux.simplediary.data.source.local.room.entity.Weather
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -41,110 +39,93 @@ class DiariesLocalDataSource
 @Inject
 constructor(val context: Context) : DiariesDataSource {
 
-    private var database = Room.databaseBuilder(context.applicationContext,
-            DiaryDatabase::class.java, DATABASE_NAME).build()
+    private var database = Room.databaseBuilder(
+        context.applicationContext,
+        DiaryDatabase::class.java, DATABASE_NAME
+    ).build()
 
     private var diaryDao = database.diaryDao()
 
-    override fun getDiaries(callback: DiariesDataSource.LoadDiariesCallback) {
-        doAsync {
-            val result = try {
-                diaryDao.getAll().map { diary ->
-                    mapDiaryFromRoomToDataSource(diary)
-                }
-            } catch (e: Throwable) {
-                loge(Log.getStackTraceString(e), "DiariesLocalDataSource")
-                e
+    override suspend fun getDiaries(): List<Diary> {
+        val result = try {
+            diaryDao.getAll().map { diary ->
+                mapDiaryFromRoomToDataSource(diary)
             }
-
-            when (result) {
-                is Throwable -> {
-                    uiThread {
-                        callback.onDataNotAvailable()
-                    }
-                }
-                else -> {
-                    val data = result as List<Diary>
-                    uiThread {
-                        callback.onDiariesLoaded(data.filter { !it.meta.deleted }.sortedBy { it.diaryContent.displayTime })
-                    }
-                }
-            }
+        } catch (e: Throwable) {
+            loge(Log.getStackTraceString(e), "DiariesLocalDataSource")
+            throw RuntimeException(e)
         }
+
+        val data = result as List<Diary>
+        return data.filter { !it.meta.deleted }.sortedBy { it.diaryContent.displayTime }
     }
 
-    override fun getDiary(diaryId: Long, callback: DiariesDataSource.GetDiaryCallback) {
-        doAsync {
-            val diary = diaryDao.getOneById(diaryId)
-
-            uiThread {
-                if (diary != null) {
-                    callback.onDiaryLoaded(mapDiaryFromRoomToDataSource(diary))
-                } else {
-                    callback.onDataNotAvailable()
-                }
-            }
-
-        }
+    override suspend fun getDiary(diaryId: Long): Diary? {
+        val diary = diaryDao.getOneById(diaryId) ?: return null
+        return mapDiaryFromRoomToDataSource(diary)
     }
 
-    override fun save(diary: Diary, callback: DiariesDataSource.OnCallback<Long>) {
-        doAsync {
-            loge("save diary", "notice")
-            val id = diaryDao.insertOne(mapDiaryFromDataSourceToRoom(diary))
-            callback.onResult(id)
-        }
+    override suspend fun save(diary: Diary): Long {
+        loge("save diary", "notice")
+        val id = diaryDao.insertOne(mapDiaryFromDataSourceToRoom(diary))
+        return id
     }
 
-    override fun refreshDiaries() {
+    override suspend fun refreshDiaries() {
         database.close()
-        database = Room.databaseBuilder(context.applicationContext,
-                DiaryDatabase::class.java, DATABASE_NAME).build()
+        database = Room.databaseBuilder(
+            context.applicationContext,
+            DiaryDatabase::class.java, DATABASE_NAME
+        ).build()
         diaryDao = database.diaryDao()
     }
 
-    override fun deleteAllDiaries() {
+    override suspend fun deleteAllDiaries() {
         // todo
     }
 
-    override fun deleteDiary(diaryId: Long) {
+    override suspend fun deleteDiary(diaryId: Long): Boolean {
         diaryDao.getOneById(diaryId)?.apply {
             deleted = true
             diaryDao.updateState(this)
         }
+        return true
     }
 
-    override fun deleteDiaryAsync(diaryId: Long, callback: DiariesDataSource.OnCallback<Boolean>) {
-        doAsync {
-            deleteDiary(diaryId)
-            uiThread {
-                callback.onResult(true)
-            }
-        }
-    }
 
     private fun mapDiaryFromRoomToDataSource(diary: com.empty.jinux.simplediary.data.source.local.room.entity.Diary) =
-            Diary(diary.id!!, DiaryContent(
-                    diary.title,
-                    diary.contentText,
-                    diary.displayTime,
-                    weatherInfo = diary.weather?.run { WeatherInfo(desc, icon) },
-                    locationInfo = diary.location?.run { LocationInfo(com.empty.jinux.simplediary.location.Location(longitude, latitude), address) },
-                    emotionInfo = diary.emotion?.run { EmotionInfo(icon) }
-            ), meta = Meta(diary.createTime, diary.lastChangeTime, diary.deleted))
+        Diary(diary.id!!, DiaryContent(
+            diary.title,
+            diary.contentText,
+            diary.displayTime,
+            weatherInfo = diary.weather?.run { WeatherInfo(desc, icon) },
+            locationInfo = diary.location?.run {
+                LocationInfo(
+                    com.empty.jinux.simplediary.location.Location(
+                        longitude,
+                        latitude
+                    ), address
+                )
+            },
+            emotionInfo = diary.emotion?.run { EmotionInfo(icon) }
+        ), meta = Meta(diary.createTime, diary.lastChangeTime, diary.deleted))
 
     private fun mapDiaryFromDataSourceToRoom(diary: Diary) =
-            com.empty.jinux.simplediary.data.source.local.room.entity.Diary(diary.id.takeIf { it != INVALID_DIARY_ID },
-                    contentText = diary.diaryContent.content, displayTime = diary.diaryContent.displayTime,
-                    weather = diary.diaryContent.weatherInfo?.run {
-                        Weather(null, desc = description,
-                                icon = icon)
-                    },
-                    location = diary.diaryContent.locationInfo?.run {
-                        Location(null, location.latitude, location.longitude, address)
-                    },
-                    emotion = diary.diaryContent.emotionInfo?.run { Emotion(null, id) },
-                    createTime = diary.meta.createdTime,
-                    lastChangeTime = diary.meta.lastChangeTime,
-                    deleted = diary.meta.deleted)
+        com.empty.jinux.simplediary.data.source.local.room.entity.Diary(
+            diary.id.takeIf { it != INVALID_DIARY_ID },
+            contentText = diary.diaryContent.content, displayTime = diary.diaryContent.displayTime,
+            weather = diary.diaryContent.weatherInfo?.run {
+                Weather(
+                    null, desc = description,
+                    icon = icon
+                )
+            },
+            location = diary.diaryContent.locationInfo?.run {
+                Location(null, location.latitude, location.longitude, address)
+            },
+            emotion = diary.diaryContent.emotionInfo?.run { Emotion(null, id) },
+            createTime = diary.meta.createdTime,
+            lastChangeTime = diary.meta.lastChangeTime,
+            deleted = diary.meta.deleted
+        )
 }

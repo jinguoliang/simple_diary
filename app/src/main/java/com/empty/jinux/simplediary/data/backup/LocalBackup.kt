@@ -1,7 +1,6 @@
 package com.empty.jinux.simplediary.data.backup
 
 import com.empty.jinux.simplediary.data.source.local.room.DATABASE_NAME
-import com.google.common.io.Files
 import java.io.File
 
 
@@ -12,14 +11,14 @@ class LocalBackup(fragment: androidx.fragment.app.Fragment) : Backup() {
 
     override fun backupDb(outPath: String) {
         val databaseFilePath = context.getDatabasePath(DATABASE_NAME).toString();
-        Files.copy(File(databaseFilePath), File(outPath))
+        File(databaseFilePath).copyTo(File(outPath))
+
     }
 
     override fun importDb(inPath: String) {
         val databaseFilePath = context.getDatabasePath(DATABASE_NAME).toString();
 
-        Files.copy(File(inPath), File(databaseFilePath))
-
+        File(inPath).copyTo(File(databaseFilePath))
         val databaseShm = "$databaseFilePath-shm"
         val databaseWal = "$databaseFilePath-wal"
         File(databaseShm).delete()

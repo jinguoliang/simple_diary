@@ -1,16 +1,14 @@
-import org.ajoberstar.grgit.Grgit
-
-apply plugin: 'com.android.application'
-
-apply plugin: 'kotlin-android'
-
-apply plugin: 'kotlin-android-extensions'
-
-apply plugin: 'kotlin-kapt'
-
-apply plugin: 'io.fabric'
-
-apply plugin: "org.ajoberstar.grgit"
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+//    id 'dagger.hilt.android.plugin'
+    id 'com.google.dagger.hilt.android'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+}
 
 
 
@@ -23,20 +21,20 @@ android {
             storePassword '123123'
         }
     }
-    compileSdkVersion 28
+    compileSdkVersion 32
     defaultConfig {
         applicationId "com.empty.jinux.simplediary"
-        minSdkVersion 17
-        targetSdkVersion 28
-        versionCode Grgit.open().log().size()
-        versionName Grgit.open().describe()
+        minSdkVersion 21
+        targetSdkVersion 32
+        versionCode 300
+        versionName '2.0.0'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         multiDexEnabled true
 
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
 
@@ -56,6 +54,11 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     androidExtensions {
         experimental = true
     }
@@ -63,101 +66,96 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.21"
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.0.0'
-    implementation 'androidx.preference:preference:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation 'androidx.preference:preference:1.1.1'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'com.google.android.material:material:1.0.0'
-
-    implementation "com.google.firebase:firebase-core:$firebase_version"
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'com.google.android.material:material:1.4.0'
 
     implementation "com.google.android.gms:play-services-location:$gms_version"
-    implementation 'com.google.android.gms:play-services-places:15.0.1'
+    implementation 'com.google.android.gms:play-services-places:17.0.0'
 
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-all:1.10.19'
-    androidTestImplementation 'androidx.test:runner:1.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation 'androidx.test:runner:1.4.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation project(':AndroidBaseKt')
-    // dagger
-    kapt "com.google.dagger:dagger-compiler:$dagger_version"
-    implementation "com.google.dagger:dagger:$dagger_version"
-    kapt 'com.google.auto:auto-common:0.10'
-    implementation "com.google.dagger:dagger-android:$dagger_version"
-    implementation "com.google.dagger:dagger-android-support:$dagger_version"
-    // if you use the support libraries
-    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
-    // guava
-    implementation "com.google.guava:guava:$rootProject.guava_version"
-    implementation 'com.google.code.gson:gson:2.8.2'
+    kapt 'com.google.auto:auto-common:0.11'
+    implementation 'com.google.code.gson:gson:2.8.9'
 
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
 
     implementation 'com.squareup.picasso:picasso:2.5.2'
-    implementation 'androidx.multidex:multidex:2.0.0'
-    implementation 'org.jetbrains.anko:anko-commons:0.10.4'
-    implementation 'androidx.core:core-ktx:1.0.2'
-    implementation 'androidx.room:room-runtime:2.0.0'
-    kapt 'androidx.room:room-compiler:2.0.0'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+    implementation 'androidx.multidex:multidex:2.0.1'
+//    implementation 'org.jetbrains.anko:anko-commons:0.10.4'
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.room:room-runtime:2.4.3'
+    kapt 'androidx.room:room-compiler:2.4.3'
+    implementation "androidx.room:room-ktx:2.4.3"
 
+    implementation platform('com.google.firebase:firebase-bom:30.3.1')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+
+    implementation "com.google.dagger:hilt-android:2.43.2"
+    kapt "com.google.dagger:hilt-android-compiler:2.43.2"
 }
 
 
 
 
 apply plugin: 'com.google.gms.google-services'
-
-apply plugin: 'AndResGuard'
-andResGuard {
-    // mappingFile = file("./resource_mapping.txt")
-    mappingFile = null
-    use7zip = true
-    useSign = true
-    // it will keep the origin path of your resources when it's true
-    keepRoot = false
-
-    whiteList = [
-            // your icon
-            "R.drawable.ic_app_launcher",
-            "R.mipmap.ic_launcher_round",
-            // for fabric
-            "R.string.com.crashlytics.*",
-            // for google-services
-            "R.string.google_app_id",
-            "R.string.gcm_defaultSenderId",
-            "R.string.default_web_client_id",
-            "R.string.ga_trackingId",
-            "R.string.firebase_database_url",
-            "R.string.google_api_key",
-            "R.string.google_crash_reporting_api_key"
-    ]
-    compressFilePattern = [
-            "*.png",
-            "*.jpg",
-            "*.jpeg",
-            "*.gif",
-    ]
-    sevenzip {
-        artifact = 'com.tencent.mm:SevenZip:1.2.13'
-        //path = "/usr/local/bin/7za"
-    }
-
-    /**
-     * Optional: if finalApkBackupPath is null, AndResGuard will overwrite final apk
-     * to the path which assemble[Task] write to
-     **/
-    // finalApkBackupPath = "${project.rootDir}/final.apk"
-
-    /**
-     * Optional: Specifies the name of the message digest algorithm to user when digesting the entries of JAR file
-     * Only works in V1signing, default value is "SHA-1"
-     **/
-    // digestalg = "SHA-256"
-}
+//
+//apply plugin: 'AndResGuard'
+//andResGuard {
+//    // mappingFile = file("./resource_mapping.txt")
+//    mappingFile = null
+//    use7zip = true
+//    useSign = true
+//    // it will keep the origin path of your resources when it's true
+//    keepRoot = false
+//
+//    whiteList = [
+//            // your icon
+//            "R.drawable.ic_app_launcher",
+//            "R.mipmap.ic_launcher_round",
+//            // for fabric
+//            "R.string.com.crashlytics.*",
+//            // for google-services
+//            "R.string.google_app_id",
+//            "R.string.gcm_defaultSenderId",
+//            "R.string.default_web_client_id",
+//            "R.string.ga_trackingId",
+//            "R.string.firebase_database_url",
+//            "R.string.google_api_key",
+//            "R.string.google_crash_reporting_api_key"
+//    ]
+//    compressFilePattern = [
+//            "*.png",
+//            "*.jpg",
+//            "*.jpeg",
+//            "*.gif",
+//    ]
+//    sevenzip {
+//        artifact = 'com.tencent.mm:SevenZip:1.2.13'
+//        //path = "/usr/local/bin/7za"
+//    }
+//
+//    /**
+//     * Optional: if finalApkBackupPath is null, AndResGuard will overwrite final apk
+//     * to the path which assemble[Task] write to
+//     **/
+//    // finalApkBackupPath = "${project.rootDir}/final.apk"
+//
+//    /**
+//     * Optional: Specifies the name of the message digest algorithm to user when digesting the entries of JAR file
+//     * Only works in V1signing, default value is "SHA-1"
+//     **/
+//    // digestalg = "SHA-256"
+//}
 

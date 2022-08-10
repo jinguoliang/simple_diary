@@ -19,8 +19,6 @@ package com.empty.jinux.simplediary.data.source
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.di.EmptyData
 import com.empty.jinux.simplediary.di.Local
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,21 +29,15 @@ import javax.inject.Singleton
 @Singleton
 class DiariesRepository
 @Inject
-internal constructor(@param:EmptyData private val mRemoteDataSource: DiariesDataSource,
-                     @param:Local private val mLocalDataSource: DiariesDataSource) : DiariesDataSource {
+internal constructor(
+    @param:EmptyData private val mRemoteDataSource: DiariesDataSource,
+    @param:Local private val mLocalDataSource: DiariesDataSource
+) : DiariesDataSource {
 
 
-    override fun getDiaries(callback: DiariesDataSource.LoadDiariesCallback) {
+    override suspend fun getDiaries(): List<Diary> {
         // Query the local storage if available. If not, query the network.
-        mLocalDataSource.getDiaries(object : DiariesDataSource.LoadDiariesCallback {
-            override fun onDiariesLoaded(diaries: List<Diary>) {
-                callback.onDiariesLoaded(diaries)
-            }
-
-            override fun onDataNotAvailable() {
-                callback.onDataNotAvailable()
-            }
-        })
+        return mLocalDataSource.getDiaries()
 
 //        mRemoteDataSource.getDiaries(object : DiariesDataSource.LoadDiariesCallback {
 //            override fun onDiariesLoaded(diaries: List<Diary>) {
@@ -58,44 +50,32 @@ internal constructor(@param:EmptyData private val mRemoteDataSource: DiariesData
 //        })
     }
 
-    override fun save(diary: Diary, callback: DiariesDataSource.OnCallback<Long>) {
-        mRemoteDataSource.save(diary, callback)
-        mLocalDataSource.save(diary, callback)
+    override suspend fun save(diary: Diary): Long {
+        mRemoteDataSource.save(diary)
+
+        return mLocalDataSource.save(diary)
     }
 
-    override fun getDiary(diaryId: Long, callback: DiariesDataSource.GetDiaryCallback) {
+    override suspend fun getDiary(diaryId: Long): Diary? {
+
         // Is the task in the local data source? If not, query the network.
-        mLocalDataSource.getDiary(diaryId, object : DiariesDataSource.GetDiaryCallback {
-            override fun onDiaryLoaded(diary: Diary) {
-                callback.onDiaryLoaded(diary)
-            }
-
-            override fun onDataNotAvailable() {
-                callback.onDataNotAvailable()
-            }
-        })
+        return mLocalDataSource.getDiary(diaryId)
     }
 
-    override fun refreshDiaries() {
+    override suspend fun refreshDiaries() {
         mLocalDataSource.refreshDiaries()
     }
 
-    override fun deleteAllDiaries() {
+    override suspend fun deleteAllDiaries() {
         mRemoteDataSource.deleteAllDiaries()
         mLocalDataSource.deleteAllDiaries()
     }
 
-    override fun deleteDiary(diaryId: Long) {
+    override suspend fun deleteDiary(diaryId: Long): Boolean {
+
         mRemoteDataSource.deleteDiary(diaryId)
         mLocalDataSource.deleteDiary(diaryId)
+        return true
     }
 
-    override fun deleteDiaryAsync(diaryId: Long, callback: DiariesDataSource.OnCallback<Boolean>) {
-        doAsync {
-            deleteDiary(diaryId)
-            uiThread {
-                callback.onResult(true)
-            }
-        }
-    }
 }

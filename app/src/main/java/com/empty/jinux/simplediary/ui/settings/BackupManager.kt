@@ -1,6 +1,5 @@
 package com.empty.jinux.simplediary.ui.settings
 
-import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AlertDialog
 import com.empty.jinux.baselibaray.view.loading.doTaskWithLoadingDialog
 import com.empty.jinux.simplediary.BuildConfig
@@ -8,9 +7,10 @@ import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.backup.Backup
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
 import com.empty.jinux.simplediary.di.Local
-import com.empty.jinux.simplediary.di.Remote
 import com.empty.jinux.baselibaray.utils.formatBackupDate
-import org.jetbrains.anko.toast
+import com.empty.jinux.baselibaray.utils.toast
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 
@@ -20,14 +20,14 @@ class BackupManager
         @param:Local val local: Backup,
         @param:Local val localDatabase: DiariesDataSource
 ) {
-    val activity = fragment.activity!!
+    val activity = fragment.requireActivity()
 
     fun performLocalBackup() {
         activity.doTaskWithLoadingDialog(activity.getString(R.string.saving)) {
             if (local.tryLogin()) {
                 val outFileName = "${if (BuildConfig.DEBUG) "debug_" else ""}${System.currentTimeMillis().formatBackupDate()}"
                 local.performBackup(outFileName)
-                fragment.activity!!.toast(R.string.successfully_backup)
+                fragment.requireActivity().toast(R.string.successfully_backup)
             }
         }
     }
@@ -55,7 +55,9 @@ class BackupManager
             try {
                 activity.doTaskWithLoadingDialog(fragment.getString(R.string.restore)) {
                     local.importDb(files[which].path)
-                    localDatabase.refreshDiaries()
+                    GlobalScope.launch {
+                        localDatabase.refreshDiaries()
+                    }
                 }
             } catch (e: Exception) {
                 activity.toast("Failed to restore")

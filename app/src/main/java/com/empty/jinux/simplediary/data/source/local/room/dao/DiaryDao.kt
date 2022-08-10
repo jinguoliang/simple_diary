@@ -13,20 +13,20 @@ import com.empty.jinux.simplediary.data.source.local.room.entity.Diary
 @Dao
 interface DiaryDao {
     @Insert(onConflict = REPLACE)
-    fun insertOne(diary: Diary): Long
+    suspend fun insertOne(diary: Diary): Long
 
     @Query("SELECT * FROM $TABLE_DIARY")
-    fun getAll(): List<Diary>
+    suspend fun getAll(): List<Diary>
 
     @Query("SELECT * FROM $TABLE_DIARY WHERE $COLUMN_ID LIKE :id LIMIT 1")
-    fun getOneById(id: Long): Diary?
+    suspend fun getOneById(id: Long): Diary?
 
     @Delete
-    fun delete(diary: Diary)
+    suspend fun delete(diary: Diary)
 
     @Query("DELETE FROM $TABLE_DIARY WHERE $COLUMN_ID LIKE :id")
-    fun deleteById(id: Long)
+    suspend fun deleteById(id: Long)
 
     @Update()
-    fun updateState(diary: Diary)
+    suspend fun updateState(diary: Diary)
 }

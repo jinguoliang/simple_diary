@@ -15,7 +15,7 @@ import com.empty.jinux.simplediary.R
 import com.empty.jinux.baselibaray.utils.ParagraphEndLineSpan
 import com.empty.jinux.baselibaray.utils.getLineForCursor
 
-class MEditText : EditText {
+class MEditText : androidx.appcompat.widget.AppCompatEditText {
     var mScrollParent: ScrollView? = null
     private var mEditVisibleHeight: Int = -1
 
@@ -77,10 +77,10 @@ class MEditText : EditText {
         val line = layout.getLineForOffset(pos)
         val start = layout.getLineStart(line)
         val end = layout.getLineEnd(line)
-        val isParagraphEnd = text.getSpans(start, end, ParagraphEndLineSpan::class.java).isNotEmpty()
+        val isParagraphEnd = text!!.getSpans(start, end, ParagraphEndLineSpan::class.java).isNotEmpty()
         // 本来只要判断是段尾行就行，但是当最后一行为空时，也被认为是段尾，所以需排除
         // 这是　getSpans　的原因
-        if (isParagraphEnd && !((pos == text.length) && text[pos - 1] == '\n')) {
+        if (isParagraphEnd && !((pos == text!!.length) && text!![pos - 1] == '\n')) {
             cursorDrawable.level = 5800
         } else {
             cursorDrawable.level = 9000

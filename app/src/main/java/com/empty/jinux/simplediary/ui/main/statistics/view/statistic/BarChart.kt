@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import com.empty.jinux.baselibaray.thread.ThreadPools
+import com.empty.jinux.baselibaray.utils.dimen
 import com.empty.jinux.baselibaray.utils.inflate
 import com.empty.jinux.baselibaray.utils.layoutHeight
 import com.empty.jinux.baselibaray.utils.layoutWidth
@@ -17,7 +18,6 @@ import com.empty.jinux.baselibaray.view.recycleview.*
 import com.empty.jinux.simplediary.R
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.recycler_view_bar_item.*
-import org.jetbrains.anko.dimen
 
 class BarChart : FrameLayout {
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
@@ -35,7 +35,7 @@ class BarChart : FrameLayout {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         Bar.barWidth = (measuredWidth - paddingStart - paddingEnd) / 7
-        Bar.maxBarHeight = (measuredHeight - paddingTop - paddingBottom - 2 * dimen(R.dimen.bar_item_value_textview_height))
+        Bar.maxBarHeight = (measuredHeight - paddingTop - paddingBottom - 2 * context.dimen(R.dimen.bar_item_value_textview_height))
     }
 
 
@@ -92,9 +92,9 @@ class Bar(val data: Pair<Long, Long>) : Item {
         override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, item: Item) {
             holder as Holder
             item as Bar
-            holder.xValueTv.text = xAxisFormatter?.format(item.data.first) ?: "no formatter"
-            holder.yValueTv.text = item.data.second.toString()
-            holder.bar.layoutHeight = ((item.data.second.toFloat() / maxYValue) * maxBarHeight).toInt()
+//            holder.x.text = xAxisFormatter?.format(item.data.first) ?: "no formatter"
+//            holder.yValueTv.text = item.data.second.toString()
+//            holder.bar.layoutHeight = ((item.data.second.toFloat() / maxYValue) * maxBarHeight).toInt()
         }
 
         class Holder(override val containerView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(containerView), LayoutContainer

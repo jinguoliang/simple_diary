@@ -22,8 +22,6 @@ import com.empty.jinux.simplediary.data.source.DiariesDataSource
 //import com.google.firebase.database.DatabaseError
 //import com.google.firebase.database.FirebaseDatabase
 //import com.google.firebase.database.ValueEventListener
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 import javax.inject.Singleton
 
 /**
@@ -54,52 +52,44 @@ class DiariesRemoteDataSource : DiariesDataSource {
 //        this.addValueEventListener(mEventListener)
 //    }
 
-    override fun getDiaries(callback: DiariesDataSource.LoadDiariesCallback) {
+    override suspend  fun getDiaries():List<Diary> {
         if (mCacheDirty) {
 
         } else {
-            callback.onDiariesLoaded(mDataList)
         }
+        return emptyList()
     }
 
-    override fun getDiary(diaryId: Long, callback: DiariesDataSource.GetDiaryCallback) {
+    override suspend fun getDiary(diaryId: Long):Diary? {
         if (mCacheDirty) {
 
         } else {
             if (mDataMap.containsKey(diaryId)) {
-                callback.onDiaryLoaded(mDataMap[diaryId]!!)
             } else {
-                callback.onDataNotAvailable()
             }
         }
+        return null
     }
 
 
-    override fun save(diary: Diary, callback: DiariesDataSource.OnCallback<Long>) {
+    override suspend fun save(diary: Diary): Long {
 //        mDatabase.child(diary.id.toString()).setValue(Gson().toJson(diary))
 //        mCacheDirty = true
+        return -1
     }
 
-    override fun refreshDiaries() {
+    override suspend fun refreshDiaries() {
     }
 
-    override fun deleteAllDiaries() {
+    override suspend fun deleteAllDiaries() {
 //        mDatabase.removeValue()
 
         mCacheDirty = true
     }
 
-    override fun deleteDiary(diaryId: Long) {
+    override suspend fun deleteDiary(diaryId: Long):Boolean {
 //        mDatabase.child(diaryId.toString()).removeValue()
-    }
-
-    override fun deleteDiaryAsync(diaryId: Long, callback: DiariesDataSource.OnCallback<Boolean>) {
-        doAsync {
-            deleteDiary(diaryId)
-            uiThread {
-                callback.onResult(true)
-            }
-        }
+        return true
     }
 
     companion object {

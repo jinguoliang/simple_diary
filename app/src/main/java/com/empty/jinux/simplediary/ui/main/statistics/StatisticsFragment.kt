@@ -21,12 +21,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.STREAK_MIN_WORDS_COUNTS
 import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.main.BackPressPrecessor
-import dagger.android.support.DaggerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_statistics.*
 import javax.inject.Inject
 
@@ -34,7 +35,8 @@ import javax.inject.Inject
 /**
  * Main UI for the statistics screen.
  */
-class StatisticsFragment : DaggerFragment(), StatisticsContract.View, BackPressPrecessor {
+@AndroidEntryPoint
+class StatisticsFragment : Fragment(), StatisticsContract.View, BackPressPrecessor {
 
     @Inject
     internal

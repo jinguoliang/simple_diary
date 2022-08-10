@@ -10,7 +10,6 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.google.common.collect.Lists
 import java.io.IOException
 import java.util.*
 
@@ -77,7 +76,7 @@ open class LocationManagerImpl constructor(val context: Activity) : LocationMana
             val addresses = try {
                 geocoder.getFromLocation(location.latitude, location.longitude, 1)
             } catch (e: IOException) {
-                Lists.newArrayList<Address>()
+                arrayListOf()
             }
 
             if (addresses.isNotEmpty()) {

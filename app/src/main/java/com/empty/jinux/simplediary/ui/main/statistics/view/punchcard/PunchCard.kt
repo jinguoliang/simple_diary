@@ -85,13 +85,13 @@ private class PunchCheck(val data: Calendar,
         get() = Controller
 
     private companion object Controller : ItemController {
-        override fun onCreateViewHolder(parent: ViewGroup): androidx.recyclerview.widget.RecyclerView.ViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
             return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.layout_punchard_check_item, parent, false))
         }
 
-        override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, item: Item) {
-            holder as ViewHolder
-            item as PunchCheck
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: Item) {
+            val holder = holder as ViewHolder
+            val item = item as PunchCheck
             when (item.state) {
                 PunchCheckState.STATE_CHECKED -> {
                     holder.stateChecked.visibility = View.VISIBLE
@@ -110,7 +110,7 @@ private class PunchCheck(val data: Calendar,
         }
     }
 
-    private class ViewHolder(override val containerView: View?) : androidx.recyclerview.widget.RecyclerView.ViewHolder(containerView!!), LayoutContainer
+    private class ViewHolder(override val containerView: View?) : RecyclerView.ViewHolder(containerView!!), LayoutContainer
 }
 
 private fun Diary.day() =

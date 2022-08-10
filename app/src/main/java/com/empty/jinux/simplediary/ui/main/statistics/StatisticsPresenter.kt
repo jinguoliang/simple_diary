@@ -21,6 +21,8 @@ import com.empty.jinux.simplediary.data.Diary
 import com.empty.jinux.simplediary.data.source.DiariesDataSource
 import com.empty.jinux.simplediary.di.Repository
 import com.empty.jinux.simplediary.report.Reporter
+import kotlinx.coroutines.*
+import java.lang.Exception
 import javax.inject.Inject
 
 /**
@@ -31,6 +33,12 @@ internal class StatisticsPresenter
 constructor(private val mTasksRepository: DiariesDataSource,
             private val mStatisticsView: StatisticsContract.View) : StatisticsContract.Presenter {
 
+    private val job = Job()
+    private val presentorScope = CoroutineScope(Dispatchers.Main + job)
+
+    override fun onDestory() {
+        job.cancel()
+    }
 
     override fun start() {
         loadStatistics()
@@ -39,24 +47,24 @@ constructor(private val mTasksRepository: DiariesDataSource,
     private fun loadStatistics() {
         mStatisticsView.setProgressIndicator(true)
 
-        mTasksRepository.getDiaries(object : DiariesDataSource.LoadDiariesCallback {
-            override fun onDiariesLoaded(diaries: List<Diary>) {
-                // The view may not be able to handle UI updates anymore
-                if (!mStatisticsView.isActive) {
-                    return
-                }
-                mStatisticsView.setProgressIndicator(false)
-
-                mStatisticsView.showStatistics(diaries)
+        presentorScope.launch(Dispatchers.IO) {
+            val diaries = try {
+                mTasksRepository.getDiaries()
+            } catch (e: Exception) {
+                listOf()
             }
 
-            override fun onDataNotAvailable() {
-                // The view may not be able to handle UI updates anymore
-                if (!mStatisticsView.isActive) {
-                    return
+            if (job.isCancelled) return@launch
+
+            withContext(Dispatchers.IO) {
+                if (diaries.isEmpty()) {
+                    mStatisticsView.showLoadingStatisticsError()
+                } else {
+                    mStatisticsView.setProgressIndicator(false)
+                    mStatisticsView.showStatistics(diaries)
                 }
-                mStatisticsView.showLoadingStatisticsError()
             }
-        })
+
+        }
     }
 }

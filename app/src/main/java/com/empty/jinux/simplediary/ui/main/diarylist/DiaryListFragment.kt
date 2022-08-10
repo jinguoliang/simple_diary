@@ -20,14 +20,12 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
-import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
 import android.view.*
 import android.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.empty.jinux.baselibaray.utils.dayStartTime
 import com.empty.jinux.baselibaray.utils.hideInputMethod
 import com.empty.jinux.baselibaray.utils.weekStartTime
@@ -44,17 +42,18 @@ import com.empty.jinux.simplediary.ui.main.MainActivity
 import com.empty.jinux.simplediary.ui.main.diarylist.adapter.CategoryEndItem
 import com.empty.jinux.simplediary.ui.main.diarylist.adapter.CategoryItem
 import com.empty.jinux.simplediary.ui.main.diarylist.adapter.DiaryItem
-import dagger.android.support.DaggerFragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_diary_list.*
-import org.jetbrains.anko.collections.forEachWithIndex
-import org.jetbrains.anko.dimen
-import org.jetbrains.anko.intentFor
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 /**
  * Display a grid of [Diary]s. User can choose to view all, active or completed diaries.
  */
-class DiaryListFragment : DaggerFragment(), DiaryListContract.View, BackPressPrecessor {
+@AndroidEntryPoint
+class DiaryListFragment : Fragment(), DiaryListContract.View, BackPressPrecessor {
+
     override fun onBackPress(): Boolean {
         searchView?.apply {
             if (this.isIconified) {
@@ -76,8 +75,10 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View, BackPressPre
     override val isActive: Boolean
         get() = isAdded
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_diary_list, container, false)
     }
 
@@ -109,13 +110,15 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View, BackPressPre
         activity?.let { activity ->
             // Set up progress indicator
             refresh_layout.setColorSchemeColors(
-                    ContextCompat.getColor(activity, R.color.colorPrimary),
-                    ContextCompat.getColor(activity, R.color.colorAccent),
-                    ContextCompat.getColor(activity, R.color.colorPrimaryDark)
+                ContextCompat.getColor(activity, R.color.colorPrimary),
+                ContextCompat.getColor(activity, R.color.colorAccent),
+                ContextCompat.getColor(activity, R.color.colorPrimaryDark)
             )
             // Set the scrolling view in the custom SwipeRefreshLayout.
             refresh_layout.setScrollUpChild(diaryRecyclerView)
-            refresh_layout.setOnRefreshListener { mPresenter.loadDiaries(true) }
+            refresh_layout.setOnRefreshListener {
+                mPresenter.loadDiaries(true)
+            }
         }
     }
 
@@ -162,7 +165,8 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View, BackPressPre
             val searchManager = it.getSystemService(Context.SEARCH_SERVICE) as SearchManager
             searchView = menu.findItem(R.id.search).actionView as SearchView
             searchView?.setSearchableInfo(
-                    searchManager.getSearchableInfo(it.componentName))
+                searchManager.getSearchableInfo(it.componentName)
+            )
 
             searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
@@ -209,13 +213,18 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View, BackPressPre
 
     override fun showNoDiaries() {
         showNoDiariesViews(
-                resources.getString(R.string.no_diaries_all),
-                R.drawable.ic_no_diary
+            resources.getString(R.string.no_diaries_all),
+            R.drawable.ic_no_diary
         )
     }
 
     override fun showSuccessfullySavedMessage() {
         showMessage(getString(R.string.successfully_saved_diary_message))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mPresenter.onDestory()
     }
 
     private fun showNoDiariesViews(mainText: String, iconRes: Int) {
@@ -227,14 +236,28 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View, BackPressPre
     }
 
     override fun showAddDiary(todayWords: Int) {
-        startActivityForResult(context?.intentFor<DiaryDetailActivity>(DiaryDetailActivity.EXTRA_TODAY_WORD_COUNT to todayWords),
-                MainActivity.REQUEST_ADD_DIARY)
+        val intent = Intent(context, DiaryDetailActivity::class.java).apply {
+            putExtra(DiaryDetailActivity.EXTRA_TODAY_WORD_COUNT, todayWords)
+        }
+
+        startActivityForResult(
+            intent,
+            MainActivity.REQUEST_ADD_DIARY
+        )
     }
 
     override fun showDiaryDetailsUI(diaryId: Long, todayWords: Int) {
-        startActivity(context?.intentFor<DiaryDetailActivity>(
-                DiaryDetailActivity.EXTRA_DIARY_ID to diaryId,
-                DiaryDetailActivity.EXTRA_TODAY_WORD_COUNT to todayWords))
+        val intent = Intent(context, DiaryDetailActivity::class.java).apply {
+            putExtra(
+                DiaryDetailActivity.EXTRA_DIARY_ID, diaryId,
+            )
+            putExtra(DiaryDetailActivity.EXTRA_TODAY_WORD_COUNT, todayWords)
+        }
+
+        startActivityForResult(
+            intent,
+            MainActivity.REQUEST_ADD_DIARY
+        )
     }
 
     override fun showLoadingDiariesError() {
@@ -242,7 +265,11 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View, BackPressPre
     }
 
     private fun showMessage(message: String) {
-        com.google.android.material.snackbar.Snackbar.make(view!!, message, com.google.android.material.snackbar.Snackbar.LENGTH_LONG).show()
+        com.google.android.material.snackbar.Snackbar.make(
+            view!!,
+            message,
+            com.google.android.material.snackbar.Snackbar.LENGTH_LONG
+        ).show()
     }
 
     fun handleSearch(query: String) {
@@ -258,12 +285,15 @@ class DiaryListFragment : DaggerFragment(), DiaryListContract.View, BackPressPre
 
 }
 
-private fun androidx.recyclerview.widget.RecyclerView.refreshFromDiariesList(diaries: List<Diary>, itemListener: DiaryItem.OnItemListener) {
+private fun androidx.recyclerview.widget.RecyclerView.refreshFromDiariesList(
+    diaries: List<Diary>,
+    itemListener: DiaryItem.OnItemListener
+) {
     val items = mutableListOf<Item>()
 
     var preWeekStart = 0L
     var preDay = 0L
-    diaries.forEachWithIndex { i, it ->
+    diaries.forEachIndexed { i, it ->
         val createdTime = it.meta.createdTime
         if (createdTime.weekStartTime() != preWeekStart) {
             preWeekStart = createdTime.weekStartTime()
@@ -276,13 +306,15 @@ private fun androidx.recyclerview.widget.RecyclerView.refreshFromDiariesList(dia
         }
         items.add(DiaryItem(it, differentDay, itemListener))
 
-        val nextDiaryWeekStart = if (i < diaries.size - 1) diaries[i + 1].meta.createdTime.weekStartTime() else -1
+        val nextDiaryWeekStart =
+            if (i < diaries.size - 1) diaries[i + 1].meta.createdTime.weekStartTime() else -1
         if (createdTime.weekStartTime() != nextDiaryWeekStart) {
             items.add(CategoryEndItem())
         }
     }
 
-    val spaceHeight = dimen(R.dimen.diary_list_ending_space_size)
+    val spaceHeight =
+        context.resources.getDimension(R.dimen.diary_list_ending_space_size).roundToInt()
     items.add(0, SpaceItem(spaceHeight / 2))
     items.add(SpaceItem(spaceHeight))
 

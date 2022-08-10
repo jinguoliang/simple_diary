@@ -17,12 +17,16 @@
 package com.empty.jinux.simplediary.ui.main
 
 import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.navigation.NavigationView
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import com.empty.jinux.baselibaray.utils.startActivity
+import com.empty.jinux.baselibaray.utils.toast
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.intent.helpTranslate
 import com.empty.jinux.simplediary.intent.rateApp
@@ -35,14 +39,12 @@ import com.empty.jinux.simplediary.ui.main.diarylist.DiaryListFragment
 import com.empty.jinux.simplediary.ui.main.statistics.StatisticsFragment
 import com.empty.jinux.simplediary.ui.settings.SettingsActivity
 import com.empty.jinux.simplediary.util.ActivityUtils
-import dagger.android.support.DaggerAppCompatActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_diary_list.*
-import org.jetbrains.anko.intentFor
-import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.toast
 import javax.inject.Inject
 
-class MainActivity : DaggerAppCompatActivity() {
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
 
     @Inject
     internal
@@ -168,7 +170,7 @@ class MainActivity : DaggerAppCompatActivity() {
                     try {
                         startActivity(rateApp(context))
                     } catch (e: ActivityNotFoundException) {
-                        toast(R.string.error_no_google_play).show()
+                        toast(R.string.error_no_google_play)
                     }
                     mReporter.reportClick("main_menu_rate")
                 }
@@ -188,7 +190,7 @@ class MainActivity : DaggerAppCompatActivity() {
 
                 }
                 R.id.about_navigation_menu_item -> {
-                    startActivity(intentFor<AboutActivity>())
+                    startActivity<AboutActivity>()
                     mReporter.reportClick("main_menu_about")
 
                 }

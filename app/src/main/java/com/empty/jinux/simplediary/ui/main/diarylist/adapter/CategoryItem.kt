@@ -1,7 +1,6 @@
 package com.empty.jinux.simplediary.ui.main.diarylist.adapter
 
 import android.annotation.SuppressLint
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -10,23 +9,18 @@ import android.widget.FrameLayout
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.empty.jinux.baselibaray.utils.getScreenWidth
-import com.empty.jinux.baselibaray.utils.inflate
+import com.empty.jinux.baselibaray.utils.*
 import com.empty.jinux.baselibaray.view.recycleview.Item
 import com.empty.jinux.baselibaray.view.recycleview.ItemController
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
-import com.empty.jinux.baselibaray.utils.formatToDay
-import com.empty.jinux.baselibaray.utils.formatToTime
-import com.empty.jinux.baselibaray.utils.formatToWeekday
-import com.empty.jinux.baselibaray.utils.toCalendar
 import kotlinx.android.synthetic.main.layout_swipe_item_settings.view.*
 import kotlinx.android.synthetic.main.recycle_item_diary.view.*
 import kotlinx.android.synthetic.main.recycler_view_item_category.view.*
-import org.jetbrains.anko.dimen
 import java.util.*
 
-class DiaryItem(val data: Diary, val differentDay: Boolean, val onItemListener: OnItemListener) : Item {
+class DiaryItem(val data: Diary, val differentDay: Boolean, val onItemListener: OnItemListener) :
+    Item {
     interface OnItemListener {
         fun onItemClick(diary: Diary)
         fun onDeleteClick(diary: Diary)
@@ -37,7 +31,10 @@ class DiaryItem(val data: Diary, val differentDay: Boolean, val onItemListener: 
             return ViewHolder(parent.inflate(R.layout.recycle_item_diary, false))
         }
 
-        override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, item: Item) {
+        override fun onBindViewHolder(
+            holder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
+            item: Item
+        ) {
             item as DiaryItem
             holder as ViewHolder
 
@@ -50,10 +47,15 @@ class DiaryItem(val data: Diary, val differentDay: Boolean, val onItemListener: 
                     item.onItemListener.onItemClick(item.data)
                 }
             }
-            holder.itemView.swipe_settings_delete.setOnClickListener { item.onItemListener.onDeleteClick(item.data) }
+            holder.itemView.swipe_settings_delete.setOnClickListener {
+                item.onItemListener.onDeleteClick(
+                    item.data
+                )
+            }
         }
 
-        class ViewHolder(val originView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(SwipeView(originView)) {
+        class ViewHolder(val originView: View) :
+            androidx.recyclerview.widget.RecyclerView.ViewHolder(SwipeView(originView)) {
             val title = itemView.title
             val weekName: TextView = itemView.weekName
             val day: TextView = itemView.day
@@ -64,7 +66,7 @@ class DiaryItem(val data: Diary, val differentDay: Boolean, val onItemListener: 
                 closeMenu()
 
                 title.text = diary.diaryContent.getTitleFromContent().takeIf { it.isNotEmpty() }
-                        ?: itemView.resources.getString(R.string.untitled)
+                    ?: itemView.resources.getString(R.string.untitled)
                 weekName.text = diary.diaryContent.displayTime.formatToWeekday()
                 day.text = diary.diaryContent.displayTime.formatToDay()
                 time.text = diary.diaryContent.displayTime.formatToTime()
@@ -74,8 +76,8 @@ class DiaryItem(val data: Diary, val differentDay: Boolean, val onItemListener: 
             }
 
             protected fun closeMenu() {
-                itemView as SwipeView
-                itemView.close()
+                val tmp = itemView as SwipeView
+                tmp.close()
             }
 
             fun showWeekday(differentDay: Boolean) {
@@ -86,13 +88,12 @@ class DiaryItem(val data: Diary, val differentDay: Boolean, val onItemListener: 
             }
 
             fun isOpen(): Boolean {
-                itemView as SwipeView
-                return itemView.isOpen()
+                return (itemView as SwipeView).isOpen()
             }
 
             fun smoothClose() {
-                itemView as SwipeView
-                itemView.smoothClose()
+
+                (itemView as SwipeView).smoothClose()
             }
         }
 
@@ -103,7 +104,8 @@ class DiaryItem(val data: Diary, val differentDay: Boolean, val onItemListener: 
     @SuppressLint("ViewConstructor")
     class SwipeView(v: View) : HorizontalScrollView(v.context) {
         val swipeMenuWidth = context.dimen(R.dimen.swipe_item_menu_item_width)
-        val diariesListHorizontalMargin = context.dimen(R.dimen.diaries_list_recycle_view_margin_horizontal)
+        val diariesListHorizontalMargin =
+            context.dimen(R.dimen.diaries_list_recycle_view_margin_horizontal)
 
         init {
             scrollBarSize = 0
@@ -117,18 +119,25 @@ class DiaryItem(val data: Diary, val differentDay: Boolean, val onItemListener: 
 
         private fun wrapContent(content: View) {
             val linearLayout = LinearLayout(context).apply {
-                addView(content, LinearLayout.LayoutParams(context.getScreenWidth() - 2 * diariesListHorizontalMargin,
-                        context.dimen(R.dimen.diary_list_item_height)))
+                addView(
+                    content, LinearLayout.LayoutParams(
+                        context.getScreenWidth() - 2 * diariesListHorizontalMargin,
+                        context.dimen(R.dimen.diary_list_item_height)
+                    )
+                )
                 addView(inflateMenuLayout())
             }
-            addView(linearLayout, FrameLayout.LayoutParams(
+            addView(
+                linearLayout, FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT,
                     FrameLayout.LayoutParams.WRAP_CONTENT
-            ))
+                )
+            )
         }
 
         private fun inflateMenuLayout(): View {
-            return LayoutInflater.from(context).inflate(R.layout.layout_swipe_item_settings, this, false)
+            return LayoutInflater.from(context)
+                .inflate(R.layout.layout_swipe_item_settings, this, false)
         }
 
         fun isOpen(): Boolean {
@@ -171,7 +180,10 @@ class CategoryItem(val time: Long) : Item {
             return ViewHolder(parent.inflate(R.layout.recycler_view_item_category, false))
         }
 
-        override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, item: Item) {
+        override fun onBindViewHolder(
+            holder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
+            item: Item
+        ) {
             item as CategoryItem
             holder as ViewHolder
             val calendar = item.time.toCalendar()
@@ -183,7 +195,8 @@ class CategoryItem(val time: Long) : Item {
 
     }
 
-    class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) :
+        androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         private var weekth: TextView = itemView.weekth
         private var year: TextView = itemView.year
 
@@ -202,12 +215,16 @@ class CategoryEndItem() : Item {
             return ViewHolder(parent.inflate(R.layout.recycler_view_item_category_end, false))
         }
 
-        override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, item: Item) {
+        override fun onBindViewHolder(
+            holder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
+            item: Item
+        ) {
         }
 
     }
 
-    class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) :
+        androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
     }
 
     override val controller: ItemController = Controller

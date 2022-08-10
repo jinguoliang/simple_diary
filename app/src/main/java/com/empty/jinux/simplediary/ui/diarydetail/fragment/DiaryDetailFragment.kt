@@ -21,16 +21,14 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.tabs.TabLayout
-import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentPagerAdapter
-import androidx.core.content.res.ResourcesCompat
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import android.widget.ImageView
+import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.baselibaray.log.logi
 import com.empty.jinux.baselibaray.thread.ThreadPools
@@ -47,18 +45,19 @@ import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.KeyboardFra
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.StatusFragment
 import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
 import com.empty.jinux.simplediary.util.PermissionUtil
-import dagger.android.support.DaggerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_diary_detail.*
 import kotlinx.android.synthetic.main.fragment_taskdetail.*
 import kotlinx.android.synthetic.main.layout_diary_detail_edit_tool.*
-import org.jetbrains.anko.dimen
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 
 /**
  * Main UI for the task detail screen.
  */
-class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
+@AndroidEntryPoint
+class DiaryDetailFragment : Fragment(), DiaryDetailContract.View {
 
     @Inject
     internal
@@ -72,13 +71,13 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     internal
     lateinit var mConfig: ConfigManager
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
 
         val wordCountToday = arguments?.getInt(DiaryDetailActivity.EXTRA_TODAY_WORD_COUNT, 0)
-                ?: 0
+            ?: 0
         val taskId = arguments?.getLong(DiaryDetailActivity.EXTRA_DIARY_ID, INVALID_DIARY_ID)
-                ?: INVALID_DIARY_ID
+            ?: INVALID_DIARY_ID
         mPresenter.setDiaryId(taskId)
         mPresenter.setWordCountToday(wordCountToday)
     }
@@ -115,10 +114,13 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         if (mKeyboardHeightCached > 0) {
             mConfig.put(CONFIG_KEY_KEYBOARD_HEIGHT, mKeyboardHeightCached)
         }
+        mPresenter.onDestory()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_taskdetail, container, false)
     }
 
@@ -165,11 +167,11 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     private fun setupContainer() {
         editContainer.setOnClickListener {
-            diaryContent.apply { setSelection(text.length) }
+            diaryContent.apply { setSelection(text!!.length) }
             showInputMethod()
         }
         fragmentContainer.setOnClickListener {
-            diaryContent.apply { setSelection(text.length) }
+            diaryContent.apply { setSelection(text!!.length) }
             showInputMethod()
         }
     }
@@ -226,7 +228,11 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         showToolArea()
 
         ThreadPools.postOnUI {
-            diaryContent.adjustScrollPosition(scrollContainer, editTabContainer.top - context!!.dimen(R.dimen.detail_diary_editor_bottom))
+            diaryContent.adjustScrollPosition(
+                scrollContainer,
+                editTabContainer.top - context!!.resources.getDimension(R.dimen.detail_diary_editor_bottom)
+                    .roundToInt()
+            )
         }
     }
 
@@ -236,7 +242,9 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     private fun setToolAreaHeight(height: Int) {
         if (height != toolArea.layoutHeight) {
-            bottomSpace.layoutHeight = height + toolArea.dimen(R.dimen.diary_detail_edit_tool_height)
+            bottomSpace.layoutHeight =
+                height + toolArea.resources.getDimension(R.dimen.diary_detail_edit_tool_height)
+                    .roundToInt()
             toolArea.layoutHeight = height
         }
     }
@@ -246,10 +254,20 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     private lateinit var statusFragment: StatusFragment
 
     private fun initEditToolbar() {
-        keyboardFragment = ((fragmentManager?.findFragmentByTag(makeFragmentName(toolArea.id, 0)) as? KeyboardFragment)
-                ?: KeyboardFragment())
-        statusFragment = ((fragmentManager?.findFragmentByTag(makeFragmentName(toolArea.id, 1)) as? StatusFragment)
-                ?: StatusFragment())
+        keyboardFragment = ((fragmentManager?.findFragmentByTag(
+            makeFragmentName(
+                toolArea.id,
+                0
+            )
+        ) as? KeyboardFragment)
+            ?: KeyboardFragment())
+        statusFragment = ((fragmentManager?.findFragmentByTag(
+            makeFragmentName(
+                toolArea.id,
+                1
+            )
+        ) as? StatusFragment)
+            ?: StatusFragment())
 
         val fragments = listOf(keyboardFragment, statusFragment)
         fragments.forEach {
@@ -257,7 +275,7 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             it.mReporter = mReporter
         }
 
-        toolArea.adapter = object : FragmentPagerAdapter(fragmentManager) {
+        toolArea.adapter = object : FragmentPagerAdapter(fragmentManager!!) {
             override fun getItem(position: Int): androidx.fragment.app.Fragment {
                 return fragments[position]
             }
@@ -270,12 +288,23 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         }
         editToolsTab.setupWithViewPager(toolArea)
 
-        val iconRes = listOf(R.drawable.ic_keyboard,
-                R.drawable.ic_emotion_location_weather)
+        val iconRes = listOf(
+            R.drawable.ic_keyboard,
+            R.drawable.ic_emotion_location_weather
+        )
         (0 until iconRes.size).map { editToolsTab.getTabAt(it) }.forEachIndexed { i, it ->
-            it?.customView = ImageView(context).apply { setImageDrawable(VectorDrawableCompat.create(resources, iconRes[i], null)) }
+            it?.customView = ImageView(context).apply {
+                setImageDrawable(
+                    VectorDrawableCompat.create(
+                        resources,
+                        iconRes[i],
+                        null
+                    )
+                )
+            }
         }
-        editToolsTab.addOnTabSelectedListener(object : com.google.android.material.tabs.TabLayout.OnTabSelectedListener {
+        editToolsTab.addOnTabSelectedListener(object :
+            com.google.android.material.tabs.TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: com.google.android.material.tabs.TabLayout.Tab) {
                 when (tab.position) {
                     TAB_KEYBOARD_POS -> {
@@ -313,12 +342,23 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
             }
         })
 
-        setToolAreaHeight(mConfig.get(CONFIG_KEY_KEYBOARD_HEIGHT, context!!.dimen(R.dimen.editor_tool_area_init_height)))
+        setToolAreaHeight(
+            mConfig.get(
+                CONFIG_KEY_KEYBOARD_HEIGHT,
+                context!!.resources.getDimension(R.dimen.editor_tool_area_init_height).roundToInt()
+            )
+        )
     }
 
     private fun showToolArea() {
         toolArea.visibility = View.VISIBLE
-        editToolsTab.setSelectedTabIndicatorColor(ResourcesCompat.getColor(resources, R.color.icon_color_primary, null))
+        editToolsTab.setSelectedTabIndicatorColor(
+            ResourcesCompat.getColor(
+                resources,
+                R.color.icon_color_primary,
+                null
+            )
+        )
     }
 
     private fun hideToolArea() {
@@ -326,23 +366,39 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
         editToolsTab.setSelectedTabIndicatorColor(Color.TRANSPARENT)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        PermissionUtil.onRequestPermissionsResult(requestCode, permissions, grantResults, object : PermissionUtil.OnRequestPermissionsResultCallbacks {
-            override fun onPermissionsGranted(requestCode: Int, perms: List<String>, isAllGranted: Boolean) {
-                if (requestCode == REQUEST_CODE_LOCATION_PERMISSION) {
-                    mPresenter.refreshLocation()
-                    mPresenter.refreshWeather()
+        PermissionUtil.onRequestPermissionsResult(
+            requestCode,
+            permissions,
+            grantResults,
+            object : PermissionUtil.OnRequestPermissionsResultCallbacks {
+                override fun onPermissionsGranted(
+                    requestCode: Int,
+                    perms: List<String>,
+                    isAllGranted: Boolean
+                ) {
+                    if (requestCode == REQUEST_CODE_LOCATION_PERMISSION) {
+                        mPresenter.refreshLocation()
+                        mPresenter.refreshWeather()
+                    }
                 }
-            }
 
-            override fun onPermissionsDenied(requestCode: Int, perms: List<String>, isAllDenied: Boolean) {
-                if (requestCode == REQUEST_CODE_LOCATION_PERMISSION) {
+                override fun onPermissionsDenied(
+                    requestCode: Int,
+                    perms: List<String>,
+                    isAllDenied: Boolean
+                ) {
+                    if (requestCode == REQUEST_CODE_LOCATION_PERMISSION) {
 //                    mPresenter.start()
+                    }
                 }
-            }
 
-        })
+            })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -442,7 +498,11 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
     }
 
     override fun showDiarySaved() {
-        com.google.android.material.snackbar.Snackbar.make(view!!, getString(R.string.successfully_saved_diary_message), com.google.android.material.snackbar.Snackbar.LENGTH_LONG).show()
+        com.google.android.material.snackbar.Snackbar.make(
+            view!!,
+            getString(R.string.successfully_saved_diary_message),
+            com.google.android.material.snackbar.Snackbar.LENGTH_LONG
+        ).show()
     }
 
     override fun showEmptyDiaryError() {
@@ -459,7 +519,10 @@ class DiaryDetailFragment : DaggerFragment(), DiaryDetailContract.View {
 
     override fun hasLocationPermission(): Boolean {
         return activity?.let {
-            PermissionUtil.getLocationPermissions(it, DiaryDetailFragment.REQUEST_CODE_LOCATION_PERMISSION)
+            PermissionUtil.getLocationPermissions(
+                it,
+                DiaryDetailFragment.REQUEST_CODE_LOCATION_PERMISSION
+            )
         } ?: false
     }
 

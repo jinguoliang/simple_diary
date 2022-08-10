@@ -30,6 +30,7 @@ import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailContract
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.DiaryDetailFragment
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.MyEmotionIcons
 import com.empty.jinux.simplediary.weather.WeatherManager
+import kotlinx.coroutines.*
 import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
 
@@ -38,19 +39,19 @@ import javax.inject.Inject
  * the UI as required.
  */
 class DiaryDetailPresenter
-@Inject
 constructor(
-        @param:Repository private val mDiariesRepository: DiariesDataSource,
+        private val mDiariesRepository: DiariesDataSource,
         private val mDiaryDetailView: DiaryDetailContract.View,
         private val mLocationManager: LocationManager,
-        private val mWeatherManager: WeatherManager) : DiaryDetailContract.Presenter {
+        private val mWeatherManager: WeatherManager,
+        private val mReporter: Reporter) : DiaryDetailContract.Presenter {
+
+    private val job = Job()
+    private val presenterScope = CoroutineScope(Dispatchers.Main + job)
 
     private var mDiaryId: Long = INVALID_DIARY_ID
     private var currentDiaryContent = DiaryContent("", "", -1, null, null)
     private var currentDairyMeta = Meta(-1, -1, false)
-
-    @Inject
-    lateinit var mReporter: Reporter
 
     private val isNewDiary: Boolean
         get() = mDiaryId == INVALID_DIARY_ID
@@ -90,31 +91,28 @@ constructor(
 
     private fun openDiary() {
         mDiaryDetailView.setLoadingIndicator(true)
-        mDiariesRepository.getDiary(mDiaryId, object : DiariesDataSource.GetDiaryCallback {
-            override fun onDiaryLoaded(diary: Diary) {
+        presenterScope.launch(Dispatchers.IO) {
+           val diary =  mDiariesRepository.getDiary(mDiaryId,)
+            withContext(Dispatchers.Main) {
                 mLoadFinished = true
 
                 // The view may not be able to handle UI updates anymore
-                if (!mDiaryDetailView.isActive) {
-                    return
+                if (!job.isCancelled) {
+                    return@withContext
                 }
 
-                mDiaryDetailView.setLoadingIndicator(false)
-                currentDiaryContent = diary.diaryContent
-                currentDiaryContent.weatherInfo = diary.diaryContent.weatherInfo
-                currentDiaryContent.locationInfo = diary.diaryContent.locationInfo
-                currentDairyMeta = diary.meta
-                showDiary()
-            }
-
-            override fun onDataNotAvailable() {
-                // The view may not be able to handle UI updates anymore
-                if (!mDiaryDetailView.isActive) {
-                    return
+                if (diary != null) {
+                    mDiaryDetailView.setLoadingIndicator(false)
+                    currentDiaryContent = diary.diaryContent
+                    currentDiaryContent.weatherInfo = diary.diaryContent.weatherInfo
+                    currentDiaryContent.locationInfo = diary.diaryContent.locationInfo
+                    currentDairyMeta = diary.meta
+                    showDiary()
+                } else {
+                    mDiaryDetailView.showMissingDiary()
                 }
-                mDiaryDetailView.showMissingDiary()
             }
-        })
+        }
     }
 
     override fun saveDiary() {
@@ -124,40 +122,34 @@ constructor(
         }
 
         mReporter.reportCount("words", currentDiaryContent.content.wordsCount())
+        presenterScope.launch(Dispatchers.IO) {
 
-        if (isNewDiary) {
-            val createdTime = System.currentTimeMillis()
-            currentDairyMeta = Meta(createdTime, createdTime)
-            currentDiaryContent.displayTime = createdTime
-        } else {
-            currentDairyMeta.lastChangeTime = System.currentTimeMillis()
-        }
+            if (isNewDiary) {
+                val createdTime = System.currentTimeMillis()
+                currentDairyMeta = Meta(createdTime, createdTime)
+                currentDiaryContent.displayTime = createdTime
+            } else {
+                currentDairyMeta.lastChangeTime = System.currentTimeMillis()
+            }
 
-        val newDiary = Diary(
+            val newDiary = Diary(
                 mDiaryId,
                 currentDiaryContent,
                 currentDairyMeta
-        )
+            )
 
-        val countDownLatch = CountDownLatch(1)
-        mDiariesRepository.save(newDiary, object : DiariesDataSource.OnCallback<Long> {
-            override fun onResult(result: Long) {
-                mDiaryId = result
-                countDownLatch.countDown()
+            mDiariesRepository.save(newDiary)
+            withContext(Dispatchers.Main) {
+                mDiaryDetailView.showDiarySaved()
             }
-        })
-        countDownLatch.await()
-        mDiaryDetailView.showDiarySaved()
+        }
     }
 
     private fun deleteDiaryFromRepoIfNecessary() {
         if (mDiaryId != INVALID_DIARY_ID) {
-            mDiariesRepository.deleteDiaryAsync(mDiaryId, object : DiariesDataSource.OnCallback<Boolean> {
-                override fun onResult(result: Boolean) {
-
-                }
-
-            })
+            presenterScope.launch {
+                mDiariesRepository.deleteDiary(mDiaryId, )
+            }
             mDiaryId = INVALID_DIARY_ID
         }
     }
@@ -290,4 +282,7 @@ constructor(
     }
 
 
+    override fun onDestory() {
+        job.cancel()
+    }
 }

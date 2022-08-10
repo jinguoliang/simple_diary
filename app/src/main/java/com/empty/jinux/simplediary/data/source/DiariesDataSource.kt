@@ -19,49 +19,19 @@ package com.empty.jinux.simplediary.data.source
 import com.empty.jinux.simplediary.data.Diary
 
 /**
- * Main entry point for accessing diaries data.
- *
- *
- * For simplicity, only getDiaries() and getDiary() have callbacks. Consider adding callbacks to other
- * methods to inform the user of network/mDatabase errors or successful operations.
- * For example, when a new diary is created, it's synchronously stored in cache but usually every
- * operation on mDatabase or network should be executed in a different thread.
+ * Main entry point for accessing diaries data
  */
 interface DiariesDataSource {
 
-    interface LoadDiariesCallback {
+    suspend fun getDiaries(): List<Diary>
 
-        fun onDiariesLoaded(diaries: List<Diary>)
+    suspend fun getDiary(diaryId: Long): Diary?
 
-        fun onDataNotAvailable()
-    }
+    suspend fun save(diary: Diary):Long
 
-    interface GetDiaryCallback {
+    suspend fun refreshDiaries()
 
-        fun onDiaryLoaded(diary: Diary)
+    suspend fun deleteAllDiaries()
 
-        fun onDataNotAvailable()
-    }
-
-    interface OnChangeListener {
-        fun onChange(data: List<Diary>)
-    }
-
-    fun getDiaries(callback: LoadDiariesCallback)
-
-    fun getDiary(diaryId: Long, callback: GetDiaryCallback)
-
-    fun save(diary: Diary, callback: OnCallback<Long>)
-
-    fun refreshDiaries()
-
-    fun deleteAllDiaries()
-
-    fun deleteDiary(diaryId: Long)
-
-    fun deleteDiaryAsync(diaryId: Long, callback: OnCallback<Boolean>)
-
-    interface OnCallback<in T> {
-        fun onResult(result: T)
-    }
+    suspend fun deleteDiary(diaryId: Long): Boolean
 }
