@@ -23,6 +23,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import androidx.core.content.res.ResourcesCompat
@@ -37,6 +38,8 @@ import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.config.ConfigManager
 import com.empty.jinux.simplediary.data.INVALID_DIARY_ID
 import com.empty.jinux.simplediary.data.LocationInfo
+import com.empty.jinux.simplediary.databinding.FragmentTaskdetailBinding
+import com.empty.jinux.simplediary.databinding.LayoutDiaryDetailEditToolBinding
 import com.empty.jinux.simplediary.intent.shareContentIntent
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivity
@@ -46,9 +49,6 @@ import com.empty.jinux.simplediary.ui.diarydetail.fragment.edittools.StatusFragm
 import com.empty.jinux.simplediary.ui.diarydetail.presenter.DiaryDetailPresenter
 import com.empty.jinux.simplediary.util.PermissionUtil
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_diary_detail.*
-import kotlinx.android.synthetic.main.fragment_taskdetail.*
-import kotlinx.android.synthetic.main.layout_diary_detail_edit_tool.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
@@ -89,7 +89,7 @@ class DiaryDetailFragment : Fragment(), DiaryDetailContract.View {
         logi("detail fragment onResume", "detail")
         super.onResume()
 
-        diaryContent.addTextChangedListener(mWatcher)
+        binding.diaryContent.addTextChangedListener(mWatcher)
 
         ThreadPools.postOnUI {
             keyboardHeightListener.start()
@@ -100,7 +100,7 @@ class DiaryDetailFragment : Fragment(), DiaryDetailContract.View {
         logi("detail fragment onPause", "detail")
         super.onPause()
         keyboardHeightListener.close()
-        diaryContent.removeTextChangedListener(mWatcher)
+        binding.diaryContent.removeTextChangedListener(mWatcher)
         mPresenter.stop()
     }
 
@@ -117,11 +117,15 @@ class DiaryDetailFragment : Fragment(), DiaryDetailContract.View {
         mPresenter.onDestory()
     }
 
+    private lateinit var binding: FragmentTaskdetailBinding
+    private lateinit var editToolBinding: LayoutDiaryDetailEditToolBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_taskdetail, container, false)
+        binding = FragmentTaskdetailBinding.inflate(inflater, container, false)
+        editToolBinding = binding.editTool
+        return binding.root
     }
 
     private var mWatcher: TextWatcher? = null
@@ -151,9 +155,6 @@ class DiaryDetailFragment : Fragment(), DiaryDetailContract.View {
         keyboardHeightListener = KeyboardHeightProvider(activity!!)
         keyboardHeightListener.observer = object : KeyboardHeightObserver {
             override fun onKeyboardHeightChanged(height: Int, orientation: Int) {
-                if (diaryContent == null) {
-                    return
-                }
 
                 val inputMethodShowed = height != 0
                 if (inputMethodShowed) {
@@ -166,12 +167,12 @@ class DiaryDetailFragment : Fragment(), DiaryDetailContract.View {
     }
 
     private fun setupContainer() {
-        editContainer.setOnClickListener {
-            diaryContent.apply { setSelection(text!!.length) }
+        binding.editContainer.setOnClickListener {
+            binding.diaryContent.apply { setSelection(text!!.length) }
             showInputMethod()
         }
-        fragmentContainer.setOnClickListener {
-            diaryContent.apply { setSelection(text!!.length) }
+        binding.fragmentContainer.setOnClickListener {
+            binding.diaryContent.apply { setSelection(text!!.length) }
             showInputMethod()
         }
     }
@@ -183,69 +184,70 @@ class DiaryDetailFragment : Fragment(), DiaryDetailContract.View {
                 formatEditContent()
             }
         }
-        diaryContent.setOnTouchListener { _, event ->
+        binding.diaryContent.setOnTouchListener { _, event ->
             when (event.actionMasked) {
                 MotionEvent.ACTION_UP -> {
-                    diaryContent.isLongClickable = true
+                    binding.diaryContent.isLongClickable = true
                 }
-                MotionEvent.ACTION_MOVE -> diaryContent.isLongClickable = false
+                MotionEvent.ACTION_MOVE -> binding.diaryContent.isLongClickable = false
             }
             false
         }
 
-        diaryContent.mScrollParent = scrollContainer
+        binding.diaryContent.mScrollParent = binding.scrollContainer
     }
 
     private fun onInputMedhodHided() {
-        if (editToolsTab.selectedTabPosition == 0) {
+        if (editToolBinding.editToolsTab.selectedTabPosition == 0) {
             hideToolArea()
         }
     }
 
     override fun showGoodView(): Boolean {
-        goodView.visibility = View.VISIBLE
+        binding.goodView.visibility = View.VISIBLE
         return true
     }
 
     override fun setTodayGood(show: Boolean) {
-        val actionbarCheck = (context as Activity).action_check
-        actionbarCheck.visibility = if (show) View.VISIBLE else View.INVISIBLE
-        if (!show) {
-            goodView.visibility = View.GONE
-        }
+//        val actionbarCheck = (context as Activity).action_check
+//        actionbarCheck.visibility = if (show) View.VISIBLE else View.INVISIBLE
+//        if (!show) {
+//            binding.goodView.visibility = View.GONE
+//        }
     }
 
     var mKeyboardHeightCached = 0
 
     private fun onInputMethodShowed(height: Int) {
         mKeyboardHeightCached = height
-
-        diaryContent.isCursorVisible = true
+        Log.e("JIN", "keyboardHeight: $height")
+        binding.diaryContent.isCursorVisible = true
 
         setGoodViewHeight(height)
         setToolAreaHeight(height)
-        toolArea.setCurrentItem(0, false)
+        editToolBinding.toolArea.setCurrentItem(0, false)
         showToolArea()
 
         ThreadPools.postOnUI {
-            diaryContent.adjustScrollPosition(
-                scrollContainer,
-                editTabContainer.top - context!!.resources.getDimension(R.dimen.detail_diary_editor_bottom)
+            binding.diaryContent.adjustScrollPosition(
+                binding.scrollContainer,
+                editToolBinding.editTabContainer.top - context!!.resources.getDimension(R.dimen.detail_diary_editor_bottom)
                     .roundToInt()
             )
         }
     }
 
     private fun setGoodViewHeight(keyboardHeight: Int) {
-        goodView.layoutHeight = fragmentContainer.height - keyboardHeight
+        binding.goodView.layoutHeight = binding.fragmentContainer.height - keyboardHeight
     }
 
     private fun setToolAreaHeight(height: Int) {
-        if (height != toolArea.layoutHeight) {
-            bottomSpace.layoutHeight =
-                height + toolArea.resources.getDimension(R.dimen.diary_detail_edit_tool_height)
+        Log.e("JIN", "toolHeight: $height")
+        if (height > 0 && height != editToolBinding.toolArea.layoutHeight) {
+            binding.bottomSpace.layoutHeight =
+                height + editToolBinding.toolArea.resources.getDimension(R.dimen.diary_detail_edit_tool_height)
                     .roundToInt()
-            toolArea.layoutHeight = height
+            editToolBinding.toolArea.layoutHeight = height + 300
         }
     }
 
@@ -256,14 +258,14 @@ class DiaryDetailFragment : Fragment(), DiaryDetailContract.View {
     private fun initEditToolbar() {
         keyboardFragment = ((fragmentManager?.findFragmentByTag(
             makeFragmentName(
-                toolArea.id,
+                editToolBinding.toolArea.id,
                 0
             )
         ) as? KeyboardFragment)
             ?: KeyboardFragment())
         statusFragment = ((fragmentManager?.findFragmentByTag(
             makeFragmentName(
-                toolArea.id,
+                editToolBinding.toolArea.id,
                 1
             )
         ) as? StatusFragment)
@@ -275,7 +277,8 @@ class DiaryDetailFragment : Fragment(), DiaryDetailContract.View {
             it.mReporter = mReporter
         }
 
-        toolArea.adapter = object : FragmentPagerAdapter(fragmentManager!!) {
+        editToolBinding.toolArea.adapter = object :
+            FragmentPagerAdapter(parentFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
             override fun getItem(position: Int): androidx.fragment.app.Fragment {
                 return fragments[position]
             }
@@ -283,16 +286,16 @@ class DiaryDetailFragment : Fragment(), DiaryDetailContract.View {
             override fun getCount() = fragments.size
 
         }
-        toolArea.setPageTransformer(false) { page, position ->
+        editToolBinding.toolArea.setPageTransformer(false) { page, position ->
             page.translationX = page.width * -position
         }
-        editToolsTab.setupWithViewPager(toolArea)
+        editToolBinding.editToolsTab.setupWithViewPager(editToolBinding.toolArea)
 
         val iconRes = listOf(
             R.drawable.ic_keyboard,
             R.drawable.ic_emotion_location_weather
         )
-        (0 until iconRes.size).map { editToolsTab.getTabAt(it) }.forEachIndexed { i, it ->
+        (0 until iconRes.size).map { editToolBinding.editToolsTab.getTabAt(it) }.forEachIndexed { i, it ->
             it?.customView = ImageView(context).apply {
                 setImageDrawable(
                     VectorDrawableCompat.create(
@@ -303,19 +306,20 @@ class DiaryDetailFragment : Fragment(), DiaryDetailContract.View {
                 )
             }
         }
-        editToolsTab.addOnTabSelectedListener(object :
+        editToolBinding.editToolsTab.addOnTabSelectedListener(object :
             com.google.android.material.tabs.TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: com.google.android.material.tabs.TabLayout.Tab) {
+                Log.e("JIN", "tabSelected: ${tab.position}")
                 when (tab.position) {
                     TAB_KEYBOARD_POS -> {
-                        if (toolArea.isShown) {
+                        if (editToolBinding.toolArea.isShown) {
                             hideInputMethod()
                         } else {
                             showInputMethod()
                         }
                     }
                     else -> {
-                        if (toolArea.isShown) {
+                        if (editToolBinding.toolArea.isShown) {
                             hideToolArea()
                         } else {
                             showToolArea()
@@ -351,8 +355,8 @@ class DiaryDetailFragment : Fragment(), DiaryDetailContract.View {
     }
 
     private fun showToolArea() {
-        toolArea.visibility = View.VISIBLE
-        editToolsTab.setSelectedTabIndicatorColor(
+        editToolBinding.toolArea.visibility = View.VISIBLE
+        editToolBinding.editToolsTab.setSelectedTabIndicatorColor(
             ResourcesCompat.getColor(
                 resources,
                 R.color.icon_color_primary,
@@ -362,8 +366,8 @@ class DiaryDetailFragment : Fragment(), DiaryDetailContract.View {
     }
 
     private fun hideToolArea() {
-        toolArea.visibility = View.GONE
-        editToolsTab.setSelectedTabIndicatorColor(Color.TRANSPARENT)
+        editToolBinding.toolArea.visibility = View.GONE
+        editToolBinding.editToolsTab.setSelectedTabIndicatorColor(Color.TRANSPARENT)
     }
 
     override fun onRequestPermissionsResult(
@@ -419,16 +423,19 @@ class DiaryDetailFragment : Fragment(), DiaryDetailContract.View {
     }
 
     override fun hideDescription() {
-        diaryContent.visibility = View.GONE
+        binding.diaryContent.visibility = View.GONE
     }
 
     override fun showContent(content: String) {
-        diaryContent.visibility = View.VISIBLE
-        diaryContent.removeTextChangedListener(mWatcher)
-        diaryContent.setText(content)
-        diaryContent.addTextChangedListener(mWatcher)
+        binding.diaryContent.apply {
+            visibility = View.VISIBLE
+            removeTextChangedListener(mWatcher)
+            setText(content)
+            addTextChangedListener(mWatcher)
 //        diaryContent.setSelection(content.length)
-        diaryContent.isCursorVisible = false
+            isCursorVisible = false
+        }
+
 
         formatEditContent()
     }
@@ -436,8 +443,8 @@ class DiaryDetailFragment : Fragment(), DiaryDetailContract.View {
     private fun formatEditContent() {
         ThreadPools.postOnUI {
             logi("formatEditContent adjust paragraph", "detail")
-            diaryContent.adjustParagraphSpace(R.dimen.editor_paragraph_end)
-            diaryContent.adjustCursorHeightNoException()
+            binding.diaryContent.adjustParagraphSpace(R.dimen.editor_paragraph_end)
+            binding.diaryContent.adjustCursorHeightNoException()
         }
     }
 
@@ -510,11 +517,11 @@ class DiaryDetailFragment : Fragment(), DiaryDetailContract.View {
     }
 
     override fun showInputMethod() {
-        diaryContent.showInputMethod()
+        binding.diaryContent.showInputMethod()
     }
 
     override fun hideInputMethod() {
-        diaryContent.hideInputMethod()
+        binding.diaryContent.hideInputMethod()
     }
 
     override fun hasLocationPermission(): Boolean {
@@ -533,7 +540,7 @@ class DiaryDetailFragment : Fragment(), DiaryDetailContract.View {
     }
 
     fun onBackPressed(): Boolean {
-        if (editToolsTab.selectedTabPosition > 0 && toolArea.isShown) {
+        if (editToolBinding.editToolsTab.selectedTabPosition > 0 && editToolBinding.toolArea.isShown) {
             hideToolArea()
             return true
         } else {

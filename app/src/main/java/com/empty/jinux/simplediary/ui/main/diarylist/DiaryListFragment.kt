@@ -35,6 +35,7 @@ import com.empty.jinux.baselibaray.view.recycleview.SpaceItem
 import com.empty.jinux.baselibaray.view.recycleview.withItems
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
+import com.empty.jinux.simplediary.databinding.FragmentDiaryListBinding
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.diarydetail.DiaryDetailActivity
 import com.empty.jinux.simplediary.ui.main.BackPressPrecessor
@@ -44,7 +45,6 @@ import com.empty.jinux.simplediary.ui.main.diarylist.adapter.CategoryItem
 import com.empty.jinux.simplediary.ui.main.diarylist.adapter.DiaryItem
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_diary_list.*
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
@@ -75,11 +75,15 @@ class DiaryListFragment : Fragment(), DiaryListContract.View, BackPressPrecessor
     override val isActive: Boolean
         get() = isAdded
 
+    private lateinit var _binding: FragmentDiaryListBinding
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_diary_list, container, false)
+    ): View {
+        _binding = FragmentDiaryListBinding.inflate(inflater, container, false)
+        return _binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -96,27 +100,27 @@ class DiaryListFragment : Fragment(), DiaryListContract.View, BackPressPrecessor
     private val mDiariesItems = mutableListOf<Item>()
 
     private fun setupDiariesView() {
-        diaryRecyclerView.withItems(mDiariesItems)
+        _binding.diaryRecyclerView.withItems(mDiariesItems)
     }
 
     private fun setupNoDiaryView() {
-        noDiaries.setOnClickListener {
+        _binding.noDiaries.setOnClickListener {
             mPresenter.addNewDiary()
             mReporter.reportClick("no diary icon")
         }
     }
 
     private fun setupRefreshView() {
-        activity?.let { activity ->
+        (requireActivity()).let { activity ->
             // Set up progress indicator
-            refresh_layout.setColorSchemeColors(
+            _binding.refreshLayout.setColorSchemeColors(
                 ContextCompat.getColor(activity, R.color.colorPrimary),
                 ContextCompat.getColor(activity, R.color.colorAccent),
                 ContextCompat.getColor(activity, R.color.colorPrimaryDark)
             )
             // Set the scrolling view in the custom SwipeRefreshLayout.
-            refresh_layout.setScrollUpChild(diaryRecyclerView)
-            refresh_layout.setOnRefreshListener {
+            _binding.refreshLayout.setScrollUpChild(_binding.diaryRecyclerView)
+            _binding.refreshLayout.setOnRefreshListener {
                 mPresenter.loadDiaries(true)
             }
         }
@@ -131,7 +135,7 @@ class DiaryListFragment : Fragment(), DiaryListContract.View, BackPressPrecessor
                 mReporter.reportClick("add diary")
             }
             setOnLongClickListener {
-                diaryRecyclerView.smoothScrollToPosition(diaryRecyclerView.adapter!!.itemCount)
+                _binding.diaryRecyclerView.smoothScrollToPosition(_binding.diaryRecyclerView.adapter!!.itemCount)
                 true
             }
         }
@@ -186,14 +190,14 @@ class DiaryListFragment : Fragment(), DiaryListContract.View, BackPressPrecessor
         if (view == null) {
             return
         }
-        val srl = refresh_layout as ScrollChildSwipeRefreshLayout
+        val srl = _binding.refreshLayout
 
         // Make sure setRefreshing() is called after the layout is done with everything else.
         srl.post { srl.isRefreshing = active }
     }
 
     override fun showDiaries(diaries: List<Diary>) {
-        diaryRecyclerView.refreshFromDiariesList(diaries, object : DiaryItem.OnItemListener {
+        _binding.diaryRecyclerView.refreshFromDiariesList(diaries, object : DiaryItem.OnItemListener {
             override fun onItemClick(diary: Diary) {
                 mPresenter.openDiaryDetails(diary)
                 mReporter.reportClick("open diary")
@@ -205,8 +209,8 @@ class DiaryListFragment : Fragment(), DiaryListContract.View, BackPressPrecessor
             }
         })
 
-        diaryRecyclerView.visibility = View.VISIBLE
-        noDiaries.visibility = View.GONE
+        _binding.diaryRecyclerView.visibility = View.VISIBLE
+        _binding.noDiaries.visibility = View.GONE
 
         mReporter.reportCount("diaries all", diaries.size)
     }
@@ -228,11 +232,11 @@ class DiaryListFragment : Fragment(), DiaryListContract.View, BackPressPrecessor
     }
 
     private fun showNoDiariesViews(mainText: String, iconRes: Int) {
-        diaryRecyclerView.visibility = View.GONE
-        noDiaries.visibility = View.VISIBLE
+        _binding.diaryRecyclerView.visibility = View.GONE
+        _binding.noDiaries.visibility = View.VISIBLE
 
-        noDiariesMessage.text = mainText
-        noDiariesIcon.setImageDrawable(VectorDrawableCompat.create(resources, iconRes, null))
+        _binding.noDiariesMessage.text = mainText
+        _binding.noDiariesIcon.setImageDrawable(VectorDrawableCompat.create(resources, iconRes, null))
     }
 
     override fun showAddDiary(todayWords: Int) {

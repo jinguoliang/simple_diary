@@ -1,30 +1,40 @@
 package com.empty.jinux.simplediary.ui.main.statistics.view.statistic
 
 import android.content.Context
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.recyclerview.widget.RecyclerView
 import com.empty.jinux.baselibaray.thread.ThreadPools
 import com.empty.jinux.baselibaray.utils.dimen
 import com.empty.jinux.baselibaray.utils.inflate
 import com.empty.jinux.baselibaray.utils.layoutHeight
 import com.empty.jinux.baselibaray.utils.layoutWidth
-import com.empty.jinux.baselibaray.view.recycleview.*
+import com.empty.jinux.baselibaray.view.recycleview.Item
+import com.empty.jinux.baselibaray.view.recycleview.ItemController
+import com.empty.jinux.baselibaray.view.recycleview.replaceData
+import com.empty.jinux.baselibaray.view.recycleview.withItems
 import com.empty.jinux.simplediary.R
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.recycler_view_bar_item.*
+import com.empty.jinux.simplediary.databinding.RecyclerViewBarItemBinding
 
 class BarChart : FrameLayout {
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    )
 
-    val recyclerView = androidx.recyclerview.widget.RecyclerView(context).also {
-        it.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
+    val recyclerView = RecyclerView(context).also {
+        it.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
+            context,
+            androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL,
+            false
+        )
     }
 
     private val emptyView = ImageView(context).also {
@@ -35,15 +45,22 @@ class BarChart : FrameLayout {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         Bar.barWidth = (measuredWidth - paddingStart - paddingEnd) / 7
-        Bar.maxBarHeight = (measuredHeight - paddingTop - paddingBottom - 2 * context.dimen(R.dimen.bar_item_value_textview_height))
+        Bar.maxBarHeight =
+            (measuredHeight - paddingTop - paddingBottom - 2 * context.dimen(R.dimen.bar_item_value_textview_height))
     }
 
 
     init {
         recyclerView.withItems(items)
         recyclerView.visibility = View.INVISIBLE
-        addView(recyclerView, FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT).also { it.gravity = Gravity.CENTER })
-        addView(emptyView, FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT).also { it.gravity = Gravity.CENTER })
+        addView(
+            recyclerView,
+            FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                .also { it.gravity = Gravity.CENTER })
+        addView(
+            emptyView,
+            FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                .also { it.gravity = Gravity.CENTER })
     }
 
     interface Formator {
@@ -83,21 +100,24 @@ class Bar(val data: Pair<Long, Long>) : Item {
 
         var xAxisFormatter: BarChart.Formator? = null
 
-        override fun onCreateViewHolder(parent: ViewGroup): androidx.recyclerview.widget.RecyclerView.ViewHolder {
-            return Holder(parent.inflate(R.layout.recycler_view_bar_item, false).also {
+        private lateinit var binding: RecyclerViewBarItemBinding
+
+        override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+            binding = RecyclerViewBarItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            return Holder(binding.root.also {
                 it.layoutWidth = barWidth
             })
         }
 
-        override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, item: Item) {
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: Item) {
             holder as Holder
             item as Bar
-//            holder.x.text = xAxisFormatter?.format(item.data.first) ?: "no formatter"
-//            holder.yValueTv.text = item.data.second.toString()
-//            holder.bar.layoutHeight = ((item.data.second.toFloat() / maxYValue) * maxBarHeight).toInt()
+            binding.xValueTv.text = xAxisFormatter?.format(item.data.first) ?: "no formatter"
+            binding.yValueTv.text = item.data.second.toString()
+            binding.bar.layoutHeight = ((item.data.second.toFloat() / maxYValue) * maxBarHeight).toInt()
         }
 
-        class Holder(override val containerView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(containerView), LayoutContainer
+        class Holder(containerView: View) : RecyclerView.ViewHolder(containerView)
     }
 
     override val controller = Controller

@@ -5,7 +5,7 @@ plugins {
 //    id 'dagger.hilt.android.plugin'
     id 'com.google.dagger.hilt.android'
     id 'kotlin-android'
-    id 'kotlin-android-extensions'
+//    id 'kotlin-android-extensions'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
 }
@@ -59,8 +59,12 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    androidExtensions {
-        experimental = true
+//    androidExtensions {
+//        experimental = true
+//    }
+
+    buildFeatures {
+        viewBinding true
     }
 }
 

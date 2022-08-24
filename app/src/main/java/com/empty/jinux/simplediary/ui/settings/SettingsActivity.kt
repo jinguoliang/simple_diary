@@ -3,10 +3,10 @@ package com.empty.jinux.simplediary.ui.settings
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.empty.jinux.simplediary.R
+import com.empty.jinux.simplediary.databinding.ActivitySettingsBinding
 import com.empty.jinux.simplediary.ui.LockHelper
 import com.empty.jinux.simplediary.util.ActivityUtils
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_settings.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -15,9 +15,12 @@ class SettingsActivity : AppCompatActivity() {
     @Inject
     lateinit var lockHelper: LockHelper
 
+    private lateinit var binding: ActivitySettingsBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+        binding = ActivitySettingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         setupToolbar()
 
         ActivityUtils.addFragmentToActivity(supportFragmentManager, SettingsFragment(), R.id.content)
@@ -40,7 +43,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun setupToolbar() {
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
     }

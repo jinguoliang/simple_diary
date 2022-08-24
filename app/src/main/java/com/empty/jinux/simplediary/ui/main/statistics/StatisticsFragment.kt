@@ -25,10 +25,10 @@ import androidx.fragment.app.Fragment
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.STREAK_MIN_WORDS_COUNTS
 import com.empty.jinux.simplediary.data.Diary
+import com.empty.jinux.simplediary.databinding.FragmentStatisticsBinding
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.main.BackPressPrecessor
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_statistics.*
 import javax.inject.Inject
 
 
@@ -45,8 +45,11 @@ class StatisticsFragment : Fragment(), StatisticsContract.View, BackPressPrecess
     @Inject
     lateinit var mReporter: Reporter
 
+    private lateinit var binding: FragmentStatisticsBinding
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_statistics, container, false)
+        binding = FragmentStatisticsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
 
@@ -54,7 +57,7 @@ class StatisticsFragment : Fragment(), StatisticsContract.View, BackPressPrecess
         super.onActivityCreated(savedInstanceState)
 
         activity?.findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.fab_add_diary)?.visibility = View.INVISIBLE
-        statistics.mReporter = mReporter
+        binding.statistics.mReporter = mReporter
     }
 
     override fun onResume() {
@@ -63,15 +66,18 @@ class StatisticsFragment : Fragment(), StatisticsContract.View, BackPressPrecess
     }
 
     override fun setProgressIndicator(active: Boolean) {
-        if (active) {
-            loadingContainer.visibility = View.VISIBLE
-            statistics.visibility = View.GONE
-            punchCard.visibility = View.GONE
-        } else {
-            loadingContainer.visibility = View.GONE
-            statistics.visibility = View.VISIBLE
-            punchCard.visibility = View.VISIBLE
+        binding.apply {
+            if (active) {
+                loadingContainer.visibility = View.VISIBLE
+                statistics.visibility = View.GONE
+                punchCard.visibility = View.GONE
+            } else {
+                loadingContainer.visibility = View.GONE
+                statistics.visibility = View.VISIBLE
+                punchCard.visibility = View.VISIBLE
+            }
         }
+
     }
 
     override fun showStatistics(diaries: List<Diary>) {
@@ -80,12 +86,12 @@ class StatisticsFragment : Fragment(), StatisticsContract.View, BackPressPrecess
     }
 
     private fun showStatisticChart(diaries: List<Diary>) {
-        statistics.setDiaries(diaries)
+        binding.statistics.setDiaries(diaries)
     }
 
     private fun showPunchCard(diaries: List<Diary>) {
-        punchCard.setTitle(resources.getString(R.string.streak_card_title_fmt, STREAK_MIN_WORDS_COUNTS))
-        punchCard.setWordCountOfEveryday(diaries)
+        binding.punchCard.setTitle(resources.getString(R.string.streak_card_title_fmt, STREAK_MIN_WORDS_COUNTS))
+        binding.punchCard.setWordCountOfEveryday(diaries)
     }
 
 

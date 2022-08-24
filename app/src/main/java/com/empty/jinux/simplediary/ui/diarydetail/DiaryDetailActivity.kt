@@ -20,11 +20,11 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.empty.jinux.baselibaray.log.logi
 import com.empty.jinux.simplediary.R
+import com.empty.jinux.simplediary.databinding.ActivityDiaryDetailBinding
 import com.empty.jinux.simplediary.ui.LockHelper
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.DiaryDetailFragment
 import com.empty.jinux.simplediary.util.ActivityUtils
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_diary_detail.*
 import javax.inject.Inject
 
 /**
@@ -37,9 +37,10 @@ class DiaryDetailActivity : AppCompatActivity() {
     @Inject
     lateinit var mLockHelper: LockHelper
 
+    lateinit var binding: ActivityDiaryDetailBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        binding = ActivityDiaryDetailBinding.inflate(layoutInflater)
         setContentView(R.layout.activity_diary_detail)
 
         setupActionBar()
@@ -60,7 +61,7 @@ class DiaryDetailActivity : AppCompatActivity() {
     }
 
     private fun setupActionBar() {
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
     }

@@ -16,9 +16,8 @@ import com.empty.jinux.baselibaray.view.recycleview.withItems
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.STREAK_MIN_WORDS_COUNTS
 import com.empty.jinux.simplediary.data.Diary
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.layout_punchard_check_item.*
-import kotlinx.android.synthetic.main.layout_punchcard.view.*
+import com.empty.jinux.simplediary.databinding.LayoutPunchardCheckItemBinding
+import com.empty.jinux.simplediary.databinding.LayoutPunchcardBinding
 import java.util.*
 
 class PunchCard @JvmOverloads constructor(
@@ -33,13 +32,13 @@ class PunchCard @JvmOverloads constructor(
         ThreadPools.postOnQuene {
             val items = past100day(diaries).mapWithState()
             ThreadPools.postOnUI {
-                punchRecycleView.replaceData(items)
+                binding.punchRecycleView.replaceData(items)
                 ThreadPools.postOnUIDelayed(300) {
-                    punchRecycleView.smoothScrollToPosition(items.size)
+                    binding.punchRecycleView.smoothScrollToPosition(items.size)
                 }
                 val (current, longest) = computeLongestPunch(items)
-                currentPunch.text = context.getString(R.string.current_punch_fmt, current)
-                longestPunch.text = context.getString(R.string.longest_punch_fmt, longest)
+                binding.currentPunch.text = context.getString(R.string.current_punch_fmt, current)
+                binding.longestPunch.text = context.getString(R.string.longest_punch_fmt, longest)
             }
         }
     }
@@ -64,13 +63,14 @@ class PunchCard @JvmOverloads constructor(
         return listOf(currentPunch, longest)
     }
 
+    private lateinit var binding: LayoutPunchcardBinding
     init {
-        LayoutInflater.from(context).inflate(R.layout.layout_punchcard, this)
-        punchRecycleView.withItems(items)
+        binding = LayoutPunchcardBinding.inflate(LayoutInflater.from(context), this, true)
+        binding.punchRecycleView.withItems(items)
     }
 
     fun setTitle(title: String) {
-        streakCardTitle.text = title
+        binding.streakCardTitle.text = title
     }
 
 }
@@ -85,8 +85,10 @@ private class PunchCheck(val data: Calendar,
         get() = Controller
 
     private companion object Controller : ItemController {
+        private  lateinit var binding: LayoutPunchardCheckItemBinding
         override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
-            return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.layout_punchard_check_item, parent, false))
+            binding = LayoutPunchardCheckItemBinding.inflate(LayoutInflater.from(parent.context))
+            return ViewHolder(binding.root)
         }
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: Item) {
@@ -94,23 +96,23 @@ private class PunchCheck(val data: Calendar,
             val item = item as PunchCheck
             when (item.state) {
                 PunchCheckState.STATE_CHECKED -> {
-                    holder.stateChecked.visibility = View.VISIBLE
-                    holder.stateMissed.visibility = View.INVISIBLE
+                    binding.stateChecked.visibility = View.VISIBLE
+                    binding.stateMissed.visibility = View.INVISIBLE
                 }
                 PunchCheckState.STATE_MISSED -> {
-                    holder.stateChecked.visibility = View.INVISIBLE
-                    holder.stateMissed.visibility = View.VISIBLE
+                    binding.stateChecked.visibility = View.INVISIBLE
+                    binding.stateMissed.visibility = View.VISIBLE
                 }
                 PunchCheckState.STATE_NEED_CHECKED -> {
-                    holder.stateChecked.visibility = View.INVISIBLE
-                    holder.stateMissed.visibility = View.INVISIBLE
+                    binding.stateChecked.visibility = View.INVISIBLE
+                    binding.stateMissed.visibility = View.INVISIBLE
                 }
             }
-            holder.weekName.text = item.data.timeInMillis.formatToWeekday()
+            binding.weekName.text = item.data.timeInMillis.formatToWeekday()
         }
     }
 
-    private class ViewHolder(override val containerView: View?) : RecyclerView.ViewHolder(containerView!!), LayoutContainer
+    private class ViewHolder(containerView: View?) : RecyclerView.ViewHolder(containerView!!)
 }
 
 private fun Diary.day() =

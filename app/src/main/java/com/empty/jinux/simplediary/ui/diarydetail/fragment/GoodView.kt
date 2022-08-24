@@ -15,7 +15,6 @@ import com.empty.jinux.baselibaray.log.loge
 import com.empty.jinux.baselibaray.utils.CountDownTimer
 import com.empty.jinux.baselibaray.utils.dimen
 import com.empty.jinux.simplediary.R
-import kotlinx.android.synthetic.main.activity_diary_detail.*
 
 class GoodView : FrameLayout {
     companion object {
@@ -90,32 +89,32 @@ class GoodView : FrameLayout {
     }
 
     private fun check() {
-        val actionbarCheck = (context as Activity).action_check
-        actionbarCheck.alpha = 0f
-        actionbarCheck.visibility = View.VISIBLE
-        val rect = Rect()
-        actionbarCheck.getGlobalVisibleRect(rect)
+//        val actionbarCheck = (context as Activity).action_check
+//        actionbarCheck.alpha = 0f
+//        actionbarCheck.visibility = View.VISIBLE
+//        val rect = Rect()
+//        actionbarCheck.getGlobalVisibleRect(rect)
 
-        ValueAnimator.ofFloat(currentCenterX!!, rect.centerX().toFloat()).apply {
-            addUpdateListener {
-                currentCenterX = it.animatedValue as Float
-            }
-            start()
-        }
-
-        val rect1 = Rect()
-        getGlobalVisibleRect(rect1)
-        ValueAnimator.ofFloat(currentCenterY!!, rect.centerY().toFloat() - rect1.top).apply {
-            addUpdateListener {
-                currentCenterY = it.animatedValue as Float
-                invalidate()
-            }
-            addListener(onEnd = {
-                actionbarCheck.animate().alpha(1f).start()
-                visibility = View.GONE
-            })
-            start()
-        }
+//        ValueAnimator.ofFloat(currentCenterX!!, rect.centerX().toFloat()).apply {
+//            addUpdateListener {
+//                currentCenterX = it.animatedValue as Float
+//            }
+//            start()
+//        }
+//
+//        val rect1 = Rect()
+//        getGlobalVisibleRect(rect1)
+//        ValueAnimator.ofFloat(currentCenterY!!, rect.centerY().toFloat() - rect1.top).apply {
+//            addUpdateListener {
+//                currentCenterY = it.animatedValue as Float
+//                invalidate()
+//            }
+//            addListener(onEnd = {
+//                actionbarCheck.animate().alpha(1f).start()
+//                visibility = View.GONE
+//            })
+//            start()
+//        }
     }
 
 }

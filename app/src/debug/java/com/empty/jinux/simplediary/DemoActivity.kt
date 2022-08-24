@@ -9,13 +9,15 @@ import android.text.*
 import android.text.style.*
 import com.empty.jinux.baselibaray.thread.ThreadPools
 import com.empty.jinux.baselibaray.utils.adjustParagraphSpace
-import kotlinx.android.synthetic.main.activity_demo.*
+import com.empty.jinux.simplediary.databinding.ActivityDemoBinding
 
 class DemoActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityDemoBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityDemoBinding.inflate(layoutInflater)
         setContentView(R.layout.activity_demo)
-        mEditor.text = SpannableStringBuilder().apply {
+        binding.mEditor.text = SpannableStringBuilder().apply {
             val drawable = ContextCompat.getDrawable(this@DemoActivity, R.drawable.ic_drawer_top_bg)!!
             drawable.bounds = Rect(0, 0, 500, 500)
 //            append("a123123", ImageSpan(drawable))
@@ -33,7 +35,7 @@ class DemoActivity : AppCompatActivity() {
 
         }
 
-        mEditor.addTextChangedListener(object : TextWatcher {
+        binding.mEditor.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 
             }
@@ -42,7 +44,7 @@ class DemoActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                mEditor.adjustParagraphSpace(R.dimen.editor_paragraph_end)
+                binding.mEditor.adjustParagraphSpace(R.dimen.editor_paragraph_end)
             }
 
         })

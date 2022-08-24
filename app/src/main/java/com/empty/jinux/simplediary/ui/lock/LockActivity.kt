@@ -9,16 +9,17 @@ import androidx.core.widget.ImageViewCompat
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.applock.AppLockManager
 import com.empty.jinux.simplediary.config.ConfigManager
+import com.empty.jinux.simplediary.databinding.ActivityLockBinding
 import com.empty.jinux.simplediary.report.Reporter
 import com.empty.jinux.simplediary.ui.lock.fingerprint.FingerprintHelper
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_lock.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -32,18 +33,18 @@ class LockActivity : AppCompatActivity() {
 
     @Inject
     lateinit var mReporter: Reporter
-
+    private lateinit var binding: ActivityLockBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_lock)
+        binding = ActivityLockBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         setupPasswordInputView()
         initFingerprint()
     }
 
     private fun setupPasswordInputView() {
-        password.addTextChangedListener(object : TextWatcher {
+        binding.password.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 val password = config.get("pref_app_lock_password", "")
                 val input = s.toString()
@@ -70,7 +71,7 @@ class LockActivity : AppCompatActivity() {
             fingerprintHelper = FingerprintHelper(
                     fingerprintMgr,
                     object : FingerprintHelper.Callback {
-                        val fingerprintImageColorChanger = ImageColorChanger(fingerPrintIcon)
+                        val fingerprintImageColorChanger = ImageColorChanger(binding.fingerPrintIcon)
                         override fun onAuthenticated() {
                             unlockApp()
                             reportUnlockTime("fingerprint")
@@ -100,8 +101,8 @@ class LockActivity : AppCompatActivity() {
     }
 
     private fun showFingerprintMessage(msg: String) {
-        fingerPrintMessage.text = msg
-        fingerPrintMessage.visibility = View.VISIBLE
+        binding.fingerPrintMessage.text = msg
+        binding.fingerPrintMessage.visibility = View.VISIBLE
     }
 
     private fun unlockApp() {
@@ -122,7 +123,7 @@ class LockActivity : AppCompatActivity() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             fingerprintHelper.startListening()
-            fingerPrintMessage.visibility = View.INVISIBLE
+            binding.fingerPrintMessage.visibility = View.INVISIBLE
         }
     }
 

@@ -12,9 +12,9 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import com.empty.jinux.simplediary.R
+import com.empty.jinux.simplediary.databinding.DialogAppLockSetPasswordBinding
 import com.empty.jinux.simplediary.report.Reporter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.dialog_app_lock_set_password.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -35,7 +35,9 @@ class SettingsFragment : PreferenceFragmentCompat(),
 
     private fun showLockPasswordSetDialog(checkBoxPreference: CheckBoxPreference) {
         val dialog = Dialog(context!!)
-        dialog.setContentView(R.layout.dialog_app_lock_set_password)
+        val binding = DialogAppLockSetPasswordBinding.inflate(layoutInflater)
+        dialog.setContentView(binding.root)
+
         val passwordChecker: TextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -45,29 +47,29 @@ class SettingsFragment : PreferenceFragmentCompat(),
 
             override fun afterTextChanged(s: Editable?) {
                 s?.apply {
-                    dialog.positiveButton.isEnabled = this.toString().length == 6
-                            && dialog.passwordConfirm.text.toString() == dialog.newPassword.text.toString()
+                    binding.positiveButton.isEnabled = this.toString().length == 6
+                            && binding.passwordConfirm.text.toString() == binding.newPassword.text.toString()
                 }
             }
 
         }
-        dialog.newPassword.addTextChangedListener(passwordChecker)
-        dialog.passwordConfirm.addTextChangedListener(passwordChecker)
-        dialog.negativeButton.setOnClickListener {
+        binding.newPassword.addTextChangedListener(passwordChecker)
+        binding.passwordConfirm.addTextChangedListener(passwordChecker)
+        binding.negativeButton.setOnClickListener {
             mIsConfirmEnableLock = false
             dialog.cancel()
             checkBoxPreference.isChecked = false
             mReporter.reportClick("password_set_dialog_cancel")
         }
 
-        dialog.positiveButton.setOnClickListener {
+        binding.positiveButton.setOnClickListener {
             mIsConfirmEnableLock = true
             dialog.dismiss()
             checkBoxPreference.isChecked = true
             PreferenceManager.getDefaultSharedPreferences(activity).edit {
                 putString(
                     getString(R.string.pref_lock_password),
-                    dialog.newPassword.text.toString()
+                    binding.newPassword.text.toString()
                 )
             }
             mReporter.reportClick("password_set_dialog_ok")

@@ -14,9 +14,8 @@ import com.empty.jinux.baselibaray.view.recycleview.Item
 import com.empty.jinux.baselibaray.view.recycleview.ItemController
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
-import kotlinx.android.synthetic.main.layout_swipe_item_settings.view.*
-import kotlinx.android.synthetic.main.recycle_item_diary.view.*
-import kotlinx.android.synthetic.main.recycler_view_item_category.view.*
+import com.empty.jinux.simplediary.databinding.RecycleItemDiaryBinding
+import com.empty.jinux.simplediary.databinding.RecyclerViewItemCategoryBinding
 import java.util.*
 
 class DiaryItem(val data: Diary, val differentDay: Boolean, val onItemListener: OnItemListener) :
@@ -27,8 +26,11 @@ class DiaryItem(val data: Diary, val differentDay: Boolean, val onItemListener: 
     }
 
     companion object Controller : ItemController {
+        private lateinit var binding: RecycleItemDiaryBinding
         override fun onCreateViewHolder(parent: ViewGroup): androidx.recyclerview.widget.RecyclerView.ViewHolder {
-            return ViewHolder(parent.inflate(R.layout.recycle_item_diary, false))
+            binding =
+                RecycleItemDiaryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            return ViewHolder(binding.root)
         }
 
         override fun onBindViewHolder(
@@ -37,8 +39,13 @@ class DiaryItem(val data: Diary, val differentDay: Boolean, val onItemListener: 
         ) {
             item as DiaryItem
             holder as ViewHolder
-
+            val diary = item.data
             holder.bind(item.data)
+            binding.title.text = diary.diaryContent.getTitleFromContent().takeIf { it.isNotEmpty() }
+                ?: holder.itemView.resources.getString(R.string.untitled)
+            binding.weekName.text = diary.diaryContent.displayTime.formatToWeekday()
+            binding.day.text = diary.diaryContent.displayTime.formatToDay()
+            binding.time.text = diary.diaryContent.displayTime.formatToTime()
             holder.showWeekday(item.differentDay)
             holder.originView.setOnClickListener {
                 if (holder.isOpen()) {
@@ -47,29 +54,23 @@ class DiaryItem(val data: Diary, val differentDay: Boolean, val onItemListener: 
                     item.onItemListener.onItemClick(item.data)
                 }
             }
-            holder.itemView.swipe_settings_delete.setOnClickListener {
-                item.onItemListener.onDeleteClick(
-                    item.data
-                )
-            }
+//            binding.sw.setOnClickListener {
+//                item.onItemListener.onDeleteClick(
+//                    item.data
+//                )
+//            }
         }
 
         class ViewHolder(val originView: View) :
             androidx.recyclerview.widget.RecyclerView.ViewHolder(SwipeView(originView)) {
-            val title = itemView.title
-            val weekName: TextView = itemView.weekName
-            val day: TextView = itemView.day
-            val time: TextView = itemView.time
-            val topLine: View = itemView.topLine
+            val title = binding.title
+            val weekName: TextView = binding.weekName
+            val day: TextView = binding.day
+            val time: TextView = binding.time
+            val topLine: View = binding.topLine
 
             fun bind(diary: Diary) {
                 closeMenu()
-
-                title.text = diary.diaryContent.getTitleFromContent().takeIf { it.isNotEmpty() }
-                    ?: itemView.resources.getString(R.string.untitled)
-                weekName.text = diary.diaryContent.displayTime.formatToWeekday()
-                day.text = diary.diaryContent.displayTime.formatToDay()
-                time.text = diary.diaryContent.displayTime.formatToTime()
 
 //            currentDiary = diary
 
@@ -176,8 +177,14 @@ class DiaryItem(val data: Diary, val differentDay: Boolean, val onItemListener: 
 
 class CategoryItem(val time: Long) : Item {
     companion object Controller : ItemController {
+        private lateinit var binding: RecyclerViewItemCategoryBinding
         override fun onCreateViewHolder(parent: ViewGroup): androidx.recyclerview.widget.RecyclerView.ViewHolder {
-            return ViewHolder(parent.inflate(R.layout.recycler_view_item_category, false))
+            binding = RecyclerViewItemCategoryBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+            return ViewHolder(binding.root)
         }
 
         override fun onBindViewHolder(
@@ -190,21 +197,14 @@ class CategoryItem(val time: Long) : Item {
             val weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR)
             val weekStr = holder.itemView.resources.getString(R.string.week_of_year_fmt, weekOfYear)
             val yearStr = "" + item.time.toCalendar().get(Calendar.YEAR)
-            holder.bind(weekStr, yearStr)
+            binding.weekth.text = weekStr
+            binding.year.text = yearStr
         }
 
     }
 
     class ViewHolder(itemView: View) :
-        androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
-        private var weekth: TextView = itemView.weekth
-        private var year: TextView = itemView.year
-
-        fun bind(weekstr: String, yearStr: String) {
-            weekth.text = weekstr
-            year.text = yearStr
-        }
-    }
+        androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView)
 
     override val controller: ItemController = Controller
 }

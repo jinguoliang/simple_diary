@@ -23,13 +23,12 @@ import com.empty.jinux.baselibaray.log.logw
 import com.empty.jinux.baselibaray.utils.toast
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.LocationInfo
+import com.empty.jinux.simplediary.databinding.FragmentEditStatusBinding
 import com.empty.jinux.simplediary.location.Location
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.MFragment
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.MyEmotionIcons
 import com.empty.jinux.simplediary.ui.diarydetail.fragment.MyWeatherIcons
-import com.empty.jinux.simplediary.ui.diarydetail.fragment.reflectFeild
 import com.google.android.gms.location.places.ui.PlacePicker
-import kotlinx.android.synthetic.main.fragment_edit_status.*
 
 class StatusFragment : MFragment() {
 
@@ -40,39 +39,42 @@ class StatusFragment : MFragment() {
     val setWeathTask = object : TaskWaitingConditions(4) {
         override fun run() {
             val iconIndex = MyWeatherIcons.getIconIndex(mWeatherIcon!!)
-            val child = weatherRadioGroup.getChildAt(iconIndex)
-                    ?: weatherRadioGroup.getChildAt(0).apply {
+            val child = binding.weatherRadioGroup.getChildAt(iconIndex)
+                    ?: binding.weatherRadioGroup.getChildAt(0).apply {
                         mReporter.reportEvent("exception", Bundle())
                     }
-            weatherRadioGroup.check(child.id)
+            binding.weatherRadioGroup.check(child.id)
 
-            val child1 = emotionRadioGroup.getChildAt(mEmotionId)
-                    ?: emotionRadioGroup.getChildAt(0)
-            emotionRadioGroup.check(child1.id)
+            val child1 = binding.emotionRadioGroup.getChildAt(mEmotionId)
+                    ?: binding.emotionRadioGroup.getChildAt(0)
+            binding.emotionRadioGroup.check(child1.id)
 
-            address.text = mLocationInfo?.address
+            binding.address.text = mLocationInfo?.address
         }
     }
 
+    private lateinit var binding: FragmentEditStatusBinding
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_edit_status, container, false)
+        binding = FragmentEditStatusBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val iconSize = resources.getDimensionPixelSize(R.dimen.edit_status_icon_size)
-        weatherRadioGroup.addRadios(MyWeatherIcons.getAllMyIcon(), iconSize)
-        emotionRadioGroup.addRadios(MyEmotionIcons.getAllMyIcon(), iconSize)
+        binding.weatherRadioGroup.addRadios(MyWeatherIcons.getAllMyIcon(), iconSize)
+        binding.emotionRadioGroup.addRadios(MyEmotionIcons.getAllMyIcon(), iconSize)
 
         setWeathTask.emit(4)
 
-        weatherRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+        binding.weatherRadioGroup.setOnCheckedChangeListener { group, checkedId ->
             val index = group.indexOfChild(group.findViewById<RadioButton>(checkedId))
             mPresenter.setWeather(MyWeatherIcons.getIconByIndex(index))
             mReporter.reportClick("detail_tool_weather", MyWeatherIcons.getWeatherName(index))
         }
 
-        emotionRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+        binding.emotionRadioGroup.setOnCheckedChangeListener { group, checkedId ->
             val index = group.indexOfChild(group.findViewById<RadioButton>(checkedId))
             mPresenter.setEmotion(index.toLong())
             mReporter.reportClick("detail_tool_emotion", MyEmotionIcons.getEmotionName(index))
@@ -81,7 +83,7 @@ class StatusFragment : MFragment() {
             //            mReporter.reportClick("detail_tool_location")
         }
 
-        edit.setOnClickListener {
+        binding.edit.setOnClickListener {
             val intentBuilder = PlacePicker.IntentBuilder()
             val intent = try {
                 intentBuilder.build(activity)
@@ -126,7 +128,7 @@ class StatusFragment : MFragment() {
             if (resultCode == Activity.RESULT_OK) {
                 if (data == null) return
                 val place = PlacePicker.getPlace(activity, data)
-                address.text = place.address
+                binding.address.text = place.address
                 mPresenter.setLocation(LocationInfo(place.latLng.run { Location(latitude, longitude) }, place.address.toString()))
             }
         }

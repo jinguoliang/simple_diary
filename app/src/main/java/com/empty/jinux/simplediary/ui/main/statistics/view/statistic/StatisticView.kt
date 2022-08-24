@@ -12,8 +12,8 @@ import com.empty.jinux.baselibaray.utils.toCalendar
 import com.empty.jinux.baselibaray.utils.wordsCount
 import com.empty.jinux.simplediary.R
 import com.empty.jinux.simplediary.data.Diary
+import com.empty.jinux.simplediary.databinding.LayoutStatisticChartBinding
 import com.empty.jinux.simplediary.report.Reporter
-import kotlinx.android.synthetic.main.layout_statistic_chart.view.*
 import java.util.*
 
 class StatisticView
@@ -38,15 +38,16 @@ constructor(context: Context,
     private var currentXAxis: Int = 0
     private var currentYAxis: Int = 0
 
+    private lateinit var binding: LayoutStatisticChartBinding
     init {
-        LayoutInflater.from(context).inflate(R.layout.layout_statistic_chart, this)
+        binding = LayoutStatisticChartBinding.inflate(LayoutInflater.from(context), this, true)
 
-        yAxis.adapter = ArrayAdapter<String>(context,
+        binding.yAxis.adapter = ArrayAdapter<String>(context,
                 R.layout.statistics_card_spinner_item,
                 context.resources.getStringArray(R.array.statistics_yaxis_select_values)).apply {
             setDropDownViewResource(R.layout.statistics_card_spinner_drop_down_item)
         }
-        yAxis.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.yAxis.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
 
@@ -58,13 +59,13 @@ constructor(context: Context,
 
         }
 
-        xAxis.adapter = ArrayAdapter<String>(context,
+        binding.xAxis.adapter = ArrayAdapter<String>(context,
                 R.layout.statistics_card_spinner_item,
                 context.resources.getStringArray(R.array.statistics_xaxis_select_values)).apply {
             setDropDownViewResource(R.layout.statistics_card_spinner_drop_down_item)
         }
 
-        xAxis.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.xAxis.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
 
             }
@@ -89,8 +90,8 @@ constructor(context: Context,
             }.toList()
 
             ThreadPools.postOnUI {
-                statisticChat.setXAxisValueFormator(mFormatter)
-                statisticChat.setData(entries)
+                binding.statisticChat.setXAxisValueFormator(mFormatter)
+                binding.statisticChat.setData(entries)
             }
         }
     }

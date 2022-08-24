@@ -63,6 +63,7 @@
     </ScrollView>
 
     <include
+        android:id="@+id/editTool"
         layout="@layout/layout_diary_detail_edit_tool"
         android:visibility="visible" />
 

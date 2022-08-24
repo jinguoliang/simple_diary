@@ -17,17 +17,15 @@
 package com.empty.jinux.simplediary.ui.main
 
 import android.content.ActivityNotFoundException
-import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.navigation.NavigationView
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import com.empty.jinux.baselibaray.utils.startActivity
 import com.empty.jinux.baselibaray.utils.toast
 import com.empty.jinux.simplediary.R
+import com.empty.jinux.simplediary.databinding.ActivityDiaryListBinding
 import com.empty.jinux.simplediary.intent.helpTranslate
 import com.empty.jinux.simplediary.intent.rateApp
 import com.empty.jinux.simplediary.intent.sendFeedback
@@ -40,7 +38,6 @@ import com.empty.jinux.simplediary.ui.main.statistics.StatisticsFragment
 import com.empty.jinux.simplediary.ui.settings.SettingsActivity
 import com.empty.jinux.simplediary.util.ActivityUtils
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_diary_list.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -54,11 +51,12 @@ class MainActivity : AppCompatActivity() {
     lateinit var mLockHelper: LockHelper
 
     private lateinit var mCurrentFragment: BackPressPrecessor
-
+    lateinit var binding: ActivityDiaryListBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_diary_list)
+        binding = ActivityDiaryListBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         setupToolbar()
         setupNavigationDrawer()
         showDiaryListFragment()
@@ -71,7 +69,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        nav_view.setCheckedItem(mCurrentItemRes)
+        binding.navView.setCheckedItem(mCurrentItemRes)
     }
 
     override fun onStop() {
@@ -82,19 +80,19 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         if (mCurrentFragment.onBackPress()) {
             return
-        }  else {
+        } else {
             super.onBackPressed()
         }
     }
 
     private fun setupNavigationDrawer() {
-        drawer_layout.setStatusBarBackground(R.color.colorPrimaryDark)
-        drawer_layout.setMDrawerListener()
-        nav_view.setMItemClickListener()
+        binding.drawerLayout.setStatusBarBackground(R.color.colorPrimaryDark)
+        binding.drawerLayout.setMDrawerListener()
+        binding.navView.setMItemClickListener()
     }
 
     private fun setupToolbar() {
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         val ab = supportActionBar
         ab!!.setHomeAsUpIndicator(R.drawable.ic_menu)
         ab.setDisplayHomeAsUpEnabled(true)
@@ -103,7 +101,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                drawer_layout.openDrawer(GravityCompat.START)
+                binding.drawerLayout.openDrawer(GravityCompat.START)
                 return true
             }
         }
@@ -111,18 +109,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showDiaryStatistics() {
-        val fragment = supportFragmentManager.findFragmentById(R.id.contentFrame) as? StatisticsFragment
+        val fragment =
+            supportFragmentManager.findFragmentById(R.id.contentFrame) as? StatisticsFragment
                 ?: StatisticsFragment.newInstance()
         ActivityUtils.replaceFragment(
-                supportFragmentManager, fragment, R.id.contentFrame)
+            supportFragmentManager, fragment, R.id.contentFrame
+        )
         mCurrentFragment = fragment
     }
 
     private fun showDiaryListFragment() {
-        val fragment = supportFragmentManager.findFragmentById(R.id.contentFrame) as? DiaryListFragment
+        val fragment =
+            supportFragmentManager.findFragmentById(R.id.contentFrame) as? DiaryListFragment
                 ?: DiaryListFragment.newInstance()
         ActivityUtils.replaceFragment(
-                supportFragmentManager, fragment, R.id.contentFrame)
+            supportFragmentManager, fragment, R.id.contentFrame
+        )
         mCurrentFragment = fragment
     }
 
@@ -198,7 +200,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            drawer_layout.closeDrawers()
+            binding.drawerLayout.closeDrawers()
             true
         }
     }

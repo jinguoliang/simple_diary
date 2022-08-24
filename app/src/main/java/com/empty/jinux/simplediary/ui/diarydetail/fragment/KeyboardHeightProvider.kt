@@ -3,6 +3,7 @@ package com.empty.jinux.simplediary.ui.diarydetail.fragment
 import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
+import android.graphics.Color
 import android.graphics.Point
 import android.graphics.Rect
 import android.util.Log
@@ -21,12 +22,14 @@ class KeyboardHeightProvider(private val activity: Activity) {
         get() = activity.resources.configuration.orientation
 
 
-    private val contentView = FrameLayout(activity)
+    private val contentView = FrameLayout(activity).also {
+        it.setBackgroundColor(Color.CYAN)
+    }
 
     private val wm = activity.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
     private val params = WindowManager.LayoutParams().apply {
-        width = 0
+        width = 100
         height = WindowManager.LayoutParams.MATCH_PARENT
         softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE
         flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
@@ -94,6 +97,9 @@ class KeyboardHeightProvider(private val activity: Activity) {
         // the keyboard height. But this worked fine on a Nexus.
         val orientation = screenOrientation
         val keyboardHeight = screenSize.y - rect.bottom
+        Log.e("JIN", "screenSize = ${screenSize}")
+        Log.e("JIN", "rect = ${rect}")
+
 
         if (keyboardHeight == 0) {
             notifyKeyboardHeightChanged(0, orientation)
